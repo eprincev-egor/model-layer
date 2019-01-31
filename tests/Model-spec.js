@@ -887,4 +887,190 @@ describe("Model", () => {
         }
     });
 
+    it("prepare number", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    age: {
+                        type: "number",
+                        default: "0"
+                    }
+                };
+            }
+        }
+        let model;
+
+        model = new SomeModel();
+        assert.strictEqual( model.data.age, 0 );
+
+        model = new SomeModel({
+            age: "1"
+        });
+        assert.strictEqual( model.data.age, 1 );
+        
+        model.set("age", "2");
+        assert.strictEqual( model.data.age, 2 );
+
+        model.set("age", null);
+        assert.strictEqual( model.data.age, null );
+
+        model.set("age", "-2000.123");
+        assert.strictEqual( model.data.age, -2000.123 );
+
+        try {
+            model.set("age", "wrong");
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid number for age: wrong");
+        }
+
+        try {
+            model.set("age", {});
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid number for age: {}");
+        }
+
+        try {
+            model.set("age", {age: 1});
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid number for age: {\"age\":1}");
+        }
+
+        try {
+            model.set("age", false);
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid number for age: false");
+        }
+
+        try {
+            model.set("age", true);
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid number for age: true");
+        }
+
+        try {
+            model.set("age", -1 / 0);
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid number for age: -Infinity");
+        }
+
+        try {
+            model.set("age", 1 / 0);
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid number for age: Infinity");
+        }
+
+        try {
+            model.set("age", NaN);
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid number for age: NaN");
+        }
+
+        try {
+            model.set("age", [0]);
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid number for age: [0]");
+        }
+
+        assert.strictEqual( model.data.age, -2000.123 );
+    });
+
+    
+    it("prepare string", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    name: {
+                        type: "string",
+                        default: 10
+                    }
+                };
+            }
+        }
+        let model;
+
+        model = new SomeModel();
+        assert.strictEqual( model.data.name, "10" );
+
+        model = new SomeModel({
+            name: -20
+        });
+        assert.strictEqual( model.data.name, "-20" );
+        
+        model.set("name", 1.1);
+        assert.strictEqual( model.data.name, "1.1" );
+
+        model.set("name", null);
+        assert.strictEqual( model.data.name, null );
+
+        model.set("name", "nice");
+        assert.strictEqual( model.data.name, "nice" );
+
+        
+        try {
+            model.set("name", {});
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid string for name: {}");
+        }
+
+        try {
+            model.set("name", {name: 1});
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid string for name: {\"name\":1}");
+        }
+
+        try {
+            model.set("name", false);
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid string for name: false");
+        }
+
+        try {
+            model.set("name", true);
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid string for name: true");
+        }
+
+        try {
+            model.set("name", -1 / 0);
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid string for name: -Infinity");
+        }
+
+        try {
+            model.set("name", 1 / 0);
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid string for name: Infinity");
+        }
+
+        try {
+            model.set("name", NaN);
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid string for name: NaN");
+        }
+
+        try {
+            model.set("name", [0]);
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid string for name: [0]");
+        }
+
+        assert.strictEqual( model.data.name, "nice" );
+    });
 });
