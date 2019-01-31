@@ -1149,4 +1149,26 @@ describe("Model", () => {
 
         assert.strictEqual( model.data.some, true );
     });
+
+    it("prepare trim", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    name: {
+                        type: "string",
+                        default: " bob ",
+                        trim: true
+                    }
+                };
+            }
+        }
+
+        let model = new SomeModel();
+        assert.strictEqual( model.data.name, "bob" );
+
+        model.set("name", " word ");
+        assert.strictEqual( model.data.name, "word" );
+    });
+
+
 });
