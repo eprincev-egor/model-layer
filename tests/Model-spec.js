@@ -609,66 +609,54 @@ describe("Model", () => {
             sale: 30
         });
 
-        let checks = [
-            // valid
-            {
-                buy: 100,
-                sale: 200
-            }, true,
+        // valid
+        assert.strictEqual(model.isValid({
+            buy: 100,
+            sale: 200
+        }), true);
 
-            // required validate
-            {}, false,
+        // ignore required error, because isValid we using before .set
+        assert.strictEqual(model.isValid({}), true);
             
-            // required validate
-            {
-                buy: 1000
-            }, false,
+        // buy > sale
+        assert.strictEqual(model.isValid({
+            buy: 1000
+        }), false);
 
-            // enum validate
-            {
-                buy: 100,
-                sale: 200,
-                color: "pink"
-            }, false,
+        // enum validate
+        assert.strictEqual(model.isValid({
+            buy: 100,
+            sale: 200,
+            color: "pink"
+        }), false);
 
-            // regexp validate
-            {
-                buy: 1,
-                sale: 10,
-                word: "wrong word"
-            }, false,
+        // regexp validate
+        assert.strictEqual(model.isValid({
+            buy: 1,
+            sale: 10,
+            word: "wrong word"
+        }), false);
 
-            // function validate for field
-            {
-                buy: 1,
-                sale: 2,
-                age: -1
-            }, false,
+        // function validate for field
+        assert.strictEqual(model.isValid({
+            buy: 1,
+            sale: 2,
+            age: -1
+        }), false);
 
-            // unknown property
-            {
-                buy: 1,
-                sale: 101,
-                xx: true
-            }, false,
+        // unknown property
+        assert.strictEqual(model.isValid({
+            buy: 1,
+            sale: 101,
+            xx: true
+        }), false);
 
-            // custom validate data
-            {
-                buy: 100,
-                sale: 20
-            }, false
-        ];
+        // custom validate data
+        assert.strictEqual(model.isValid({
+            buy: 100,
+            sale: 20
+        }), false);
 
-        for (let i = 0, n = checks.length; i < n; i += 2) {
-            let data = checks[ i ];
-            let isValid = checks[ i + 1 ];
-
-            assert.ok(
-                model.isValid( data ) === isValid,
-
-                "data: " + JSON.stringify( data, null, 4 )
-            );
-        }
     });
 
     it("keep data if hasn't changes", () => {
