@@ -1073,4 +1073,80 @@ describe("Model", () => {
 
         assert.strictEqual( model.data.name, "nice" );
     });
+
+    it("prepare string", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    some: {
+                        type: "boolean",
+                        default: 0
+                    }
+                };
+            }
+        }
+        let model;
+
+        model = new SomeModel();
+        assert.strictEqual( model.data.some, false );
+
+        model = new SomeModel({
+            some: 1
+        });
+        assert.strictEqual( model.data.some, true );
+        
+        model.set("some", false);
+        assert.strictEqual( model.data.some, false );
+
+        model.set("some", null);
+        assert.strictEqual( model.data.some, null );
+
+        model.set("some", true);
+        assert.strictEqual( model.data.some, true );
+
+        
+        try {
+            model.set("some", {});
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid boolean for some: {}");
+        }
+
+        try {
+            model.set("some", {some: 1});
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid boolean for some: {\"some\":1}");
+        }
+
+        try {
+            model.set("some", -1 / 0);
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid boolean for some: -Infinity");
+        }
+
+        try {
+            model.set("some", 1 / 0);
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid boolean for some: Infinity");
+        }
+
+        try {
+            model.set("some", NaN);
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid boolean for some: NaN");
+        }
+
+        try {
+            model.set("some", [0]);
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid boolean for some: [0]");
+        }
+
+        assert.strictEqual( model.data.some, true );
+    });
 });

@@ -16,7 +16,7 @@
     - prepare
         - custom prepare data
         - custom prepare field
-        - prepare boolean
+        + prepare boolean
         + prepare number
         + prepare string
         - prepare date
