@@ -1,0 +1,38 @@
+{
+  "name": "model-layer",
+  "version": "1.0.0",
+  "description": "model layer",
+  "main": "lib/index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "mocha tests/**/*-spec.js --timeout 9999 --exit",
+    "lint": "eslint ./**/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eprincev-egor/model-layer.git"
+  },
+  "keywords": [
+    "model",
+    "data",
+    "layer",
+    "tree",
+    "data",
+    "structure"
+  ],
+  "author": "Eprincev Egor",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eprincev-egor/model-layer/issues"
+  },
+  "homepage": "https://github.com/eprincev-egor/model-layer#readme",
+  "dependencies": {
+    "lodash": "^4.17.11"
+  },
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "mocha": "^5.2.0"
+  }
+}
