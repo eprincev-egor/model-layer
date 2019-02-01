@@ -21,7 +21,7 @@
         + prepare boolean
         + prepare number
         + prepare string
-        - prepare date
+        + prepare date
         + trim
         + lower
         + upper

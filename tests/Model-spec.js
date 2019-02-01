@@ -1516,4 +1516,120 @@ describe("Model", () => {
     });
 
 
+
+    it("prepare date", () => {
+        // Date.parse trimming ms
+        let now = Date.parse(
+            new Date().toString()
+        );
+        let nowDate = new Date( now );
+
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    bornDate: {
+                        type: "date",
+                        default: now
+                    }
+                };
+            }
+        }
+        let model;
+
+        model = new SomeModel();
+        assert.strictEqual( +model.data.bornDate, now );
+        assert.ok( model.data.bornDate instanceof Date );
+
+        model = new SomeModel({
+            bornDate: nowDate
+        });
+        assert.strictEqual( +model.data.bornDate, now );
+        assert.ok( model.data.bornDate instanceof Date );
+        
+        model.set("bornDate", now);
+        assert.strictEqual( +model.data.bornDate, now );
+        assert.ok( model.data.bornDate instanceof Date );
+
+        model.set("bornDate", null);
+        assert.strictEqual( model.data.bornDate, null );
+
+        model.set("bornDate", nowDate.toString());
+        assert.strictEqual( +model.data.bornDate, now );
+        assert.ok( model.data.bornDate instanceof Date );
+
+        model.set("bornDate", null);
+        assert.strictEqual( model.data.bornDate, null );
+
+        model.set("bornDate", nowDate.toISOString());
+        assert.strictEqual( +model.data.bornDate, now );
+        assert.ok( model.data.bornDate instanceof Date );
+
+        try {
+            model.set("bornDate", "wrong");
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid date for bornDate: wrong");
+        }
+
+        try {
+            model.set("bornDate", {});
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid date for bornDate: {}");
+        }
+
+        try {
+            model.set("bornDate", {bornDate: 1});
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid date for bornDate: {\"bornDate\":1}");
+        }
+
+        try {
+            model.set("bornDate", false);
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid date for bornDate: false");
+        }
+
+        try {
+            model.set("bornDate", true);
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid date for bornDate: true");
+        }
+
+        try {
+            model.set("bornDate", -1 / 0);
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid date for bornDate: -Infinity");
+        }
+
+        try {
+            model.set("bornDate", 1 / 0);
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid date for bornDate: Infinity");
+        }
+
+        try {
+            model.set("bornDate", NaN);
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid date for bornDate: NaN");
+        }
+
+        try {
+            model.set("bornDate", [0]);
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid date for bornDate: [0]");
+        }
+
+        assert.strictEqual( +model.data.bornDate, now );
+        assert.ok( model.data.bornDate instanceof Date );
+    });
+
+
 });
