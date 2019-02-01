@@ -1631,5 +1631,114 @@ describe("Model", () => {
         assert.ok( model.data.bornDate instanceof Date );
     });
 
+    it("redefine standard prepare number", () => {
+        let originalPrepare = Model.prepareNumber;
+        let callArgs = false;
 
+        Model.prepareNumber = function(key, value) {
+            callArgs = [key, value];
+            return originalPrepare(key, value);
+        };
+
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    age: "number"
+                };
+            }
+        }
+
+        let model = new SomeModel({
+            age: "10"
+        });
+
+        assert.strictEqual( model.data.age, 10 );
+        assert.deepEqual( callArgs, ["age", "10"] );
+
+        Model.prepareNumber = originalPrepare;
+    });
+
+    it("redefine standard prepare string", () => {
+        let originalPrepare = Model.prepareString;
+        let callArgs = false;
+
+        Model.prepareString = function(key, value) {
+            callArgs = [key, value];
+            return originalPrepare(key, value);
+        };
+
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    name: "string"
+                };
+            }
+        }
+
+        let model = new SomeModel({
+            name: 0
+        });
+
+        assert.strictEqual( model.data.name, "0" );
+        assert.deepEqual( callArgs, ["name", 0] );
+
+        Model.prepareString = originalPrepare;
+    });
+
+    it("redefine standard prepare boolean", () => {
+        let originalPrepare = Model.prepareBoolean;
+        let callArgs = false;
+
+        Model.prepareBoolean = function(key, value) {
+            callArgs = [key, value];
+            return originalPrepare(key, value);
+        };
+
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    some: "boolean"
+                };
+            }
+        }
+
+        let model = new SomeModel({
+            some: 0
+        });
+
+        assert.strictEqual( model.data.some, false );
+        assert.deepEqual( callArgs, ["some", 0] );
+
+        Model.prepareBoolean = originalPrepare;
+    });
+
+
+    it("redefine standard prepare date", () => {
+        let originalPrepare = Model.prepareDate;
+        let callArgs = false;
+
+        Model.prepareDate = function(key, value) {
+            callArgs = [key, value];
+            return originalPrepare(key, value);
+        };
+
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    bornDate: "date"
+                };
+            }
+        }
+
+        let now = Date.now();
+        let model = new SomeModel({
+            bornDate: now
+        });
+
+        assert.strictEqual( +model.data.bornDate, now );
+        assert.ok( model.data.bornDate instanceof Date );
+        assert.deepEqual( callArgs, ["bornDate", now] );
+
+        Model.prepareDate = originalPrepare;
+    });
 });

@@ -31,6 +31,7 @@
         + round
         + floor
         + ceil
+        + redefine standard prepares
     
     + event change
         + event "change:prop"
