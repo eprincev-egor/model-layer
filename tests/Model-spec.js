@@ -1422,5 +1422,98 @@ describe("Model", () => {
         assert.strictEqual( model.data.age, 1 );
     });
 
+    it("custom prepare data", () => {
+        function upFirstLetter(name) {
+            return (
+                name[0].toUpperCase() + 
+                    name.slice(1).toLowerCase()
+            );
+        }
+
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    firstName: {
+                        type: "string",
+                        trim: true,
+                        emptyAsNull: true,
+                        prepare: name =>
+                            upFirstLetter( name )
+                    },
+                    lastName: {
+                        type: "string",
+                        trim: true,
+                        emptyAsNull: true,
+                        prepare: name =>
+                            upFirstLetter( name )
+                    },
+                    fullName: {
+                        type: "string",
+                        trim: true,
+                        emptyAsNull: true
+                    }
+                };
+            }
+
+            prepare(data) {
+                // data.firstName can be null
+                let firstName = data.firstName || "";
+                // data.lastName can be null
+                let lastName = data.lastName || "";
+
+                data.fullName = `${ firstName } ${lastName}`;
+            }
+        }
+
+        let model = new SomeModel();
+        assert.strictEqual( model.data.firstName, null );
+        assert.strictEqual( model.data.lastName, null );
+        assert.strictEqual( model.data.fullName, null );
+
+        model = new SomeModel({
+            firstName: "bob"
+        });
+        assert.strictEqual( model.data.firstName, "Bob" );
+        assert.strictEqual( model.data.lastName, null );
+        assert.strictEqual( model.data.fullName, "Bob" );
+        
+        model.set({
+            lastName: "  taylor"
+        });
+        assert.strictEqual( model.data.firstName, "Bob" );
+        assert.strictEqual( model.data.lastName, "Taylor" );
+        assert.strictEqual( model.data.fullName, "Bob Taylor" );
+    });
+
+
+    it("prepare falseAsNull", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    some: {
+                        type: "boolean",
+                        default: false,
+                        falseAsNull: true
+                    }
+                };
+            }
+        }
+
+        let model = new SomeModel();
+        assert.strictEqual( model.data.some, null );
+
+        model.set("some", false);
+        assert.strictEqual( model.data.some, null );
+
+        model.set("some", true);
+        assert.strictEqual( model.data.some, true );
+
+        model.set("some", 0);
+        assert.strictEqual( model.data.some, null );
+
+        model.set("some", 1);
+        assert.strictEqual( model.data.some, true );
+    });
+
 
 });

@@ -2,6 +2,8 @@
     + default
         + default primitive
         + default as func
+    
+    - validate structure
 
     + const values
 
@@ -14,7 +16,7 @@
         + isValid
 
     - prepare
-        - custom prepare data
+        + custom prepare data
         + custom prepare field
         + prepare boolean
         + prepare number
@@ -25,6 +27,7 @@
         + upper
         + emptyAsNull
         + zeroAsNull
+        + falseAsNull
         + round
         + floor
         + ceil
