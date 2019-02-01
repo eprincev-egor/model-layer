@@ -1170,6 +1170,53 @@ describe("Model", () => {
         assert.strictEqual( model.data.name, "word" );
     });
 
+    it("prepare emptyAsNull", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    name: {
+                        type: "string",
+                        default: "",
+                        emptyAsNull: true
+                    }
+                };
+            }
+        }
+
+        let model = new SomeModel();
+        assert.strictEqual( model.data.name, null );
+
+        model.set("name", "word");
+        assert.strictEqual( model.data.name, "word" );
+
+        model.set("name", "");
+        assert.strictEqual( model.data.name, null );
+    });
+
+    it("prepare trim and emptyAsNull", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    name: {
+                        type: "string",
+                        default: " ",
+                        trim: true,
+                        emptyAsNull: true
+                    }
+                };
+            }
+        }
+
+        let model = new SomeModel();
+        assert.strictEqual( model.data.name, null );
+
+        model.set("name", " word ");
+        assert.strictEqual( model.data.name, "word" );
+
+        model.set("name", "   ");
+        assert.strictEqual( model.data.name, null );
+    });
+
     it("prepare lower", () => {
         class SomeModel extends Model {
             static structure() {
@@ -1289,6 +1336,90 @@ describe("Model", () => {
 
         model.set("money", 1.599);
         assert.strictEqual( model.data.money, 1.6 );
+    });
+
+    it("prepare zeroAsNull", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    money: {
+                        type: "number",
+                        default: 0,
+                        round: 0,
+                        zeroAsNull: true
+                    }
+                };
+            }
+        }
+
+        let model = new SomeModel();
+        assert.strictEqual( model.data.money, null );
+
+        model.set("money", 1.1111);
+        assert.strictEqual( model.data.money, 1 );
+
+        model.set("money", 0.0001);
+        assert.strictEqual( model.data.money, null );
+    });
+
+    it("custom prepare field", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    money: {
+                        type: "number",
+                        default: 1,
+                        prepare: value =>
+                            value * 2
+                    }
+                };
+            }
+        }
+
+        let model = new SomeModel();
+        assert.strictEqual( model.data.money, 2 );
+
+        model.set("money", 12);
+        assert.strictEqual( model.data.money, 24 );
+
+        model.set("money", null);
+        assert.strictEqual( model.data.money, null );
+    });
+
+    it("custom prepare field and standard prepares (round, trim, emptyAsNull)", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    name: {
+                        type: "string",
+                        default: "  ",
+                        trim: true,
+                        emptyAsNull: true,
+                        prepare: value =>
+                            value[0].toUpperCase() + 
+                                value.slice(1).toLowerCase()
+                    },
+                    age: {
+                        type: "number",
+                        default: 0,
+                        zeroAsNull: true,
+                        prepare: value =>
+                            +(value).toFixed(0)
+                    }
+                };
+            }
+        }
+
+        let model = new SomeModel();
+        assert.strictEqual( model.data.name, null );
+        assert.strictEqual( model.data.age, null );
+
+        model = new SomeModel({
+            name: " wOrd ",
+            age: 1.1111
+        });
+        assert.strictEqual( model.data.name, "Word" );
+        assert.strictEqual( model.data.age, 1 );
     });
 
 

@@ -15,7 +15,7 @@
 
     - prepare
         - custom prepare data
-        - custom prepare field
+        + custom prepare field
         + prepare boolean
         + prepare number
         + prepare string
@@ -23,6 +23,8 @@
         + trim
         + lower
         + upper
+        + emptyAsNull
+        + zeroAsNull
         + round
         + floor
         + ceil
