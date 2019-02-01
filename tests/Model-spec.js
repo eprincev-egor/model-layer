@@ -1170,5 +1170,126 @@ describe("Model", () => {
         assert.strictEqual( model.data.name, "word" );
     });
 
+    it("prepare lower", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    name: {
+                        type: "string",
+                        default: "BOB",
+                        lower: true
+                    }
+                };
+            }
+        }
+
+        let model = new SomeModel();
+        assert.strictEqual( model.data.name, "bob" );
+
+        model.set("name", "WORD");
+        assert.strictEqual( model.data.name, "word" );
+    });
+
+    it("prepare upper", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    name: {
+                        type: "string",
+                        default: "bob",
+                        upper: true
+                    }
+                };
+            }
+        }
+
+        let model = new SomeModel();
+        assert.strictEqual( model.data.name, "BOB" );
+
+        model.set("name", "word");
+        assert.strictEqual( model.data.name, "WORD" );
+    });
+
+    it("prepare lower and trim", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    name: {
+                        type: "string",
+                        default: " Bob ",
+                        lower: true,
+                        trim: true
+                    }
+                };
+            }
+        }
+
+        let model = new SomeModel();
+        assert.strictEqual( model.data.name, "bob" );
+
+        model.set("name", "WORD ");
+        assert.strictEqual( model.data.name, "word" );
+    });
+
+    it("prepare round", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    money: {
+                        type: "number",
+                        default: 1.1111,
+                        round: 2
+                    }
+                };
+            }
+        }
+
+        let model = new SomeModel();
+        assert.strictEqual( model.data.money, 1.11 );
+
+        model.set("money", 1.999);
+        assert.strictEqual( model.data.money, 2 );
+    });
+
+    it("prepare floor", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    money: {
+                        type: "number",
+                        default: 1.1111,
+                        floor: 2
+                    }
+                };
+            }
+        }
+
+        let model = new SomeModel();
+        assert.strictEqual( model.data.money, 1.11 );
+
+        model.set("money", 1.999);
+        assert.strictEqual( model.data.money, 1.99 );
+    });
+
+    it("prepare ceil", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    money: {
+                        type: "number",
+                        default: 1.1111,
+                        ceil: 2
+                    }
+                };
+            }
+        }
+
+        let model = new SomeModel();
+        assert.strictEqual( model.data.money, 1.12 );
+
+        model.set("money", 1.599);
+        assert.strictEqual( model.data.money, 1.6 );
+    });
+
 
 });

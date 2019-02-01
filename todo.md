@@ -20,12 +20,12 @@
         + prepare number
         + prepare string
         - prepare date
-        - trim
-        - lower
-        - upper
-        - round
-        - floor
-        - ceil
+        + trim
+        + lower
+        + upper
+        + round
+        + floor
+        + ceil
     
     + event change
         + event "change:prop"
