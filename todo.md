@@ -50,8 +50,8 @@
         - prop: {key: {type: "number", round: 2, ...}}
         ...
 
-    - child model
-    - walk
+    + child model
+    + walk
     - compile (first constructor call must replace methods)
     + hasValue
     + hasProperty

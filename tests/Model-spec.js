@@ -1931,4 +1931,170 @@ describe("Model", () => {
         assert.strictEqual( user.data.phone, null );
     });
 
+    it("BinaryTree", () => {
+        class BinaryTreeModel extends Model {
+            static structure() {
+                return {
+                    left: BinaryTreeModel,
+                    right: BinaryTreeModel,
+                    id: "number",
+                    name: "string"
+                };
+            }
+
+            findName(id) {
+                if ( id == this.get("id") ) {
+                    return this.get("name");
+                }
+
+                if ( id > this.get("id") ) {
+                    let right = this.get("right");
+                    if ( right ) {
+                        return right.findName(id);
+                    }
+                }
+                else {
+                    let left = this.get("left");
+                    if ( left ) {
+                        return left.findName(id);
+                    }
+                }
+
+                return null;
+            }
+        }
+
+        let binaryTreeModel = new BinaryTreeModel({
+            id: 4,
+            name: "Bob",
+            left: {
+                id: 2,
+                name: "Jack",
+                left: {
+                    name: "Oscar",
+                    id: 1
+                },
+                right: {
+                    name: "Leo",
+                    id: 3
+                }
+            },
+            right: {
+                id: 5,
+                name: "Harry",
+                right: {
+                    name: "Oliver",
+                    id: 7
+                }
+            }
+        });
+
+        assert.strictEqual( binaryTreeModel.findName(1), "Oscar" );
+        assert.strictEqual( binaryTreeModel.findName(2), "Jack" );
+        assert.strictEqual( binaryTreeModel.findName(3), "Leo" );
+        assert.strictEqual( binaryTreeModel.findName(4), "Bob" );
+        assert.strictEqual( binaryTreeModel.findName(5), "Harry" );
+        assert.strictEqual( binaryTreeModel.findName(6), null );
+        assert.strictEqual( binaryTreeModel.findName(7), "Oliver" );
+
+        // test native method walk
+        let nameById = {};
+        nameById[ binaryTreeModel.get("id") ] = binaryTreeModel.get("name");
+
+        binaryTreeModel.walk((model) => {
+            let id = model.get("id");
+            let name = model.get("name");
+
+            nameById[ id ] = name;
+        });
+
+        assert.deepEqual({
+            1: "Oscar",
+            2: "Jack",
+            3: "Leo",
+            4: "Bob",
+            5: "Harry",
+            7: "Oliver"
+        }, nameById);
+
+
+
+        let counter = 0;
+        binaryTreeModel.walk((model, walker) => {
+            counter++;
+            walker.exit();
+        });
+
+        assert.equal(counter, 1);
+
+        let ids = [];
+        binaryTreeModel.walk((model, walker) => {
+            ids.push(
+                model.get("id")
+            );
+
+            if ( model.get("id") == 5 ) {
+                walker.continue();
+            }
+        });
+        ids.sort();
+
+        assert.deepEqual(ids, [1, 2, 3, 5]);
+    });
+
+    it("walker.skip(), skip one element", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    a: SomeModel,
+                    b: SomeModel,
+                    c: SomeModel,
+
+                    value: "string"
+                };
+            }
+        }
+
+        let model = new SomeModel({
+            a: {
+                a: {
+                    value: "a.a"
+                },
+                value: "a"
+            },
+            b: {
+                b: {
+                    value: "b.b"
+                },
+                value: "b"
+            },
+            c: {
+                c: {
+                    value: "c.c"
+                },
+                value: "c"
+            }
+        });
+
+        let values = [];
+        model.walk((model, walker) => {
+            let value = model.get("value");
+
+            values.push( value );
+
+            if ( value == "b" ) {
+                walker.continue();
+            }
+        });
+
+        values.sort();
+        assert.deepEqual(values, [
+            "a",
+            "a.a",
+            "b",
+            "c",
+            "c.c"
+        ]);
+    });
+
 });
