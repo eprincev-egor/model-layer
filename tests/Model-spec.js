@@ -921,7 +921,7 @@ describe("Model", () => {
             model.set("age", "wrong");
             throw new Error("expected error");
         } catch(err) {
-            assert.equal(err.message, "invalid number for age: wrong");
+            assert.equal(err.message, "invalid number for age: \"wrong\"");
         }
 
         try {
@@ -950,6 +950,13 @@ describe("Model", () => {
             throw new Error("expected error");
         } catch(err) {
             assert.equal(err.message, "invalid number for age: true");
+        }
+
+        try {
+            model.set("age", /x/);
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid number for age: /x/");
         }
 
         try {
@@ -1065,6 +1072,13 @@ describe("Model", () => {
         }
 
         try {
+            model.set("name", /x/);
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid string for name: /x/");
+        }
+
+        try {
             model.set("name", [0]);
             throw new Error("expected error");
         } catch(err) {
@@ -1074,7 +1088,7 @@ describe("Model", () => {
         assert.strictEqual( model.data.name, "nice" );
     });
 
-    it("prepare string", () => {
+    it("prepare boolean", () => {
         class SomeModel extends Model {
             static structure() {
                 return {
@@ -1138,6 +1152,13 @@ describe("Model", () => {
             throw new Error("expected error");
         } catch(err) {
             assert.equal(err.message, "invalid boolean for some: NaN");
+        }
+
+        try {
+            model.set("some", /x/);
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid boolean for some: /x/");
         }
 
         try {
@@ -1568,7 +1589,7 @@ describe("Model", () => {
             model.set("bornDate", "wrong");
             throw new Error("expected error");
         } catch(err) {
-            assert.equal(err.message, "invalid date for bornDate: wrong");
+            assert.equal(err.message, "invalid date for bornDate: \"wrong\"");
         }
 
         try {
@@ -1618,6 +1639,13 @@ describe("Model", () => {
             throw new Error("expected error");
         } catch(err) {
             assert.equal(err.message, "invalid date for bornDate: NaN");
+        }
+
+        try {
+            model.set("bornDate", /x/);
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid date for bornDate: /x/");
         }
 
         try {
@@ -1754,4 +1782,153 @@ describe("Model", () => {
         Model.prepareDate = originalPrepare;
     });
     
+    
+    it("child model", () => {
+        class UserModel extends Model {
+            static structure() {
+                return {
+                    name: {
+                        type: "string",
+                        trim: true,
+                        emptyAsNull: true,
+                        required: true
+                    },
+                    phone: {
+                        type: "string",
+                        validate: /^\+7 \(\d\d\d\) \d\d\d-\d\d-\d\d$/
+                    },
+                    email: {
+                        type: "string",
+                        required: true,
+                        validate: /^[\w.-]+@[\w.-]+\.\w+$/i
+                    },
+                    age: {
+                        type: "number",
+                        required: true,
+                        validate: age =>
+                            age > 0
+                    }
+                };
+            }
+        }
+
+        class RegistrationModel extends Model {
+            static structure() {
+                return {
+                    user: {
+                        type: UserModel,
+                        required: true
+                    },
+                    date: {
+                        type: "date",
+                        required: true
+                    }
+                };
+            }
+        }
+
+        try {
+            new RegistrationModel({
+                date: Date.now()
+            });
+
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "required user");
+        }
+
+        try {
+            new RegistrationModel({
+                date: Date.now(),
+                user: null
+            });
+
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "required user");
+        }
+
+        try {
+            new RegistrationModel({
+                date: Date.now(),
+                user: []
+            });
+
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid UserModel for user: []");
+        }
+
+        try {
+            new RegistrationModel({
+                date: Date.now(),
+                user: false
+            });
+
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid UserModel for user: false");
+        }
+
+        try {
+            new RegistrationModel({
+                date: Date.now(),
+                user: NaN
+            });
+
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid UserModel for user: NaN");
+        }
+
+        try {
+            new RegistrationModel({
+                date: Date.now(),
+                user: /x/
+            });
+
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid UserModel for user: /x/");
+        }
+
+
+        try {
+            new RegistrationModel({
+                date: Date.now(),
+                user: {
+                    name: "10",
+                    age: 101
+                }
+            });
+
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid UserModel for user: {\"name\",\"age\":101,\"email\":null}, required email");
+        }
+
+
+
+
+
+        let now = Date.now();
+        let registrationModel = new RegistrationModel({
+            date: now,
+            user: {
+                name: "Bob ",
+                age: "99",
+                email: "x@x.x"
+            }
+        });
+
+        assert.strictEqual( +registrationModel.data.date, now );
+        assert.ok( registrationModel.data.date instanceof Date );
+
+        let user = registrationModel.data.user;
+        assert.strictEqual( user.data.name, "Bob" );
+        assert.strictEqual( user.data.age, 99 );
+        assert.strictEqual( user.data.email, "x@x.x" );
+        assert.strictEqual( user.data.phone, null );
+    });
+
 });
