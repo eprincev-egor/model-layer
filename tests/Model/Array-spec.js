@@ -352,4 +352,114 @@ describe("Model array property", () => {
         });
     });
 
+    it("unique primitive", () => {
+        class CompanyModel extends Model {
+            static structure() {
+                return {
+                    managersIds: {
+                        type: "array",
+                        element: "number",
+                        unique: true
+                    }
+                };
+            }
+        }
+
+        try {
+            new CompanyModel({
+                managersIds: [1, 2, 1]
+            });
+
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message,
+                "managersIds is not unique: [1,2,1]"
+            );
+        }
+
+        let companyModel = new CompanyModel({
+            managersIds: [1, 2]
+        });
+
+        try {
+            companyModel.set("managersIds", [2, 2]);
+
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message,
+                "managersIds is not unique: [2,2]"
+            );
+        }
+
+        assert.deepEqual(companyModel.data.managersIds, [1, 2]);
+        
+        // in unique validation   null != null
+        companyModel.set("managersIds", [null, undefined, null]);
+        assert.deepEqual(companyModel.data.managersIds, [null, null, null]);
+    });
+
+    it("unique ChildModel", () => {
+        class UserModel extends Model {
+            static structure() {
+                return {
+                    name: "string"
+                };
+            }
+        }
+
+        class CompanyModel extends Model {
+            static structure() {
+                return {
+                    managers: {
+                        type: "array",
+                        element: UserModel,
+                        unique: true
+                    }
+                };
+            }
+        }
+
+        let userModel1 = new UserModel({
+            name: "test"
+        });
+
+        try {
+            new CompanyModel({
+                managers: [userModel1, userModel1]
+            });
+
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message,
+                "managers is not unique: [{\"name\":\"test\"},{\"name\":\"test\"}]"
+            );
+        }
+
+        let userModel2 = new UserModel({
+            name: "test"
+        }); 
+
+        let companyModel = new CompanyModel({
+            managers: [userModel1, userModel2]
+        });
+
+        let managers = companyModel.data.managers;
+        assert.ok( managers[0] == userModel1 );
+        assert.ok( managers[1] == userModel2 );
+
+        try {
+            companyModel.set("managers", [userModel2, userModel2]);
+
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message,
+                "managers is not unique: [{\"name\":\"test\"},{\"name\":\"test\"}]"
+            );
+        }
+
+        managers = companyModel.data.managers;
+        assert.ok( managers[0] == userModel1 );
+        assert.ok( managers[1] == userModel2 );
+    });
+
 });

@@ -49,7 +49,9 @@
         + key: [{type: "string", trim: true, ...}]
         + emptyAsNull
         + nullAsEmpty
-        - unique
+        + unique
+        - sort
+        - sort by custom comparator
         ...
     
     - obj property
