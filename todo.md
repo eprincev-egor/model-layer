@@ -28,6 +28,9 @@
         + emptyAsNull
         + zeroAsNull
         + falseAsNull
+        - nullAsEmpty
+        - nullAsZero
+        - nullAsFalse
         + round
         + floor
         + ceil
@@ -35,6 +38,17 @@
     
     + event change
         + event "change:prop"
+
+    - arr property
+        key: ["number"]
+        key: ["string"]
+        key: [{type: "string", trim: true, ...}]
+        ...
+    
+    - obj property
+        - prop: {key: "number"}
+        - prop: {key: {type: "number", round: 2, ...}}
+        ...
 
     - child model
     - walk

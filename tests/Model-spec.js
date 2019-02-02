@@ -1635,9 +1635,9 @@ describe("Model", () => {
         let originalPrepare = Model.prepareNumber;
         let callArgs = false;
 
-        Model.prepareNumber = function(key, value) {
-            callArgs = [key, value];
-            return originalPrepare(key, value);
+        Model.prepareNumber = function(description, key, value) {
+            callArgs = [description, key, value];
+            return originalPrepare(description, key, value);
         };
 
         class SomeModel extends Model {
@@ -1653,7 +1653,10 @@ describe("Model", () => {
         });
 
         assert.strictEqual( model.data.age, 10 );
-        assert.deepEqual( callArgs, ["age", "10"] );
+        assert.deepEqual( callArgs, [
+            { type: "number" }, 
+            "age", "10"
+        ]);
 
         Model.prepareNumber = originalPrepare;
     });
@@ -1662,9 +1665,9 @@ describe("Model", () => {
         let originalPrepare = Model.prepareString;
         let callArgs = false;
 
-        Model.prepareString = function(key, value) {
-            callArgs = [key, value];
-            return originalPrepare(key, value);
+        Model.prepareString = function(description, key, value) {
+            callArgs = [description, key, value];
+            return originalPrepare(description, key, value);
         };
 
         class SomeModel extends Model {
@@ -1680,7 +1683,10 @@ describe("Model", () => {
         });
 
         assert.strictEqual( model.data.name, "0" );
-        assert.deepEqual( callArgs, ["name", 0] );
+        assert.deepEqual( callArgs, [
+            { type: "string" },
+            "name", 0
+        ]);
 
         Model.prepareString = originalPrepare;
     });
@@ -1689,9 +1695,9 @@ describe("Model", () => {
         let originalPrepare = Model.prepareBoolean;
         let callArgs = false;
 
-        Model.prepareBoolean = function(key, value) {
-            callArgs = [key, value];
-            return originalPrepare(key, value);
+        Model.prepareBoolean = function(description, key, value) {
+            callArgs = [description, key, value];
+            return originalPrepare(description, key, value);
         };
 
         class SomeModel extends Model {
@@ -1707,7 +1713,10 @@ describe("Model", () => {
         });
 
         assert.strictEqual( model.data.some, false );
-        assert.deepEqual( callArgs, ["some", 0] );
+        assert.deepEqual( callArgs, [
+            { type: "boolean" },
+            "some", 0
+        ]);
 
         Model.prepareBoolean = originalPrepare;
     });
@@ -1717,9 +1726,9 @@ describe("Model", () => {
         let originalPrepare = Model.prepareDate;
         let callArgs = false;
 
-        Model.prepareDate = function(key, value) {
-            callArgs = [key, value];
-            return originalPrepare(key, value);
+        Model.prepareDate = function(description, key, value) {
+            callArgs = [description, key, value];
+            return originalPrepare(description, key, value);
         };
 
         class SomeModel extends Model {
@@ -1737,8 +1746,12 @@ describe("Model", () => {
 
         assert.strictEqual( +model.data.bornDate, now );
         assert.ok( model.data.bornDate instanceof Date );
-        assert.deepEqual( callArgs, ["bornDate", now] );
+        assert.deepEqual( callArgs, [
+            { type: "date" },
+            "bornDate", now
+        ]);
 
         Model.prepareDate = originalPrepare;
     });
+    
 });
