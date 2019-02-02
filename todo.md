@@ -45,7 +45,7 @@
         + key: ["boolean"]
         + key: ["date"]
         + key: [ChildModel]
-        - array of arrays
+        + array of arrays
         + key: [{type: "string", trim: true, ...}]
         + emptyAsNull
         + nullAsEmpty

@@ -506,4 +506,28 @@ describe("Model array property", () => {
         assert.deepEqual(model.data.names, ["c1", "b2", "a3"]);
     });
 
+    it("matrix", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    matrix: [["number"]]
+                };
+            }
+        }
+
+        let model = new SomeModel({
+            matrix: [
+                [1, 2, 3],
+                [4, 5, 6],
+                [7, 8, 9]
+            ]
+        });
+
+        assert.deepEqual(model.data.matrix, [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9]
+        ]);
+    });
+
 });
