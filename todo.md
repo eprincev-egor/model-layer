@@ -15,7 +15,7 @@
         + enum
         + isValid
 
-    - prepare
+    + prepare
         + custom prepare data
         + custom prepare field
         + prepare boolean
@@ -28,9 +28,9 @@
         + emptyAsNull
         + zeroAsNull
         + falseAsNull
-        - nullAsEmpty
-        - nullAsZero
-        - nullAsFalse
+        + nullAsEmpty
+        + nullAsZero
+        + nullAsFalse
         + round
         + floor
         + ceil

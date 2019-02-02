@@ -1214,6 +1214,28 @@ describe("Model", () => {
         assert.strictEqual( model.data.name, null );
     });
 
+    it("prepare emptyAsNull", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    name: {
+                        type: "string",
+                        nullAsEmpty: true
+                    }
+                };
+            }
+        }
+
+        let model = new SomeModel();
+        assert.strictEqual( model.data.name, "" );
+
+        model.set("name", "word");
+        assert.strictEqual( model.data.name, "word" );
+
+        model.set("name", null);
+        assert.strictEqual( model.data.name, "" );
+    });
+
     it("prepare trim and emptyAsNull", () => {
         class SomeModel extends Model {
             static structure() {
@@ -1383,6 +1405,28 @@ describe("Model", () => {
         assert.strictEqual( model.data.money, null );
     });
 
+    it("prepare nullAsZero", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    money: {
+                        type: "number",
+                        nullAsZero: true
+                    }
+                };
+            }
+        }
+
+        let model = new SomeModel();
+        assert.strictEqual( model.data.money, 0 );
+
+        model.set("money", 1);
+        assert.strictEqual( model.data.money, 1 );
+
+        model.set("money", null);
+        assert.strictEqual( model.data.money, 0 );
+    });
+
     it("custom prepare field", () => {
         class SomeModel extends Model {
             static structure() {
@@ -1534,6 +1578,28 @@ describe("Model", () => {
 
         model.set("some", 1);
         assert.strictEqual( model.data.some, true );
+    });
+
+    it("prepare nullAsFalse", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    some: {
+                        type: "boolean",
+                        nullAsFalse: true
+                    }
+                };
+            }
+        }
+
+        let model = new SomeModel();
+        assert.strictEqual( model.data.some, false );
+
+        model.set("some", true);
+        assert.strictEqual( model.data.some, true );
+
+        model.set("some", null);
+        assert.strictEqual( model.data.some, false );
     });
 
 
