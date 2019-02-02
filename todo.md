@@ -39,7 +39,7 @@
     + event change
         + event "change:prop"
 
-    - arr property
+    + arr property
         + key: ["number"]
         + key: ["string"]
         + key: ["boolean"]
@@ -50,9 +50,8 @@
         + emptyAsNull
         + nullAsEmpty
         + unique
-        - sort
-        - sort by custom comparator
-        ...
+        + sort
+        + sort by custom comparator
     
     - obj property
         - prop: {element: "number"}

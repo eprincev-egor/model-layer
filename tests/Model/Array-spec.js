@@ -462,4 +462,48 @@ describe("Model array property", () => {
         assert.ok( managers[1] == userModel2 );
     });
 
+    it("sort", () => {
+        class CompanyModel extends Model {
+            static structure() {
+                return {
+                    managersIds: {
+                        type: "array",
+                        element: "number",
+                        sort: true
+                    }
+                };
+            }
+        }
+
+        let companyModel = new CompanyModel({
+            managersIds: ["30", 2, -10]
+        });
+
+        assert.deepEqual(companyModel.data.managersIds, [-10, 2, 30]);
+    });
+
+    it("sort by custom comparator", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    names: {
+                        type: "array",
+                        element: "string",
+                        // sort by second letter
+                        sort: (a, b) =>
+                            +a[1] > +b[1] ?
+                                1 :
+                                -1
+                    }
+                };
+            }
+        }
+
+        let model = new SomeModel({
+            names: ["a3", "b2", "c1"]
+        });
+
+        assert.deepEqual(model.data.names, ["c1", "b2", "a3"]);
+    });
+
 });
