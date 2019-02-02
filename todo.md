@@ -74,7 +74,7 @@
     + hasValue
     + hasProperty
     + toJSON
-        - child models
+        + child models
 
     - custom types
     - method equal

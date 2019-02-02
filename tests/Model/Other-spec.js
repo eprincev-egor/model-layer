@@ -389,4 +389,43 @@ describe("Model other tests", () => {
         );
     });
 
+    it("model.toJSON with custom models", () => {
+        class CarModel extends Model {
+            static structure() {
+                return {
+                    id: "number",
+                    color: "string"
+                };
+            }
+        }
+
+        class UserModel extends Model {
+            static structure() {
+                return {
+                    name: "string",
+                    car: CarModel
+                };
+            }
+        }
+
+        let userModel = new UserModel({
+            name: "Jack",
+            car: {
+                id: "1",
+                color: "red"
+            }
+        });
+
+        assert.deepEqual(
+            userModel.toJSON(),
+            {
+                name: "Jack",
+                car: {
+                    id: 1,
+                    color: "red"
+                }
+            }
+        );
+    });
+
 });
