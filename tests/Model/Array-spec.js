@@ -202,4 +202,154 @@ describe("Model array property", () => {
         assert.deepEqual( model.data.colors, [] );
     });
 
+
+    it("array[boolean]", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    answers: ["boolean"]
+                };
+            }
+        }
+
+        try {
+            new SomeModel({
+                answers: [1, 0, false, true, "wrong"]
+            });
+
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, 
+                "invalid array[boolean] for answers: [1,0,false,true,\"wrong\"],\n invalid boolean for 4: \"wrong\""
+            );
+        }
+
+        let model = new SomeModel({
+            answers: [1, true]
+        });
+
+        let answers = model.data.answers;
+        assert.deepEqual( answers, [true, true] );
+
+        assert.strictEqual( answers[0], true );
+        assert.strictEqual( answers[1], true );
+    });
+
+    it("array[date]", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    pays: ["date"]
+                };
+            }
+        }
+
+        try {
+            new SomeModel({
+                pays: ["wrong"]
+            });
+
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, 
+                "invalid array[date] for pays: [\"wrong\"],\n invalid date for 0: \"wrong\""
+            );
+        }
+
+        let now = Date.now();
+        let model = new SomeModel({
+            pays: [now]
+        });
+
+        let pays = model.data.pays;
+
+        assert.strictEqual( +pays[0], now );
+        assert.ok( pays[0] instanceof Date );
+    });
+
+    it("array[ChildModel]", () => {
+        class UserModel extends Model {
+            static structure() {
+                return {
+                    name: {
+                        type: "string",
+                        trim: true
+                    }
+                };
+            }
+        }
+
+        class CompanyModel extends Model {
+            static structure() {
+                return {
+                    managers: [UserModel]
+                };
+            }
+        }
+
+        try {
+            new CompanyModel({
+                managers: [false]
+            });
+
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, 
+                "invalid array[UserModel] for managers: [false],\n invalid UserModel for 0: false"
+            );
+        }
+
+        let companyModel = new CompanyModel({
+            managers: [{
+                name: " Bob "
+            }]
+        });
+
+        let managers = companyModel.data.managers;
+        assert.ok( managers[0] instanceof UserModel );
+        assert.equal( managers[0].get("name"), "Bob" );
+    });
+
+    it("array[string]", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    colors: [{
+                        type: "string",
+                        upper: true
+                    }],
+                    names: {
+                        type: "array",
+                        element: {
+                            type: "string",
+                            trim: true
+                        }
+                    }
+                };
+            }
+        }
+
+        try {
+            new SomeModel({
+                names: [false]
+            });
+
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message,
+                "invalid array[string] for names: [false],\n invalid string for 0: false"
+            );
+        }
+
+        let model = new SomeModel({
+            colors: ["red"],
+            names: [" Bob "]
+        });
+
+        assert.deepEqual(model.data, {
+            colors: ["RED"],
+            names: ["Bob"]
+        });
+    });
+
 });

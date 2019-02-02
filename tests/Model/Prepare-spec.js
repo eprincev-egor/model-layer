@@ -280,6 +280,13 @@ describe("Model prepare", () => {
         }
 
         try {
+            model.set("some", "wrong");
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid boolean for some: \"wrong\"");
+        }
+
+        try {
             model.set("some", [0]);
             throw new Error("expected error");
         } catch(err) {

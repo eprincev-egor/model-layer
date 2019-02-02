@@ -42,22 +42,27 @@
     - arr property
         + key: ["number"]
         + key: ["string"]
-        - key: ["boolean"]
-        - key: ["date"]
-        - key: [ChildModel]
-        - key: [{type: "string", trim: true, ...}]
+        + key: ["boolean"]
+        + key: ["date"]
+        + key: [ChildModel]
+        - array of arrays
+        + key: [{type: "string", trim: true, ...}]
         + emptyAsNull
         + nullAsEmpty
         - unique
         ...
     
     - obj property
-        - prop: {key: "number"}
-        - prop: {key: {type: "number", round: 2, ...}}
+        - prop: {element: "number"}
+        - prop: {element: {type: "number", round: 2, ...}}
+        - emptyAsNull
+        - nullAsEmpty
         ...
 
     + child model
         + walk
+            - array of models
+            - object of models
         + findChild
         + filterChildren
         + findParent
