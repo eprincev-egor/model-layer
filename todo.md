@@ -40,9 +40,15 @@
         + event "change:prop"
 
     - arr property
-        key: ["number"]
-        key: ["string"]
-        key: [{type: "string", trim: true, ...}]
+        + key: ["number"]
+        + key: ["string"]
+        - key: ["boolean"]
+        - key: ["date"]
+        - key: [ChildModel]
+        - key: [{type: "string", trim: true, ...}]
+        + emptyAsNull
+        + nullAsEmpty
+        - unique
         ...
     
     - obj property
@@ -64,6 +70,9 @@
     + toJSON
         - child models
 
+    - custom types
+    - method equal
+    
 - Collection
     - serial
     - primary key

@@ -127,7 +127,9 @@ describe("Model sub models", () => {
 
             throw new Error("expected error");
         } catch(err) {
-            assert.equal(err.message, "invalid UserModel for user: {\"name\":\"10\",\"age\":101,\"email\":null}, required email");
+            assert.equal(err.message, 
+                "invalid UserModel for user: {\"name\":\"10\",\"age\":101,\"email\":null},\n required email"
+            );
         }
 
 

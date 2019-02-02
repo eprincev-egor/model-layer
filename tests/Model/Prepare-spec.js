@@ -332,7 +332,7 @@ describe("Model prepare", () => {
         assert.strictEqual( model.data.name, null );
     });
 
-    it("prepare emptyAsNull", () => {
+    it("prepare nullAsEmpty", () => {
         class SomeModel extends Model {
             static structure() {
                 return {
