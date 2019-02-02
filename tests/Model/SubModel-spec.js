@@ -527,5 +527,90 @@ describe("Model sub models", () => {
         assert.equal( bModel.get("name"), "b" );
         assert.equal( cModel.get("name"), "c" );
     });
+
+
+
+    it("walk by array", () => {
+        class JobModel extends Model {
+            static structure() {
+                return {
+                    name: "string"
+                };
+            }
+        }
+
+        class UserModel extends Model {
+            static structure() {
+                return {
+                    name: "string",
+                    job: JobModel
+                };
+            }
+        }
+
+        class CompanyModel extends Model {
+            static structure() {
+                return {
+                    name: "string",
+                    managers: [UserModel]
+                };
+            }
+        }
+
+        class OrderModel extends Model {
+            static structure() {
+                return {
+                    client: CompanyModel,
+                    partner: CompanyModel
+                };
+            }
+        }
+
+        let orderModel = new OrderModel({
+            client: {
+                name: "Red Company",
+                managers: [
+                    {
+                        name: "Oliver",
+                        job: {
+                            name: "Manager"
+                        }
+                    },
+                    {
+                        name: "Bob",
+                        job: {
+                            name: "Director"
+                        }
+                    }
+                ]
+            },
+            partner: {
+                name: "Wold Company"
+            }
+        });
+
+        let jobModel = orderModel.findChild(model =>
+            model instanceof JobModel &&
+            model.get("name") == "Director"
+        );
+        assert.equal( jobModel.get("name"), "Director" );
+
+        let walkByArray = false;
+        orderModel.walk(model => {
+            if ( model instanceof JobModel ) {
+                walkByArray = true;
+            }
+        });
+        assert.equal(walkByArray, true);
+
+
+        let filterChildrenByArray = false;
+        orderModel.filterChildren(model => {
+            if ( model instanceof JobModel ) {
+                filterChildrenByArray = true;
+            }
+        });
+        assert.equal(filterChildrenByArray, true);
+    });
     
 });

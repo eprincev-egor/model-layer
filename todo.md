@@ -62,7 +62,7 @@
 
     + child model
         + walk
-            - array of models
+            + array of models
             - object of models
         + findChild
         + filterChildren
