@@ -51,7 +51,13 @@
         ...
 
     + child model
-    + walk
+        + walk
+        + findChild
+        + filterChildren
+        + findParent
+        + filterParents
+        + findParentInstance
+
     - compile (first constructor call must replace methods)
     + hasValue
     + hasProperty

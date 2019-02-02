@@ -320,5 +320,210 @@ describe("Model sub models", () => {
         ]);
     });
 
+    it("findChild", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    child: SomeModel,
+                    level: "number"
+                };
+            }
+        }
 
+        let model = new SomeModel({
+            level: 0,
+            child: {
+                level: 1,
+                child: {
+                    level: 2,
+                    child: {
+                        level: 3
+                    }
+                }
+            }
+        });
+
+        let counter = 0;
+        let lvl2model = model.findChild(model => {
+            counter++;
+    
+            return model.get("level") == 2;
+        });
+    
+        assert.equal( counter, 2 );
+        assert.ok( lvl2model );
+        assert.equal( lvl2model.get("level"), 2 );
+    
+    });
+
+    it("filterChildren", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    child: SomeModel,
+                    level: "number"
+                };
+            }
+        }
+
+        let model = new SomeModel({
+            level: 0,
+            child: {
+                level: 1,
+                child: {
+                    level: 2,
+                    child: {
+                        level: 3,
+                        child: {
+                            level: 4
+                        }
+                    }
+                }
+            }
+        });
+
+        let models = model.filterChildren(model =>
+            model.get("level") % 2  == 0
+        );
+    
+        assert.equal( models.length, 2 );
+        assert.equal( models[0].get("level"), 2 );
+        assert.equal( models[1].get("level"), 4 );
+    
+    });
+
+
+    it("findParent", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    child: SomeModel,
+                    level: "number"
+                };
+            }
+        }
+
+        let model = new SomeModel({
+            level: 0,
+            child: {
+                level: 1,
+                child: {
+                    level: 2,
+                    child: {
+                        level: 3,
+                        child: {
+                            level: 4
+                        }
+                    }
+                }
+            }
+        });
+
+        let lastModel = model.findChild(model =>
+            model.get("level") == 4
+        );
+    
+        assert.equal( lastModel.get("level"), 4 );
+        
+        let counter = 0;
+        let lvl1 = lastModel.findParent(model => {
+            counter++;
+
+            return model.get("level") == 1;
+        });
+
+        assert.ok( lvl1 );
+        assert.equal( lvl1.get("level"), 1 );
+        assert.equal( counter, 3 );
+
+    });
+
+
+    it("filterParents", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    child: SomeModel,
+                    level: "number"
+                };
+            }
+        }
+
+        let model = new SomeModel({
+            level: 0,
+            child: {
+                level: 1,
+                child: {
+                    level: 2,
+                    child: {
+                        level: 3,
+                        child: {
+                            level: 4
+                        }
+                    }
+                }
+            }
+        });
+
+        let lastModel = model.findChild(model =>
+            model.get("level") == 4
+        );
+
+        let models = lastModel.filterParents(model =>
+            model.get("level") % 2  == 1
+        );
+    
+        assert.equal( models.length, 2 );
+        assert.equal( models[0].get("level"), 3 );
+        assert.equal( models[1].get("level"), 1 );
+    
+    });
+
+    it("findParentInstance", () => {
+        class CModel extends Model {
+            static structure() {
+                return {
+                    name: "string"
+                };
+            }
+        }
+        class BModel extends Model {
+            static structure() {
+                return {
+                    name: "string",
+                    child: CModel
+                };
+            }
+        }
+        class AModel extends Model {
+            static structure() {
+                return {
+                    name: "string",
+                    child: BModel
+                };
+            }
+        }
+
+        let model = new AModel({
+            name: "a",
+            child: {
+                name: "b",
+                child: {
+                    name: "c"
+                }
+            }
+        });
+
+        let cModel = model.findChild(model =>
+            model instanceof CModel
+        );
+
+        let aModel = cModel.findParentInstance(AModel);
+        let bModel = cModel.findParentInstance(BModel);
+    
+        assert.equal( aModel.get("name"), "a" );
+        assert.equal( bModel.get("name"), "b" );
+        assert.equal( cModel.get("name"), "c" );
+    });
+    
 });
