@@ -78,6 +78,7 @@
 
     - custom types
     - method equal
+    + method clone
     
 - Collection
     - serial

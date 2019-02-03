@@ -105,6 +105,18 @@ describe("Model prepare", () => {
             assert.equal(err.message, "invalid number for age: [0]");
         }
 
+
+        let circularJSON = {};
+        circularJSON.test = circularJSON;
+        try {
+            model.set("age", circularJSON);
+
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "invalid number for age: [object Object]");
+        }
+
+
         assert.strictEqual( model.data.age, -2000.123 );
     });
 

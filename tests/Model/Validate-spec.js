@@ -400,6 +400,13 @@ describe("Model validate", () => {
             sale: 20
         }), false);
 
+        try {
+            model.isValid();
+            
+            throw new Error("expected error");
+        } catch(err) {
+            assert.equal(err.message, "data must be are object");
+        }
     });
 
     it("const prop", () => {

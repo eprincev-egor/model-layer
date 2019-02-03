@@ -566,6 +566,10 @@ describe("Model sub models", () => {
             }
         }
 
+        let partnerCompanyModel = new CompanyModel({
+            name: "World Company"
+        });
+
         let orderModel = new OrderModel({
             client: {
                 name: "Red Company",
@@ -584,9 +588,7 @@ describe("Model sub models", () => {
                     }
                 ]
             },
-            partner: {
-                name: "Wold Company"
-            }
+            partner: partnerCompanyModel
         });
 
         let jobModel = orderModel.findChild(model =>
