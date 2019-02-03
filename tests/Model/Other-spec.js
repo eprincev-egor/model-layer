@@ -428,4 +428,146 @@ describe("Model other tests", () => {
         );
     });
 
+    it("model.clone()", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    name: "text",
+                    ids: ["number"]
+                };
+            }
+        }
+
+        let model = new SomeModel({
+            name: "test",
+            ids: [1, 2, 3]
+        });
+
+        assert.deepEqual(model.data, {
+            name: "test",
+            ids: [1, 2, 3]
+        });
+
+        let clone = model.clone();
+
+        assert.ok( clone instanceof SomeModel );
+        assert.ok( clone != model );
+
+        assert.deepEqual(clone.data, {
+            name: "test",
+            ids: [1, 2, 3]
+        });
+
+        // change clone model
+        clone.set({
+            name: "clone",
+            ids: [3, 4]
+        });
+
+        assert.deepEqual(model.data, {
+            name: "test",
+            ids: [1, 2, 3]
+        });
+
+        assert.deepEqual(clone.data, {
+            name: "clone",
+            ids: [3, 4]
+        });
+
+        // change original model
+        model.set({
+            name: "original",
+            ids: [8]
+        });
+
+        assert.deepEqual(model.data, {
+            name: "original",
+            ids: [8]
+        });
+
+        assert.deepEqual(clone.data, {
+            name: "clone",
+            ids: [3, 4]
+        });
+    });
+
+
+    it("model.clone() with child model", () => {
+        class CarModel extends Model {
+            static structure() {
+                return {
+                    id: "number",
+                    color: "string"
+                };
+            }
+        }
+
+        class UserModel extends Model {
+            static structure() {
+                return {
+                    name: "string",
+                    car: CarModel
+                };
+            }
+        }
+
+        let carModel = new CarModel({
+            id: 1,
+            color: "red"
+        });
+
+        let userModel = new UserModel({
+            name: "Oliver",
+            car: carModel
+        });
+
+        assert.deepEqual(userModel.toJSON(), {
+            name: "Oliver",
+            car: {
+                id: 1,
+                color: "red"
+            }
+        });
+
+
+        let clone = userModel.clone();
+
+        assert.deepEqual(clone.toJSON(), {
+            name: "Oliver",
+            car: {
+                id: 1,
+                color: "red"
+            }
+        });
+
+        assert.ok( clone.get("car") != userModel.get("car") );
+    });
+
+    it("model.clone() with required field", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    name: {
+                        type: "text",
+                        required: true
+                    }
+                };
+            }
+        }
+
+        let model = new SomeModel({
+            name: "test"
+        });
+
+        assert.deepEqual(model.data, {
+            name: "test"
+        });
+
+        let clone = model.clone();
+
+        assert.deepEqual(clone.data, {
+            name: "test"
+        });
+    });
+
 });
