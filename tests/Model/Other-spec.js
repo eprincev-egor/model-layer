@@ -46,13 +46,13 @@ describe("Model other tests", () => {
         
         class SomeModel extends Model {}
 
-        try {
-            new SomeModel();
-            
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "static SomeModel.structure() is not declared");
-        }
+        assert.throws(
+            () => {
+                new SomeModel();
+            },
+            err =>
+                err.message == "static SomeModel.structure() is not declared"
+        );
 
     });
 
@@ -196,13 +196,12 @@ describe("Model other tests", () => {
         
         let data = model.data;
 
-        try {
-            model.set("some", "1");
-            
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "unknown property some");
-        }
+        assert.throws(
+            () => {
+                model.set("some", "1");
+            }, err =>
+                err.message == "unknown property some"
+        );
 
         // invalid action cannot change object
         assert.equal( model.get("prop"), "x" );
@@ -211,15 +210,15 @@ describe("Model other tests", () => {
         assert.ok( model.data === data );
 
 
-        try {
-            new SomeModel({
-                some: "x"
-            });
-            
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "unknown property some");
-        }
+        assert.throws(
+            () => {
+                new SomeModel({
+                    some: "x"
+                });
+            },
+            err =>
+                err.message == "unknown property some"
+        );
     });
 
 
@@ -234,29 +233,26 @@ describe("Model other tests", () => {
 
         let model = new SomeModel();
 
-        try {
-            model.data.prop = "a";
+        assert.throws(
+            () => {
+                model.data.prop = "a";
             
-            throw new Error("expected error");
-        } catch(err) {
-            assert.ok(
+                throw new Error("expected error");
+            }, 
+            err =>
                 /Cannot assign to read only property/.test(err.message)
-            );
-        }
+        );
 
         model.set("prop", "x");
         assert.equal( model.get("prop"), "x" );
         assert.equal( model.data.prop, "x" );
 
-        try {
-            model.data.prop = "y";
-            
-            throw new Error("expected error");
-        } catch(err) {
-            assert.ok(
+        assert.throws(
+            () => {
+                model.data.prop = "y";
+            }, err =>
                 /Cannot assign to read only property/.test(err.message)
-            );
-        }
+        );
 
         assert.equal( model.get("prop"), "x" );
         assert.equal( model.data.prop, "x" );

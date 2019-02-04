@@ -35,86 +35,96 @@ describe("Model prepare", () => {
         model.set("age", "-2000.123");
         assert.strictEqual( model.data.age, -2000.123 );
 
-        try {
-            model.set("age", "wrong");
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid number for age: \"wrong\"");
-        }
+        assert.throws(
+            () => {
+                model.set("age", "wrong");
+            },
+            err =>
+                err.message == "invalid number for age: \"wrong\""
+        );
 
-        try {
-            model.set("age", {});
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid number for age: {}");
-        }
+        assert.throws(
+            () => {
+                model.set("age", {});
+            },
+            err =>
+                err.message == "invalid number for age: {}"
+        );
 
-        try {
-            model.set("age", {age: 1});
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid number for age: {\"age\":1}");
-        }
+        assert.throws(
+            () => {
+                model.set("age", {age: 1});
+            },
+            err =>
+                err.message == "invalid number for age: {\"age\":1}"
+        );
 
-        try {
-            model.set("age", false);
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid number for age: false");
-        }
+        assert.throws(
+            () => {
+                model.set("age", false);
+            },
+            err =>
+                err.message == "invalid number for age: false"
+        );
 
-        try {
-            model.set("age", true);
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid number for age: true");
-        }
+        assert.throws(
+            () => {
+                model.set("age", true);
+            },
+            err =>
+                err.message == "invalid number for age: true"
+        );
 
-        try {
-            model.set("age", /x/);
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid number for age: /x/");
-        }
+        assert.throws(
+            () => {
+                model.set("age", /x/);
+            },
+            err =>
+                err.message == "invalid number for age: /x/"
+        );
 
-        try {
-            model.set("age", -1 / 0);
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid number for age: -Infinity");
-        }
+        assert.throws(
+            () => {
+                model.set("age", -1 / 0);
+            },
+            err =>
+                err.message == "invalid number for age: -Infinity"
+        );
 
-        try {
-            model.set("age", 1 / 0);
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid number for age: Infinity");
-        }
+        assert.throws(
+            () => {
+                model.set("age", 1 / 0);
+            },
+            err =>
+                err.message == "invalid number for age: Infinity"
+        );
 
-        try {
-            model.set("age", NaN);
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid number for age: NaN");
-        }
+        assert.throws(
+            () => {
+                model.set("age", NaN);
+            },
+            err =>
+                err.message == "invalid number for age: NaN"
+        );
 
-        try {
-            model.set("age", [0]);
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid number for age: [0]");
-        }
+        assert.throws(
+            () => {
+                model.set("age", [0]);
+            },
+            err =>
+                err.message == "invalid number for age: [0]"
+        );
 
 
         let circularJSON = {};
         circularJSON.test = circularJSON;
-        try {
-            model.set("age", circularJSON);
-
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid number for age: [object Object]");
-        }
+        assert.throws(
+            () => {
+                model.set("age", circularJSON);
+            },
+            err =>
+                err.message == "invalid number for age: [object Object]"
+        );
 
 
         assert.strictEqual( model.data.age, -2000.123 );
@@ -152,68 +162,77 @@ describe("Model prepare", () => {
         assert.strictEqual( model.data.name, "nice" );
 
         
-        try {
-            model.set("name", {});
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid string for name: {}");
-        }
+        assert.throws(
+            () => {
+                model.set("name", {});
+            },
+            err =>
+                err.message == "invalid string for name: {}"
+        );
 
-        try {
-            model.set("name", {name: 1});
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid string for name: {\"name\":1}");
-        }
+        assert.throws(
+            () => {
+                model.set("name", {name: 1});
+            },
+            err =>
+                err.message == "invalid string for name: {\"name\":1}"
+        );
 
-        try {
-            model.set("name", false);
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid string for name: false");
-        }
+        assert.throws(
+            () => {
+                model.set("name", false);
+            },
+            err =>
+                err.message == "invalid string for name: false"
+        );
 
-        try {
-            model.set("name", true);
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid string for name: true");
-        }
+        assert.throws(
+            () => {
+                model.set("name", true);
+            },
+            err =>
+                err.message == "invalid string for name: true"
+        );
 
-        try {
-            model.set("name", -1 / 0);
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid string for name: -Infinity");
-        }
+        assert.throws(
+            () => {
+                model.set("name", -1 / 0);
+            },
+            err =>
+                err.message == "invalid string for name: -Infinity"
+        );
 
-        try {
-            model.set("name", 1 / 0);
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid string for name: Infinity");
-        }
+        assert.throws(
+            () => {
+                model.set("name", 1 / 0);
+            },
+            err =>
+                err.message == "invalid string for name: Infinity"
+        );
 
-        try {
-            model.set("name", NaN);
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid string for name: NaN");
-        }
+        assert.throws(
+            () => {
+                model.set("name", NaN);
+            },
+            err =>
+                err.message == "invalid string for name: NaN"
+        );
 
-        try {
-            model.set("name", /x/);
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid string for name: /x/");
-        }
+        assert.throws(
+            () => {
+                model.set("name", /x/);
+            },
+            err =>
+                err.message == "invalid string for name: /x/"
+        );
 
-        try {
-            model.set("name", [0]);
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid string for name: [0]");
-        }
+        assert.throws(
+            () => {
+                model.set("name", [0]);
+            },
+            err =>
+                err.message == "invalid string for name: [0]"
+        );
 
         assert.strictEqual( model.data.name, "nice" );
     });
@@ -249,61 +268,69 @@ describe("Model prepare", () => {
         assert.strictEqual( model.data.some, true );
 
         
-        try {
-            model.set("some", {});
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid boolean for some: {}");
-        }
+        assert.throws(
+            () => {
+                model.set("some", {});
+            },
+            err =>
+                err.message == "invalid boolean for some: {}"
+        );
 
-        try {
-            model.set("some", {some: 1});
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid boolean for some: {\"some\":1}");
-        }
+        assert.throws(
+            () => {
+                model.set("some", {some: 1});
+            },
+            err =>
+                err.message == "invalid boolean for some: {\"some\":1}"
+        );
 
-        try {
-            model.set("some", -1 / 0);
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid boolean for some: -Infinity");
-        }
+        assert.throws(
+            () => {
+                model.set("some", -1 / 0);
+            },
+            err =>
+                err.message == "invalid boolean for some: -Infinity"
+        );
 
-        try {
-            model.set("some", 1 / 0);
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid boolean for some: Infinity");
-        }
+        assert.throws(
+            () => {
+                model.set("some", 1 / 0);
+            },
+            err =>
+                err.message == "invalid boolean for some: Infinity"
+        );
 
-        try {
-            model.set("some", NaN);
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid boolean for some: NaN");
-        }
+        assert.throws(
+            () => {
+                model.set("some", NaN);
+            },
+            err =>
+                err.message == "invalid boolean for some: NaN"
+        );
 
-        try {
-            model.set("some", /x/);
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid boolean for some: /x/");
-        }
+        assert.throws(
+            () => {
+                model.set("some", /x/);
+            },
+            err =>
+                err.message == "invalid boolean for some: /x/"
+        );
 
-        try {
-            model.set("some", "wrong");
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid boolean for some: \"wrong\"");
-        }
+        assert.throws(
+            () => {
+                model.set("some", "wrong");
+            },
+            err =>
+                err.message == "invalid boolean for some: \"wrong\""
+        );
 
-        try {
-            model.set("some", [0]);
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid boolean for some: [0]");
-        }
+        assert.throws(
+            () => {
+                model.set("some", [0]);
+            },
+            err =>
+                err.message == "invalid boolean for some: [0]"
+        );
 
         assert.strictEqual( model.data.some, true );
     });
@@ -788,75 +815,85 @@ describe("Model prepare", () => {
         assert.strictEqual( +model.data.bornDate, now );
         assert.ok( model.data.bornDate instanceof Date );
 
-        try {
-            model.set("bornDate", "wrong");
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid date for bornDate: \"wrong\"");
-        }
+        assert.throws(
+            () => {
+                model.set("bornDate", "wrong");
+            },
+            err =>
+                err.message == "invalid date for bornDate: \"wrong\""
+        );
 
-        try {
-            model.set("bornDate", {});
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid date for bornDate: {}");
-        }
+        assert.throws(
+            () => {
+                model.set("bornDate", {});
+            },
+            err =>
+                err.message == "invalid date for bornDate: {}"
+        );
 
-        try {
-            model.set("bornDate", {bornDate: 1});
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid date for bornDate: {\"bornDate\":1}");
-        }
+        assert.throws(
+            () => {
+                model.set("bornDate", {bornDate: 1});
+            },
+            err =>
+                err.message == "invalid date for bornDate: {\"bornDate\":1}"
+        );
 
-        try {
-            model.set("bornDate", false);
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid date for bornDate: false");
-        }
+        assert.throws(
+            () => {
+                model.set("bornDate", false);
+            },
+            err =>
+                err.message == "invalid date for bornDate: false"
+        );
 
-        try {
-            model.set("bornDate", true);
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid date for bornDate: true");
-        }
+        assert.throws(
+            () => {
+                model.set("bornDate", true);
+            },
+            err =>
+                err.message == "invalid date for bornDate: true"
+        );
 
-        try {
-            model.set("bornDate", -1 / 0);
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid date for bornDate: -Infinity");
-        }
+        assert.throws(
+            () => {
+                model.set("bornDate", -1 / 0);
+            },
+            err =>
+                err.message == "invalid date for bornDate: -Infinity"
+        );
 
-        try {
-            model.set("bornDate", 1 / 0);
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid date for bornDate: Infinity");
-        }
+        assert.throws(
+            () => {
+                model.set("bornDate", 1 / 0);
+            },
+            err =>
+                err.message == "invalid date for bornDate: Infinity"
+        );
 
-        try {
-            model.set("bornDate", NaN);
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid date for bornDate: NaN");
-        }
+        assert.throws(
+            () => {
+                model.set("bornDate", NaN);
+            },
+            err =>
+                err.message == "invalid date for bornDate: NaN"
+        );
 
-        try {
-            model.set("bornDate", /x/);
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid date for bornDate: /x/");
-        }
+        assert.throws(
+            () => {
+                model.set("bornDate", /x/);
+            },
+            err =>
+                err.message == "invalid date for bornDate: /x/"
+        );
 
-        try {
-            model.set("bornDate", [0]);
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid date for bornDate: [0]");
-        }
+        assert.throws(
+            () => {
+                model.set("bornDate", [0]);
+            },
+            err =>
+                err.message == "invalid date for bornDate: [0]"
+        );
 
         assert.strictEqual( +model.data.bornDate, now );
         assert.ok( model.data.bornDate instanceof Date );

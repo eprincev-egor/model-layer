@@ -18,13 +18,15 @@ describe("Model validate", () => {
             }
         }
 
-        try {
-            new SomeModel();
+        assert.throws(
+            () => {
+                new SomeModel();
             
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "required name");
-        }
+                throw new Error("expected error");
+            },
+            err =>
+                err.message == "required name"
+        );
 
 
         let model = new SomeModel({
@@ -37,13 +39,15 @@ describe("Model validate", () => {
         assert.strictEqual( model.get("age"), 40 );
         assert.strictEqual( model.data.age, 40 );
 
-        try {
-            model.set("name", null);
+        assert.throws(
+            () => {
+                model.set("name", null);
             
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "required name");
-        }
+                throw new Error("expected error");
+            },
+            err =>
+                err.message == "required name"
+        );
 
 
         assert.equal( model.get("name"), "Andrew" );
@@ -71,15 +75,17 @@ describe("Model validate", () => {
         }
 
         // validate in constructor
-        try {
-            new AgeModel({
-                age: -1
-            });
+        assert.throws(
+            () => {
+                new AgeModel({
+                    age: -1
+                });
             
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid age");
-        }
+                throw new Error("expected error");
+            },
+            err =>
+                err.message == "invalid age"
+        );
 
 
         let model = new AgeModel({
@@ -87,15 +93,17 @@ describe("Model validate", () => {
         });
 
         // validate in set
-        try {
-            model.set({
-                age: -100
-            });
+        assert.throws(
+            () => {
+                model.set({
+                    age: -100
+                });
             
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid age");
-        }
+                throw new Error("expected error");
+            },
+            err =>
+                err.message == "invalid age"
+        );
 
         // error in validate, returns previous state
         assert.equal( model.data.age, 100 );
@@ -117,15 +125,15 @@ describe("Model validate", () => {
             }
         }
 
-        try {
-            new AgeModel({ age: 1 });
+        assert.throws(
+            () => {
+                new AgeModel({ age: 1 });
             
-            throw new Error("expected error");
-        } catch(err) {
-            assert.ok(
+                throw new Error("expected error");
+            },
+            err =>
                 /Cannot assign to read only property/.test(err.message)
-            );
-        }
+        );
     });
 
     it("this.data in validate is previous state", () => {
@@ -165,15 +173,17 @@ describe("Model validate", () => {
         }
 
         // validate in constructor
-        try {
-            new AgeModel({
-                age: -1
-            });
+        assert.throws(
+            () => {
+                new AgeModel({
+                    age: -1
+                });
             
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid age: -1");
-        }
+                throw new Error("expected error");
+            },
+            err =>
+                err.message == "invalid age: -1"
+        );
 
 
         let model = new AgeModel({
@@ -181,15 +191,17 @@ describe("Model validate", () => {
         });
 
         // validate in set
-        try {
-            model.set({
-                age: -100
-            });
+        assert.throws(
+            () => {
+                model.set({
+                    age: -100
+                });
             
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid age: -100");
-        }
+                throw new Error("expected error");
+            },
+            err =>
+                err.message == "invalid age: -100"
+        );
 
         // error in validate, returns previous state
         assert.equal( model.data.age, 100 );
@@ -239,15 +251,17 @@ describe("Model validate", () => {
         }
 
         // validate in constructor
-        try {
-            new WordModel({
-                word: " some 12123 "
-            });
+        assert.throws(
+            () => {
+                new WordModel({
+                    word: " some 12123 "
+                });
             
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid word: \" some 12123 \"");
-        }
+                throw new Error("expected error");
+            },
+            err =>
+                err.message == "invalid word: \" some 12123 \""
+        );
 
 
         let model = new WordModel({
@@ -255,15 +269,17 @@ describe("Model validate", () => {
         });
 
         // validate in set
-        try {
-            model.set({
-                word: "some wrong"
-            });
+        assert.throws(
+            () => {
+                model.set({
+                    word: "some wrong"
+                });
             
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid word: \"some wrong\"");
-        }
+                throw new Error("expected error");
+            },
+            err =>
+                err.message == "invalid word: \"some wrong\""
+        );
 
         // error in validate, returns previous state
         assert.equal( model.data.word, "test" );
@@ -285,30 +301,34 @@ describe("Model validate", () => {
         assert.strictEqual( model.data.color, null );
 
         // validate in set
-        try {
-            model.set({
-                color: "orange"
-            });
+        assert.throws(
+            () => {
+                model.set({
+                    color: "orange"
+                });
             
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid color: \"orange\"");
-        }
+                throw new Error("expected error");
+            },
+            err =>
+                err.message == "invalid color: \"orange\""
+        );
 
         // error in validate, returns previous state
         assert.strictEqual( model.data.color, null );
 
 
         // validate in constructor
-        try {
-            new EnumModel({
-                color: "dark blue"
-            });
+        assert.throws(
+            () => {
+                new EnumModel({
+                    color: "dark blue"
+                });
             
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid color: \"dark blue\"");
-        }
+                throw new Error("expected error");
+            },
+            err =>
+                err.message == "invalid color: \"dark blue\""
+        );
     });
 
     it("isValid(data)", () => {
@@ -400,13 +420,15 @@ describe("Model validate", () => {
             sale: 20
         }), false);
 
-        try {
-            model.isValid();
+        assert.throws(
+            () => {
+                model.isValid();
             
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "data must be are object");
-        }
+                throw new Error("expected error");
+            },
+            err =>
+                err.message == "data must be are object"
+        );
     });
 
     it("const prop", () => {
@@ -425,13 +447,15 @@ describe("Model validate", () => {
 
         assert.strictEqual( model.data.name, null );
 
-        try {
-            model.set("name", "new name");
+        assert.throws(
+            () => {
+                model.set("name", "new name");
             
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "cannot assign to read only property: name");
-        }
+                throw new Error("expected error");
+            },
+            err =>
+                err.message == "cannot assign to read only property: name"
+        );
 
 
         model = new SomeModel({
@@ -439,13 +463,15 @@ describe("Model validate", () => {
         });
         assert.equal( model.data.name, "Bob" );
 
-        try {
-            model.set("name", "new name");
+        assert.throws(
+            () => {
+                model.set("name", "new name");
             
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "cannot assign to read only property: name");
-        }
+                throw new Error("expected error");
+            },
+            err =>
+                err.message == "cannot assign to read only property: name"
+        );
     });
 
     

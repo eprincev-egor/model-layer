@@ -15,120 +15,127 @@ describe("Model array property", () => {
             }
         }
 
-        try {
-            new CompanyModel({
-                managersIds: false
-            });
+        assert.throws(
+            () => {
+                new CompanyModel({
+                    managersIds: false
+                });
+            }, 
+            err => 
+                err.message ==  "invalid array[number] for managersIds: false"
+        );
+        
 
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid array[number] for managersIds: false");
-        }
+        assert.throws(
+            () => {
+                new CompanyModel({
+                    managersIds: true
+                });
+            }, 
+            err => 
+                err.message ==  "invalid array[number] for managersIds: true"
+        );
+        
 
-        try {
-            new CompanyModel({
-                managersIds: true
-            });
+        assert.throws(
+            () => {
+                new CompanyModel({
+                    managersIds: {}
+                });
+            }, 
+            err => 
+                err.message ==  "invalid array[number] for managersIds: {}"
+        );
+        
 
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid array[number] for managersIds: true");
-        }
+        assert.throws(
+            () => {
+                new CompanyModel({
+                    managersIds: "1,2"
+                });
+            }, 
+            err => 
+                err.message ==  "invalid array[number] for managersIds: \"1,2\""
+        );
+        
 
-        try {
-            new CompanyModel({
-                managersIds: {}
-            });
+        assert.throws(
+            () => {
+                new CompanyModel({
+                    managersIds: NaN
+                });
+            }, 
+            err => 
+                err.message ==  "invalid array[number] for managersIds: NaN"
+        );
+        
 
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid array[number] for managersIds: {}");
-        }
+        assert.throws(
+            () => {
+                new CompanyModel({
+                    managersIds: /x/
+                });
+            }, 
+            err => 
+                err.message ==  "invalid array[number] for managersIds: /x/"
+        );
+        
 
-        try {
-            new CompanyModel({
-                managersIds: "1,2"
-            });
+        assert.throws(
+            () => {
+                new CompanyModel({
+                    managersIds: Infinity
+                });
+            }, 
+            err => 
+                err.message ==  "invalid array[number] for managersIds: Infinity"
+        );
+        
 
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid array[number] for managersIds: \"1,2\"");
-        }
+        assert.throws(
+            () => {
+                new CompanyModel({
+                    managersIds: -Infinity
+                });
+            }, 
+            err =>
+                err.message == "invalid array[number] for managersIds: -Infinity"
+        );
+        
 
-        try {
-            new CompanyModel({
-                managersIds: NaN
-            });
-
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid array[number] for managersIds: NaN");
-        }
-
-        try {
-            new CompanyModel({
-                managersIds: /x/
-            });
-
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid array[number] for managersIds: /x/");
-        }
-
-        try {
-            new CompanyModel({
-                managersIds: Infinity
-            });
-
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid array[number] for managersIds: Infinity");
-        }
-
-        try {
-            new CompanyModel({
-                managersIds: -Infinity
-            });
-
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid array[number] for managersIds: -Infinity");
-        }
-
-        try {
-            new CompanyModel({
-                managersIds: 0
-            });
-
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid array[number] for managersIds: 0");
-        }
+        assert.throws(
+            () => {
+                new CompanyModel({
+                    managersIds: 0
+                });
+            }, 
+            err => 
+                err.message ==  "invalid array[number] for managersIds: 0"
+        );
+        
 
 
-        try {
-            new CompanyModel({
-                managersIds: [false]
-            });
+        assert.throws(
+            () => {
+                new CompanyModel({
+                    managersIds: [false]
+                });
+            }, 
+            err => 
+                err.message == "invalid array[number] for managersIds: [false],\n invalid number for 0: false"
+        );
+        
 
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, 
-                "invalid array[number] for managersIds: [false],\n invalid number for 0: false"
-            );
-        }
-
-        try {
-            new CompanyModel({
-                managersIds: ["1", "wrong"]
-            });
-
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, 
-                "invalid array[number] for managersIds: [\"1\",\"wrong\"],\n invalid number for 1: \"wrong\""
-            );
-        }
+        assert.throws(
+            () => {
+                new CompanyModel({
+                    managersIds: ["1", "wrong"]
+                });
+            }, 
+            err => 
+                err.message == "invalid array[number] for managersIds: [\"1\",\"wrong\"],\n invalid number for 1: \"wrong\""
+        );
+        
 
 
         let outsideArr = ["1", 2];
@@ -145,13 +152,14 @@ describe("Model array property", () => {
 
 
         // array should be frozen
-        try {
-            managersIds[0] = 10;
-        } catch(err) {
-            assert.ok(
+        assert.throws(
+            () => {
+                managersIds[0] = 10;
+            },
+            err =>
                 /Cannot assign to read only property/.test(err.message)
-            );
-        }
+        );
+        
 
         assert.strictEqual( managersIds[0], 1 );
     });
@@ -212,17 +220,16 @@ describe("Model array property", () => {
             }
         }
 
-        try {
-            new SomeModel({
-                answers: [1, 0, false, true, "wrong"]
-            });
-
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, 
-                "invalid array[boolean] for answers: [1,0,false,true,\"wrong\"],\n invalid boolean for 4: \"wrong\""
-            );
-        }
+        assert.throws(
+            () => {
+                new SomeModel({
+                    answers: [1, 0, false, true, "wrong"]
+                });
+            }, 
+            err => 
+                err.message == "invalid array[boolean] for answers: [1,0,false,true,\"wrong\"],\n invalid boolean for 4: \"wrong\""
+        );
+        
 
         let model = new SomeModel({
             answers: [1, true]
@@ -244,17 +251,16 @@ describe("Model array property", () => {
             }
         }
 
-        try {
-            new SomeModel({
-                pays: ["wrong"]
-            });
-
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, 
-                "invalid array[date] for pays: [\"wrong\"],\n invalid date for 0: \"wrong\""
-            );
-        }
+        assert.throws(
+            () => {
+                new SomeModel({
+                    pays: ["wrong"]
+                });
+            }, 
+            err => 
+                err.message == "invalid array[date] for pays: [\"wrong\"],\n invalid date for 0: \"wrong\""
+        );
+        
 
         let now = Date.now();
         let model = new SomeModel({
@@ -287,17 +293,16 @@ describe("Model array property", () => {
             }
         }
 
-        try {
-            new CompanyModel({
-                managers: [false]
-            });
-
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, 
-                "invalid array[UserModel] for managers: [false],\n invalid UserModel for 0: false"
-            );
-        }
+        assert.throws(
+            () => {
+                new CompanyModel({
+                    managers: [false]
+                });
+            }, 
+            err => 
+                err.message == "invalid array[UserModel] for managers: [false],\n invalid UserModel for 0: false"
+        );
+        
 
         let companyModel = new CompanyModel({
             managers: [{
@@ -329,17 +334,16 @@ describe("Model array property", () => {
             }
         }
 
-        try {
-            new SomeModel({
-                names: [false]
-            });
-
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message,
-                "invalid array[string] for names: [false],\n invalid string for 0: false"
-            );
-        }
+        assert.throws(
+            () => {
+                new SomeModel({
+                    names: [false]
+                });
+            }, 
+            err => 
+                err.message == "invalid array[string] for names: [false],\n invalid string for 0: false"
+        );
+        
 
         let model = new SomeModel({
             colors: ["red"],
@@ -365,31 +369,32 @@ describe("Model array property", () => {
             }
         }
 
-        try {
-            new CompanyModel({
-                managersIds: [1, 2, 1]
-            });
-
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message,
-                "managersIds is not unique: [1,2,1]"
-            );
-        }
+        assert.throws(
+            () => {
+                new CompanyModel({
+                    managersIds: [1, 2, 1]
+                });
+            }, 
+            err => 
+                err.message == "managersIds is not unique: [1,2,1]"
+        );
+        
 
         let companyModel = new CompanyModel({
             managersIds: [1, 2]
         });
 
-        try {
-            companyModel.set("managersIds", [2, 2]);
+        assert.throws(
+            () => {
+                companyModel.set("managersIds", [2, 2]);
 
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message,
-                "managersIds is not unique: [2,2]"
-            );
-        }
+            
+        
+            }, 
+            err => 
+                err.message == "managersIds is not unique: [2,2]"
+        );
+        
 
         assert.deepEqual(companyModel.data.managersIds, [1, 2]);
         
@@ -423,17 +428,16 @@ describe("Model array property", () => {
             name: "test"
         });
 
-        try {
-            new CompanyModel({
-                managers: [userModel1, userModel1]
-            });
-
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message,
-                "managers is not unique: [{\"name\":\"test\"},{\"name\":\"test\"}]"
-            );
-        }
+        assert.throws(
+            () => {
+                new CompanyModel({
+                    managers: [userModel1, userModel1]
+                });
+            }, 
+            err => 
+                err.message == "managers is not unique: [{\"name\":\"test\"},{\"name\":\"test\"}]"
+        );
+        
 
         let userModel2 = new UserModel({
             name: "test"
@@ -447,15 +451,14 @@ describe("Model array property", () => {
         assert.ok( managers[0] == userModel1 );
         assert.ok( managers[1] == userModel2 );
 
-        try {
-            companyModel.set("managers", [userModel2, userModel2]);
-
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message,
-                "managers is not unique: [{\"name\":\"test\"},{\"name\":\"test\"}]"
-            );
-        }
+        assert.throws(
+            () => {
+                companyModel.set("managers", [userModel2, userModel2]);
+            }, 
+            err => 
+                err.message == "managers is not unique: [{\"name\":\"test\"},{\"name\":\"test\"}]"
+        );
+        
 
         managers = companyModel.data.managers;
         assert.ok( managers[0] == userModel1 );

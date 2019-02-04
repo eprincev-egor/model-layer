@@ -50,87 +50,89 @@ describe("Model sub models", () => {
             }
         }
 
-        try {
-            new RegistrationModel({
-                date: Date.now()
-            });
+        assert.throws(
+            () => {
+                new RegistrationModel({
+                    date: Date.now()
+                });
+            }, 
+            err =>
+                err.message == "required user"
+        );
 
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "required user");
-        }
+        assert.throws(
+            () => {
+                new RegistrationModel({
+                    date: Date.now(),
+                    user: null
+                });
+            }, 
+            err =>
+                err.message == "required user"
+        );
 
-        try {
-            new RegistrationModel({
-                date: Date.now(),
-                user: null
-            });
+        assert.throws(
+            () => {
+                new RegistrationModel({
+                    date: Date.now(),
+                    user: []
+                });
+            }, 
+            err =>
+                err.message == "invalid UserModel for user: []"
+        );
 
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "required user");
-        }
+        assert.throws(
+            () => {
+                new RegistrationModel({
+                    date: Date.now(),
+                    user: false
+                });
+            }, 
+            err =>
+                err.message == "invalid UserModel for user: false"
+        );
 
-        try {
-            new RegistrationModel({
-                date: Date.now(),
-                user: []
-            });
+        assert.throws(
+            () => {
+                new RegistrationModel({
+                    date: Date.now(),
+                    user: NaN
+                });
+            }, 
+            err =>
+                err.message == "invalid UserModel for user: NaN"
+        );
 
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid UserModel for user: []");
-        }
+        assert.throws(
+            () => {
+                new RegistrationModel({
+                    date: Date.now(),
+                    user: /x/
+                });
 
-        try {
-            new RegistrationModel({
-                date: Date.now(),
-                user: false
-            });
-
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid UserModel for user: false");
-        }
-
-        try {
-            new RegistrationModel({
-                date: Date.now(),
-                user: NaN
-            });
-
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid UserModel for user: NaN");
-        }
-
-        try {
-            new RegistrationModel({
-                date: Date.now(),
-                user: /x/
-            });
-
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, "invalid UserModel for user: /x/");
-        }
+                throw new Error("expected error");
+            }, 
+            err =>
+                err.message == "invalid UserModel for user: /x/"
+        );
 
 
-        try {
-            new RegistrationModel({
-                date: Date.now(),
-                user: {
-                    name: "10",
-                    age: 101
-                }
-            });
+        assert.throws(
+            () => {
+                new RegistrationModel({
+                    date: Date.now(),
+                    user: {
+                        name: "10",
+                        age: 101
+                    }
+                });
 
-            throw new Error("expected error");
-        } catch(err) {
-            assert.equal(err.message, 
-                "invalid UserModel for user: {\"name\":\"10\",\"age\":101,\"email\":null},\n required email"
-            );
-        }
+                throw new Error("expected error");
+            },
+            err =>
+                err.message == "invalid UserModel for user: {\"name\":\"10\",\"age\":101,\"email\":null},\n required email"
+        );
 
 
 
