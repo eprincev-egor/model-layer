@@ -47,14 +47,18 @@ describe("Model events", () => {
 
         let model = new SomeModel();
 
-        let counter = 0;
-        model.on("change", () => {
-            counter++;
-        });
+        let throwError = () => {
+            throw new Error("unexpected call");
+        };
+        try {
+            throwError();
+        } catch(err) {
+            assert.ok( err );
+        }
+
+        model.on("change", throwError);
 
         model.set("prop", null);
-
-        assert.equal(counter, 0);
     });
 
     it("listen change:prop", () => {
