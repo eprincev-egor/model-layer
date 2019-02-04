@@ -21,8 +21,6 @@ describe("Model validate", () => {
         assert.throws(
             () => {
                 new SomeModel();
-            
-                throw new Error("expected error");
             },
             err =>
                 err.message == "required name"
@@ -42,8 +40,6 @@ describe("Model validate", () => {
         assert.throws(
             () => {
                 model.set("name", null);
-            
-                throw new Error("expected error");
             },
             err =>
                 err.message == "required name"
@@ -80,8 +76,6 @@ describe("Model validate", () => {
                 new AgeModel({
                     age: -1
                 });
-            
-                throw new Error("expected error");
             },
             err =>
                 err.message == "invalid age"
@@ -98,8 +92,6 @@ describe("Model validate", () => {
                 model.set({
                     age: -100
                 });
-            
-                throw new Error("expected error");
             },
             err =>
                 err.message == "invalid age"
@@ -128,8 +120,6 @@ describe("Model validate", () => {
         assert.throws(
             () => {
                 new AgeModel({ age: 1 });
-            
-                throw new Error("expected error");
             },
             err =>
                 /Cannot assign to read only property/.test(err.message)
@@ -178,8 +168,6 @@ describe("Model validate", () => {
                 new AgeModel({
                     age: -1
                 });
-            
-                throw new Error("expected error");
             },
             err =>
                 err.message == "invalid age: -1"
@@ -196,8 +184,6 @@ describe("Model validate", () => {
                 model.set({
                     age: -100
                 });
-            
-                throw new Error("expected error");
             },
             err =>
                 err.message == "invalid age: -100"
@@ -256,8 +242,6 @@ describe("Model validate", () => {
                 new WordModel({
                     word: " some 12123 "
                 });
-            
-                throw new Error("expected error");
             },
             err =>
                 err.message == "invalid word: \" some 12123 \""
@@ -274,8 +258,6 @@ describe("Model validate", () => {
                 model.set({
                     word: "some wrong"
                 });
-            
-                throw new Error("expected error");
             },
             err =>
                 err.message == "invalid word: \"some wrong\""
@@ -306,8 +288,6 @@ describe("Model validate", () => {
                 model.set({
                     color: "orange"
                 });
-            
-                throw new Error("expected error");
             },
             err =>
                 err.message == "invalid color: \"orange\""
@@ -323,8 +303,6 @@ describe("Model validate", () => {
                 new EnumModel({
                     color: "dark blue"
                 });
-            
-                throw new Error("expected error");
             },
             err =>
                 err.message == "invalid color: \"dark blue\""
@@ -423,8 +401,6 @@ describe("Model validate", () => {
         assert.throws(
             () => {
                 model.isValid();
-            
-                throw new Error("expected error");
             },
             err =>
                 err.message == "data must be are object"
@@ -450,8 +426,6 @@ describe("Model validate", () => {
         assert.throws(
             () => {
                 model.set("name", "new name");
-            
-                throw new Error("expected error");
             },
             err =>
                 err.message == "cannot assign to read only property: name"
@@ -466,8 +440,6 @@ describe("Model validate", () => {
         assert.throws(
             () => {
                 model.set("name", "new name");
-            
-                throw new Error("expected error");
             },
             err =>
                 err.message == "cannot assign to read only property: name"

@@ -236,8 +236,6 @@ describe("Model other tests", () => {
         assert.throws(
             () => {
                 model.data.prop = "a";
-            
-                throw new Error("expected error");
             }, 
             err =>
                 /Cannot assign to read only property/.test(err.message)

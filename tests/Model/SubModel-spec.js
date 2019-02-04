@@ -110,8 +110,6 @@ describe("Model sub models", () => {
                     date: Date.now(),
                     user: /x/
                 });
-
-                throw new Error("expected error");
             }, 
             err =>
                 err.message == "invalid UserModel for user: /x/"
@@ -127,8 +125,6 @@ describe("Model sub models", () => {
                         age: 101
                     }
                 });
-
-                throw new Error("expected error");
             },
             err =>
                 err.message == "invalid UserModel for user: {\"name\":\"10\",\"age\":101,\"email\":null},\n required email"
