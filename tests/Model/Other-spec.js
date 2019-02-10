@@ -422,6 +422,44 @@ describe("Model other tests", () => {
         );
     });
 
+    it("model.toJSON with array of models", () => {
+        class TaskModel extends Model {
+            static structure() {
+                return {
+                    name: "string"
+                };
+            }
+        }
+
+        class UserModel extends Model {
+            static structure() {
+                return {
+                    name: "string",
+                    tasks: [TaskModel]
+                };
+            }
+        }
+
+        let userModel = new UserModel({
+            name: "Jack",
+            tasks: [
+                {name: "task 1"},
+                {name: "task 2"}
+            ]
+        });
+
+        assert.deepEqual(
+            userModel.toJSON(),
+            {
+                name: "Jack",
+                tasks: [
+                    {name: "task 1"},
+                    {name: "task 2"}
+                ]
+            }
+        );
+    });
+
     it("model.clone()", () => {
         class SomeModel extends Model {
             static structure() {
