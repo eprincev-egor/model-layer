@@ -356,6 +356,34 @@ describe("Model array property", () => {
         });
     });
 
+    it("array[object]", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    users: ["object"]
+                };
+            }
+        }
+
+        assert.throws(
+            () => {
+                new SomeModel({
+                    users: [{id: 1}, false]
+                });
+            }, 
+            err => 
+                err.message == "invalid array[object] for users: [{\"id\":1},false],\n invalid object for 1: false"
+        );
+        
+
+        let model = new SomeModel({
+            users: [{id: 1}]
+        });
+
+        let users = model.data.users;
+        assert.deepEqual( users, [{id: 1}] );
+    });
+
     it("unique primitive", () => {
         class CompanyModel extends Model {
             static structure() {

@@ -460,6 +460,33 @@ describe("Model other tests", () => {
         );
     });
 
+    it("model.toJSON with object property", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    names: "object"
+                };
+            }
+        }
+
+        let model = new SomeModel({
+            names: {
+                Bob: true,
+                James: true
+            }
+        });
+
+        assert.deepEqual(
+            model.toJSON(),
+            {
+                names: {
+                    Bob: true,
+                    James: true
+                }
+            }
+        );
+    });
+
     it("model.clone()", () => {
         class SomeModel extends Model {
             static structure() {
