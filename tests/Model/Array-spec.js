@@ -531,10 +531,10 @@ describe("Model array property", () => {
         }
 
         let model = new SomeModel({
-            names: ["a3", "b2", "c1"]
+            names: ["a3", "d4", "b2", "c1"]
         });
 
-        assert.deepEqual(model.data.names, ["c1", "b2", "a3"]);
+        assert.deepEqual(model.data.names, ["c1", "b2", "a3", "d4"]);
     });
 
     it("matrix", () => {

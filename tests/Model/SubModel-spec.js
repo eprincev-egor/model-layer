@@ -219,6 +219,7 @@ describe("Model sub models", () => {
         assert.strictEqual( binaryTreeModel.findName(5), "Harry" );
         assert.strictEqual( binaryTreeModel.findName(6), null );
         assert.strictEqual( binaryTreeModel.findName(7), "Oliver" );
+        assert.strictEqual( binaryTreeModel.findName(8), null );
 
         // test native method walk
         let nameById = {};
