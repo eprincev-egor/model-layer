@@ -257,4 +257,26 @@ describe("Model object property", () => {
         );
     });
 
+    it("prepare object value", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    object: {
+                        type: "object",
+                        element: "number"
+                    }
+                };
+            }
+        }
+
+        let model = new SomeModel({
+            object: {
+                a: "10",
+                b: "20"
+            }
+        });
+        assert.strictEqual( model.data.object.a, 10 );
+        assert.strictEqual( model.data.object.b, 20 );
+    });
+
 });

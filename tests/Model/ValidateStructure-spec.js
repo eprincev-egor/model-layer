@@ -4,7 +4,7 @@ const Model = require("../../lib/Model");
 const assert = require("assert");
 
 describe("validate and prepare model structure", () => {
-    
+
     it("model without structure", () => {
         
         class SomeModel extends Model {}
@@ -114,7 +114,15 @@ describe("validate and prepare model structure", () => {
                     user: Model,
                     arrayOfModels: [Model],
                     arrayOfNumbers: ["number"],
-                    obj: "object"
+                    arrayOfAny: [],
+                    arrayOfDates: {
+                        type: ["date"]
+                    },
+                    arrayOfObjects: [{}],
+                    obj1: "object",
+                    obj2: {},
+                    obj3: {element: "number"},
+                    obj4: {type: {element: "string"}}
                 };
             }
         }
@@ -142,8 +150,50 @@ describe("validate and prepare model structure", () => {
                         type: "number"
                     }
                 },
-                obj: {
-                    type: "object"
+                arrayOfAny: {
+                    type: "array",
+                    element: {
+                        type: "*"
+                    }
+                },
+                arrayOfDates: {
+                    type: "array",
+                    element: {
+                        type: "date"
+                    }
+                },
+                arrayOfObjects: {
+                    type: "array",
+                    element: {
+                        type: "object",
+                        element: {
+                            type: "*"
+                        }
+                    }
+                },
+                obj1: {
+                    type: "object",
+                    element: {
+                        type: "*"
+                    }
+                },
+                obj2: {
+                    type: "object",
+                    element: {
+                        type: "*"
+                    }
+                },
+                obj3: {
+                    type: "object",
+                    element: {
+                        type: "number"
+                    }
+                },
+                obj4: {
+                    type: "object",
+                    element: {
+                        type: "string"
+                    }
                 }
             }
         );
