@@ -41,6 +41,8 @@ describe("validate and prepare model structure", () => {
         class ValidModel extends Model {
             static structure() {
                 return {
+                    any: "*",
+
                     string: "string",
                     number: "number",
                     date: "date",
@@ -56,7 +58,8 @@ describe("validate and prepare model structure", () => {
                     arrayOfObject: ["object"],
                     arrayOfBoolean: ["boolean"],
                     arrayOfClass: [CustomClass],
-                    arrayOfModel: [Model]
+                    arrayOfModel: [Model],
+                    arrayOfAny: ["*"]
                 };
             }
         }
