@@ -613,5 +613,41 @@ describe("Model sub models", () => {
         });
         assert.equal(filterChildrenByArray, true);
     });
+
+
+    it("walk by any key and any value", () => {
+
+        class TreeModel extends Model {
+            static structure() {
+                return {
+                    "*": "*"
+                };
+            }
+        }
+
+        let lvl4 = new TreeModel({
+            lvl: 4
+        });
+
+        let lvl3 = new TreeModel({
+            lvl: 3,
+            children: [lvl4]
+        });
+        let lvl2 = new TreeModel({
+            lvl: 2,
+            child: lvl3
+        });
+        let lvl1 = new TreeModel({
+            lvl: 1,
+            child: lvl2
+        });
+
+        let tmp = [];
+        lvl1.walk(model => {
+            tmp.push( model.get("lvl") );
+        });
+
+        assert.deepEqual( tmp, [2, 3, 4] );
+    });
     
 });
