@@ -104,6 +104,58 @@ describe("validate and prepare model structure", () => {
         });
 
         assert.strictEqual( count, 1 );
+
+
+        // calling structure only in first constructor call
+        // (save structure to prototype)
+
+        let model2 = new SomeModel({
+            age: "20"
+        });
+
+        assert.deepEqual(model2.data, {
+            name: null,
+            age: 20
+        });
+
+        assert.strictEqual( count, 1 );
+    });
+
+    it("structure is freeze object", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    arr: ["number"],
+                    obj: {element: "number"}
+                };
+            }
+        }
+
+        let model = new SomeModel();
+
+        assert.throws(
+            () => {
+                model.structure.arr = 10;
+            },
+            err =>
+                /Cannot assign to read only property/.test(err.message)
+        );
+
+        assert.throws(
+            () => {
+                model.structure.arr.element.type = 10;
+            },
+            err =>
+                /Cannot assign to read only property/.test(err.message)
+        );
+
+        assert.throws(
+            () => {
+                model.structure.obj.element.type = 10;
+            },
+            err =>
+                /Cannot assign to read only property/.test(err.message)
+        );
     });
 
     it("prepare structure, and save to model.structure", () => {
