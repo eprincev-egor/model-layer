@@ -42,20 +42,6 @@ describe("Model other tests", () => {
         assert.strictEqual( model.data.prop, null );
     });
 
-    it("model without structure", () => {
-        
-        class SomeModel extends Model {}
-
-        assert.throws(
-            () => {
-                new SomeModel();
-            },
-            err =>
-                err.message == "static SomeModel.structure() is not declared"
-        );
-
-    });
-
     it("default value", () => {
         let model;
         class SomeModel extends Model {
@@ -491,7 +477,7 @@ describe("Model other tests", () => {
         class SomeModel extends Model {
             static structure() {
                 return {
-                    name: "text",
+                    name: "string",
                     ids: ["number"]
                 };
             }
@@ -607,7 +593,7 @@ describe("Model other tests", () => {
             static structure() {
                 return {
                     name: {
-                        type: "text",
+                        type: "string",
                         required: true
                     }
                 };
