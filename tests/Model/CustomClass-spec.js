@@ -44,4 +44,72 @@ describe("Model array property", () => {
         assert.ok( model.get("some") === value );
     });
 
+    it("CustomClass.toJSON()", () => {
+        class CustomClass {
+            constructor() {
+            }
+
+            toJSON() {
+                return {nice: true};
+            }
+        }
+
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    some: CustomClass
+                };
+            }
+        }
+
+        let value = new CustomClass();
+        let model = new SomeModel({
+            some: value
+        });
+
+        assert.deepEqual(
+            model.toJSON(),
+            {
+                some: {
+                    nice: true
+                }
+            }
+        );
+    });
+
+    it("CustomClass.clone()", () => {
+        class CustomClass {
+            constructor() {
+            }
+
+            clone() {
+                let clone = new CustomClass();
+
+                clone.nice = true;
+
+                return clone;
+            }
+        }
+
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    some: CustomClass
+                };
+            }
+        }
+
+        let value = new CustomClass();
+        let model = new SomeModel({
+            some: value
+        });
+
+        let clone = model.clone();
+        
+        assert.strictEqual(
+            clone.get("some").nice,
+            true
+        );
+    });
+
 });
