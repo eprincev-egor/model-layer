@@ -200,7 +200,7 @@ describe("Model other tests", () => {
             () => {
                 model.set("some", "1");
             }, err =>
-                err.message == "unknown property some"
+                err.message == "unknown property: some"
         );
 
         // invalid action cannot change object
@@ -217,7 +217,7 @@ describe("Model other tests", () => {
                 });
             },
             err =>
-                err.message == "unknown property some"
+                err.message == "unknown property: some"
         );
     });
 

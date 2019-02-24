@@ -199,4 +199,62 @@ describe("Model object property", () => {
         assert.deepEqual( model.data.words, {} );
     });
 
+    it("recursive clone object", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    tree: "object"
+                };
+            }
+        }
+
+        let model = new SomeModel({
+            tree: {
+                name: "test",
+                tree: {
+                    name: "nice",
+                    arr: [{ x: 1 }]
+                }
+            }
+        });
+
+        assert.deepEqual( model.data, {
+            tree: {
+                name: "test",
+                tree: {
+                    name: "nice",
+                    arr: [{ x: 1 }]
+                }
+            }
+        });
+
+        let clone = model.clone();
+
+        assert.deepEqual( clone.data, {
+            tree: {
+                name: "test",
+                tree: {
+                    name: "nice",
+                    arr: [{ x: 1 }]
+                }
+            }
+        });
+
+        assert.ok(
+            clone.data.tree != model.data.tree
+        );
+
+        assert.ok(
+            clone.data.tree.tree != model.data.tree.tree
+        );
+
+        assert.ok(
+            clone.data.tree.tree.arr != model.data.tree.tree.arr
+        );
+
+        assert.ok(
+            clone.data.tree.tree.arr[0] != model.data.tree.tree.arr[0]
+        );
+    });
+
 });
