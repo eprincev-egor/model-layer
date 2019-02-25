@@ -4,7 +4,7 @@ const Model = require("../../lib/Model");
 const assert = require("assert");
 
 describe("Model other tests", () => {
-    
+
     it("create model with data", () => {
 
         class SomeModel extends Model {
@@ -613,6 +613,29 @@ describe("Model other tests", () => {
         assert.deepEqual(clone.data, {
             name: "test"
         });
+    });
+
+    
+    it("extends from another Model with structure", () => {
+        class FirstLevel extends Model {
+            static structure() {
+                return {
+                    lvl1: "string"
+                };
+            }
+        }
+
+        class SecondLevel extends FirstLevel {
+            static structure() {
+                return {
+                    lvl2: "string"
+                };
+            }
+        }
+
+        // create models without errors
+        new FirstLevel({ lvl1: "1"});
+        new SecondLevel({ lvl2: "2" });
     });
 
 });
