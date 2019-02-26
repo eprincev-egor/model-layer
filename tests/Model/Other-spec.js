@@ -286,6 +286,11 @@ describe("Model other tests", () => {
             model.hasProperty("unknown"),
             false
         );
+
+        assert.strictEqual(
+            model.hasProperty("hasOwnProperty"),
+            false
+        );
     });
 
     it("model.hasValue", () => {
