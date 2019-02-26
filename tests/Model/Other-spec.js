@@ -638,4 +638,57 @@ describe("Model other tests", () => {
         new SecondLevel({ lvl2: "2" });
     });
 
+    it("custom toJSON, for field", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    name: "string",
+                    self: {
+                        type: SomeModel,
+                        toJSON: model =>
+                            model.get("name")
+                    }
+                };
+            }
+        }
+
+        let model = new SomeModel({
+            name: "circular"
+        });
+
+        model.set("self", model);
+
+        assert.deepEqual(
+            model.toJSON(),
+            {
+                name: "circular",
+                self: "circular"
+            }
+        );
+    });
+
+    it("custom toJSON, for any field", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    "*": {
+                        type: SomeModel,
+                        toJSON: () =>
+                            "nice"
+                    }
+                };
+            }
+        }
+
+        let model = new SomeModel();
+        model.set("self", model);
+
+        assert.deepEqual(
+            model.toJSON(),
+            {
+                self: "nice"
+            }
+        );
+    });
+
 });
