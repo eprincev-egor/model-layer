@@ -1,6 +1,6 @@
 "use strict";
 
-const Model = require("../../lib/Model");
+const {Model} = require("../../lib/index");
 const assert = require("assert");
 
 describe("validate and prepare model structure", () => {

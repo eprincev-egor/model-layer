@@ -1,6 +1,6 @@
 "use strict";
 
-const Model = require("../../lib/Model");
+const {Model} = require("../../lib/index");
 const assert = require("assert");
 
 describe("Model prepare", () => {
@@ -900,12 +900,14 @@ describe("Model prepare", () => {
     });
 
     it("redefine standard prepare number", () => {
-        let originalPrepare = Model.prepareNumber;
         let callArgs = false;
+        
+        const NumberType = Model.getType("number");
+        let originalPrepare = NumberType.prototype.prepare;
 
-        Model.prepareNumber = function(description, key, value) {
-            callArgs = [description, key, value];
-            return originalPrepare(description, key, value);
+        NumberType.prototype.prepare = function(value, key, model) {
+            callArgs = [value, key];
+            return originalPrepare.call(this, value, key, model);
         };
 
         class SomeModel extends Model {
@@ -922,20 +924,22 @@ describe("Model prepare", () => {
 
         assert.strictEqual( model.data.age, 10 );
         assert.deepEqual( callArgs, [
-            { type: "number" }, 
-            "age", "10"
+            "10",
+            "age"
         ]);
 
-        Model.prepareNumber = originalPrepare;
+        NumberType.prototype.prepare = originalPrepare;
     });
 
     it("redefine standard prepare string", () => {
-        let originalPrepare = Model.prepareString;
         let callArgs = false;
 
-        Model.prepareString = function(description, key, value) {
-            callArgs = [description, key, value];
-            return originalPrepare(description, key, value);
+        const StringType = Model.getType("string");
+        let originalPrepare = StringType.prototype.prepare;
+
+        StringType.prototype.prepare = function(value, key, model) {
+            callArgs = [value, key];
+            return originalPrepare.call(this, value, key, model);
         };
 
         class SomeModel extends Model {
@@ -952,20 +956,21 @@ describe("Model prepare", () => {
 
         assert.strictEqual( model.data.name, "0" );
         assert.deepEqual( callArgs, [
-            { type: "string" },
-            "name", 0
+            0, "name"
         ]);
 
-        Model.prepareString = originalPrepare;
+        StringType.prototype.prepare = originalPrepare;
     });
 
     it("redefine standard prepare boolean", () => {
-        let originalPrepare = Model.prepareBoolean;
         let callArgs = false;
 
-        Model.prepareBoolean = function(description, key, value) {
-            callArgs = [description, key, value];
-            return originalPrepare(description, key, value);
+        const BooleanType = Model.getType("boolean");
+        let originalPrepare = BooleanType.prototype.prepare;
+
+        BooleanType.prototype.prepare = function(value, key, model) {
+            callArgs = [value, key];
+            return originalPrepare.call(this, value, key, model);
         };
 
         class SomeModel extends Model {
@@ -982,21 +987,22 @@ describe("Model prepare", () => {
 
         assert.strictEqual( model.data.some, false );
         assert.deepEqual( callArgs, [
-            { type: "boolean" },
-            "some", 0
+            0, "some"
         ]);
 
-        Model.prepareBoolean = originalPrepare;
+        BooleanType.prototype.prepare = originalPrepare;
     });
 
 
     it("redefine standard prepare date", () => {
-        let originalPrepare = Model.prepareDate;
         let callArgs = false;
 
-        Model.prepareDate = function(description, key, value) {
-            callArgs = [description, key, value];
-            return originalPrepare(description, key, value);
+        const DateType = Model.getType("date");
+        let originalPrepare = DateType.prototype.prepare;
+
+        DateType.prototype.prepare = function(value, key, model) {
+            callArgs = [value, key];
+            return originalPrepare.call(this, value, key, model);
         };
 
         class SomeModel extends Model {
@@ -1015,11 +1021,10 @@ describe("Model prepare", () => {
         assert.strictEqual( +model.data.bornDate, now );
         assert.ok( model.data.bornDate instanceof Date );
         assert.deepEqual( callArgs, [
-            { type: "date" },
-            "bornDate", now
+            now, "bornDate"
         ]);
 
-        Model.prepareDate = originalPrepare;
+        DateType.prototype.prepare = originalPrepare;
     });
     
     

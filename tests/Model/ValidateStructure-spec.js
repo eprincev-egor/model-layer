@@ -1,6 +1,6 @@
 "use strict";
 
-const Model = require("../../lib/Model");
+const {Model} = require("../../lib/index");
 const assert = require("assert");
 
 describe("validate and prepare model structure", () => {
@@ -185,66 +185,139 @@ describe("validate and prepare model structure", () => {
             model.structure,
             {
                 name: {
-                    type: "string"
+                    type: "string",
+                    required: false,
+                    emptyAsNull: false,
+                    nullAsEmpty: false,
+                    trim: false,
+                    upper: false,
+                    lower: false
                 },
                 user: {
-                    type: Model
+                    type: "model",
+                    Model,
+                    required: false
                 },
                 arrayOfModels: {
                     type: "array",
+                    sort: false, 
+                    emptyAsNull: false, 
+                    nullAsEmpty: false,
+                    required: false,
+                    unique: false,
                     element: {
-                        type: Model
+                        type: "model",
+                        Model,
+                        required: false
                     }
                 },
                 arrayOfNumbers: {
                     type: "array",
+                    sort: false, 
+                    emptyAsNull: false, 
+                    nullAsEmpty: false,
+                    required: false,
+                    unique: false,
                     element: {
-                        type: "number"
+                        type: "number",
+                        required: false,
+                        ceil: null,
+                        round: null,
+                        floor: null,
+                        nullAsZero: false,
+                        zeroAsNull: false
                     }
                 },
                 arrayOfAny: {
                     type: "array",
+                    sort: false, 
+                    emptyAsNull: false, 
+                    nullAsEmpty: false,
+                    required: false,
+                    unique: false,
                     element: {
-                        type: "*"
+                        type: "*",
+                        required: false
                     }
                 },
                 arrayOfDates: {
                     type: "array",
+                    sort: false, 
+                    emptyAsNull: false, 
+                    nullAsEmpty: false,
+                    required: false,
+                    unique: false,
                     element: {
-                        type: "date"
+                        type: "date",
+                        required: false
                     }
                 },
                 arrayOfObjects: {
                     type: "array",
+                    sort: false, 
+                    emptyAsNull: false, 
+                    nullAsEmpty: false,
+                    required: false,
+                    unique: false,
                     element: {
                         type: "object",
+                        required: false,
+                        nullAsEmpty: false,
+                        emptyAsNull: false,
                         element: {
-                            type: "*"
+                            type: "*",
+                            required: false
                         }
                     }
                 },
                 obj1: {
                     type: "object",
+                    required: false,
+                    nullAsEmpty: false,
+                    emptyAsNull: false,
                     element: {
-                        type: "*"
+                        type: "*",
+                        required: false
                     }
                 },
                 obj2: {
                     type: "object",
+                    required: false,
+                    nullAsEmpty: false,
+                    emptyAsNull: false,
                     element: {
-                        type: "*"
+                        type: "*",
+                        required: false
                     }
                 },
                 obj3: {
                     type: "object",
+                    required: false,
+                    nullAsEmpty: false,
+                    emptyAsNull: false,
                     element: {
-                        type: "number"
+                        type: "number",
+                        required: false,
+                        ceil: null,
+                        round: null,
+                        floor: null,
+                        nullAsZero: false,
+                        zeroAsNull: false
                     }
                 },
                 obj4: {
                     type: "object",
+                    required: false,
+                    nullAsEmpty: false,
+                    emptyAsNull: false,
                     element: {
-                        type: "string"
+                        type: "string",
+                        required: false,
+                        emptyAsNull: false,
+                        nullAsEmpty: false,
+                        trim: false,
+                        upper: false,
+                        lower: false
                     }
                 }
             }
