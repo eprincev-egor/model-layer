@@ -313,4 +313,162 @@ describe("ModelType", () => {
             );
         });
     });
+
+    it("BaseModel.or(ChildModel1)", () => {
+        class BaseModel extends Model {
+            static structure() {
+                return {
+                    modelName: "string"
+                };
+            }
+        }
+
+        class ChildModel extends BaseModel {
+            static structure() {
+                return {
+                    ...super.structure(),
+                    isChild: {
+                        type: "boolean",
+                        default: true
+                    }
+                };
+            }
+        }
+
+        class MainModel extends Model {
+            static structure() {
+                return {
+                    child: BaseModel.or( ChildModel )
+                };
+            }
+        }
+
+        let main = new MainModel({
+            child: {
+                modelName: "base"
+            }
+        });
+
+        assert.deepEqual(
+            main.toJSON(),
+            {
+                child: {
+                    modelName: "base"
+                }
+            }
+        );
+
+        main.set("child", new ChildModel());
+
+        assert.deepEqual(
+            main.toJSON(),
+            {
+                child: {
+                    modelName: null,
+                    isChild: true
+                }
+            }
+        );
+    });
+
+    it("BaseModel.or(ChildModel) ChildModel should be inherited from BaseModel", () => {
+        
+        class BaseModel extends Model {}
+        class ChildModel extends Model {}
+
+        assert.throws(
+            () => {
+                BaseModel.or( ChildModel );
+            }, 
+            err =>
+                err.message == "ChildModel should be inherited from BaseModel"
+        );
+        
+    });
+
+    it("BaseModel.or() expected children Models", () => {
+        class BaseModel extends Model {}
+
+        assert.throws(
+            () => {
+                BaseModel.or();
+            }, 
+            err =>
+                err.message == "expected children Models"
+        );
+        
+    });
+
+
+    it("BaseModel.or(ChildModel1, ChildModel2, ...)", () => {
+
+        class Product extends Model {
+            static structure() {
+                return {
+                    type: "string",
+                    price: "number"
+                };
+            }
+        }
+
+        class DressProduct extends Product {
+            static structure() {
+                return {
+                    ...super.structure(),
+
+                    size: "number"
+                };
+            }
+        }
+
+        class FoodProduct extends Product {
+            static structure() {
+                return {
+                    ...super.structure(),
+
+                    color: "string"
+                };
+            }
+        }
+
+        class Cart extends Model {
+            static structure() {
+                return {
+                    products: {
+                        type: "array",
+                        element: {
+                            type: Product.or( DressProduct, FoodProduct ),
+                            constructor: data => {
+                                if ( data.type == "dress" ) {
+                                    return DressProduct;
+                                }
+
+                                if ( data.type == "car" ) {
+                                    return FoodProduct;
+                                }
+                            }
+                        }
+                    }
+                };
+            }
+        }
+
+        let cart = new Cart({
+            products: [
+                {type: "car", price: 10000, color: "red"},
+                {type: "dress", price: 100, size: 34}
+            ]
+        });
+
+        assert.deepEqual(
+            cart.toJSON(),
+            {
+                products: [
+                    {type: "car", price: 10000, color: "red"},
+                    {type: "dress", price: 100, size: 34}
+                ]
+            }
+        );
+    });
+
 });

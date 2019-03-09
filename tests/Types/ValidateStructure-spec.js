@@ -198,7 +198,8 @@ describe("validate and prepare model structure", () => {
                 },
                 user: {
                     type: "model",
-                    Model: TestModel,
+                    Models: [TestModel],
+                    getConstructorByData: model.getDescription("user").getConstructorByData,
                     required: false
                 },
                 arrayOfModels: {
@@ -210,8 +211,13 @@ describe("validate and prepare model structure", () => {
                     unique: false,
                     element: {
                         type: "model",
-                        Model: TestModel,
-                        required: false
+                        Models: [TestModel],
+                        required: false,
+                        getConstructorByData: (
+                            model.getDescription("arrayOfModels")
+                                .element
+                                .getConstructorByData
+                        )
                     }
                 },
                 arrayOfNumbers: {
