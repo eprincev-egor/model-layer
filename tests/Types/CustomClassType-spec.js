@@ -182,4 +182,48 @@ describe("CustomClassType", () => {
         );
     });
 
+    
+    it("equal CustomClass", () => {
+        class CustomClass {}
+
+        let obj1 = new CustomClass();
+        let obj2 = new CustomClass();
+
+        let pairs = [
+            [null, null, true],
+            [null, obj1, false],
+            [obj1, obj1, true],
+            [obj1, obj2, false]
+        ];
+
+        pairs.forEach(pair => {
+            class TestModel extends Model {
+                static structure() {
+                    return {
+                        custom: CustomClass
+                    };
+                }
+            }
+
+            let model1 = new TestModel({
+                custom: pair[0]
+            });
+
+            let model2 = new TestModel({
+                custom: pair[1]
+            });
+
+            assert.strictEqual(
+                model1.equal( model2 ),
+                pair[2],
+                JSON.stringify(pair)
+            );
+
+            assert.strictEqual(
+                model2.equal( model1 ),
+                pair[2],
+                JSON.stringify(pair)
+            );
+        });
+    });
 });

@@ -292,4 +292,46 @@ describe("StringType", () => {
         StringType.prototype.prepare = originalPrepare;
     });
 
+    it("equal strings", () => {
+        let pairs = [
+            [null, null, true],
+            [null, "", false],
+            ["", null, false],
+            [" ", " ", true],
+            ["  ", " ", false],
+            ["nice", "nice", true],
+            ["nice", "Nice", false]
+        ];
+
+        pairs.forEach(pair => {
+            class TestModel extends Model {
+                static structure() {
+                    return {
+                        str: "string"
+                    };
+                }
+            }
+
+            let model1 = new TestModel({
+                str: pair[0]
+            });
+
+            let model2 = new TestModel({
+                str: pair[1]
+            });
+
+            assert.strictEqual(
+                model1.equal( model2 ),
+                pair[2],
+                pair
+            );
+
+            assert.strictEqual(
+                model2.equal( model1 ),
+                pair[2],
+                pair
+            );
+        });
+    });
+
 });

@@ -697,4 +697,94 @@ describe("ArrayType", () => {
         });
     });
 
+    it("equal arrays", () => {
+        let pairs = [
+            [null, null, true],
+            [null, [], false],
+            [[], [], true],
+            [[1,2], [1,2], true],
+            [[2,1], [1,2], false],
+            [[1], [1,2], false]
+        ];
+
+        pairs.forEach(pair => {
+            class TestModel extends Model {
+                static structure() {
+                    return {
+                        arr: ["number"]
+                    };
+                }
+            }
+
+            let model1 = new TestModel({
+                arr: pair[0]
+            });
+
+            let model2 = new TestModel({
+                arr: pair[1]
+            });
+
+            assert.strictEqual(
+                model1.equal( model2 ),
+                pair[2],
+                pair
+            );
+
+            assert.strictEqual(
+                model2.equal( model1 ),
+                pair[2],
+                pair
+            );
+        });
+    });
+
+    it("equal circular arrays", () => {
+        let circular1 = [];
+        circular1[0] = circular1;
+
+        let circular2 = [];
+        circular2[0] = circular2;
+
+        let circular3 = [];
+        circular3[0] = circular3;
+        circular3[1] = [];
+
+        let pairs = [
+            [circular1, circular1, true],
+            [circular1, circular2, true],
+            [circular2, circular2, true],
+            [circular1, circular3, false],
+            [circular2, circular3, false]
+        ];
+
+        pairs.forEach(pair => {
+            class TestModel extends Model {
+                static structure() {
+                    return {
+                        arr: [[]]
+                    };
+                }
+            }
+
+            let model1 = new TestModel({
+                arr: pair[0]
+            });
+
+            let model2 = new TestModel({
+                arr: pair[1]
+            });
+
+            assert.strictEqual(
+                model1.equal( model2 ),
+                pair[2],
+                pair
+            );
+
+            assert.strictEqual(
+                model2.equal( model1 ),
+                pair[2],
+                pair
+            );
+        });
+    });
 });

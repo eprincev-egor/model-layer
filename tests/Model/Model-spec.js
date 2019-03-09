@@ -650,5 +650,64 @@ describe("Model tests", () => {
         assert.strictEqual( model.data.fullName, "Bob Taylor" );
     });
 
+    
+    it("equal with same class model", () => {
 
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    prop: "string"
+                };
+            }
+        }
+
+        let firstModel = new SomeModel({
+            prop: "first"
+        });
+        let secondModel = new SomeModel({
+            prop: "second"
+        });
+
+        assert.ok( !firstModel.equal( secondModel ) );
+        assert.ok( !secondModel.equal( firstModel ) );
+
+        secondModel.set("prop", "first");
+
+        assert.ok( firstModel.equal( secondModel ) );
+        assert.ok( secondModel.equal( firstModel ) );
+    });
+
+    it("equal model with another structure", () => {
+
+        class Model1 extends Model {
+            static structure() {
+                return {
+                    some: "number"
+                };
+            }
+        }
+        class Model2 extends Model {
+            static structure() {
+                return {
+                    "*": "*"
+                };
+            }
+        }
+
+
+        let firstModel = new Model1({
+            some: 1
+        });
+        let secondModel = new Model2({
+            some: 1
+        });
+
+        assert.ok( firstModel.equal( secondModel ) );
+        assert.ok( secondModel.equal( firstModel ) );
+
+        secondModel.set("another", "value");
+
+        assert.ok( !firstModel.equal( secondModel ) );
+        assert.ok( !secondModel.equal( firstModel ) );
+    });
 });

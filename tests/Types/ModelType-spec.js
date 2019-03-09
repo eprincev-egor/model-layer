@@ -2,6 +2,7 @@
 
 const {Model} = require("../../lib/index");
 const assert = require("assert");
+const {invalidValuesAsString} = require("../../lib/utils");
 
 describe("ModelType", () => {
     
@@ -192,5 +193,124 @@ describe("ModelType", () => {
             }
         );
     });
-	
+    
+
+    it("equal models", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    prop: "number"
+                };
+            }
+        }
+
+        let model1 = new SomeModel({
+            prop: 1
+        });
+        let model2 = new SomeModel({
+            prop: 1
+        });
+        let model3 = new SomeModel({
+            prop: 3
+        });
+
+        let pairs = [
+            [null, null, true],
+            [null, model1, false],
+            [null, model2, false],
+            [null, model3, false],
+            [model1, model1, true],
+            [model1, model2, true],
+            [model1, model3, false],
+            [model2, model3, false]
+        ];
+
+        pairs.forEach(pair => {
+            class TestModel extends Model {
+                static structure() {
+                    return {
+                        model: SomeModel
+                    };
+                }
+            }
+
+            let model1 = new TestModel({
+                model: pair[0]
+            });
+
+            let model2 = new TestModel({
+                model: pair[1]
+            });
+
+            assert.strictEqual(
+                model1.equal( model2 ),
+                pair[2],
+                pair
+            );
+
+            assert.strictEqual(
+                model2.equal( model1 ),
+                pair[2],
+                pair
+            );
+        });
+    });
+
+    it("equal circular models", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    name: "string",
+                    self: SomeModel
+                };
+            }
+        }
+
+        let circular1 = new SomeModel();
+        circular1.set("self", circular1);
+
+        let circular2 = new SomeModel();
+        circular2.set("self", circular2);
+
+        let circular3 = new SomeModel({name: "nice"});
+        circular3.set("self", circular3);
+
+        let pairs = [
+            [circular1, circular1, true],
+            [circular1, circular2, true],
+            [circular2, circular2, true],
+            [circular1, circular3, false],
+            [circular2, circular3, false]
+        ];
+
+        pairs.forEach((pair, i) => {
+            class TestModel extends Model {
+                static structure() {
+                    return {
+                        model: SomeModel
+                    };
+                }
+            }
+
+            let model1 = new TestModel({
+                model: pair[0]
+            });
+
+            let model2 = new TestModel({
+                model: pair[1]
+            });
+
+            assert.strictEqual(
+                model1.equal( model2 ),
+                pair[2],
+                i + ": " + invalidValuesAsString(pair)
+            );
+
+            assert.strictEqual(
+                model2.equal( model1 ),
+                pair[2],
+                i + ": " + invalidValuesAsString(pair)
+            );
+        });
+    });
 });

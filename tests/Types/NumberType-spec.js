@@ -331,4 +331,45 @@ describe("NumberType", () => {
         );
     });
     
+    it("equal numbers", () => {
+        let pairs = [
+            [null, null, true],
+            [null, 0, false],
+            [0, null, false],
+            [-0, +0, true],
+            [-10, -10, true],
+            [10.12, 10.12, true]
+        ];
+
+        pairs.forEach(pair => {
+            class TestModel extends Model {
+                static structure() {
+                    return {
+                        numb: "number"
+                    };
+                }
+            }
+
+            let model1 = new TestModel({
+                numb: pair[0]
+            });
+
+            let model2 = new TestModel({
+                numb: pair[1]
+            });
+
+            assert.strictEqual(
+                model1.equal( model2 ),
+                pair[2],
+                pair
+            );
+
+            assert.strictEqual(
+                model2.equal( model1 ),
+                pair[2],
+                pair
+            );
+        });
+    });
+    
 });

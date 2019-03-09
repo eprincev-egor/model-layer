@@ -169,5 +169,46 @@ describe("DateType", () => {
         DateType.prototype.prepare = originalPrepare;
     });
     
-    
+    it("equal Date", () => {
+        let now1 = new Date();
+        let now2 = new Date( +now1 );
+
+        let pairs = [
+            [null, null, true],
+            [null, 0, false],
+            [null, now1, false],
+            [null, now2, false],
+            [now1, now2, true]
+        ];
+
+        pairs.forEach(pair => {
+            class TestModel extends Model {
+                static structure() {
+                    return {
+                        date: "date"
+                    };
+                }
+            }
+
+            let model1 = new TestModel({
+                date: pair[0]
+            });
+
+            let model2 = new TestModel({
+                date: pair[1]
+            });
+
+            assert.strictEqual(
+                model1.equal( model2 ),
+                pair[2],
+                pair
+            );
+
+            assert.strictEqual(
+                model2.equal( model1 ),
+                pair[2],
+                pair
+            );
+        });
+    });
 });

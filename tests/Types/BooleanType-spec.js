@@ -188,5 +188,46 @@ describe("BooleanType", () => {
     });
 
 
+    it("equal booleans", () => {
+        let pairs = [
+            [null, false, false],
+            [null, true, false],
+            [false, false, true],
+            [false, true, false],
+            [true, true, true],
+            [1, true, true]
+        ];
+
+        pairs.forEach(pair => {
+            class TestModel extends Model {
+                static structure() {
+                    return {
+                        bool: "boolean"
+                    };
+                }
+            }
+
+            let model1 = new TestModel({
+                bool: pair[0]
+            });
+
+            let model2 = new TestModel({
+                bool: pair[1]
+            });
+
+            assert.strictEqual(
+                model1.equal( model2 ),
+                pair[2],
+                pair
+            );
+
+            assert.strictEqual(
+                model2.equal( model1 ),
+                pair[2],
+                pair
+            );
+        });
+    });
+
     
 });
