@@ -327,4 +327,50 @@ describe("validate and prepare model structure", () => {
         );
     });
 
+    it("invalid validate", () => {
+        
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    prop: {
+                        type: "number",
+                        validate: "wrong"
+                    }
+                };
+            }
+        }
+
+        assert.throws(
+            () => {
+                new SomeModel();
+            },
+            err =>
+                err.message == "prop: validate should be function or RegExp: \"wrong\""
+        );
+
+    });
+
+    it("invalid validate key", () => {
+        
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    "*": {
+                        type: "number",
+                        key: "wrong"
+                    }
+                };
+            }
+        }
+
+        assert.throws(
+            () => {
+                new SomeModel();
+            },
+            err =>
+                err.message == "*: validate key should be function or RegExp: \"wrong\""
+        );
+
+    });
+
 });

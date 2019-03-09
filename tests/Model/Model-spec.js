@@ -468,13 +468,187 @@ describe("Model tests", () => {
 
         let model = new SomeModel();
         model.set("self", model);
+        model.set("empty", null);
 
         assert.deepEqual(
             model.toJSON(),
             {
-                self: "nice"
+                self: "nice",
+                empty: null
             }
         );
     });
+
+    it("clone, for any field", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    "*": "*"
+                };
+            }
+        }
+
+        let model = new SomeModel();
+        model.set("some", 12);
+        model.set("empty", null);
+
+        assert.deepEqual(
+            model.clone().data,
+            {
+                some: 12,
+                empty: null
+            }
+        );
+    });
+
+    it("register new type", () => {
+        
+        class CustomType extends Model.Type {
+            prepare(value) {
+                return +value * 2;
+            }
+        }
+
+        Model.registerType("custom", CustomType);
+
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    prop: "custom"
+                };
+            }
+        }
+
+        let model = new SomeModel({
+            prop: "10"
+        });
+
+        assert.strictEqual(model.data.prop, 20);
+    });
+
+    
+    it("custom prepare field", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    money: {
+                        type: "number",
+                        default: 1,
+                        prepare: value =>
+                            value * 2
+                    }
+                };
+            }
+        }
+
+        let model = new SomeModel();
+        assert.strictEqual( model.data.money, 2 );
+
+        model.set("money", 12);
+        assert.strictEqual( model.data.money, 24 );
+
+        model.set("money", null);
+        assert.strictEqual( model.data.money, null );
+    });
+
+    it("custom prepare field and standard prepares (round, trim, emptyAsNull)", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    name: {
+                        type: "string",
+                        default: "  ",
+                        trim: true,
+                        emptyAsNull: true,
+                        prepare: value =>
+                            value[0].toUpperCase() + 
+                                value.slice(1).toLowerCase()
+                    },
+                    age: {
+                        type: "number",
+                        default: 0,
+                        zeroAsNull: true,
+                        prepare: value =>
+                            +(value).toFixed(0)
+                    }
+                };
+            }
+        }
+
+        let model = new SomeModel();
+        assert.strictEqual( model.data.name, null );
+        assert.strictEqual( model.data.age, null );
+
+        model = new SomeModel({
+            name: " wOrd ",
+            age: 1.1111
+        });
+        assert.strictEqual( model.data.name, "Word" );
+        assert.strictEqual( model.data.age, 1 );
+    });
+
+    it("custom prepare data", () => {
+        function upFirstLetter(name) {
+            return (
+                name[0].toUpperCase() + 
+                    name.slice(1).toLowerCase()
+            );
+        }
+
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    firstName: {
+                        type: "string",
+                        trim: true,
+                        emptyAsNull: true,
+                        prepare: name =>
+                            upFirstLetter( name )
+                    },
+                    lastName: {
+                        type: "string",
+                        trim: true,
+                        emptyAsNull: true,
+                        prepare: name =>
+                            upFirstLetter( name )
+                    },
+                    fullName: {
+                        type: "string",
+                        trim: true,
+                        emptyAsNull: true
+                    }
+                };
+            }
+
+            prepare(data) {
+                // data.firstName can be null
+                let firstName = data.firstName || "";
+                // data.lastName can be null
+                let lastName = data.lastName || "";
+
+                data.fullName = `${ firstName } ${lastName}`;
+            }
+        }
+
+        let model = new SomeModel();
+        assert.strictEqual( model.data.firstName, null );
+        assert.strictEqual( model.data.lastName, null );
+        assert.strictEqual( model.data.fullName, null );
+
+        model = new SomeModel({
+            firstName: "bob"
+        });
+        assert.strictEqual( model.data.firstName, "Bob" );
+        assert.strictEqual( model.data.lastName, null );
+        assert.strictEqual( model.data.fullName, "Bob" );
+        
+        model.set({
+            lastName: "  taylor"
+        });
+        assert.strictEqual( model.data.firstName, "Bob" );
+        assert.strictEqual( model.data.lastName, "Taylor" );
+        assert.strictEqual( model.data.fullName, "Bob Taylor" );
+    });
+
 
 });

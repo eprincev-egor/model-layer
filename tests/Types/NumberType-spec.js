@@ -285,7 +285,7 @@ describe("NumberType", () => {
                 new SomeModel();
             },
             err =>
-                err.message == "invalid ceil: \"wrong\""
+                err.message == "money: invalid ceil: \"wrong\""
         );
     });
 
@@ -306,7 +306,7 @@ describe("NumberType", () => {
                 new SomeModel();
             },
             err =>
-                err.message == "invalid floor: \"wrong\""
+                err.message == "money: invalid floor: \"wrong\""
         );
     });
 
@@ -327,7 +327,7 @@ describe("NumberType", () => {
                 new SomeModel();
             },
             err =>
-                err.message == "invalid round: \"wrong\""
+                err.message == "money: invalid round: \"wrong\""
         );
     });
     
