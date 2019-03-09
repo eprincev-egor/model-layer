@@ -4,6 +4,42 @@ const {Model} = require("../../lib/index");
 const assert = require("assert");
 
 describe("Model with any property", () => {
+
+    it("any key and any value", () => {
+        
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    "*": "*"
+                };
+            }
+        }
+
+        let model = new SomeModel();
+        assert.deepEqual(model.data, {});
+
+        model.set("x", 10);
+        assert.strictEqual(model.data.x, 10);
+        
+        model.set("y", "text");
+        assert.strictEqual(model.data.y, "text");
+
+        model.set("z", true);
+        assert.strictEqual(model.data.z, true);
+
+
+        model.set({
+            x: false,
+            y: false,
+            z: false
+        });
+
+        assert.deepEqual(model.data, {
+            x: false,
+            y: false,
+            z: false
+        });
+    });
     
     it("any number", () => {
 

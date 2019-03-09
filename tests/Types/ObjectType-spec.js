@@ -3,7 +3,7 @@
 const {Model} = require("../../lib/index");
 const assert = require("assert");
 
-describe("Model object property", () => {
+describe("ObjectType", () => {
     
     it("object", () => {
         class SomeModel extends Model {
@@ -256,6 +256,81 @@ describe("Model object property", () => {
             clone.data.tree.tree.arr[0] != model.data.tree.tree.arr[0]
         );
     });
+    
+    it("model.toJSON with object property", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    names: "object"
+                };
+            }
+        }
+
+        let model = new SomeModel({
+            names: {
+                Bob: true,
+                James: true
+            }
+        });
+
+        assert.deepEqual(
+            model.toJSON(),
+            {
+                names: {
+                    Bob: true,
+                    James: true
+                }
+            }
+        );
+    });
+
+    it("recursive convert object to json", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    tree: "object"
+                };
+            }
+        }
+
+        let model = new SomeModel({
+            tree: {
+                name: "test",
+                tree: {
+                    name: "nice",
+                    arr: [{ x: 1 }]
+                }
+            }
+        });
+
+        let json = model.toJSON();
+
+        assert.deepEqual( json, {
+            tree: {
+                name: "test",
+                tree: {
+                    name: "nice",
+                    arr: [{ x: 1 }]
+                }
+            }
+        });
+
+        assert.ok(
+            json.tree != model.data.tree
+        );
+
+        assert.ok(
+            json.tree.tree != model.data.tree.tree
+        );
+
+        assert.ok(
+            json.tree.tree.arr != model.data.tree.tree.arr
+        );
+
+        assert.ok(
+            json.tree.tree.arr[0] != model.data.tree.tree.arr[0]
+        );
+    });
 
     it("prepare object value", () => {
         class SomeModel extends Model {
@@ -277,6 +352,58 @@ describe("Model object property", () => {
         });
         assert.strictEqual( model.data.object.a, 10 );
         assert.strictEqual( model.data.object.b, 20 );
+    });
+
+    it("object of any values", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    object: {}
+                };
+            }
+        }
+
+        let model = new SomeModel({
+            object: {
+                a: 10,
+                b: true,
+                c: "nice"
+            }
+        });
+
+        assert.deepStrictEqual( model.data, {
+            object: {
+                a: 10,
+                b: true,
+                c: "nice"
+            }
+        });
+    });
+
+    it("validate element", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    object: {
+                        type: "object",
+                        element: "number"
+                    }
+                };
+            }
+        }
+
+        assert.throws(
+            () => {
+                new SomeModel({
+                    object: {
+                        a: 10,
+                        b: "nice"
+                    }
+                });
+            }, 
+            err => 
+                err.message == "invalid object[number] for object: {\"a\":10,\"b\":\"nice\"},\n invalid number for b: \"nice\""
+        );
     });
 
 });

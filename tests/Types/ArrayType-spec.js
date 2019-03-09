@@ -3,7 +3,7 @@
 const {Model} = require("../../lib/index");
 const assert = require("assert");
 
-describe("Model array property", () => {
+describe("ArrayType", () => {
     
     it("array of numbers", () => {
         class CompanyModel extends Model {
@@ -559,6 +559,142 @@ describe("Model array property", () => {
             [4, 5, 6],
             [7, 8, 9]
         ]);
+    });
+
+    
+    it("model.toJSON with array of models", () => {
+        class TaskModel extends Model {
+            static structure() {
+                return {
+                    name: "string"
+                };
+            }
+        }
+
+        class UserModel extends Model {
+            static structure() {
+                return {
+                    name: "string",
+                    tasks: [TaskModel]
+                };
+            }
+        }
+
+        let userModel = new UserModel({
+            name: "Jack",
+            tasks: [
+                {name: "task 1"},
+                {name: "task 2"}
+            ]
+        });
+
+        assert.deepEqual(
+            userModel.toJSON(),
+            {
+                name: "Jack",
+                tasks: [
+                    {name: "task 1"},
+                    {name: "task 2"}
+                ]
+            }
+        );
+    });
+
+    it("model.clone with array", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    ids: ["number"]
+                };
+            }
+        }
+
+        let model = new SomeModel({
+            ids: [1, 2, 3]
+        });
+
+        assert.deepEqual(model.data, {
+            ids: [1, 2, 3]
+        });
+
+        let clone = model.clone();
+
+        assert.ok( clone instanceof SomeModel );
+        assert.ok( clone != model );
+        assert.ok( clone.data.ids != model.data.ids );
+
+        assert.deepEqual(clone.data, {
+            ids: [1, 2, 3]
+        });
+
+        // change clone model
+        clone.set({
+            ids: [3, 4]
+        });
+
+        assert.deepEqual(model.data, {
+            ids: [1, 2, 3]
+        });
+
+        assert.deepEqual(clone.data, {
+            ids: [3, 4]
+        });
+
+        // change original model
+        model.set({
+            ids: [8]
+        });
+
+        assert.deepEqual(model.data, {
+            ids: [8]
+        });
+
+        assert.deepEqual(clone.data, {
+            ids: [3, 4]
+        });
+    });
+
+    it("test base validate as prior validation", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    ids: {
+                        type: ["number"],
+                        unique: true,
+                        enum: [[]]
+                    }
+                };
+            }
+        }
+
+        assert.throws(
+            () => {
+                new SomeModel({
+                    ids: null
+                });
+            }, 
+            err => 
+                err.message ==  "invalid ids: null"
+        );
+        
+    });
+
+    it("test array of any values", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    arr: []
+                };
+            }
+        }
+
+        let model = new SomeModel({
+            arr: [1, "nice"]
+        });
+
+        assert.deepEqual(model.data, {
+            arr: [1, "nice"]
+        });
     });
 
 });

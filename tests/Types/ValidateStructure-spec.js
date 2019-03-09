@@ -4,7 +4,7 @@ const {Model} = require("../../lib/index");
 const assert = require("assert");
 
 describe("validate and prepare model structure", () => {
-
+    
     it("model without structure", () => {
         
         class SomeModel extends Model {}
@@ -33,10 +33,11 @@ describe("validate and prepare model structure", () => {
                 new InvalidModel();
             },
             err =>
-                err.message == "unknown type: wrong"
+                err.message == "prop: unknown type: wrong"
         );
 
         class CustomClass {}
+        class SomeModel extends Model {}
 
         class ValidModel extends Model {
             static structure() {
@@ -50,7 +51,7 @@ describe("validate and prepare model structure", () => {
                     object: "object",
                     boolean: "boolean",
                     class: CustomClass,
-                    model: Model,
+                    model: SomeModel,
 
                     arrayOfString: ["string"],
                     arrayOfNumber: ["number"],
@@ -58,7 +59,7 @@ describe("validate and prepare model structure", () => {
                     arrayOfObject: ["object"],
                     arrayOfBoolean: ["boolean"],
                     arrayOfClass: [CustomClass],
-                    arrayOfModel: [Model],
+                    arrayOfModel: [SomeModel],
                     arrayOfAny: ["*"]
                 };
             }
@@ -68,7 +69,7 @@ describe("validate and prepare model structure", () => {
         new ValidModel();
     });
 
-    it("call structure only inside constructor", () => {
+    it("once call static structure method", () => {
         
         let count = 0;
         class SomeModel extends Model {
@@ -159,12 +160,14 @@ describe("validate and prepare model structure", () => {
     });
 
     it("prepare structure, and save to model.structure", () => {
+        class TestModel extends Model {}
+
         class SomeModel extends Model {
             static structure() {
                 return {
                     name: "string",
-                    user: Model,
-                    arrayOfModels: [Model],
+                    user: TestModel,
+                    arrayOfModels: [TestModel],
                     arrayOfNumbers: ["number"],
                     arrayOfAny: [],
                     arrayOfDates: {
@@ -195,7 +198,7 @@ describe("validate and prepare model structure", () => {
                 },
                 user: {
                     type: "model",
-                    Model,
+                    Model: TestModel,
                     required: false
                 },
                 arrayOfModels: {
@@ -207,7 +210,7 @@ describe("validate and prepare model structure", () => {
                     unique: false,
                     element: {
                         type: "model",
-                        Model,
+                        Model: TestModel,
                         required: false
                     }
                 },
