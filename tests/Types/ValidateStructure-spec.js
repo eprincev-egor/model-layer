@@ -166,6 +166,7 @@ describe("validate and prepare model structure", () => {
             static structure() {
                 return {
                     name: "string",
+                    text: "text",
                     user: TestModel,
                     arrayOfModels: [TestModel],
                     arrayOfNumbers: ["number"],
@@ -188,6 +189,15 @@ describe("validate and prepare model structure", () => {
             model.structure,
             {
                 name: {
+                    type: "string",
+                    required: false,
+                    emptyAsNull: false,
+                    nullAsEmpty: false,
+                    trim: false,
+                    upper: false,
+                    lower: false
+                },
+                text: {
                     type: "string",
                     required: false,
                     emptyAsNull: false,
