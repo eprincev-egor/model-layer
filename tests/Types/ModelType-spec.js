@@ -513,4 +513,49 @@ describe("ModelType", () => {
 
     });
 
+    // when in type defined BaseModel, and in data we have ChildModel (extends BaseModel), 
+    // then clone should be instance of ChildModel
+    it("clone model, should return instance of Child", () => {
+
+        class FirstLevel extends Model {}
+
+        class SecondLevel extends FirstLevel {
+            static structure() {
+                return {
+                    level: {
+                        type: "number",
+                        default: 2
+                    }
+                };
+            }
+        }
+
+        class MainModel extends Model {
+            static structure() {
+                return {
+                    some: FirstLevel
+                };
+            }
+        }
+
+        let second = new SecondLevel();
+        let main = new MainModel({
+            some: second
+        });
+
+        assert.deepEqual(
+            main.toJSON(),
+            {
+                some: {
+                    level: 2
+                }
+            }
+        );
+
+        let clone = main.clone();
+
+        assert.ok( clone.get("some") instanceof SecondLevel );
+
+    });
+
 });
