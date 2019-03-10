@@ -2,7 +2,7 @@
 
 const {Model} = require("../../lib/index");
 const assert = require("assert");
-const {invalidValuesAsString} = require("../../lib/utils");
+const {invalidValuesAsString, eol} = require("../../lib/utils");
 
 describe("ModelType", () => {
     
@@ -127,7 +127,7 @@ describe("ModelType", () => {
                 });
             },
             err =>
-                err.message == "invalid UserModel for user: {\"name\":\"10\",\"age\":101,\"email\":null},\n required email"
+                err.message == `invalid UserModel for user: {"name":"10","age":101,"email":null},${eol} required email`
         );
 
 

@@ -710,4 +710,51 @@ describe("Model tests", () => {
         assert.ok( !firstModel.equal( secondModel ) );
         assert.ok( !secondModel.equal( firstModel ) );
     });
+
+
+    it("max error length on prepare", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    prop: "number"
+                };
+            }
+        }
+
+        assert.throws(
+            () => {
+                new SomeModel({
+                    prop: "X1234568790123456879012345687901234568790123456879"
+                });
+            }, err =>
+                err.message == "invalid number for prop: \"X1234568790123456879012345687901234568790123456879\""
+        );
+
+        assert.throws(
+            () => {
+                new SomeModel({
+                    prop: "X1234568790123456879012345687901234568790123456879y"
+                });
+            }, err =>
+                err.message == "invalid number for prop: \"X1234568790123456879012345687901234568790123456879...\""
+        );
+
+        assert.throws(
+            () => {
+                new SomeModel({
+                    prop: {some: 1}
+                });
+            }, err =>
+                err.message == "invalid number for prop: {\"some\":1}"
+        );
+
+        assert.throws(
+            () => {
+                new SomeModel({
+                    prop: {some: 1, sub: {bigString: "X1234568790123456879012345687901234568790123456879"}}
+                });
+            }, err =>
+                err.message == "invalid number for prop: {\"some\":1,\"sub\":{\"bigString\":\"X1234568790123456879..."
+        );
+    });
 });

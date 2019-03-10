@@ -2,6 +2,7 @@
 
 const {Model} = require("../../lib/index");
 const assert = require("assert");
+const {eol} = require("../../lib/utils");
 
 describe("CustomClassType", () => {
     
@@ -178,7 +179,7 @@ describe("CustomClassType", () => {
                 });
             },
             err =>
-                err.message == "invalid array[MyClass] for arr: [false],\n invalid MyClass for 0: false"
+                err.message == `invalid array[MyClass] for arr: [false],${eol} invalid MyClass for 0: false`
         );
     });
 

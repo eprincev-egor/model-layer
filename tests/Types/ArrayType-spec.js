@@ -2,6 +2,7 @@
 
 const {Model} = require("../../lib/index");
 const assert = require("assert");
+const {eol} = require("../../lib/utils");
 
 describe("ArrayType", () => {
     
@@ -122,7 +123,7 @@ describe("ArrayType", () => {
                 });
             }, 
             err => 
-                err.message == "invalid array[number] for managersIds: [false],\n invalid number for 0: false"
+                err.message == `invalid array[number] for managersIds: [false],${eol} invalid number for 0: false`
         );
         
 
@@ -133,7 +134,7 @@ describe("ArrayType", () => {
                 });
             }, 
             err => 
-                err.message == "invalid array[number] for managersIds: [\"1\",\"wrong\"],\n invalid number for 1: \"wrong\""
+                err.message == `invalid array[number] for managersIds: ["1","wrong"],${eol} invalid number for 1: "wrong"`
         );
         
 
@@ -227,7 +228,7 @@ describe("ArrayType", () => {
                 });
             }, 
             err => 
-                err.message == "invalid array[boolean] for answers: [1,0,false,true,\"wrong\"],\n invalid boolean for 4: \"wrong\""
+                err.message == `invalid array[boolean] for answers: [1,0,false,true,"wrong"],${eol} invalid boolean for 4: "wrong"`
         );
         
 
@@ -258,7 +259,7 @@ describe("ArrayType", () => {
                 });
             }, 
             err => 
-                err.message == "invalid array[date] for pays: [\"wrong\"],\n invalid date for 0: \"wrong\""
+                err.message == `invalid array[date] for pays: ["wrong"],${eol} invalid date for 0: "wrong"`
         );
         
 
@@ -300,7 +301,7 @@ describe("ArrayType", () => {
                 });
             }, 
             err => 
-                err.message == "invalid array[UserModel] for managers: [false],\n invalid UserModel for 0: false"
+                err.message == `invalid array[UserModel] for managers: [false],${eol} invalid UserModel for 0: false`
         );
         
 
@@ -341,7 +342,7 @@ describe("ArrayType", () => {
                 });
             }, 
             err => 
-                err.message == "invalid array[string] for names: [false],\n invalid string for 0: false"
+                err.message == `invalid array[string] for names: [false],${eol} invalid string for 0: false`
         );
         
 
@@ -372,7 +373,7 @@ describe("ArrayType", () => {
                 });
             }, 
             err => 
-                err.message == "invalid array[object] for users: [{\"id\":1},false],\n invalid object for 1: false"
+                err.message == `invalid array[object] for users: [{\"id\":1},false],${eol} invalid object for 1: false`
         );
         
 

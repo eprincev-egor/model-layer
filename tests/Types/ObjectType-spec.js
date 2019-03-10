@@ -2,6 +2,7 @@
 
 const {Model} = require("../../lib/index");
 const assert = require("assert");
+const {eol} = require("../../lib/utils");
 
 describe("ObjectType", () => {
     
@@ -402,7 +403,7 @@ describe("ObjectType", () => {
                 });
             }, 
             err => 
-                err.message == "invalid object[number] for object: {\"a\":10,\"b\":\"nice\"},\n invalid number for b: \"nice\""
+                err.message == `invalid object[number] for object: {"a":10,"b":"nice"},${eol} invalid number for b: "nice"`
         );
     });
 
