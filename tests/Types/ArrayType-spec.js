@@ -656,13 +656,16 @@ describe("ArrayType", () => {
     });
 
     it("test base validate as prior validation", () => {
+        let testArr1 = [1];
+        let testArr2 = [2];
+
         class SomeModel extends Model {
             static structure() {
                 return {
                     ids: {
                         type: ["number"],
                         unique: true,
-                        enum: [[]]
+                        enum: [testArr1, testArr2]
                     }
                 };
             }
@@ -671,11 +674,11 @@ describe("ArrayType", () => {
         assert.throws(
             () => {
                 new SomeModel({
-                    ids: null
+                    ids: [3, 3]
                 });
             }, 
             err => 
-                err.message ==  "invalid ids: null"
+                err.message ==  "invalid ids: [3,3]"
         );
         
     });

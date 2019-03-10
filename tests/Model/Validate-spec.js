@@ -307,6 +307,14 @@ describe("Model validate", () => {
             err =>
                 err.message == "invalid color: \"dark blue\""
         );
+
+
+        model.set("color", "red");
+        assert.equal(model.get("color"), "red");
+
+        // null is valid value for enum validation
+        model.set("color", null);
+        assert.equal(model.get("color"), null);
     });
 
     it("isValid(data)", () => {
