@@ -314,7 +314,7 @@ describe("ModelType", () => {
         });
     });
 
-    it("BaseModel.or(ChildModel1)", () => {
+    it("BaseModel.or(ChildModel1), default constructor is BaseModel", () => {
         class BaseModel extends Model {
             static structure() {
                 return {
@@ -400,7 +400,7 @@ describe("ModelType", () => {
     });
 
 
-    it("BaseModel.or(ChildModel1, ChildModel2, ...)", () => {
+    it("BaseModel.or(ChildModel1, ChildModel2, ...) get constructor by data", () => {
 
         class Product extends Model {
             static structure() {
@@ -456,7 +456,8 @@ describe("ModelType", () => {
         let cart = new Cart({
             products: [
                 {type: "car", price: 10000, color: "red"},
-                {type: "dress", price: 100, size: 34}
+                {type: "dress", price: 100, size: 34},
+                {type: "product", price: 50}
             ]
         });
 
@@ -465,10 +466,51 @@ describe("ModelType", () => {
             {
                 products: [
                     {type: "car", price: 10000, color: "red"},
-                    {type: "dress", price: 100, size: 34}
+                    {type: "dress", price: 100, size: 34},
+                    {type: "product", price: 50}
                 ]
             }
         );
+    });
+
+    
+    it("BaseModel.or(...), if custom getConstructor returns undefined, we using BaseModel", () => {
+        class BaseModel extends Model {
+            static structure() {
+                return {
+                    modelName: "string"
+                };
+            }
+        }
+
+        class ChildModel extends BaseModel {}
+
+        class MainModel extends Model {
+            static structure() {
+                return {
+                    child: {
+                        type: BaseModel.or( ChildModel ),
+                        constructor: () => null
+                    }
+                };
+            }
+        }
+
+        let main = new MainModel({
+            child: {
+                modelName: "base"
+            }
+        });
+
+        assert.deepEqual(
+            main.toJSON(),
+            {
+                child: {
+                    modelName: "base"
+                }
+            }
+        );
+
     });
 
 });

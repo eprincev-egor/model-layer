@@ -471,7 +471,12 @@ describe("ObjectType", () => {
             class TestModel extends Model {
                 static structure() {
                     return {
-                        obj: {element: {}}
+                        obj: {
+                            element: {
+                                type: "object",
+                                element: "object"
+                            }
+                        }
                     };
                 }
             }

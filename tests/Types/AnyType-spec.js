@@ -5,7 +5,7 @@ const assert = require("assert");
 const {invalidValuesAsString} = require("../../lib/utils");
 
 describe("AnyType", () => {
-/*    
+
     it("any value", () => {
         
         class SomeModel extends Model {
@@ -78,7 +78,7 @@ describe("AnyType", () => {
             }
         });
     });
-*/
+
     it("equal any values", () => {
         let now1 = new Date();
         let now2 = new Date( +now1 );

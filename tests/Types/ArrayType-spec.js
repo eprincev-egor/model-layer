@@ -373,7 +373,7 @@ describe("ArrayType", () => {
                 });
             }, 
             err => 
-                err.message == `invalid array[object] for users: [{\"id\":1},false],${eol} invalid object for 1: false`
+                err.message == `invalid array[object] for users: [{"id":1},false],${eol} invalid object for 1: false`
         );
         
 
@@ -750,12 +750,16 @@ describe("ArrayType", () => {
         circular3[0] = circular3;
         circular3[1] = [];
 
+        let circular4 = [circular2, circular2];
+
         let pairs = [
             [circular1, circular1, true],
             [circular1, circular2, true],
             [circular2, circular2, true],
             [circular1, circular3, false],
-            [circular2, circular3, false]
+            [circular2, circular3, false],
+            [circular2, circular4, false],
+            [circular4, circular4, true]
         ];
 
         pairs.forEach(pair => {

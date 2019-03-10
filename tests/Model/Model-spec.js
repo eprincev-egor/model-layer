@@ -2,6 +2,7 @@
 
 const {Model} = require("../../lib/index");
 const assert = require("assert");
+const {eol} = require("../../lib/utils");
 
 describe("Model tests", () => {
 
@@ -755,6 +756,70 @@ describe("Model tests", () => {
                 });
             }, err =>
                 err.message == "invalid number for prop: {\"some\":1,\"sub\":{\"bigString\":\"X1234568790123456879..."
+        );
+    });
+
+    it("test eol on linux", () => {
+        
+        eol.define( "linux" );
+
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    arr: ["number"],
+                    obj: {element: "number"}
+                };
+            }
+        }
+
+        assert.throws(
+            () => {
+                new SomeModel({
+                    arr: ["wrong"]
+                });
+            }, err =>
+                err.message == "invalid array[number] for arr: [\"wrong\"],\n invalid number for 0: \"wrong\""
+        );
+
+        assert.throws(
+            () => {
+                new SomeModel({
+                    obj: {prop: "wrong"}
+                });
+            }, err =>
+                err.message == "invalid object[number] for obj: {\"prop\":\"wrong\"},\n invalid number for prop: \"wrong\""
+        );
+    });
+
+    it("test eol on windows", () => {
+        
+        eol.define( "windows" );
+
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    arr: ["number"],
+                    obj: {element: "number"}
+                };
+            }
+        }
+
+        assert.throws(
+            () => {
+                new SomeModel({
+                    arr: ["wrong"]
+                });
+            }, err =>
+                err.message == "invalid array[number] for arr: [\"wrong\"],\r\n invalid number for 0: \"wrong\""
+        );
+
+        assert.throws(
+            () => {
+                new SomeModel({
+                    obj: {prop: "wrong"}
+                });
+            }, err =>
+                err.message == "invalid object[number] for obj: {\"prop\":\"wrong\"},\r\n invalid number for prop: \"wrong\""
         );
     });
 });
