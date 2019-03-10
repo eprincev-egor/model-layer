@@ -792,4 +792,51 @@ describe("ArrayType", () => {
             );
         });
     });
+
+    
+    // when in type defined BaseModel, and in data we have ChildModel (extends BaseModel), 
+    // then clone should be instance of ChildModel
+    it("clone array of models, should return array of instance of Child", () => {
+
+        class FirstLevel extends Model {}
+
+        class SecondLevel extends FirstLevel {
+            static structure() {
+                return {
+                    level: {
+                        type: "number",
+                        default: 2
+                    }
+                };
+            }
+        }
+
+        class MainModel extends Model {
+            static structure() {
+                return {
+                    arr: [FirstLevel]
+                };
+            }
+        }
+
+        let second = new SecondLevel();
+        let main = new MainModel({
+            arr: [second]
+        });
+
+        assert.deepEqual(
+            main.toJSON(),
+            {
+                arr: [{
+                    level: 2
+                }]
+            }
+        );
+
+        let clone = main.clone();
+
+        assert.ok( clone.get("arr")[0] instanceof SecondLevel );
+
+    });
+
 });
