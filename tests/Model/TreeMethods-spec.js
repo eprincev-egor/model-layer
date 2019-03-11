@@ -500,5 +500,71 @@ describe("TreeMethods, walk by children or parents", () => {
 
         assert.deepEqual( tmp, [2, 3, 4] );
     });
+
+    it("circular walk", () => {
+        class TreeModel extends Model {
+            static structure() {
+                return {
+                    name: "string",
+                    child: TreeModel
+                };
+            }
+        }
+
+        let root = new TreeModel({
+            name: "root"
+        });
+        let child = new TreeModel({
+            name: "child",
+            child: root
+        });
+        root.set({
+            child
+        });
+
+        let tmp = [];
+        root.walk(model => {
+            let name = model.get("name");
+            tmp.push( name );
+        });
+
+        assert.deepEqual(tmp, [
+            "child",
+            "root"
+        ]);
+    });
+
+    it("circular findParent", () => {
+        class TreeModel extends Model {
+            static structure() {
+                return {
+                    name: "string",
+                    child: TreeModel
+                };
+            }
+        }
+
+        let root = new TreeModel({
+            name: "root"
+        });
+        let child = new TreeModel({
+            name: "child",
+            child: root
+        });
+        root.set({
+            child
+        });
+
+        let tmp = [];
+        root.findParent(parentModel => {
+            let name = parentModel.get("name");
+            tmp.push( name );
+        });
+
+        assert.deepEqual(tmp, [
+            "child",
+            "root"
+        ]);
+    });
     
 });
