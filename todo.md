@@ -1,9 +1,9 @@
-- Model
++ Model
     + default
         + default primitive
         + default as func
     
-    - validate structure
+    + validate structure
 
     + const values
 
@@ -53,11 +53,11 @@
         + sort
         + sort by custom comparator
     
-    - obj property
-        - prop: {element: "number"}
-        - prop: {element: {type: "number", round: 2, ...}}
-        - emptyAsNull
-        - nullAsEmpty
+    + obj property
+        + prop: {element: "number"}
+        + prop: {element: {type: "number", round: 2, ...}}
+        + emptyAsNull
+        + nullAsEmpty
         ...
 
     + child model
@@ -76,8 +76,8 @@
     + toJSON
         + child models
 
-    - custom types
-    - method equal
+    + custom types
+    + method equal
     + method clone
     
 - Collection
