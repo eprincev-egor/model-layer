@@ -81,9 +81,26 @@
     + method clone
     
 - Collection
-    - serial
-    - primary key
-    - unique
-    - foreign key
+    array methods:
+        - at
+        - push
+        - forEach, each
+        - splice
+        - find
+        - findIndex
+        - indexOf
+        - concat
+        - filter
+        - includes
+        - map
+        - sort
+        - reduce
+        ...
+
+    constraints:
+        - serial
+        - primary key
+        - unique
+        - foreign key
 
 - locale errors
