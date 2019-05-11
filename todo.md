@@ -103,7 +103,13 @@
             - includes
             + map
             - sort
-            - reduce
+            + reduce
+            - pop
+            - shift
+            - unshift
+            + every
+            + some
+            + slice
             ...
 
     constraints:
