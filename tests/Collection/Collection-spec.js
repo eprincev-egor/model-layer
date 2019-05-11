@@ -264,6 +264,33 @@ describe("Collection tests", () => {
         assert.deepStrictEqual( indexes, [0, 1] );
     });
 
+    it("forEach(f, context)", () => {
+
+        class Products extends Collection {
+            static structure() {
+                return {
+                    name: "text",
+                    price: "number"
+                };
+            }
+        }
+
+        let products = new Products([
+            {name: "Eggs", price: 1.2}
+        ]);
+
+        
+        let context = {
+            changed: false
+        };
+
+        products.forEach(function() {
+            this.changed = true;
+        }, context);
+
+        assert.strictEqual(context.changed, true);
+    });
+
     it("each", () => {
 
         class Products extends Collection {
@@ -301,6 +328,33 @@ describe("Collection tests", () => {
         assert.deepStrictEqual( indexes, [0, 1] );
     });
 
+    it("each(f, context)", () => {
+
+        class Products extends Collection {
+            static structure() {
+                return {
+                    name: "text",
+                    price: "number"
+                };
+            }
+        }
+
+        let products = new Products([
+            {name: "Eggs", price: 1.2}
+        ]);
+
+        
+        let context = {
+            changed: false
+        };
+
+        products.each(function() {
+            this.changed = true;
+        }, context);
+
+        assert.strictEqual(context.changed, true);
+    });
+
     it("once call structure", () => {
         let calls = 0;
 
@@ -322,4 +376,207 @@ describe("Collection tests", () => {
 
         assert.strictEqual( calls, 1 );
     });
+
+    
+    it("find()", () => {
+
+        class Colors extends Collection {
+            static structure() {
+                return {
+                    name: "text"
+                };
+            }
+        }
+
+        let colors = new Colors([
+            {name: "red"},
+            {name: "green"},
+            {name: "blue"}
+        ]);
+
+        let red = colors.find(color =>
+            color.get("name") == "red"
+        );
+
+        assert.strictEqual( red.get("name"), "red" );
+    });
+    
+    it("find(f, context)", () => {
+        class Products extends Collection {
+            static structure() {
+                return {
+                    name: "text",
+                    price: "number"
+                };
+            }
+        }
+
+        let products = new Products([
+            {name: "Eggs", price: 1.2}
+        ]);
+
+        
+        let context = {
+            changed: false
+        };
+
+        products.find(function() {
+            this.changed = true;
+        }, context);
+
+        assert.strictEqual(context.changed, true);
+    });
+
+
+    it("findIndex()", () => {
+
+        class Colors extends Collection {
+            static structure() {
+                return {
+                    name: "text"
+                };
+            }
+        }
+
+        let colors = new Colors([
+            {name: "red"},
+            {name: "green"},
+            {name: "blue"}
+        ]);
+
+        let index = colors.findIndex(color =>
+            color.get("name") == "green"
+        );
+
+        assert.strictEqual( index, 1 );
+    });
+    
+    it("findIndex(f, context)", () => {
+        class Products extends Collection {
+            static structure() {
+                return {
+                    name: "text",
+                    price: "number"
+                };
+            }
+        }
+
+        let products = new Products([
+            {name: "Eggs", price: 1.2}
+        ]);
+
+        
+        let context = {
+            changed: false
+        };
+
+        products.findIndex(function() {
+            this.changed = true;
+        }, context);
+
+        assert.strictEqual(context.changed, true);
+    });
+
+    it("filter()", () => {
+
+        class Products extends Collection {
+            static structure() {
+                return {
+                    name: "text",
+                    price: "number"
+                };
+            }
+        }
+
+        let products = new Products([
+            {name: "Eggs", price: 1.8},
+            {name: "Pie", price: 10},
+            {name: "Milk", price: 4}
+        ]);
+
+        let result = products.filter(product =>
+            product.get("price") > 2
+        );
+
+        assert.strictEqual( result.length, 2 );
+        assert.strictEqual( result[0].get("name"), "Pie" );
+        assert.strictEqual( result[1].get("name"), "Milk" );
+    });
+    
+    it("filter(f, context)", () => {
+        class Products extends Collection {
+            static structure() {
+                return {
+                    name: "text",
+                    price: "number"
+                };
+            }
+        }
+
+        let products = new Products([
+            {name: "Eggs", price: 1.2}
+        ]);
+
+        
+        let context = {
+            changed: false
+        };
+
+        products.filter(function() {
+            this.changed = true;
+        }, context);
+
+        assert.strictEqual(context.changed, true);
+    });
+
+    it("map()", () => {
+
+        class Products extends Collection {
+            static structure() {
+                return {
+                    name: "text",
+                    price: "number"
+                };
+            }
+        }
+
+        let products = new Products([
+            {name: "Eggs", price: 1.8},
+            {name: "Pie", price: 10},
+            {name: "Milk", price: 4}
+        ]);
+
+        let prices = products.map(product =>
+            product.get("price")
+        );
+
+        assert.deepStrictEqual( prices, [1.8, 10, 4] );
+    });
+    
+    it("map(f, context)", () => {
+        class Products extends Collection {
+            static structure() {
+                return {
+                    name: "text",
+                    price: "number"
+                };
+            }
+        }
+
+        let products = new Products([
+            {name: "Eggs", price: 1.2}
+        ]);
+
+        
+        let context = {
+            changed: false
+        };
+
+        products.map(function() {
+            this.changed = true;
+        }, context);
+
+        assert.strictEqual(context.changed, true);
+    });
+
 });

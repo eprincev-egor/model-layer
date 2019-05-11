@@ -95,13 +95,13 @@
             + push
             + forEach, each
             - splice
-            - find
-            - findIndex
+            + find
+            + findIndex
             - indexOf
             - concat
-            - filter
+            + filter
             - includes
-            - map
+            + map
             - sort
             - reduce
             ...
