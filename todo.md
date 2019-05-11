@@ -82,20 +82,29 @@
     
 - Collection
     array methods:
-        - at
-        - push
-        - forEach, each
-        - splice
-        - find
-        - findIndex
-        - indexOf
-        - concat
-        - filter
-        - includes
-        - map
-        - sort
-        - reduce
-        ...
+        - modelBy
+        + at
+        
+        events:
+            - add
+            - change
+            - remove
+
+
+        array methods:
+            + push
+            + forEach, each
+            - splice
+            - find
+            - findIndex
+            - indexOf
+            - concat
+            - filter
+            - includes
+            - map
+            - sort
+            - reduce
+            ...
 
     constraints:
         - serial
