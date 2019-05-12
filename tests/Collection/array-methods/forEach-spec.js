@@ -3,7 +3,7 @@
 const {Collection, Model} = require("../../../lib/index");
 const assert = require("assert");
 
-describe("Collection tests", () => {
+describe("Collection.forEach", () => {
 
     it("forEach", () => {
 

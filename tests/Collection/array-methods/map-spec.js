@@ -1,11 +1,11 @@
 "use strict";
 
-const {Collection, Model} = require("../../../lib/index");
+const {Collection} = require("../../../lib/index");
 const assert = require("assert");
 
-describe("Collection tests", () => {
+describe("Collection.map", () => {
 
-    it("each", () => {
+    it("map()", () => {
 
         class Products extends Collection {
             static structure() {
@@ -17,33 +17,19 @@ describe("Collection tests", () => {
         }
 
         let products = new Products([
-            {name: "Eggs", price: 1.2},
-            {name: "Milk", price: 2.75}
+            {name: "Eggs", price: 1.8},
+            {name: "Pie", price: 10},
+            {name: "Milk", price: 4}
         ]);
 
-        
-        assert.strictEqual( products.length, 2 );
+        let prices = products.map(product =>
+            product.get("price")
+        );
 
-
-        let names = [];
-        let prices = [];
-        let indexes = [];
-
-        products.each((product, i) => {
-            assert.ok( product instanceof Model );
-
-            names.push( product.get("name") );
-            prices.push( product.get("price") );
-            indexes.push( i );
-        });
-
-        assert.deepStrictEqual( names, ["Eggs", "Milk"] );
-        assert.deepStrictEqual( prices, [1.2, 2.75] );
-        assert.deepStrictEqual( indexes, [0, 1] );
+        assert.deepStrictEqual( prices, [1.8, 10, 4] );
     });
-
-    it("each(f, context)", () => {
-
+    
+    it("map(f, context)", () => {
         class Products extends Collection {
             static structure() {
                 return {
@@ -62,11 +48,10 @@ describe("Collection tests", () => {
             changed: false
         };
 
-        products.each(function() {
+        products.map(function() {
             this.changed = true;
         }, context);
 
         assert.strictEqual(context.changed, true);
     });
-
 });

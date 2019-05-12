@@ -3,9 +3,9 @@
 const {Collection} = require("../../../lib/index");
 const assert = require("assert");
 
-describe("Collection tests", () => {
+describe("Collection.includes", () => {
 
-    it("indexOf(model)", () => {
+    it("includes(model)", () => {
 
         class Products extends Collection {
             static structure() {
@@ -33,17 +33,17 @@ describe("Collection tests", () => {
         let unknownModel = new SomeModel();
 
         
-        let result = products.indexOf( lastModel );
-        assert.strictEqual( result, 2 );
+        let result = products.includes( lastModel );
+        assert.strictEqual( result, true );
 
-        result = products.indexOf( firstModel );
-        assert.strictEqual( result, 0 );
+        result = products.includes( firstModel );
+        assert.strictEqual( result, true );
 
-        result = products.indexOf( unknownModel );
-        assert.strictEqual( result, -1 );
+        result = products.includes( unknownModel );
+        assert.strictEqual( result, false );
     });
-    
-    it("indexOf(model, fromIndex)", () => {
+
+    it("includes(model, fromIndex)", () => {
 
         class Products extends Collection {
             static structure() {
@@ -64,11 +64,11 @@ describe("Collection tests", () => {
         let lastModel = products.at(2);
 
         
-        let result = products.indexOf( lastModel, 1 );
-        assert.strictEqual( result, 2 );
+        let result = products.includes( lastModel, 1 );
+        assert.strictEqual( result, true );
 
-        result = products.indexOf( firstModel, 1 );
-        assert.strictEqual( result, -1 );
+        result = products.includes( firstModel, 1 );
+        assert.strictEqual( result, false );
     });
 
 

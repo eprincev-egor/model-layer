@@ -3,9 +3,9 @@
 const {Collection, Model} = require("../../../lib/index");
 const assert = require("assert");
 
-describe("Collection tests", () => {
-    
-    it("unshift object", () => {
+describe("Collection.push", () => {
+
+    it("push object", () => {
         class Users extends Collection {
             static structure() {
                 return {
@@ -20,18 +20,18 @@ describe("Collection tests", () => {
         
         assert.strictEqual( users.length, 1 );
 
-        users.unshift({
+        users.push({
             name: "Bob"
         });
 
         assert.strictEqual( users.length, 2 );
 
-        let user = users.at(0);
+        let user = users.at(1);
         assert.ok( user instanceof Model );
         assert.strictEqual( user.get("name"), "Bob" );
     });
 
-    it("unshift(a, b, ...)", () => {
+    it("push(a, b, ...)", () => {
         class Users extends Collection {
             static structure() {
                 return {
@@ -44,7 +44,7 @@ describe("Collection tests", () => {
         
         assert.strictEqual( users.length, 0 );
 
-        users.unshift({
+        users.push({
             name: "Bob"
         }, {
             name: "James"
@@ -64,7 +64,7 @@ describe("Collection tests", () => {
         assert.strictEqual( users.at(2).get("name"), "Oliver" );
     });
 
-    it("unshift CustomModel", () => {
+    it("push CustomModel", () => {
         class User extends Model {
             static structure() {
                 return {
@@ -86,15 +86,15 @@ describe("Collection tests", () => {
         
         assert.strictEqual( users.length, 0 );
 
-        users.unshift( user );
+        users.push( user );
 
         assert.strictEqual( users.length, 1 );
 
-        let firstUser = users.at(0);
-        assert.ok( firstUser == user );
+        let pushedUser = users.at(0);
+        assert.ok( pushedUser == user );
     });
 
-    it("unshift SomeModel", () => {
+    it("push SomeModel", () => {
         class User extends Model {
             static structure() {
                 return {
@@ -118,16 +118,16 @@ describe("Collection tests", () => {
         
         assert.strictEqual( users.length, 0 );
 
-        users.unshift( user );
+        users.push( user );
 
         assert.strictEqual( users.length, 1 );
 
-        let firstUser = users.at(0);
-        assert.ok( firstUser instanceof Model );
-        assert.ok( firstUser != user );
+        let pushedUser = users.at(0);
+        assert.ok( pushedUser instanceof Model );
+        assert.ok( pushedUser != user );
     });
 
-    it("unshift()", () => {
+    it("push()", () => {
 
         class Users extends Collection {
             static structure() {
@@ -141,12 +141,12 @@ describe("Collection tests", () => {
         
         assert.strictEqual( users.length, 0 );
 
-        users.unshift();
+        users.push();
 
         assert.strictEqual( users.length, 0 );
     });
 
-    it("unshift(undefined)", () => {
+    it("push(undefined)", () => {
 
         class Users extends Collection {
             static structure() {
@@ -160,7 +160,7 @@ describe("Collection tests", () => {
         
         assert.throws(
             () => {
-                users.unshift(undefined);
+                users.push(undefined);
             }, err =>
                 err.message == "invalid model: undefined"
         );

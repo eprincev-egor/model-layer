@@ -3,9 +3,9 @@
 const {Collection} = require("../../../lib/index");
 const assert = require("assert");
 
-describe("Collection tests", () => {
+describe("Collection.filter", () => {
 
-    it("some()", () => {
+    it("filter()", () => {
 
         class Products extends Collection {
             static structure() {
@@ -22,19 +22,16 @@ describe("Collection tests", () => {
             {name: "Milk", price: 4}
         ]);
 
-        let result = products.some(product =>
-            product.get("price") > 5
+        let result = products.filter(product =>
+            product.get("price") > 2
         );
-        assert.strictEqual( result, true );
 
-
-        result = products.some(product =>
-            product.get("price") > 20
-        );
-        assert.strictEqual( result, false );
+        assert.strictEqual( result.length, 2 );
+        assert.strictEqual( result[0].get("name"), "Pie" );
+        assert.strictEqual( result[1].get("name"), "Milk" );
     });
     
-    it("some(f, context)", () => {
+    it("filter(f, context)", () => {
         class Products extends Collection {
             static structure() {
                 return {
@@ -53,11 +50,11 @@ describe("Collection tests", () => {
             changed: false
         };
 
-        products.some(function() {
+        products.filter(function() {
             this.changed = true;
         }, context);
 
         assert.strictEqual(context.changed, true);
     });
-    
+
 });

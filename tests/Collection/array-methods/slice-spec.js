@@ -3,7 +3,7 @@
 const {Collection} = require("../../../lib/index");
 const assert = require("assert");
 
-describe("Collection tests", () => {
+describe("Collection.slice", () => {
 
     it("slice(begin)", () => {
 

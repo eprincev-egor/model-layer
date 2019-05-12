@@ -3,9 +3,9 @@
 const {Collection} = require("../../../lib/index");
 const assert = require("assert");
 
-describe("Collection tests", () => {
+describe("Collection.every", () => {
 
-    it("map()", () => {
+    it("every()", () => {
 
         class Products extends Collection {
             static structure() {
@@ -22,14 +22,19 @@ describe("Collection tests", () => {
             {name: "Milk", price: 4}
         ]);
 
-        let prices = products.map(product =>
-            product.get("price")
+        let result = products.every(product =>
+            product.get("price") > 5
         );
+        assert.strictEqual( result, false );
 
-        assert.deepStrictEqual( prices, [1.8, 10, 4] );
+
+        result = products.every(product =>
+            product.get("price") > 1
+        );
+        assert.strictEqual( result, true );
     });
     
-    it("map(f, context)", () => {
+    it("every(f, context)", () => {
         class Products extends Collection {
             static structure() {
                 return {
@@ -48,10 +53,11 @@ describe("Collection tests", () => {
             changed: false
         };
 
-        products.map(function() {
+        products.every(function() {
             this.changed = true;
         }, context);
 
         assert.strictEqual(context.changed, true);
     });
+
 });
