@@ -119,7 +119,7 @@
             - keys
             - lastIndexOf
             - reduceRight
-            - reverse
+            + reverse
             - values
 
     constraints:
