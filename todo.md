@@ -110,7 +110,17 @@
             + every
             + some
             + slice
-            ...
+            - copyWithin
+            - entries
+            - fill
+            - flat
+            - flatMap
+            - join
+            - keys
+            - lastIndexOf
+            - reduceRight
+            - reverse
+            - values
 
     constraints:
         - serial
