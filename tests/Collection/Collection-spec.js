@@ -46,6 +46,37 @@ describe("Collection tests", () => {
 
     });
 
+    it("create collection with models", () => {
+        class User extends Model {
+            static structure() {
+                return {
+                    name: "text"
+                };
+            }
+        }
+
+        class Users extends Collection {
+            static structure() {
+                return User;
+            }
+        }
+
+        let user = new User({
+            name: "Bob"
+        });
+        let users = new Users([
+            user
+        ]);
+
+        assert.strictEqual( users.length, 1 );
+        
+        let firstUser = users.at(0);
+
+        assert.ok( firstUser == user );
+        assert.strictEqual( firstUser.get("name"), "Bob" );
+
+    });
+
     it("set model by index", () => {
         class Users extends Collection {
             static structure() {

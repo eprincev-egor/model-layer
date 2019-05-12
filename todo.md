@@ -98,7 +98,7 @@
             + find
             + findIndex
             + indexOf
-            - concat
+            + concat
             + filter
             + includes
             + map
@@ -121,6 +121,11 @@
             + reduceRight
             + reverse
             - values
+            - first
+            - last
+            - reset
+            - add
+            - create
 
     constraints:
         - serial
