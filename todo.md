@@ -117,7 +117,7 @@
             - flatMap
             - join
             - keys
-            - lastIndexOf
+            + lastIndexOf
             - reduceRight
             + reverse
             - values
