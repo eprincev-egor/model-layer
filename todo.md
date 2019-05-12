@@ -97,10 +97,10 @@
             - splice
             + find
             + findIndex
-            - indexOf
+            + indexOf
             - concat
             + filter
-            - includes
+            + includes
             + map
             - sort
             + reduce
