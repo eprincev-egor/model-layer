@@ -104,9 +104,9 @@
             + map
             - sort
             + reduce
-            - pop
-            - shift
-            - unshift
+            + pop
+            + shift
+            + unshift
             + every
             + some
             + slice

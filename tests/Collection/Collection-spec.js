@@ -77,17 +77,19 @@ describe("Collection tests", () => {
             }
         }
 
-        let users = new Users();
+        let users = new Users([
+            {name: "Oliver"}
+        ]);
         
-        assert.strictEqual( users.length, 0 );
+        assert.strictEqual( users.length, 1 );
 
         users.push({
             name: "Bob"
         });
 
-        assert.strictEqual( users.length, 1 );
+        assert.strictEqual( users.length, 2 );
 
-        let user = users.at(0);
+        let user = users.at(1);
         assert.ok( user instanceof Model );
         assert.strictEqual( user.get("name"), "Bob" );
     });
@@ -904,4 +906,240 @@ describe("Collection tests", () => {
         result = products.includes( firstModel, 1 );
         assert.strictEqual( result, false );
     });
+
+    it("pop()", () => {
+        
+        class Products extends Collection {
+            static structure() {
+                return {
+                    name: "text",
+                    price: "number"
+                };
+            }
+        }
+
+        let products = new Products([
+            {name: "Eggs", price: 1.8},
+            {name: "Pie", price: 10},
+            {name: "Milk", price: 4}
+        ]);
+
+        assert.strictEqual( products.length, 3 );
+
+        let result = products.pop();
+        assert.strictEqual( result.get("name"), "Milk" );
+        assert.strictEqual( products.length, 2 );
+
+        result = products.pop();
+        assert.strictEqual( result.get("name"), "Pie" );
+        assert.strictEqual( products.length, 1 );
+
+        result = products.pop();
+        assert.strictEqual( result.get("name"), "Eggs" );
+        assert.strictEqual( products.length, 0 );
+
+        result = products.pop();
+        assert.strictEqual( result, undefined );
+        assert.strictEqual( products.length, 0 );
+    });
+
+    it("shift()", () => {
+        
+        class Products extends Collection {
+            static structure() {
+                return {
+                    name: "text",
+                    price: "number"
+                };
+            }
+        }
+
+        let products = new Products([
+            {name: "Eggs", price: 1.8},
+            {name: "Pie", price: 10},
+            {name: "Milk", price: 4}
+        ]);
+
+        assert.strictEqual( products.length, 3 );
+
+        let result = products.shift();
+        assert.strictEqual( result.get("name"), "Eggs" );
+        assert.strictEqual( products.length, 2 );
+
+        result = products.shift();
+        assert.strictEqual( result.get("name"), "Pie" );
+        assert.strictEqual( products.length, 1 );
+
+        result = products.shift();
+        assert.strictEqual( result.get("name"), "Milk" );
+        assert.strictEqual( products.length, 0 );
+
+        result = products.shift();
+        assert.strictEqual( result, undefined );
+        assert.strictEqual( products.length, 0 );
+    });
+
+
+    
+    it("unshift object", () => {
+        class Users extends Collection {
+            static structure() {
+                return {
+                    name: "text"
+                };
+            }
+        }
+
+        let users = new Users([
+            {name: "Oliver"}
+        ]);
+        
+        assert.strictEqual( users.length, 1 );
+
+        users.unshift({
+            name: "Bob"
+        });
+
+        assert.strictEqual( users.length, 2 );
+
+        let user = users.at(0);
+        assert.ok( user instanceof Model );
+        assert.strictEqual( user.get("name"), "Bob" );
+    });
+
+    it("unshift(a, b, ...)", () => {
+        class Users extends Collection {
+            static structure() {
+                return {
+                    name: "text"
+                };
+            }
+        }
+
+        let users = new Users();
+        
+        assert.strictEqual( users.length, 0 );
+
+        users.unshift({
+            name: "Bob"
+        }, {
+            name: "James"
+        }, {
+            name: "Oliver"
+        });
+
+        assert.strictEqual( users.length, 3 );
+
+        assert.ok( users.at(0) instanceof Model );
+        assert.strictEqual( users.at(0).get("name"), "Bob" );
+
+        assert.ok( users.at(1) instanceof Model );
+        assert.strictEqual( users.at(1).get("name"), "James" );
+
+        assert.ok( users.at(2) instanceof Model );
+        assert.strictEqual( users.at(2).get("name"), "Oliver" );
+    });
+
+    it("unshift CustomModel", () => {
+        class User extends Model {
+            static structure() {
+                return {
+                    name: "text"
+                };
+            }
+        }
+
+        class Users extends Collection {
+            static structure() {
+                return User;
+            }
+        }
+
+        let user = new User({
+            name: "Bob"
+        });
+        let users = new Users();
+        
+        assert.strictEqual( users.length, 0 );
+
+        users.unshift( user );
+
+        assert.strictEqual( users.length, 1 );
+
+        let firstUser = users.at(0);
+        assert.ok( firstUser == user );
+    });
+
+    it("unshift SomeModel", () => {
+        class User extends Model {
+            static structure() {
+                return {
+                    name: "text"
+                };
+            }
+        }
+
+        class Users extends Collection {
+            static structure() {
+                return {
+                    name: "text"
+                };
+            }
+        }
+
+        let user = new User({
+            name: "Bob"
+        });
+        let users = new Users();
+        
+        assert.strictEqual( users.length, 0 );
+
+        users.unshift( user );
+
+        assert.strictEqual( users.length, 1 );
+
+        let firstUser = users.at(0);
+        assert.ok( firstUser instanceof Model );
+        assert.ok( firstUser != user );
+    });
+
+    it("push()", () => {
+
+        class Users extends Collection {
+            static structure() {
+                return {
+                    name: "text"
+                };
+            }
+        }
+
+        let users = new Users();
+        
+        assert.strictEqual( users.length, 0 );
+
+        users.unshift();
+
+        assert.strictEqual( users.length, 0 );
+    });
+
+    it("push(undefined)", () => {
+
+        class Users extends Collection {
+            static structure() {
+                return {
+                    name: "text"
+                };
+            }
+        }
+
+        let users = new Users();
+        
+        assert.throws(
+            () => {
+                users.unshift(undefined);
+            }, err =>
+                err.message == "invalid model: undefined"
+        );
+    });
+
 });
