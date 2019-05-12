@@ -102,7 +102,7 @@
             + filter
             + includes
             + map
-            - sort
+            + sort
             + reduce
             + pop
             + shift
