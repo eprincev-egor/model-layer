@@ -118,7 +118,7 @@
             - join
             - keys
             + lastIndexOf
-            - reduceRight
+            + reduceRight
             + reverse
             - values
 
