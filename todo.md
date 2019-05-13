@@ -94,7 +94,7 @@
         array methods:
             + push
             + forEach, each
-            - splice
+            + splice
             + find
             + findIndex
             + indexOf
