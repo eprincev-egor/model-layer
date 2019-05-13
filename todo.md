@@ -114,7 +114,7 @@
             - entries
             - fill
             + flat
-            - flatMap
+            + flatMap
             - join
             - keys
             + lastIndexOf
