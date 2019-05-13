@@ -110,22 +110,21 @@
             + every
             + some
             + slice
-            - copyWithin
-            - entries
+            + copyWithin
             + fill
             + flat
             + flatMap
             + join
-            - keys
             + lastIndexOf
             + reduceRight
             + reverse
-            - values
             + first
             + last
             + reset
             + add
             + create
+            + toJSON
+            - remove
 
             - node8+ polyfill
 
