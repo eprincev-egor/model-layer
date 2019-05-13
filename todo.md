@@ -113,7 +113,7 @@
             - copyWithin
             - entries
             - fill
-            - flat
+            + flat
             - flatMap
             - join
             - keys
