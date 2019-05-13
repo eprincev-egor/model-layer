@@ -1,6 +1,6 @@
 "use strict";
 
-const {Collection} = require("../../../lib/index");
+const {Collection, Model} = require("../../../lib/index");
 const assert = require("assert");
 
 describe("Collection.indexOf", () => {
@@ -25,7 +25,7 @@ describe("Collection.indexOf", () => {
         let firstModel = products.at(0);
         let lastModel = products.at(2);
 
-        class SomeModel {
+        class SomeModel extends Model {
             static structure() {
                 return {"*": "*"};
             }

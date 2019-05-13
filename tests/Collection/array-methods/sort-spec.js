@@ -114,4 +114,29 @@ describe("Collection.sort", () => {
         assert.strictEqual( products.at(6).get("price"), 10 );
     });
 
+    it("sort(somethingWrong)", () => {
+        
+        class Products extends Collection {
+            static structure() {
+                return {
+                    name: "text",
+                    price: "number"
+                };
+            }
+        }
+
+        let products = new Products([
+            {name: "Pie", price: 10},
+            {name: "Eggs", price: 1.8},
+            {name: "Milk", price: 40}
+        ]);
+
+        assert.throws(
+            () => {
+                products.sort();
+            }, err =>
+                err.message == "invalid compareFunction or key: undefined"
+        );
+    });
+
 });
