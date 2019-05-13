@@ -3,9 +3,9 @@
 const {Collection} = require("../../../lib/index");
 const assert = require("assert");
 
-describe("Collection.reset", () => {
+describe("Collection.first", () => {
 
-    it("reset()", () => {
+    it("first()", () => {
         
         class Products extends Collection {
             static structure() {
