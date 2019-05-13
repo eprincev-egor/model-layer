@@ -115,7 +115,7 @@
             - fill
             + flat
             + flatMap
-            - join
+            + join
             - keys
             + lastIndexOf
             + reduceRight
@@ -126,6 +126,8 @@
             + reset
             + add
             + create
+
+            - node8+ polyfill
 
     constraints:
         - serial
