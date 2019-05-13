@@ -121,9 +121,9 @@
             + reduceRight
             + reverse
             - values
-            - first
-            - last
-            - reset
+            + first
+            + last
+            + reset
             - add
             - create
 
