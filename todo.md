@@ -112,7 +112,7 @@
             + slice
             - copyWithin
             - entries
-            - fill
+            + fill
             + flat
             + flatMap
             + join
