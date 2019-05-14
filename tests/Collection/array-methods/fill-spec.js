@@ -44,5 +44,105 @@ describe("Collection.fill", () => {
 
     });
 
+    
+
+    it("fill(row, start)", () => {
+        
+        class Products extends Collection {
+            static structure() {
+                return {
+                    name: "text"
+                };
+            }
+        }
+
+        let products = new Products([
+            {name: "A"},
+            {name: "B"},
+            {name: "C"}
+        ]);
+
+        assert.strictEqual( products.length, 3 );
+
+        products.fill({
+            name: "X"
+        }, 1);
+        
+        assert.strictEqual( products.length, 3 );
+
+        assert.strictEqual( products.at(0).get("name"), "A" );
+        assert.strictEqual( products.at(1).get("name"), "X" );
+        assert.strictEqual( products.at(2).get("name"), "X" );
+        
+        assert.ok( products.at(1) != products.at(2) );
+
+        products.at(1).set("name", "Y");
+        assert.strictEqual( products.at(0).get("name"), "A" );
+        assert.strictEqual( products.at(1).get("name"), "Y" );
+        assert.strictEqual( products.at(2).get("name"), "X" );
+
+    });
+
+    
+    it("fill(row, -start)", () => {
+        
+        class Products extends Collection {
+            static structure() {
+                return {
+                    name: "text"
+                };
+            }
+        }
+
+        let products = new Products([
+            {name: "A"},
+            {name: "B"},
+            {name: "C"}
+        ]);
+
+        assert.strictEqual( products.length, 3 );
+
+        products.fill({
+            name: "X"
+        }, -1);
+        
+        assert.strictEqual( products.length, 3 );
+
+        assert.strictEqual( products.at(0).get("name"), "A" );
+        assert.strictEqual( products.at(1).get("name"), "B" );
+        assert.strictEqual( products.at(2).get("name"), "X" );
+        
+    });
+
+    it("fill(row, -start, -end)", () => {
+        
+        class Products extends Collection {
+            static structure() {
+                return {
+                    name: "text"
+                };
+            }
+        }
+
+        let products = new Products([
+            {name: "A"},
+            {name: "B"},
+            {name: "C"}
+        ]);
+
+        assert.strictEqual( products.length, 3 );
+
+        products.fill({
+            name: "X"
+        }, -2, -1);
+        
+        assert.strictEqual( products.length, 3 );
+
+        assert.strictEqual( products.at(0).get("name"), "A" );
+        assert.strictEqual( products.at(1).get("name"), "X" );
+        assert.strictEqual( products.at(2).get("name"), "C" );
+        
+    });
+
 
 });
