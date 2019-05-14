@@ -31,6 +31,9 @@ describe("Collection.remove", () => {
         assert.deepStrictEqual( products.toJSON(), [
             {name: "Milk"}
         ]);
+
+        // expected without errors
+        products.remove( firstModel );
     });
 
 
