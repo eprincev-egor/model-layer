@@ -110,7 +110,6 @@
             + every
             + some
             + slice
-            + copyWithin
             + fill
             + flat
             + flatMap
