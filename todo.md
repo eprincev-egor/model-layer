@@ -126,8 +126,8 @@
             + create
             + toJSON
             + remove by model instance
-                - remove by id
-            - get by id
+                + remove by id
+            + get by id
 
             - node8+ polyfill
 

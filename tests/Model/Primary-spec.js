@@ -11,6 +11,7 @@ describe("Model primary field", () => {
             // reserved Model properties
             "data",
             "primaryKey",
+            "primaryValue",
 
             // Model methods
             "set",
@@ -79,6 +80,32 @@ describe("Model primary field", () => {
         });
 
         assert.strictEqual( company1.primaryKey, "id" );
+    });
+
+    it("check property model.primaryValue", () => {
+        class Company extends Model {
+            static structure() {
+                return {
+                    id: {
+                        type: "number",
+                        primary: true
+                    },
+                    name: "text"
+                };
+            }
+        }
+
+        let company1 = new Company({
+            id: 1
+        });
+
+        assert.strictEqual( company1.primaryValue, 1 );
+
+        company1.set({
+            id: 2
+        });
+
+        assert.strictEqual( company1.primaryValue, 2 );
     });
 
     it("model.id, if exists static field 'id' in structure", () => {
