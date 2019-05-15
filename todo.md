@@ -90,7 +90,7 @@
         events:
             + add
             - change
-            - remove
+            + remove
 
 
         array methods:
