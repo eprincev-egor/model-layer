@@ -86,7 +86,7 @@
         + at
         
         events:
-            - add
+            + add
             - change
             - remove
 
