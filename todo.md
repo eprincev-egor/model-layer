@@ -128,6 +128,7 @@
             + remove by model instance
                 + remove by id
             + get by id
+            - clone
 
             - node8+ polyfill
 
