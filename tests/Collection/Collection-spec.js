@@ -121,5 +121,32 @@ describe("Collection tests", () => {
         assert.strictEqual( calls, 1 );
     });
 
+    it("one model inside two collections", () => {
+        class Company extends Model {
+            static structure() {
+                return {
+                    name: "text"
+                };
+            }
+        }
+
+        class Companies extends Collection {
+            static structure() {
+                return Company;
+            }
+        }
+
+        let company = new Company({
+            name: "MicroApple"
+        });
+
+        let collection1 = new Companies();
+        let collection2 = new Companies();
+
+        collection1.add( company );
+        collection2.add( company );
+
+        assert.ok( collection1.first() == collection2.first() );
+    });
 
 });
