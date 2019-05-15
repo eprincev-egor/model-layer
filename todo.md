@@ -79,6 +79,8 @@
     + custom types
     + method equal
     + method clone
+    + primary key
+      (fast link model.id)
     
 - Collection
     array methods:
