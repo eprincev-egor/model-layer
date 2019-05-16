@@ -167,6 +167,18 @@ describe("CollectionType", () => {
             err =>
                 err.message == `invalid array[collection MyCollection] for arr: [false],${eol} invalid collection MyCollection for 0: false`
         );
+
+        let model = new SomeModel({
+            arr: [
+                [{id: 1}]
+            ]
+        });
+
+        assert.deepStrictEqual(model.toJSON(), {
+            arr: [
+                [{id: 1}]
+            ]
+        });
     });
 
     
