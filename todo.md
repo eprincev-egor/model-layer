@@ -79,6 +79,8 @@
     + custom types
     + method equal
     + method clone
+        - circular recursion
+    - method contains
     + primary key
       (fast link model.id)
     
@@ -128,7 +130,10 @@
             + remove by model instance
                 + remove by id
             + get by id
-            - clone
+            + clone
+                - circular recursion
+            + equal
+                + circular recursion
 
             - node8+ polyfill
 

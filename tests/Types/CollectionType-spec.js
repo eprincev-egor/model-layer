@@ -2,10 +2,10 @@
 
 const {Model, Collection} = require("../../lib/index");
 const assert = require("assert");
-// const {eol} = require("../../lib/utils");
+const {eol} = require("../../lib/utils");
 
 describe("CollectionType", () => {
-    
+
     it("Collection property", () => {
         class Products extends Collection {
             static structure() {
@@ -45,6 +45,36 @@ describe("CollectionType", () => {
         });
 
         assert.ok( cart.get("products") === products );
+    });
+
+    it("create Collection by array", () => {
+        class Products extends Collection {
+            static structure() {
+                return {
+                    name: "text"
+                };
+            }
+        }
+
+        class Cart extends Model {
+            static structure() {
+                return {
+                    products: Products
+                };
+            }
+        }
+
+        let cart = new Cart({
+            products: [
+                {name: "nice"}
+            ]
+        });
+
+        assert.deepStrictEqual( cart.toJSON(), {
+            products: [
+                {name: "nice"}
+            ]
+        });
     });
 
     it("Collection.toJSON()", () => {
@@ -107,14 +137,23 @@ describe("CollectionType", () => {
         );
     });
 
-    /*
-    it("array of CustomClass", () => {
-        class MyClass {}
+    
+    it("array of Collection", () => {
+        class MyCollection extends Collection {
+            static structure() {
+                return {
+                    id: {
+                        type: "number",
+                        primary: true
+                    }
+                };
+            }
+        }
 
         class SomeModel extends Model {
             static structure() {
                 return {
-                    arr: [MyClass]
+                    arr: [MyCollection]
                 };
             }
         }
@@ -126,29 +165,60 @@ describe("CollectionType", () => {
                 });
             },
             err =>
-                err.message == `invalid array[MyClass] for arr: [false],${eol} invalid MyClass for 0: false`
+                err.message == `invalid array[collection MyCollection] for arr: [false],${eol} invalid collection MyCollection for 0: false`
         );
     });
 
     
-    it("equal CustomClass", () => {
-        class CustomClass {}
+    it("equal Collections", () => {
+        class CustomCollection extends Collection {
+            static structure() {
+                return {
+                    name: "text"
+                };
+            }
+        }
 
-        let obj1 = new CustomClass();
-        let obj2 = new CustomClass();
+        let collection1 = new CustomCollection([
+            {name: "X"}
+        ]);
+        let collection2 = new CustomCollection([
+            {name: "X"}
+        ]);
+        let collection3 = new CustomCollection([
+            {name: "X"},
+            {name: "Y"}
+        ]);
+        let collection4 = new CustomCollection([
+            {name: "Y"}
+        ]);
+        let collection5 = new CustomCollection();
+        let arr1 = [
+            {name: "X"}
+        ];
+        let arr2 = [
+            {name: "Y"}
+        ];
 
         let pairs = [
             [null, null, true],
-            [null, obj1, false],
-            [obj1, obj1, true],
-            [obj1, obj2, false]
+            [null, collection1, false],
+            [collection1, collection1, true],
+            [collection1, collection2, true],
+            [collection1, collection3, false],
+            [collection1, collection4, false],
+            [collection3, collection4, false],
+            [collection2, collection4, false],
+            [collection1, collection5, false],
+            [collection1, arr1, true],
+            [collection4, arr2, true]
         ];
 
         pairs.forEach(pair => {
             class TestModel extends Model {
                 static structure() {
                     return {
-                        custom: CustomClass
+                        custom: CustomCollection
                     };
                 }
             }
@@ -174,5 +244,46 @@ describe("CollectionType", () => {
             );
         });
     });
-    */
+
+    it("equal Collections, circular recursion", () => {
+        class CustomCollection extends Collection {
+            static structure() {
+                return {
+                    name: "text",
+                    child: CustomCollection
+                };
+            }
+        }
+
+        class TestModel extends Model {
+            static structure() {
+                return {
+                    collection: CustomCollection
+                };
+            }
+        }
+
+        let collection1 = new CustomCollection([
+            {name: "X"}
+        ]);
+        collection1.first().set("child", collection1);
+
+        let collection2 = new CustomCollection([
+            {name: "X"}
+        ]);
+        collection2.first().set("child", collection2);
+
+        let model1 = new TestModel({
+            collection: collection1
+        });
+
+        let model2 = new TestModel({
+            collection: collection2
+        });
+
+        assert.ok( model1.equal( model2 ) );
+        assert.ok( model2.equal( model1 ) );
+        assert.ok( model1.equal( model1 ) );
+    });
+   
 });

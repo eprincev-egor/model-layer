@@ -213,6 +213,8 @@ describe("ModelType", () => {
         let model3 = new SomeModel({
             prop: 3
         });
+        let obj1 = {prop: 1};
+        let obj2 = {prop: 3};
 
         let pairs = [
             [null, null, true],
@@ -222,7 +224,11 @@ describe("ModelType", () => {
             [model1, model1, true],
             [model1, model2, true],
             [model1, model3, false],
-            [model2, model3, false]
+            [model2, model3, false],
+            [model1, obj1, true],
+            [model1, obj2, false],
+            [model3, obj1, false],
+            [model3, obj2, true]
         ];
 
         pairs.forEach(pair => {
