@@ -375,6 +375,42 @@ describe("Model tests", () => {
         );
     });
 
+    it("model.prepareJSON", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    name: "string",
+                    age: "number"
+                };
+            }
+
+            prepareJSON(json) {
+                delete json.age;
+            }
+        }
+
+        let model = new SomeModel();
+
+        assert.deepEqual(
+            model.toJSON(),
+            {
+                name: null
+            }
+        );
+
+        model.set({
+            name: "",
+            age: 0
+        });
+
+        assert.deepEqual(
+            model.toJSON(),
+            {
+                name: ""
+            }
+        );
+    });
+
     it("model.clone() with required field", () => {
         class SomeModel extends Model {
             static structure() {
