@@ -1,6 +1,6 @@
 {
   "name": "model-layer",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "model layer",
   "main": "lib/index.js",
   "directories": {

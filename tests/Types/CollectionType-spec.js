@@ -298,4 +298,45 @@ describe("CollectionType", () => {
         assert.ok( model1.equal( model1 ) );
     });
    
+
+    it("nullAsEmpty", () => {
+        class Products extends Collection {
+            static structure() {
+                return {
+                    name: "text"
+                };
+            }
+        }
+
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    products: {
+                        type: Products,
+                        nullAsEmpty: true
+                    }
+                };
+            }
+        }
+
+        let model = new SomeModel();
+        assert.deepEqual( model.toJSON(), {
+            products: []
+        });
+
+        model.set("products", [{
+            name: "Milk"
+        }]);
+        assert.deepEqual( model.toJSON(), {
+            products: [{
+                name: "Milk"
+            }]
+        });
+
+        model.set("products", null);
+        assert.deepEqual( model.toJSON(), {
+            products: []
+        });
+    });
+
 });
