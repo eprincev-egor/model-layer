@@ -688,6 +688,30 @@ describe("Model tests", () => {
     });
 
     
+    it("custom required field", () => {
+
+        class FileModel extends Model {
+            static structure() {
+                return {
+                    name: {
+                        type: "text",
+                        required: true
+                    },
+                    path: "text"
+                };
+            }
+
+            prepare(data) {
+                data.name = data.path.split("/").pop();
+            }
+        }
+
+        let file = new FileModel({
+            path: "test/name.txt"
+        });
+        assert.strictEqual( file.data.name, "name.txt" );
+    });
+
     it("equal with same class model", () => {
 
         class SomeModel extends Model {
