@@ -588,6 +588,46 @@ describe("Model tests", () => {
         assert.strictEqual( model.data.money, null );
     });
 
+    it("check value type after custom prepare", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    name: "text"
+                };
+            }
+
+            prepare(data) {
+                data.name = 10;
+            }
+        }
+
+        let model = new SomeModel();
+        assert.strictEqual( model.data.name, "10" );
+
+        model.set("name", 12);
+        assert.strictEqual( model.data.name, "10" );
+    });
+
+    it("check value type after custom prepare (any key)", () => {
+        class SomeModel extends Model {
+            static structure() {
+                return {
+                    "*": "text"
+                };
+            }
+
+            prepare(data) {
+                data.name = 10;
+            }
+        }
+
+        let model = new SomeModel();
+        assert.strictEqual( model.data.name, "10" );
+
+        model.set("name", 12);
+        assert.strictEqual( model.data.name, "10" );
+    });
+
     it("custom prepare field and standard prepares (round, trim, emptyAsNull)", () => {
         class SomeModel extends Model {
             static structure() {
