@@ -7,8 +7,17 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "mocha \"./tests/**/*-spec.js\" --timeout 9999 --exit",
+    "test": "nyc mocha tests/**/*-spec.js",
     "lint": "eslint ./lib/**/*.js && eslint ./tests/**/*.js"
+  },
+  "nyc": {
+    "reporter": [
+      "html"
+    ],
+    "all": true,
+    "exclude": [
+      "coverage"
+    ]
   },
   "repository": {
     "type": "git",
@@ -31,6 +40,8 @@
   "dependencies": {},
   "devDependencies": {
     "eslint": "^4.19.1",
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "nyc": "^14.1.1",
+    "source-map-support": "^0.5.13"
   }
 }
