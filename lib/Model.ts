@@ -30,6 +30,15 @@ declare interface Model<TData extends object> {
         event: "change", 
         listener: (event: IChangeEvent<TData>) => void
     ): this;
+
+    // throw error if data is invalid
+    validate(data: ReadOnlyPartial<TData>): void;
+
+    // prepare data before validation
+    prepare(data: Partial<TData>): void;
+
+    // prepare json before toJSON
+    prepareJSON(json: JSONData<TData>): void;
 }
 
 abstract class Model<TData extends object> extends EventEmitter {
@@ -344,7 +353,9 @@ abstract class Model<TData extends object> extends EventEmitter {
         }
     }
 
-    public findChild(iteration) {
+    public findChild(
+        iteration: (model: Model<object>) => boolean
+    ): Model<object> {
         let child;
 
         this.walk((model, walker) => {
@@ -359,8 +370,11 @@ abstract class Model<TData extends object> extends EventEmitter {
         return child;
     }
 
-    public filterChildren(iteration) {
-        const children = [];
+    public filterChildren(
+        iteration: (model: Model<object>) => boolean
+    ): Array<Model<object>> {
+
+        const children: Array<Model<object>> = [];
 
         this.walk((model) => {
             const result = iteration( model );
@@ -377,7 +391,7 @@ abstract class Model<TData extends object> extends EventEmitter {
         iteration: (model: Model<object>) => boolean, 
         stack?
     ): Model<object> {
-        stack = _stack || [];
+        stack = stack || [];
 
         let parent = this.parent;
 
@@ -399,8 +413,11 @@ abstract class Model<TData extends object> extends EventEmitter {
         }
     }
 
-    public filterParents(iteration) {
-        const parents = [];
+    public filterParents(
+        iteration: (model: Model<object>) => boolean
+    ): Array<Model<object>> {
+
+        const parents: Array<Model<object>> = [];
         let parent = this.parent;
 
         while ( parent ) {
@@ -416,7 +433,7 @@ abstract class Model<TData extends object> extends EventEmitter {
         return parents;
     }
 
-    public findParentInstance(SomeModel) {
+    public findParentInstance(SomeModel): Model<object> {
         return this.findParent((model) =>
             model instanceof SomeModel
         );
@@ -424,7 +441,7 @@ abstract class Model<TData extends object> extends EventEmitter {
 
     public toJSON(): JSONData<TData> {
         const json: JSONData<TData> = {};
-
+        
         for (const key in this.data) {
             const description = this.getDescription( key );
             let value = this.data[ key ];
@@ -433,7 +450,7 @@ abstract class Model<TData extends object> extends EventEmitter {
                 value = description.toJSON( value ); 
             }
 
-            json[ key ] = value;
+            json[ key ] = value as JSONValue<any>;
         }
 
         this.prepareJSON( json );
@@ -498,19 +515,19 @@ abstract class Model<TData extends object> extends EventEmitter {
         return true;
     }
 
-    private validate(data: ReadOnlyPartial<TData>): void {
+    public validate(data: ReadOnlyPartial<TData>): void {
         // for invalid data throw error here
     }
 
-    private prepare(data: Partial<TData>): void {
+    public prepare(data: Partial<TData>): void {
         // any calculations with data by reference
     }
 
-    private prepareJSON(json: JSONData<TData>): void {
+    public prepareJSON(json: JSONData<TData>): void {
         // any calculations with json by reference
     }
 
-    private prepareStructure() {
+    private prepareStructure(): void {
         if ( this.constructor.prototype.hasOwnProperty( "structure" ) ) {
             return;
         }
