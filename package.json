@@ -2,20 +2,27 @@
   "name": "model-layer",
   "version": "1.4.3",
   "description": "model layer",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
   "directories": {
-    "test": "tests"
+    "lib": "lib",
+    "test": "test"
   },
   "scripts": {
-    "test": "nyc mocha tests/**/*-spec.js",
-    "lint": "eslint ./lib/**/*.js && eslint ./tests/**/*.js"
+    "build": "tsc",
+    "lint": "tslint -c tslint.json 'lib/**/*.ts' && tslint -c test/tslint.json 'test/**/*.ts'",
+    "test": "nyc mocha",
+    "prepublishOnly": "tsc"
   },
   "nyc": {
+    "extension": [
+      ".ts"
+    ],
     "reporter": [
       "html"
     ],
     "all": true,
     "exclude": [
+      "dist",
       "coverage"
     ]
   },
@@ -29,7 +36,8 @@
     "layer",
     "tree",
     "data",
-    "structure"
+    "structure",
+    "typescript"
   ],
   "author": "Eprincev Egor",
   "license": "ISC",
@@ -39,12 +47,13 @@
   "homepage": "https://github.com/eprincev-egor/model-layer#readme",
   "devDependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "^12.11.1",
-    "mocha": "^5.2.0",
+    "@types/node": "^12.6.9",
+    "mocha": "^6.2.0",
     "nyc": "^14.1.1",
     "source-map-support": "^0.5.13",
-    "ts-node": "^8.4.1",
-    "tslint": "^5.20.0",
-    "typescript": "^3.6.4"
+    "ts-node": "^8.3.0",
+    "tsc": "^1.20150623.0",
+    "tslint": "^5.18.0",
+    "typescript": "^3.5.3"
   }
 }
