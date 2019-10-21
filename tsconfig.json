@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "rootDir": "./lib",
+        "outDir": "./dist",
+        "sourceMap": true,
+        "target": "esnext",
+        "module": "commonjs"
+    },
+    "include": ["./lib/**/*.ts"]
+}

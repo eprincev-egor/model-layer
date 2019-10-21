@@ -1,0 +1,11 @@
+{
+    "defaultSeverity": "error",
+    "extends": [
+        "../tslint.json"
+    ],
+    "rules": {
+        "trailing-comma": false,
+        "no-trailing-whitespace": false,
+        "max-classes-per-file": false
+    }
+}

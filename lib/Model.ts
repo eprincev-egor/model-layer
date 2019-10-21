@@ -1,14 +1,43 @@
 "use strict";
 
-const EventEmitter = require("events");
+import * as EventEmitter from "events";
 const Walker = require("./Walker");
 const Type = require("./type/Type");
 const EqualStack = require("./EqualStack");
 const {isObject, invalidValuesAsString, MODELS} = require("./utils");
 
-class Model extends EventEmitter {
-    static structure() {
-        throw new Error(`static ${ this.name }.structure() is not declared`);
+type ReadOnlyPartial<TData> = {
+    readonly [key in keyof TData]?: TData[key];
+};
+
+type JSONValue<TValueType> = 
+    TValueType extends Model<object> ?
+        JSONData<TValueType["data"]> :
+        TValueType
+;
+
+type JSONData<TData> = {
+    [key in keyof TData]?: JSONValue< TData[key] >;
+};
+
+interface IChangeEvent<TData> {
+    prev: ReadOnlyPartial<TData>;
+    changes: ReadOnlyPartial<TData>;
+}
+
+// tslint:disable-next-line:interface-name
+declare interface Model<TData extends object> {
+    // events
+    on(
+        event: "change", 
+        listener: (event: IChangeEvent<TData>) => void
+    ): this;
+}
+
+abstract class Model<TData extends object> extends EventEmitter {
+    public data: ReadOnlyPartial<TData>;
+    static data() {
+        throw new Error(`static ${ this.name }.data() is not declared`);
     }
 
     static registerType(typeName, CustomType) {
@@ -19,11 +48,11 @@ class Model extends EventEmitter {
         return Type.getType( typeName );
     }
 
-    constructor(data) {
+    constructor(data?: ReadOnlyPartial<TData>) {
         super();
 
         if ( !this.constructor.prototype.hasOwnProperty( "structure" ) ) {
-            let structure = this.constructor.structure();
+            let structure = this.constructor.data();
 
             // for speedup constructor, saving structure to prototype
             this.constructor.prototype.structure = structure;
@@ -80,28 +109,15 @@ class Model extends EventEmitter {
         Object.freeze( this.data );
     }
 
-    get(key) {
+    public get<Key extends keyof TData>(key: Key) {
         return this.data[ key ];
     }
 
-    set(keyOrData, value, options) {
-        if ( typeof keyOrData == "string" ) {
-            let key = keyOrData;
-            
-            this.set({
-                [key]: value
-            }, options);
-            
-            return;
-        } else {
-            options = value;
-        }
-
+    public set(data: ReadOnlyPartial<TData>, options) {
         options = options || {
             onlyValidate: false
         };
         
-        let data = keyOrData;
         let newData = {};
         let oldData = this.data;
 
@@ -145,11 +161,9 @@ class Model extends EventEmitter {
             newData[ key ] = value;
         }
 
-        if ( this.prepare ) {
-            // modify by reference
-            // because it conveniently
-            this.prepare( newData );
-        }
+        // modify by reference
+        // because it conveniently
+        this.prepare( newData );
 
         let changes = {};
         for (let key in newData) {
@@ -382,8 +396,8 @@ class Model extends EventEmitter {
         );
     }
 
-    toJSON() {
-        let json = {};
+    public toJSON(): JSONData<TData> {
+        let json: JSONData<TData> = {};
 
         for (let key in this.data) {
             let description = this.getDescription( key );
@@ -401,11 +415,15 @@ class Model extends EventEmitter {
         return json;
     }
 
-    prepareJSON() {
-        // redefine me
+    prepare(data: Partial<TData>) {
+        // any calculations with data by reference
     }
 
-    clone() {
+    prepareJSON(json: JSONData<TData>) {
+        // any calculations with json by reference
+    }
+
+    public clone(): this {
         let clone = {};
 
         for (let key in this.data) {
@@ -425,7 +443,7 @@ class Model extends EventEmitter {
         return clone;
     }
 
-    equal(otherModel, _stack) {
+    public equal(otherModel: Model<object>, _stack): boolean {
         let stack = _stack || new EqualStack();
 
         for (let key in this.data) {
