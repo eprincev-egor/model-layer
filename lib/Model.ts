@@ -33,22 +33,47 @@ declare interface Model<TData extends object> {
 }
 
 abstract class Model<TData extends object> extends EventEmitter {
-    public data: ReadOnlyPartial<TData>;
 
-    static data(): object {
+    public static Type = Type;
+
+    public static data(): object {
         throw new Error(`static ${ this.name }.data() is not declared`);
     }
 
-    static registerType(typeName, CustomType) {
+    public static registerType(typeName, CustomType) {
         Type.registerType(typeName, CustomType);
     }
 
-    static getType(typeName) {
+    public static getType(typeName) {
         return Type.getType( typeName );
     }
 
-    static Type = Type;
+    public static or(...Models) {
+        if ( !Models.length ) {
+            throw new Error("expected children Models");
+        }
 
+        const BaseModel = this;
+
+        Models.forEach((CustomModel) => {
+            const isValidModel = (
+                typeof CustomModel === "function" &&
+                CustomModel.prototype instanceof BaseModel
+            );
+
+            if ( !isValidModel ) {
+                throw new Error(`${ CustomModel.name } should be inherited from ${ BaseModel.name }`);
+            }
+        });
+        
+        Models.unshift( BaseModel );
+        return new MODELS(
+            Models
+        );
+    }
+
+    public data: ReadOnlyPartial<TData>;
+    
     // "id"
     public primaryKey: string;
     // value of id
@@ -71,8 +96,8 @@ abstract class Model<TData extends object> extends EventEmitter {
             data = {};
         }
         
-        for (let key in this.structure) {
-            if ( key == "*" ) {
+        for (const key in this.structure) {
+            if ( key === "*" ) {
                 continue;
             }
 
@@ -97,7 +122,7 @@ abstract class Model<TData extends object> extends EventEmitter {
         this.set(data);
         delete this.isInit;
         
-        // juns love use model.data for set
+        // juniors love use model.data for set
         // stick on his hands
         Object.freeze( this.data );
     }
@@ -111,17 +136,17 @@ abstract class Model<TData extends object> extends EventEmitter {
             onlyValidate: false
         };
         
-        let newData: Partial<TData> = {};
-        let oldData = this.data;
+        const newData: Partial<TData> = {};
+        const oldData = this.data;
 
         // clone old values in oldData
-        for (let key in oldData) {
+        for (const key in oldData) {
             newData[ key ] = oldData[ key ];
         }
 
-        let anyKeyDescription = this.structure["*"];
+        const anyKeyDescription = this.structure["*"];
 
-        for (let key in data) {
+        for (const key in data) {
             const anyKey: any = key;
             let description = this.structure[ anyKey ];
 
@@ -129,7 +154,7 @@ abstract class Model<TData extends object> extends EventEmitter {
                 if ( anyKeyDescription ) {
                     description = anyKeyDescription;
 
-                    let isValidKey = description.validateKey( key );
+                    const isValidKey = description.validateKey( key );
                     
                     if ( !isValidKey ) {
                         throw new Error(`invalid key: ${ key }`);
@@ -145,9 +170,9 @@ abstract class Model<TData extends object> extends EventEmitter {
             value = description.prepare(value, key, this);
 
             // validate by params
-            let isValid = description.validate( value, key );
+            const isValid = description.validate( value, key );
             if ( !isValid ) {
-                let valueAsString = invalidValuesAsString( value );
+                const valueAsString = invalidValuesAsString( value );
 
                 throw new Error(`invalid ${ key }: ${ valueAsString }`);
             }
@@ -159,15 +184,16 @@ abstract class Model<TData extends object> extends EventEmitter {
         // because it conveniently
         this.prepare( newData );
 
-        let changes: Partial<TData> = {};
-        for (let key in newData) {
-            let description = this.structure[ key ];
+        const changes: Partial<TData> = {};
+        for (const key in newData) {
+            const anyKey: any = key;
+            let description = this.structure[ anyKey ];
             if ( !description ) {
                 description = anyKeyDescription;
             }
 
             let newValue = newData[ key ];
-            let oldValue = oldData[ key ];
+            const oldValue = oldData[ key ];
 
             // if field has type string,
             // then he must be string or null in anyway!
@@ -175,7 +201,7 @@ abstract class Model<TData extends object> extends EventEmitter {
                 newValue = description.prepare(newValue, key, this);
             }
 
-            if ( oldValue != newValue ) {
+            if ( oldValue !== newValue ) {
                 if ( description.const ) {
                     if ( !this.isInit ) {
                         throw new Error(`cannot assign to read only property: ${ key }`);
@@ -194,12 +220,12 @@ abstract class Model<TData extends object> extends EventEmitter {
             }
         }
 
-        let hasChanges = Object.keys( changes ).length > 0;
+        const hasChanges = Object.keys( changes ).length > 0;
         if ( !hasChanges ) {
             return;
         }
 
-        // juns love use model.data for set
+        // juniors love use model.data for set
         // stick on his hands
         Object.freeze(newData);
 
@@ -215,12 +241,12 @@ abstract class Model<TData extends object> extends EventEmitter {
         this.data = newData;
         
         if ( this.primaryKey ) {
-            let primaryValue = this.data[ this.primaryKey ];
+            const primaryValue = this.data[ this.primaryKey ];
             this[ this.primaryKey ] = primaryValue;
             this.primaryValue = primaryValue;
         }
 
-        for (let key in changes) {
+        for (const key in changes) {
             this.emit("change:" + key, {
                 prev: oldData,
                 changes
@@ -244,7 +270,7 @@ abstract class Model<TData extends object> extends EventEmitter {
             });
 
             return true;
-        } catch(err) {
+        } catch (err) {
             return false;
         }
     }
@@ -258,7 +284,7 @@ abstract class Model<TData extends object> extends EventEmitter {
     }
 
     public hasValue<Key extends keyof TData>(key: Key): boolean {
-        let value = this.data[ key ];
+        const value = this.data[ key ];
 
         if ( value == null ) {
             return false;
@@ -269,12 +295,12 @@ abstract class Model<TData extends object> extends EventEmitter {
 
     public walk(
         iteration: (model: Model<object>, walker: Walker) => void, 
-        _stack?
+        stack?
     ) {
-        let stack = _stack || [];
+        stack = stack || [];
 
-        for (let key in this.data) {
-            let value = this.data[ key ];
+        for (const key in this.data) {
+            const value = this.data[ key ];
 
             let elements = [value];
 
@@ -283,10 +309,10 @@ abstract class Model<TData extends object> extends EventEmitter {
             }
 
             for (let i = 0, n = elements.length; i < n; i++) {
-                let element = elements[ i ];
+                const element = elements[ i ];
 
                 if ( element instanceof Model ) {
-                    let model = element;
+                    const model = element;
 
                     // stop circular recursion
                     if ( stack.includes(model) ) {
@@ -296,7 +322,7 @@ abstract class Model<TData extends object> extends EventEmitter {
                     
     
                     // api for stop and skip elements
-                    let walker = new Walker();
+                    const walker = new Walker();
     
                     // callback
                     iteration(model, walker);
@@ -318,11 +344,11 @@ abstract class Model<TData extends object> extends EventEmitter {
         }
     }
 
-    findChild(iteration) {
+    public findChild(iteration) {
         let child;
 
         this.walk((model, walker) => {
-            let result = iteration( model );
+            const result = iteration( model );
 
             if ( result ) {
                 child = model;
@@ -333,11 +359,11 @@ abstract class Model<TData extends object> extends EventEmitter {
         return child;
     }
 
-    filterChildren(iteration) {
-        let children = [];
+    public filterChildren(iteration) {
+        const children = [];
 
         this.walk((model) => {
-            let result = iteration( model );
+            const result = iteration( model );
 
             if ( result ) {
                 children.push( model );
@@ -349,9 +375,9 @@ abstract class Model<TData extends object> extends EventEmitter {
 
     public findParent(
         iteration: (model: Model<object>) => boolean, 
-        _stack?
+        stack?
     ): Model<object> {
-        let stack = _stack || [];
+        stack = _stack || [];
 
         let parent = this.parent;
 
@@ -363,7 +389,7 @@ abstract class Model<TData extends object> extends EventEmitter {
             stack.push( parent );
             
 
-            let result = iteration( parent );
+            const result = iteration( parent );
 
             if ( result ) {
                 return parent;
@@ -373,12 +399,12 @@ abstract class Model<TData extends object> extends EventEmitter {
         }
     }
 
-    filterParents(iteration) {
-        let parents = [];
+    public filterParents(iteration) {
+        const parents = [];
         let parent = this.parent;
 
         while ( parent ) {
-            let result = iteration( parent );
+            const result = iteration( parent );
 
             if ( result ) {
                 parents.push( parent );
@@ -390,17 +416,17 @@ abstract class Model<TData extends object> extends EventEmitter {
         return parents;
     }
 
-    findParentInstance(SomeModel) {
-        return this.findParent(model =>
+    public findParentInstance(SomeModel) {
+        return this.findParent((model) =>
             model instanceof SomeModel
         );
     }
 
     public toJSON(): JSONData<TData> {
-        let json: JSONData<TData> = {};
+        const json: JSONData<TData> = {};
 
-        for (let key in this.data) {
-            let description = this.getDescription( key );
+        for (const key in this.data) {
+            const description = this.getDescription( key );
             let value = this.data[ key ];
 
             if ( value != null ) {
@@ -415,6 +441,63 @@ abstract class Model<TData extends object> extends EventEmitter {
         return json;
     }
 
+    public clone(): this {
+        const cloneData: Partial<TData> = {};
+
+        for (const key in this.data) {
+            const description = this.getDescription( key );
+            let value = this.data[ key ];
+
+            if ( value != null ) {
+                value = description.clone( value ); 
+            }
+
+            cloneData[ key ] = value;
+        }
+
+        const ChildModel = this.constructor as any;
+        const clone: this = new ChildModel( cloneData );
+        
+        return clone;
+    }
+
+    public equal(otherModel: Model<object>, stack): boolean {
+        stack = stack || new EqualStack();
+
+        for (const key in this.data) {
+            const description = this.getDescription( key );
+            const selfValue = this.data[ key ];
+            const otherValue = (
+                otherModel instanceof Model ?
+                    otherModel.data[ key ] :
+                    otherModel[ key ]
+            );
+
+            const isEqual = description.equal( selfValue, otherValue, stack );
+
+            if ( !isEqual ) {
+                return false;
+            }
+        }
+
+        // check additional keys from other model
+        const otherData = (
+            otherModel instanceof Model ?
+                otherModel.data :
+                otherModel
+        );
+        for (const key in otherData) {
+            if ( key in this.data ) {
+                continue;
+            }
+            
+            // exists unknown property for self model
+            return false;
+        }
+
+        return true;
+    }
+
     private validate(data: ReadOnlyPartial<TData>): void {
         // for invalid data throw error here
     }
@@ -427,87 +510,6 @@ abstract class Model<TData extends object> extends EventEmitter {
         // any calculations with json by reference
     }
 
-    public clone(): this {
-        let cloneData: Partial<TData> = {};
-
-        for (let key in this.data) {
-            let description = this.getDescription( key );
-            let value = this.data[ key ];
-
-            if ( value != null ) {
-                value = description.clone( value ); 
-            }
-
-            cloneData[ key ] = value;
-        }
-
-        let ChildModel = this.constructor as any;
-        let clone: this = new ChildModel( cloneData );
-        
-        return clone;
-    }
-
-    public equal(otherModel: Model<object>, _stack): boolean {
-        let stack = _stack || new EqualStack();
-
-        for (let key in this.data) {
-            let description = this.getDescription( key );
-            let selfValue = this.data[ key ];
-            let otherValue = (
-                otherModel instanceof Model ?
-                    otherModel.data[ key ] :
-                    otherModel[ key ]
-            );
-
-            let isEqual = description.equal( selfValue, otherValue, stack );
-
-            if ( !isEqual ) {
-                return false;
-            }
-        }
-
-        // check additional keys from other model
-        let otherData = (
-            otherModel instanceof Model ?
-                otherModel.data :
-                otherModel
-        );
-        for (let key in otherData) {
-            if ( key in this.data ) {
-                continue;
-            }
-            
-            // exists unknown property for self model
-            return false;
-        }
-
-        return true;
-    }
-
-    static or(...Models) {
-        if ( !Models.length ) {
-            throw new Error("expected children Models");
-        }
-
-        const BaseModel = this;
-
-        Models.forEach(CustomModel => {
-            let isValidModel = (
-                typeof CustomModel == "function" &&
-                CustomModel.prototype instanceof BaseModel
-            );
-
-            if ( !isValidModel ) {
-                throw new Error(`${ CustomModel.name } should be inherited from ${ BaseModel.name }`);
-            }
-        });
-        
-        Models.unshift( BaseModel );
-        return new MODELS(
-            Models
-        );
-    }
-
     private prepareStructure() {
         if ( this.constructor.prototype.hasOwnProperty( "structure" ) ) {
             return;
@@ -518,8 +520,8 @@ abstract class Model<TData extends object> extends EventEmitter {
         // for speedup constructor, saving structure to prototype
         this.constructor.prototype.structure = structure;
     
-        for (let key in this.structure) {
-            let description = this.structure[ key ];
+        for (const key in this.structure) {
+            const description = this.structure[ key ];
     
             this.structure[ key ] = Type.create( description, key );
     
@@ -536,4 +538,4 @@ abstract class Model<TData extends object> extends EventEmitter {
 
 Type.Model = Model;
 
-module.exports = Model;
+export default Model;
