@@ -1,10 +1,8 @@
-"use strict";
-
 import * as EventEmitter from "events";
-const Walker = require("./Walker");
-const Type = require("./type/Type");
-const EqualStack = require("./EqualStack");
-const {isObject, invalidValuesAsString, MODELS} = require("./utils");
+import EqualStack from "./EqualStack";
+import Type from "./type/Type";
+import { invalidValuesAsString, isObject, MODELS } from "./utils";
+import Walker from "./Walker";
 
 type ReadOnlyPartial<TData> = {
     readonly [key in keyof TData]?: TData[key];
@@ -36,7 +34,8 @@ declare interface Model<TData extends object> {
 
 abstract class Model<TData extends object> extends EventEmitter {
     public data: ReadOnlyPartial<TData>;
-    static data() {
+
+    static data(): object {
         throw new Error(`static ${ this.name }.data() is not declared`);
     }
 
@@ -48,30 +47,24 @@ abstract class Model<TData extends object> extends EventEmitter {
         return Type.getType( typeName );
     }
 
+    static Type = Type;
+
+    // "id"
+    public primaryKey: string;
+    // value of id
+    public primaryValue: any;
+
+    // data properties
+    private structure: object;
+    
+    private isInit: boolean;
+    
+    private parent: Model<object>;
+
     constructor(data?: ReadOnlyPartial<TData>) {
         super();
 
-        if ( !this.constructor.prototype.hasOwnProperty( "structure" ) ) {
-            let structure = this.constructor.data();
-
-            // for speedup constructor, saving structure to prototype
-            this.constructor.prototype.structure = structure;
-
-            for (let key in this.structure) {
-                let description = this.structure[ key ];
-    
-                this.structure[ key ] = Type.create( description, key );
-
-                if ( description.primary ) {
-                    this.constructor.prototype.primaryKey = key;
-                }
-            }
-            
-            // structure must be static... really static
-            Object.freeze( structure );
-        }
-        
-
+        this.prepareStructure();
         
         this.data = {};
         if ( !isObject(data) ) {
@@ -83,7 +76,7 @@ abstract class Model<TData extends object> extends EventEmitter {
                 continue;
             }
 
-            let description = this.structure[ key ];
+            const description = this.structure[ key ];
 
             // default value is null, or something from description
             let value = description.default();
@@ -100,9 +93,9 @@ abstract class Model<TData extends object> extends EventEmitter {
             }
         }
         
-        this.__isInit = true; // do not check const
+        this.isInit = true; // do not check const
         this.set(data);
-        delete this.__isInit;
+        delete this.isInit;
         
         // juns love use model.data for set
         // stick on his hands
@@ -113,12 +106,12 @@ abstract class Model<TData extends object> extends EventEmitter {
         return this.data[ key ];
     }
 
-    public set(data: ReadOnlyPartial<TData>, options) {
+    public set(data: ReadOnlyPartial<TData>, options?) {
         options = options || {
             onlyValidate: false
         };
         
-        let newData = {};
+        let newData: Partial<TData> = {};
         let oldData = this.data;
 
         // clone old values in oldData
@@ -129,7 +122,8 @@ abstract class Model<TData extends object> extends EventEmitter {
         let anyKeyDescription = this.structure["*"];
 
         for (let key in data) {
-            let description = this.structure[ key ];
+            const anyKey: any = key;
+            let description = this.structure[ anyKey ];
 
             if ( !description ) {
                 if ( anyKeyDescription ) {
@@ -165,7 +159,7 @@ abstract class Model<TData extends object> extends EventEmitter {
         // because it conveniently
         this.prepare( newData );
 
-        let changes = {};
+        let changes: Partial<TData> = {};
         for (let key in newData) {
             let description = this.structure[ key ];
             if ( !description ) {
@@ -183,7 +177,7 @@ abstract class Model<TData extends object> extends EventEmitter {
 
             if ( oldValue != newValue ) {
                 if ( description.const ) {
-                    if ( !this.__isInit ) {
+                    if ( !this.isInit ) {
                         throw new Error(`cannot assign to read only property: ${ key }`);
                     }
                 }
@@ -239,7 +233,7 @@ abstract class Model<TData extends object> extends EventEmitter {
         });
     }
 
-    isValid(data) {
+    public isValid(data: Partial<TData>): boolean {
         if ( !isObject(data) ) {
             throw new Error("data must be are object");
         }
@@ -255,15 +249,15 @@ abstract class Model<TData extends object> extends EventEmitter {
         }
     }
 
-    hasProperty(key) {
+    public hasProperty<Key extends keyof TData>(key: Key): boolean {
         return this.data.hasOwnProperty( key );
     }
 
-    getDescription(key) {
+    public getDescription(key) {
         return this.structure[ key ] || this.structure["*"];
     }
 
-    hasValue(key) {
+    public hasValue<Key extends keyof TData>(key: Key): boolean {
         let value = this.data[ key ];
 
         if ( value == null ) {
@@ -273,7 +267,10 @@ abstract class Model<TData extends object> extends EventEmitter {
         }
     }
 
-    walk(iteration, _stack) {
+    public walk(
+        iteration: (model: Model<object>, walker: Walker) => void, 
+        _stack?
+    ) {
         let stack = _stack || [];
 
         for (let key in this.data) {
@@ -350,7 +347,10 @@ abstract class Model<TData extends object> extends EventEmitter {
         return children;
     }
 
-    findParent(iteration, _stack) {
+    public findParent(
+        iteration: (model: Model<object>) => boolean, 
+        _stack?
+    ): Model<object> {
         let stack = _stack || [];
 
         let parent = this.parent;
@@ -415,16 +415,20 @@ abstract class Model<TData extends object> extends EventEmitter {
         return json;
     }
 
-    prepare(data: Partial<TData>) {
+    private validate(data: ReadOnlyPartial<TData>): void {
+        // for invalid data throw error here
+    }
+
+    private prepare(data: Partial<TData>): void {
         // any calculations with data by reference
     }
 
-    prepareJSON(json: JSONData<TData>) {
+    private prepareJSON(json: JSONData<TData>): void {
         // any calculations with json by reference
     }
 
     public clone(): this {
-        let clone = {};
+        let cloneData: Partial<TData> = {};
 
         for (let key in this.data) {
             let description = this.getDescription( key );
@@ -434,11 +438,11 @@ abstract class Model<TData extends object> extends EventEmitter {
                 value = description.clone( value ); 
             }
 
-            clone[ key ] = value;
+            cloneData[ key ] = value;
         }
 
-        let ChildModel = this.constructor;
-        clone = new ChildModel( clone );
+        let ChildModel = this.constructor as any;
+        let clone: this = new ChildModel( cloneData );
         
         return clone;
     }
@@ -503,9 +507,33 @@ abstract class Model<TData extends object> extends EventEmitter {
             Models
         );
     }
+
+    private prepareStructure() {
+        if ( this.constructor.prototype.hasOwnProperty( "structure" ) ) {
+            return;
+        }
+        const constructor = this.constructor as any;
+        const structure = constructor.data();
+    
+        // for speedup constructor, saving structure to prototype
+        this.constructor.prototype.structure = structure;
+    
+        for (let key in this.structure) {
+            let description = this.structure[ key ];
+    
+            this.structure[ key ] = Type.create( description, key );
+    
+            if ( description.primary ) {
+                this.constructor.prototype.primaryKey = key;
+            }
+        }
+        
+        // structure must be static... really static
+        Object.freeze( structure );
+    }
+    
 }
 
-Model.Type = Type;
 Type.Model = Model;
 
 module.exports = Model;

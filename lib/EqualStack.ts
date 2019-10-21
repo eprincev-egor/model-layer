@@ -1,6 +1,6 @@
 "use strict";
 
-class EqualStack {
+export default class EqualStack {
     constructor() {
         this.list = [];
     }
@@ -22,5 +22,3 @@ class EqualStack {
         });
     }
 }
-
-module.exports = EqualStack;

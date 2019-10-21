@@ -1,34 +1,34 @@
 "use strict";
 
-function isObject(value) {
+export function isObject(value) {
     return (
         // not null
         value &&
-        typeof value == "object" &&
+        typeof value === "object" &&
         // not array
         !Array.isArray( value )
     );
 }
 
-function isPlainObject(value) {
+export function isPlainObject(value) {
     return (
         isObject(value) &&
         value.constructor === Object
     );
 }
 
-function isNaN(value) {
+export function isNaN(value) {
     return (
-        typeof value == "number" &&
+        typeof value === "number" &&
         value !== value
     );
 }
 
 const MAX_VALUE_LENGTH = 50;
-function invalidValuesAsString(value) {
+export function invalidValuesAsString(value) {
 
     // "big string..."
-    if ( typeof value == "string" ) {
+    if ( typeof value === "string" ) {
         if ( value.length > MAX_VALUE_LENGTH ) {
             value = value.slice(0, MAX_VALUE_LENGTH) + "...";
         }
@@ -49,7 +49,7 @@ function invalidValuesAsString(value) {
     else if ( Array.isArray(value) || isObject(value) ) {
         try {
             valueAsString = JSON.stringify(value);
-        } catch(err) {
+        } catch (err) {
             valueAsString = value + "";
         }
     }
@@ -61,31 +61,31 @@ function invalidValuesAsString(value) {
     return valueAsString;
 }
 
-function MODELS(Models) {
+export function MODELS(Models) {
     this.Models = Models;
 }
 
 
 
-const eol = {
+export const eol = {
     eol: null,
     
     toString() {
         return this.eol;
     },
 
-    define(os) {
+    define(os?) {
         // https://github.com/ryanve/eol/blob/gh-pages/eol.js
         let isWindows = (
-            typeof process != "undefined" && 
+            typeof process !== "undefined" && 
             "win32" === process.platform
         );
 
         // for tests
-        if ( os == "linux" ) {
+        if ( os === "linux" ) {
             isWindows = false;
         }
-        if ( os == "windows" ) {
+        if ( os === "windows" ) {
             isWindows = true;
         }
         
@@ -100,12 +100,3 @@ const eol = {
 };
 
 eol.define();
-
-module.exports = {
-    isObject,
-    isNaN,
-    invalidValuesAsString,
-    isPlainObject,
-    MODELS,
-    eol
-};
