@@ -1,13 +1,16 @@
 "use strict";
 
 const registeredTypes = {};
-const {invalidValuesAsString} = require("../utils");
+import {invalidValuesAsString} from "../utils";
 const FORBIDDEN_PRIMARY_KEYS = [
     "data",
     "primaryKey",
     "primaryValue"
 ];
-class Type {
+
+export default class Type {
+    public static Model: any;
+
     constructor({
         type,
         required = false,
@@ -238,5 +241,3 @@ class Type {
         return description;
     }
 }
-
-module.exports = Type;

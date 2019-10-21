@@ -1,16 +1,47 @@
 "use strict";
 
-const EventEmitter = require("events");
-const Model = require("./Model");
-const EqualStack = require("./EqualStack");
-const {invalidValuesAsString, isPlainObject} = require("./utils");
+import * as EventEmitter from "events";
+import {Model, ISimpleObject} from "./Model";
+import EqualStack from "./EqualStack";
+import {invalidValuesAsString, isPlainObject} from "./utils";
 
-class Collection extends EventEmitter {
+interface IAddEvent<TCollection, TModel> {
+    type: "add";
+    model: TModel;
+    collection: TCollection;
+}
+
+interface IRemoveEvent<TCollection, TModel> {
+    type: "remove";
+    model: TModel;
+    collection: TCollection;
+}
+
+// tslint:disable-next-line:interface-name
+declare interface Collection<TModel extends Model<ISimpleObject>> {
+    // events
+    on(
+        event: "add", 
+        listener: (event: IAddEvent<Collection<TModel>, TModel>) => void
+    ): this;
+
+    on(
+        event: "remove", 
+        listener: (event: IRemoveEvent<Collection<TModel>, TModel>) => void
+    ): this;
+}
+
+class Collection<TModel extends Model<ISimpleObject>> extends EventEmitter {
+    public models: TModel[];
+    public length: number;
+    public Model: new (object) => TModel;
+
     constructor(rows) {
         super();
 
         if ( !this.constructor.prototype.hasOwnProperty( "Model" ) ) {
-            const structure = this.constructor.structure;
+            const constructor = this.constructor as any;
+            const structure = constructor.data;
             let CustomModel;
 
             let result = structure();
@@ -18,8 +49,9 @@ class Collection extends EventEmitter {
                 CustomModel = result;
             }
             else {
-                CustomModel = class extends Model {
-                    static structure() {
+                // tslint:disable-next-line:max-classes-per-file
+                CustomModel = class extends Model<object> {
+                    static data() {
                         return result;
                     }
                 };
@@ -42,7 +74,7 @@ class Collection extends EventEmitter {
         }
     }
 
-    at(index, model) {
+    at(index: number, model?: TModel): TModel {
         // set
         if ( model ) {
             let removedModel = this.models[ index ];
@@ -52,18 +84,20 @@ class Collection extends EventEmitter {
             this.length = this.models.length;
 
             if ( removedModel ) {
-                this.emit("remove", {
+                const removeEvent: IRemoveEvent<this, TModel> = {
                     type: "remove",
                     collection: this,
                     model: removedModel
-                });
+                };
+                this.emit("remove", removeEvent);
             }
 
-            this.emit("add", {
+            const addEvent: IAddEvent<this, TModel> = {
                 type: "add",
                 model,
                 collection: this
-            });
+            };
+            this.emit("add", addEvent);
         } 
         // get
         else {
@@ -71,9 +105,9 @@ class Collection extends EventEmitter {
         }
     }
 
-    prepareRow(row) {
+    prepareRow(row: TModel["data"] | TModel | Model<object>): TModel {
         const CustomModel = this.Model;
-        let model;
+        let model: TModel;
         
         if ( row instanceof CustomModel ) {
             model = row;
@@ -94,7 +128,7 @@ class Collection extends EventEmitter {
         return model;
     }
 
-    push(...models) {
+    push(...models: TModel[]) {
         if ( !models.length ) {
             return;
         }
@@ -113,11 +147,12 @@ class Collection extends EventEmitter {
         for (let i = 0, n = addedModels.length; i < n; i++) {
             let model = addedModels[i];
             
-            this.emit("add", {
+            const addEvent: IAddEvent<this, TModel> = {
                 type: "add",
                 model,
                 collection: this
-            });
+            };
+            this.emit("add", addEvent);
         }
     }
 
@@ -154,39 +189,40 @@ class Collection extends EventEmitter {
         for (let i = 0, n = addedModels.length; i < n; i++) {
             let model = addedModels[i];
             
-            this.emit("add", {
+            const addEvent: IAddEvent<this, TModel> = {
                 type: "add",
                 model,
                 collection: this
-            });
+            };
+            this.emit("add", addEvent);
         }
     }
 
-    forEach(iteration, context) {
+    forEach(iteration, context?): void {
         this.models.forEach(iteration, context || this);
     }
 
-    each(iteration, context) {
+    each(iteration, context?): void {
         this.models.forEach(iteration, context || this);
     }
 
-    find(iteration, context) {
+    find(iteration, context?): TModel {
         return this.models.find(iteration, context || this);
     }
 
-    findIndex(iteration, context) {
+    findIndex(iteration, context?): number {
         return this.models.findIndex(iteration, context || this);
     }
 
-    filter(iteration, context) {
+    filter(iteration, context?): TModel[] {
         return this.models.filter(iteration, context || this);
     }
 
-    map(iteration, context) {
+    map(iteration, context?): TModel[] {
         return this.models.map(iteration, context || this);
     }
 
-    flatMap(iteration, context) {
+    flatMap(iteration, context?) {
         let result = this.models.map(iteration, context || this);
             
         let output = [];
@@ -212,15 +248,15 @@ class Collection extends EventEmitter {
         return this.models.reduceRight(iteration, initialValue);
     }
 
-    every(iteration, context) {
+    every(iteration, context?): boolean {
         return this.models.every(iteration, context || this);
     }
 
-    some(iteration, context) {
+    some(iteration, context?): boolean {
         return this.models.some(iteration, context || this);
     }
 
-    slice(begin, end) {
+    slice(begin, end): TModel[] {
         return this.models.slice(begin, end);
     }
 
@@ -228,11 +264,11 @@ class Collection extends EventEmitter {
         return this.models.slice();
     }
 
-    indexOf(searchElement, fromIndex) {
+    indexOf(searchElement, fromIndex): number {
         return this.models.indexOf(searchElement, fromIndex);
     }
 
-    lastIndexOf(searchElement, fromIndex) {
+    lastIndexOf(searchElement, fromIndex): number {
         if ( arguments.length == 2 ) {
             return this.models.lastIndexOf(searchElement, fromIndex);
         }
@@ -241,46 +277,48 @@ class Collection extends EventEmitter {
         }
     }
 
-    includes(searchElement, fromIndex) {
+    includes(searchElement, fromIndex): boolean {
         return this.models.includes(searchElement, fromIndex);
     }
 
-    pop() {
+    pop(): TModel {
         let model = this.models.pop();
         this.length = this.models.length;
         
-        this.emit("remove", {
+        const removeEvent: IRemoveEvent<this, TModel> = {
             type: "remove",
             collection: this,
             model
-        });
+        };
+        this.emit("remove", removeEvent);
 
         return model;
     }
 
-    shift() {
+    shift(): TModel {
         let model = this.models.shift();
         this.length = this.models.length;
 
-        this.emit("remove", {
+        const removeEvent: IRemoveEvent<this, TModel> = {
             type: "remove",
             collection: this,
             model
-        });
+        };
+        this.emit("remove", removeEvent);
 
         return model;
     }
 
-    unshift(...models) {
+    unshift(...models: TModel[] | object[]) {
         if ( !models.length ) {
             return;
         }
 
-        let preparedModels = [];
+        let preparedModels: TModel[] = [];
         for (let i = 0, n = models.length; i < n; i++) {
-            let model = models[i];
+            let row = models[i];
+            let model = this.prepareRow( row );
 
-            model = this.prepareRow( model );
             preparedModels.push( model );
         }
 
@@ -291,15 +329,21 @@ class Collection extends EventEmitter {
         for (let i = 0, n = preparedModels.length; i < n; i++) {
             let model = preparedModels[i];
             
-            this.emit("add", {
+            const addEvent: IAddEvent<this, TModel> = {
                 type: "add",
                 model,
                 collection: this
-            });
+            };
+            this.emit("add", addEvent);
         }
     }
 
-    sort(compareFunctionOrKey, ...otherKeys) {
+    sort(
+        compareFunctionOrKey: 
+            ((modelA: TModel, modelB: TModel) => number) | 
+            keyof TModel["data"], 
+        ...otherKeys: Array<keyof TModel["data"]>
+    ) {
 
         if ( typeof compareFunctionOrKey === "string" ) {
             const key = compareFunctionOrKey;
@@ -316,7 +360,7 @@ class Collection extends EventEmitter {
 
             // order by key1 asc, key2 asc, ...
             else {
-                const keys = [key].concat( otherKeys );
+                const keys = [key].concat( otherKeys ) as Array<keyof TModel["data"]>;
 
                 this.models.sort((modelA, modelB) => {
 
@@ -351,14 +395,14 @@ class Collection extends EventEmitter {
         }
     }
     
-    reverse() {
+    reverse(): this {
         this.models.reverse();
         return this;
     }
 
-    concat(...values) {
+    concat(...values): this {
         
-        let CustomCollection = this.constructor;
+        let CustomCollection = this.constructor as any;
         let models = this.models;
 
         for (let i = 0, n = values.length; i < n; i++) {
@@ -377,7 +421,7 @@ class Collection extends EventEmitter {
         return new CustomCollection(models);
     }
 
-    join(separator) {
+    join(separator: string): string {
         return this.models.join(separator);
     }
 
@@ -418,11 +462,12 @@ class Collection extends EventEmitter {
         for (let i = 0, n = addedModels.length; i < n; i++) {
             let model = addedModels[i];
             
-            this.emit("add", {
+            const addEvent: IAddEvent<this, TModel> = {
                 type: "add",
                 model,
                 collection: this
-            });
+            };
+            this.emit("add", addEvent);
         }
 
         // Step 13.
@@ -444,21 +489,23 @@ class Collection extends EventEmitter {
         for (let i = 0, n = removedModels.length; i < n; i++) {
             let model = removedModels[ i ];
 
-            this.emit("remove", {
+            const removeEvent: IRemoveEvent<this, TModel> = {
                 type: "remove",
                 collection: this,
                 model
-            });
+            };
+            this.emit("remove", removeEvent);
         }
 
         for (let i = 0, n = items.length; i < n; i++) {
             let model = items[i];
             
-            this.emit("add", {
+            const addEvent: IAddEvent<this, TModel> = {
                 type: "add",
                 model,
                 collection: this
-            });
+            };
+            this.emit("add", addEvent);
         }
     }
 
@@ -471,55 +518,57 @@ class Collection extends EventEmitter {
         for (let i = 0, n = removedModels.length; i < n; i++) {
             let model = removedModels[ i ];
 
-            this.emit("remove", {
+            const removeEvent: IRemoveEvent<this, TModel> = {
                 type: "remove",
                 collection: this,
                 model
-            });
+            };
+            this.emit("remove", removeEvent);
         }
     }
 
-    first() {
+    first(): TModel {
         return this.models[0];
     }
 
-    last() {
+    last(): TModel {
         return this.models[ this.models.length - 1 ];
     }
 
-    create(row) {
+    create(row: TModel["data"]): TModel {
         let model = this.prepareRow(row);
         
         this.models.push( model );
         this.length = this.models.length;
         
-        this.emit("add", {
+        const addEvent: IAddEvent<this, TModel> = {
             type: "add",
             model,
             collection: this
-        });
+        };
+        this.emit("add", addEvent);
 
         return model;
     }
 
-    toJSON() {
+    toJSON(): Array<TModel["data"]> {
         return this.models.map(model =>
             model.toJSON()
         );
     }
 
-    clone() {
+    clone(): this {
         let models = this.models.map(model => 
             model.clone()
         );
 
-        let ChildCollection = this.constructor;
+        let ChildCollection = this.constructor as any;
         let clone = new ChildCollection( models );
         
         return clone;
     }
 
-    remove(idOrModel) {
+    remove(idOrModel: TModel | number | string): void {
         let index = -1;
         let removedModel;
         
@@ -544,21 +593,28 @@ class Collection extends EventEmitter {
         }
 
         if ( removedModel ) {
-            this.emit("remove", {
+            const removeEvent: IRemoveEvent<this, TModel> = {
                 type: "remove",
                 collection: this,
                 model: removedModel
-            });
+            };
+
+            this.emit("remove", removeEvent);
         }
     }
 
-    get(id) {
+    get(id: number | string): TModel {
         return this.find(model => 
             model.primaryValue == id
         );
     }
 
-    equal(otherCollection, _stack) {
+    equal(
+        otherCollection: Collection<Model<object>> | 
+            Array<Model<object>> | 
+            object[], 
+        stack?: EqualStack
+    ): boolean {
         if ( 
             !(otherCollection instanceof Collection) &&
             !Array.isArray(otherCollection)
@@ -570,7 +626,7 @@ class Collection extends EventEmitter {
             return false;
         }
 
-        let stack = _stack || new EqualStack();
+        stack = stack || new EqualStack();
 
         // stop circular recursion
         let stacked = stack.get(this);
@@ -582,7 +638,7 @@ class Collection extends EventEmitter {
 
         for (let i = 0, n = this.length; i < n; i++) {
             let selfModel = this.at(i);
-            let otherModel = otherCollection.at ?
+            let otherModel = otherCollection instanceof Collection ?
                 otherCollection.at(i) :
                 otherCollection[i];
             

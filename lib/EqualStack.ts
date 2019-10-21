@@ -1,11 +1,18 @@
 "use strict";
 
+interface IListItem {
+    self: any;
+    other: any;
+};
+
 export default class EqualStack {
+    list: IListItem[];
+
     constructor() {
         this.list = [];
     }
 
-    get(selfValue) {
+    get(selfValue: any): any {
         let item = this.list.find(pair =>
             pair.self === selfValue
         );
@@ -15,7 +22,7 @@ export default class EqualStack {
         }
     }
         
-    add(selfValue, otherValue) {
+    add(selfValue: any, otherValue: any) {
         this.list.push({
             self: selfValue,
             other: otherValue

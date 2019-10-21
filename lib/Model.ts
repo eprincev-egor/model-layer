@@ -4,27 +4,27 @@ import Type from "./type/Type";
 import { invalidValuesAsString, isObject, MODELS } from "./utils";
 import Walker from "./Walker";
 
-type ReadOnlyPartial<TData> = {
-    readonly [key in keyof TData]?: TData[key];
-};
+export interface ISimpleObject extends Object {
+    [propName: string]: any;
+}
 
 type JSONValue<TValueType> = 
-    TValueType extends Model<object> ?
+    TValueType extends Model<ISimpleObject> ?
         JSONData<TValueType["data"]> :
         TValueType
 ;
 
-type JSONData<TData> = {
+type JSONData<TData extends ISimpleObject> = {
     [key in keyof TData]?: JSONValue< TData[key] >;
 };
 
-interface IChangeEvent<TData> {
-    prev: ReadOnlyPartial<TData>;
-    changes: ReadOnlyPartial<TData>;
+interface IChangeEvent<TData extends ISimpleObject> {
+    prev: Partial<TData> & Readonly<TData>;
+    changes: Partial<TData> & Readonly<TData>;
 }
 
 // tslint:disable-next-line:interface-name
-declare interface Model<TData extends object> {
+export declare interface Model<TData extends ISimpleObject> extends EventEmitter {
     // events
     on(
         event: "change", 
@@ -32,7 +32,7 @@ declare interface Model<TData extends object> {
     ): this;
 
     // throw error if data is invalid
-    validate(data: ReadOnlyPartial<TData>): void;
+    validate(data: Partial<TData> & Readonly<TData>): void;
 
     // prepare data before validation
     prepare(data: Partial<TData>): void;
@@ -41,7 +41,7 @@ declare interface Model<TData extends object> {
     prepareJSON(json: JSONData<TData>): void;
 }
 
-abstract class Model<TData extends object> extends EventEmitter {
+export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
 
     public static Type = Type;
 
@@ -81,12 +81,12 @@ abstract class Model<TData extends object> extends EventEmitter {
         );
     }
 
-    public data: ReadOnlyPartial<TData>;
+    public data: Partial<TData> & Readonly<TData>;
     
     // "id"
     public primaryKey: string;
     // value of id
-    public primaryValue: any;
+    public primaryValue: number | string;
 
     // data properties
     private structure: object;
@@ -95,7 +95,7 @@ abstract class Model<TData extends object> extends EventEmitter {
     
     private parent: Model<object>;
 
-    constructor(data?: ReadOnlyPartial<TData>) {
+    constructor(data?: Partial<TData> & Readonly<TData>) {
         super();
 
         this.prepareStructure();
@@ -140,7 +140,7 @@ abstract class Model<TData extends object> extends EventEmitter {
         return this.data[ key ];
     }
 
-    public set(data: ReadOnlyPartial<TData>, options?) {
+    public set(data: Partial<TData> & Readonly<TData>, options?) {
         options = options || {
             onlyValidate: false
         };
@@ -318,7 +318,7 @@ abstract class Model<TData extends object> extends EventEmitter {
             }
 
             for (let i = 0, n = elements.length; i < n; i++) {
-                const element = elements[ i ];
+                const element = elements[ i ] as any;
 
                 if ( element instanceof Model ) {
                     const model = element;
@@ -478,16 +478,17 @@ abstract class Model<TData extends object> extends EventEmitter {
         return clone;
     }
 
-    public equal(otherModel: Model<object>, stack): boolean {
+    public equal(otherModel: Model<object> | object, stack): boolean {
         stack = stack || new EqualStack();
 
         for (const key in this.data) {
+            const anyKey = key as any;
             const description = this.getDescription( key );
-            const selfValue = this.data[ key ];
+            const selfValue = this.data[ anyKey ];
             const otherValue = (
                 otherModel instanceof Model ?
-                    otherModel.data[ key ] :
-                    otherModel[ key ]
+                    otherModel.data[ anyKey ] :
+                    otherModel[ anyKey ]
             );
 
             const isEqual = description.equal( selfValue, otherValue, stack );
@@ -515,7 +516,7 @@ abstract class Model<TData extends object> extends EventEmitter {
         return true;
     }
 
-    public validate(data: ReadOnlyPartial<TData>): void {
+    public validate(data: Partial<TData> & Readonly<TData>): void {
         // for invalid data throw error here
     }
 
@@ -554,5 +555,3 @@ abstract class Model<TData extends object> extends EventEmitter {
 }
 
 Type.Model = Model;
-
-export default Model;

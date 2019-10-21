@@ -10,14 +10,14 @@ export function isObject(value) {
     );
 }
 
-export function isPlainObject(value) {
+export function isPlainObject(value: any): boolean {
     return (
         isObject(value) &&
         value.constructor === Object
     );
 }
 
-export function isNaN(value) {
+export function isNaN(value: any): boolean {
     return (
         typeof value === "number" &&
         value !== value
@@ -25,7 +25,7 @@ export function isNaN(value) {
 }
 
 const MAX_VALUE_LENGTH = 50;
-export function invalidValuesAsString(value) {
+export function invalidValuesAsString(value: any): string {
 
     // "big string..."
     if ( typeof value === "string" ) {
