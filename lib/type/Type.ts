@@ -65,7 +65,7 @@ export class Type {
             const SomeType = registeredTypes[ typeName ];
 
             // CustomType can use some variations for declare structure
-            SomeType.prepareDescription( description );
+            SomeType.prepareDescription( description, key );
         }
 
         // find CustomType by name
@@ -101,7 +101,7 @@ export class Type {
     }
 
     // default behavior
-    public static prepareDescription(description) {
+    public static prepareDescription(description, key: string) {
         // redefine me
         return description;
     }
@@ -252,7 +252,7 @@ export class Type {
         return this.type;
     }
 
-    public equal(selfValue, otherValue /*, stack */): boolean {
+    public equal(selfValue, otherValue, stack): boolean {
         return selfValue === otherValue;
     }
 }

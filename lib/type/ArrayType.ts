@@ -1,69 +1,76 @@
 "use strict";
 
-const Type = require("./Type");
-const {invalidValuesAsString, eol} = require("../utils");
+import {Type, ITypeParams} from "./Type";
+import {invalidValuesAsString, eol} from "../utils";
 
-class ArrayType extends Type {
+interface IArrayTypeParams extends ITypeParams {
+    sort: boolean;
+    unique: boolean;
+    emptyAsNull: boolean;
+    nullAsEmpty: boolean;
+    element: any;
+}
 
-    static prepareDescription(description) {
+export default class ArrayType extends Type {
+
+    public static prepareDescription(description, key) {
         // structure: {prop: []}
         // structure: {prop: ["number"]}
         if ( Array.isArray(description.type) ) {
-            let elementType = description.type[0];
+            const elementType = description.type[0];
 
             description.type = "array";
             description.element = elementType;
         }
 
 
-        if ( description.type == "array" ) {
+        if ( description.type === "array" ) {
             // prepare element description
-            description.element = Type.create( description.element || "*" );
+            description.element = Type.create( description.element || "*", key );
         }
     }
 
-    constructor({
-        sort = false, 
-        unique = false,
-        emptyAsNull = false, 
-        nullAsEmpty = false,
-        element,
-        ...params
-    }) {
+    public sort: boolean;
+    public unique: boolean;
+    public emptyAsNull: boolean;
+    public nullAsEmpty: boolean;
+    public element: any;
+
+    constructor(params: IArrayTypeParams) {
         super(params);
 
-        this.emptyAsNull = emptyAsNull;
-        this.nullAsEmpty = nullAsEmpty;
-        this.sort = sort;
-        this.unique = unique;
-        this.element = element;
+        this.emptyAsNull = params.emptyAsNull;
+        this.nullAsEmpty = params.nullAsEmpty;
+        this.sort = params.sort;
+        this.unique = params.unique;
+        this.element = params.element;
     }
 
-    prepare(originalValue, key) {
+    public prepare(originalValue, key) {
         if ( originalValue == null ) {
             if ( this.nullAsEmpty ) {
-                let value = [];
-                Object.freeze(value);
+                const emptyArr = [];
+                Object.freeze(emptyArr);
     
-                return value;
+                return emptyArr;
             }
             return null;
         }
     
-        let elementDescription = this.element;
-        let elementTypeAsString = elementDescription.typeAsString();
+        const elementDescription = this.element;
+        const elementTypeAsString = elementDescription.typeAsString();
     
         if ( !Array.isArray(originalValue) ) {
-            let valueAsString = invalidValuesAsString( originalValue );
+            const valueAsString = invalidValuesAsString( originalValue );
     
             throw new Error(`invalid array[${ elementTypeAsString }] for ${key}: ${valueAsString}`);
         }
     
-        let value = originalValue.map((element, i) => {
+        const value = originalValue.map((element, i) => {
             try {
                 element = elementDescription.prepare( element, i );
-            } catch(err) {
-                let valueAsString = invalidValuesAsString( originalValue );
+            } catch (err) {
+                const valueAsString = invalidValuesAsString( originalValue );
     
                 throw new Error(`invalid array[${ elementTypeAsString }] for ${key}: ${valueAsString},${eol} ${err.message}`);
             }
@@ -78,7 +85,7 @@ class ArrayType extends Type {
         }
     
         if ( this.sort ) {
-            if ( typeof this.sort == "function" ) {
+            if ( typeof this.sort === "function" ) {
                 value.sort(this.sort);
             } else {
                 value.sort();
@@ -90,8 +97,8 @@ class ArrayType extends Type {
         return value;
     }
 
-    validate(value, key) {
-        let isValid = super.validate(value, key);
+    public validate(value, key) {
+        const isValid = super.validate(value, key);
         if ( !isValid ) {
             return false;
         }
@@ -105,16 +112,16 @@ class ArrayType extends Type {
 
                 let isDuplicate = false;
                 for (let i = 0, n = index; i < n; i++) {
-                    let anotherElement = value[ i ];
+                    const anotherElement = value[ i ];
 
-                    if ( anotherElement == element ) {
+                    if ( anotherElement === element ) {
                         isDuplicate = true;
                         break;
                     }
                 }
 
                 if ( isDuplicate ) {
-                    let valueAsString = invalidValuesAsString( value );
+                    const valueAsString = invalidValuesAsString( value );
 
                     throw new Error(`${key} is not unique: ${ valueAsString }`);
                 }
@@ -124,19 +131,19 @@ class ArrayType extends Type {
         return true;
     }
 
-    toJSON(value) {
-        return value.map(item => 
+    public toJSON(value) {
+        return value.map((item) => 
             this.element.toJSON( item )
         );
     }
 
-    clone(value) {
-        return value.map(item => 
+    public clone(value) {
+        return value.map((item) => 
             this.element.clone( item )
         );
     }
 
-    equal(selfArr, otherArr, stack) {
+    public equal(selfArr, otherArr, stack) {
         if ( selfArr == null ) {
             return otherArr === null;
         }
@@ -145,14 +152,14 @@ class ArrayType extends Type {
             return false;
         }
 
-        if ( selfArr.length != otherArr.length ) {
+        if ( selfArr.length !== otherArr.length ) {
             return false;
         }
 
         for (let i = 0, n = selfArr.length; i < n; i++) {
-            let selfItem = selfArr[ i ];
-            let otherItem = otherArr[ i ];
-            let isEqual = this.element.equal( selfItem, otherItem, stack );
+            const selfItem = selfArr[ i ];
+            const otherItem = otherArr[ i ];
+            const isEqual = this.element.equal( selfItem, otherItem, stack );
 
             if ( !isEqual ) {
                 return false;
@@ -164,5 +171,3 @@ class ArrayType extends Type {
 }
 
 Type.registerType("array", ArrayType);
-
-module.exports = ArrayType;
