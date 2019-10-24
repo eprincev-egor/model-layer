@@ -1,15 +1,19 @@
 "use strict";
 
-const Type = require("./Type");
-const Collection = require("../Collection");
-const {invalidValuesAsString} = require("../utils");
+import {Type, ITypeParams} from "./Type";
+import Collection from "../Collection";
+import {invalidValuesAsString} from "../utils";
 
+interface ICollectionTypeParams extends ITypeParams {
+    Collection: any;
+    nullAsEmpty?: boolean;
+}
 
 class CollectionType extends Type {
-    static prepareDescription(description) {
+    public static prepareDescription(description) {
         
-        let isCollection = (
-            typeof description.type == "function" &&
+        const isCollection = (
+            typeof description.type === "function" &&
             description.type.prototype instanceof Collection
         );
         
@@ -17,24 +21,22 @@ class CollectionType extends Type {
             return;
         }
 
-        let CustomCollection = description.type;
+        const CustomCollection = description.type;
         description.type = "Collection";
         description.Collection = CustomCollection;
     }
 
+    public Collection: any;
+    public nullAsEmpty: boolean;
 
-    constructor({
-        Collection,
-        nullAsEmpty = false, 
-        ...params
-    }) {
+    constructor(params: ICollectionTypeParams) {
         super(params);
 
-        this.nullAsEmpty = nullAsEmpty;
-        this.Collection = Collection;
+        this.nullAsEmpty = params.nullAsEmpty;
+        this.Collection = params.Collection;
     }
 
-    prepare(value, key) {
+    public prepare(value, key) {
         if ( value == null ) {
             if ( this.nullAsEmpty ) {
                 value = [];
@@ -44,8 +46,8 @@ class CollectionType extends Type {
             }
         }
     
-        let CustomCollection = this.Collection;
-        let className = CustomCollection.name;
+        const CustomCollection = this.Collection;
+        const className = CustomCollection.name;
     
         if ( value instanceof CustomCollection ) {
             return value;
@@ -55,24 +57,24 @@ class CollectionType extends Type {
             return value;
         }
     
-        let valueAsString = invalidValuesAsString( value );
+        const valueAsString = invalidValuesAsString( value );
     
         throw new Error(`invalid collection ${ className } for ${ key }: ${ valueAsString }`);
     }
 
-    typeAsString() {
+    public typeAsString() {
         return "collection " + this.Collection.name;
     }
 
-    toJSON(collection) {
+    public toJSON(collection) {
         return collection.toJSON();
     }
 
-    clone(collection) {
+    public clone(collection) {
         return collection.clone();
     }
 
-    equal(selfCollection, otherCollection, stack) {
+    public equal(selfCollection, otherCollection, stack) {
         if ( selfCollection == null ) {
             return otherCollection === null;
         }
@@ -82,5 +84,3 @@ class CollectionType extends Type {
 }
 
 Type.registerType("Collection", CollectionType);
-
-module.exports = CollectionType;

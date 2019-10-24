@@ -1,94 +1,100 @@
 "use strict";
 
-const Type = require("./Type");
-const Model = require("../Model");
-const {invalidValuesAsString, isNaN, MODELS, eol} = require("../utils");
+import {Type, ITypeParams} from "./Type";
+import {Model, ISimpleObject} from "../Model";
+import {invalidValuesAsString, isNaN, MODELS, eol} from "../utils";
 
-class ModelType extends Type {
+interface IModelTypeParams extends ITypeParams {
+    Models: any[];
+}
 
-    static prepareDescription(description) {
+export default class ModelType extends Type {
+
+    public static prepareDescription(description) {
         
-        let isCustomModel = (
-            typeof description.type == "function" &&
+        const isCustomModel = (
+            typeof description.type === "function" &&
             description.type.prototype instanceof Model
         );
         
         if ( isCustomModel ) {
-            let CustomModel = description.type;
+            const CustomModel = description.type;
             description.type = "model";
             description.Models = [CustomModel];
         }
 
 
-        let isManyModels = (
+        const isManyModels = (
             description.type instanceof MODELS
         );
         if ( isManyModels ) {
-            let Models = description.type.Models;
+            const Models = description.type.Models;
             description.type = "model";
             description.Models = Models;
         }
     }
 
-    constructor({
-        Models,
-        ...params
-    }) {
+    public Models: any[];
+    public getConstructorByData: (model: Model<ISimpleObject>) => (new() => Model<ISimpleObject>);
+
+    constructor(params: IModelTypeParams) {
         super(params);
 
-        this.Models = Models;
+        this.Models = params.Models;
 
         if ( 
             params.hasOwnProperty("constructor") &&
-            typeof params.constructor == "function" 
+            typeof params.constructor === "function" 
         ) {
-            this.getConstructorByData = params.constructor;
+            this.getConstructorByData = (
+                params.constructor as (model: Model<ISimpleObject>) => (new() => Model<ISimpleObject>)
+            );
         }
         else {
-            const BaseModel = Models[0];
+            const BaseModel = params.Models[0];
             this.getConstructorByData = () => BaseModel;
         }
     }
 
-    prepare(value, key, model) {
+    public prepare(value, key, model) {
         if ( value == null ) {
             return null;
         }
     
         for (let i = 0, n = this.Models.length; i < n; i++) {
-            let CustomModel = this.Models[ i ];
+            const SomeModel = this.Models[ i ];
 
-            if ( value instanceof CustomModel ) {
+            if ( value instanceof SomeModel ) {
                 value.parent = model;
                 return value;
             }
         }
         
     
-        let BaseModel = this.Models[0];
-        let className = BaseModel.name;
+        const BaseModel = this.Models[0];
+        const className = BaseModel.name;
     
         if ( 
             isNaN(value) ||
-            typeof value == "boolean" ||
-            typeof value == "number" ||
-            typeof value == "string" ||
+            typeof value === "boolean" ||
+            typeof value === "number" ||
+            typeof value === "string" ||
             value instanceof Date ||
             value instanceof RegExp ||
             Array.isArray(value)
         ) {
-            let valueAsString = invalidValuesAsString( value );
+            const valueAsString = invalidValuesAsString( value );
     
             throw new Error(`invalid ${ className } for ${key}: ${valueAsString}`);
         }
 
         
-        let CustomModel = this.getConstructorByData( value ) || BaseModel;
+        const CustomModel = this.getConstructorByData( value ) || BaseModel;
         
         try {
             value = new CustomModel( value );
-        } catch(err) {
-            let valueAsString = invalidValuesAsString( value );
+        } catch (err) {
+            const valueAsString = invalidValuesAsString( value );
     
             // show child error
             throw new Error(`invalid ${ className } for ${key}: ${valueAsString},${eol} ${err.message}`);
@@ -99,19 +105,19 @@ class ModelType extends Type {
         return value;
     }
 
-    typeAsString() {
+    public typeAsString() {
         return this.Models[0].name;
     }
 
-    toJSON(model) {
+    public toJSON(model) {
         return model.toJSON();
     }
 
-    clone(model) {
+    public clone(model) {
         return model.clone();
     }
 
-    equal(selfModel, otherModel, stack) {
+    public equal(selfModel, otherModel, stack) {
         if ( selfModel == null ) {
             return otherModel === null;
         }
@@ -121,9 +127,9 @@ class ModelType extends Type {
         }
 
         // stop circular recursion
-        let stacked = stack.get(selfModel);
+        const stacked = stack.get(selfModel);
         if ( stacked ) {
-            return stacked == otherModel;
+            return stacked === otherModel;
         }
         stack.add(selfModel, otherModel);
         
@@ -133,4 +139,3 @@ class ModelType extends Type {
 
 Type.registerType("model", ModelType);
 
-module.exports = ModelType;

@@ -1,16 +1,21 @@
 "use strict";
 
-const Type = require("./Type");
-const Model = require("../Model");
-const Collection = require("../Collection");
-const {invalidValuesAsString} = require("../utils");
+import {Type, ITypeParams} from "./Type";
+import {Model} from "../Model";
+import Collection from "../Collection";
+import {invalidValuesAsString} from "../utils";
 
+interface ICustomClassTypeParams extends ITypeParams {
+    CustomClass: any;
+    nullAsEmpty?: boolean;
+    emptyAsNull?: boolean;
+}
 
-class CustomClassType extends Type {
-    static prepareDescription(description) {
+export default class CustomClassType extends Type {
+    public static prepareDescription(description) {
         
-        let isCustomClass = (
-            typeof description.type == "function" &&
+        const isCustomClass = (
+            typeof description.type === "function" &&
             !(description.type.prototype instanceof Model) &&
             !(description.type.prototype instanceof Collection) &&
             description.type !== Model
@@ -20,56 +25,54 @@ class CustomClassType extends Type {
             return;
         }
 
-        let CustomClass = description.type;
+        const CustomClass = description.type;
         description.type = "CustomClass";
         description.CustomClass = CustomClass;
     }
 
+    public CustomClass: any;
+    public nullAsEmpty: boolean;
+    public emptyAsNull: boolean;
 
-    constructor({
-        CustomClass,
-        nullAsEmpty = false, 
-        emptyAsNull = false,
-        ...params
-    }) {
+    constructor(params: ICustomClassTypeParams) {
         super(params);
 
-        this.nullAsEmpty = nullAsEmpty;
-        this.emptyAsNull = emptyAsNull;
-        this.CustomClass = CustomClass;
+        this.nullAsEmpty = params.nullAsEmpty;
+        this.emptyAsNull = params.emptyAsNull;
+        this.CustomClass = params.CustomClass;
     }
 
-    prepare(value, key) {
+    public prepare(value, key) {
         if ( value == null ) {
             return null;
         }
     
-        let CustomClass = this.CustomClass;
-        let className = CustomClass.name;
+        const CustomClass = this.CustomClass;
+        const className = CustomClass.name;
     
         if ( value instanceof CustomClass ) {
             return value;
         }
     
-        let valueAsString = invalidValuesAsString( value );
+        const valueAsString = invalidValuesAsString( value );
     
         throw new Error(`invalid ${ className } for ${ key }: ${ valueAsString }`);
     }
 
-    typeAsString() {
+    public typeAsString() {
         return this.CustomClass.name;
     }
 
-    toJSON(value) {
-        if ( typeof value.toJSON == "function" ) {
+    public toJSON(value) {
+        if ( typeof value.toJSON === "function" ) {
             return value.toJSON();
         }
 
         return value;
     }
 
-    clone(value) {
-        if ( typeof value.clone == "function" ) {
+    public clone(value) {
+        if ( typeof value.clone === "function" ) {
             return value.clone();
         }
 
@@ -78,5 +81,3 @@ class CustomClassType extends Type {
 }
 
 Type.registerType("CustomClass", CustomClassType);
-
-module.exports = CustomClassType;

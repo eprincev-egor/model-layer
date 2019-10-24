@@ -13,7 +13,7 @@ export interface ITypeParams {
     type: string;
     required?: boolean;
     primary?: boolean;
-    prepare?: (value: any, key: string) => any;
+    prepare?: (value: any, key: string, model) => any;
     toJSON?: (value: any) => any;
     validate?: 
         ((value: any, key: string) => boolean) |
@@ -138,11 +138,11 @@ export class Type {
             const prepareByType = this.prepare.bind(this);
             const customPrepare = params.prepare;
 
-            this.prepare = (value, key) => {
-                value = prepareByType( value, key );
+            this.prepare = (value, key, model) => {
+                value = prepareByType( value, key, model );
 
                 if ( value != null ) {
-                    value = customPrepare( value, key );
+                    value = customPrepare( value, key, model );
                 }
 
                 return value;
@@ -236,7 +236,7 @@ export class Type {
         return true;
     }
 
-    public prepare(value, key): any {
+    public prepare(value, key, model): any {
         return value;
     }
 
