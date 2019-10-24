@@ -658,4 +658,4 @@ class Collection<TModel extends Model<ISimpleObject>> extends EventEmitter {
     }
 }
 
-module.exports = Collection;
+export default Collection;
