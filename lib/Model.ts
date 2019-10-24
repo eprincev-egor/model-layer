@@ -8,19 +8,23 @@ export interface ISimpleObject extends Object {
     [propName: string]: any;
 }
 
+type ReadOnlyPartial<TData> = {
+    readonly [key in keyof TData]?: TData[key];
+};
+
 type JSONValue<TValueType> = 
     TValueType extends Model<ISimpleObject> ?
         JSONData<TValueType["data"]> :
         TValueType
 ;
 
-type JSONData<TData extends ISimpleObject> = {
-    [key in keyof TData]?: JSONValue< TData[key] >;
+type JSONData<TData> = {
+    [key in keyof TData & string]?: JSONValue< TData[key] >;
 };
 
 interface IChangeEvent<TData extends ISimpleObject> {
-    prev: Partial<TData> & Readonly<TData>;
-    changes: Partial<TData> & Readonly<TData>;
+    prev: ReadOnlyPartial<TData>;
+    changes: ReadOnlyPartial<TData>;
 }
 
 // tslint:disable-next-line:interface-name
@@ -32,7 +36,7 @@ export declare interface Model<TData extends ISimpleObject> extends EventEmitter
     ): this;
 
     // throw error if data is invalid
-    validate(data: Partial<TData> & Readonly<TData>): void;
+    validate(data: ReadOnlyPartial<TData>): void;
 
     // prepare data before validation
     prepare(data: Partial<TData>): void;
@@ -81,7 +85,7 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
         );
     }
 
-    public data: Partial<TData> & Readonly<TData>;
+    public data: ReadOnlyPartial<TData>;
     
     // "id"
     public primaryKey: string;
@@ -95,14 +99,14 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
     
     private parent: Model<object>;
 
-    constructor(data?: Partial<TData> & Readonly<TData>) {
+    constructor(inputData?: ReadOnlyPartial<TData>) {
         super();
 
         this.prepareStructure();
         
-        this.data = {};
-        if ( !isObject(data) ) {
-            data = {};
+        const data = {};
+        if ( !isObject(inputData) ) {
+            inputData = {};
         }
         
         for (const key in this.structure) {
@@ -117,7 +121,7 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
             // default can be invalid
             value = description.prepare(value, key, this);
 
-            this.data[ key ] = value;
+            data[ key ] = value;
 
             // throw required error in method .set
             if ( description.required ) {
@@ -130,17 +134,13 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
         this.isInit = true; // do not check const
         this.set(data);
         delete this.isInit;
-        
-        // juniors love use model.data for set
-        // stick on his hands
-        Object.freeze( this.data );
     }
 
     public get<Key extends keyof TData>(key: Key) {
         return this.data[ key ];
     }
 
-    public set(data: Partial<TData> & Readonly<TData>, options?) {
+    public set(data: ReadOnlyPartial<TData>, options?) {
         options = options || {
             onlyValidate: false
         };
@@ -516,7 +516,7 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
         return true;
     }
 
-    public validate(data: Partial<TData> & Readonly<TData>): void {
+    public validate(data: ReadOnlyPartial<TData>): void {
         // for invalid data throw error here
     }
 
