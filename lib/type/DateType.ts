@@ -1,10 +1,10 @@
 "use strict";
 
-const Type = require("./Type");
-const {invalidValuesAsString} = require("../utils");
+import {Type} from "./Type";
+import {invalidValuesAsString} from "../utils";
 
-class DateType extends Type {
-    prepare(originalValue, key) {
+export default class DateType extends Type {
+    public prepare(originalValue, key) {
         if ( originalValue == null ) {
             return null;
         }
@@ -13,22 +13,22 @@ class DateType extends Type {
         let value = originalValue;
     
         // iso date string
-        if ( typeof value == "string" ) {
+        if ( typeof value === "string" ) {
             // Date.parse returns unix timestamp
             value = Date.parse( value );
         }
     
         // unix timestamp
-        if ( typeof value == "number" ) {
+        if ( typeof value === "number" ) {
             value = new Date( value );
         }
         
-        let isInvalidDate = (
+        const isInvalidDate = (
             !(value instanceof Date) ||
-            value.toString() == "Invalid Date"
+            value.toString() === "Invalid Date"
         );
         if ( isInvalidDate ) {
-            let valueAsString = invalidValuesAsString( originalValue );
+            const valueAsString = invalidValuesAsString( originalValue );
     
             throw new Error(`invalid date for ${key}: ${valueAsString}`);
         }
@@ -36,7 +36,7 @@ class DateType extends Type {
         return value;
     }
 
-    equal(selfValue, anotherValue) {
+    public equal(selfValue, anotherValue) {
         if ( selfValue == null ) {
             return anotherValue === null;
         }
@@ -50,5 +50,3 @@ class DateType extends Type {
 }
 
 Type.registerType("date", DateType);
-
-module.exports = DateType;

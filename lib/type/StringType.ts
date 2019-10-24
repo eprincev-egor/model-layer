@@ -85,5 +85,3 @@ export default class StringType extends Type {
 }
 
 Type.registerType("string", StringType);
-
-module.exports = StringType;

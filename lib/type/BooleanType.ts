@@ -61,5 +61,3 @@ export default class BooleanType extends Type {
 }
 
 Type.registerType("boolean", BooleanType);
-
-module.exports = BooleanType;
