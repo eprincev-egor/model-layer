@@ -1,6 +1,6 @@
 "use strict";
 
-export function isObject(value) {
+export function isObject(value): boolean {
     return (
         // not null
         value &&
