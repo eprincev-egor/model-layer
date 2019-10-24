@@ -4,14 +4,14 @@ import {Type, ITypeParams} from "./Type";
 import {isObject, isNaN, invalidValuesAsString} from "../utils";
 
 interface IStringTypeParams extends ITypeParams {
-    nullAsEmpty: boolean;
-    emptyAsNull: boolean;
-    trim: boolean;
-    lower: boolean;
-    upper: boolean;
+    nullAsEmpty?: boolean;
+    emptyAsNull?: boolean;
+    trim?: boolean;
+    lower?: boolean;
+    upper?: boolean;
 }
 
-class StringType extends Type {
+export default class StringType extends Type {
 
     public static prepareDescription(description) {
         

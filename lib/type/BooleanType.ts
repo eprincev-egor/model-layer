@@ -1,20 +1,25 @@
 "use strict";
 
-const Type = require("./Type");
-const {isObject, isNaN, invalidValuesAsString} = require("../utils");
+import {Type, ITypeParams} from "./Type";
+import {isObject, isNaN, invalidValuesAsString} from "../utils";
 
-class BooleanType extends Type {
-    constructor({
-        nullAsFalse, falseAsNull,
-        ...params
-    }) {
+interface IBooleanTypeParams extends ITypeParams {
+    nullAsFalse?: boolean;
+    falseAsNull?: boolean;
+}
+
+export default class BooleanType extends Type {
+    public nullAsFalse: boolean;
+    public falseAsNull: boolean;
+
+    constructor(params: IBooleanTypeParams) {
         super(params);
 
-        this.nullAsFalse = nullAsFalse;
-        this.falseAsNull = falseAsNull;
+        this.nullAsFalse = params.nullAsFalse;
+        this.falseAsNull = params.falseAsNull;
     }
 
-    prepare(value, key) {
+    public prepare(value, key) {
         if ( value == null ) {
             if ( this.nullAsFalse ) {
                 return false;
@@ -33,7 +38,7 @@ class BooleanType extends Type {
             value === 1 / 0 ||
             value === -1 / 0
         ) {
-            let valueAsString = invalidValuesAsString( value );
+            const valueAsString = invalidValuesAsString( value );
     
             throw new Error(`invalid boolean for ${key}: ${valueAsString}`);
         }

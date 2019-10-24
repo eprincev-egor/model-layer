@@ -4,14 +4,14 @@ import {Type, ITypeParams} from "./Type";
 import {isNaN, invalidValuesAsString} from "../utils";
 
 interface INumberTypeParams extends ITypeParams {
-    nullAsZero: boolean;
-    zeroAsNull: boolean;
-    ceil: number;
-    round: number;
-    floor: number;
+    nullAsZero?: boolean;
+    zeroAsNull?: boolean;
+    ceil?: number;
+    round?: number;
+    floor?: number;
 }
 
-class NumberType extends Type {
+export default class NumberType extends Type {
     public nullAsZero: boolean;
     public zeroAsNull: boolean;
     public ceil: number;
