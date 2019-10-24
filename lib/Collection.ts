@@ -1,7 +1,7 @@
 "use strict";
 
 import * as EventEmitter from "events";
-import {Model, ISimpleObject} from "./Model";
+import {Model, ISimpleObject, JSONData} from "./Model";
 import EqualStack from "./EqualStack";
 import {invalidValuesAsString, isPlainObject} from "./utils";
 
@@ -556,7 +556,7 @@ class Collection<TModel extends Model<ISimpleObject>> extends EventEmitter {
         return model;
     }
 
-    public toJSON(): Array<TModel["data"]> {
+    public toJSON(): Array<JSONData<TModel["data"]>> {
         return this.models.map((model) =>
             model.toJSON()
         );

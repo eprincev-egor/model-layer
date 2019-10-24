@@ -18,7 +18,7 @@ type JSONValue<TValueType> =
         TValueType
 ;
 
-type JSONData<TData> = {
+export type JSONData<TData> = {
     [key in keyof TData & string]?: JSONValue< TData[key] >;
 };
 
