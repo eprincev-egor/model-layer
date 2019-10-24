@@ -402,7 +402,7 @@ class Collection<TModel extends Model<ISimpleObject>> extends EventEmitter {
         return this;
     }
 
-    public concat(...values): this {
+    public concat(...values: TModel[][] | this[]): this {
         
         const CustomCollection = this.constructor as any;
         let models = this.models;
@@ -479,7 +479,7 @@ class Collection<TModel extends Model<ISimpleObject>> extends EventEmitter {
         return this;
     }
 
-    public splice(start, deleteCount, ...items) {
+    public splice(start: number, deleteCount: number, ...items) {
         if ( items.length ) {
             items = items.map((row) => 
                 this.prepareRow(row)
@@ -615,9 +615,9 @@ class Collection<TModel extends Model<ISimpleObject>> extends EventEmitter {
     }
 
     public equal(
-        otherCollection: Collection<Model<object>> | 
-            Array<Model<object>> | 
-            object[], 
+        otherCollection: Collection<Model<ISimpleObject>> | 
+            Array<Model<ISimpleObject>> | 
+            ISimpleObject[], 
         stack?: EqualStack
     ): boolean {
         if ( 
