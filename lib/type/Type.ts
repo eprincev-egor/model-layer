@@ -45,11 +45,11 @@ export default class Type {
 
         // prepare description: ["string"] 
         // to { type: "array", element: {type: "string"} }
-        for (const key in registeredTypes) {
-            const CustomType = registeredTypes[ key ];
+        for (const typeName in registeredTypes) {
+            const SomeType = registeredTypes[ typeName ];
 
             // CustomType can use some variations for declare structure
-            CustomType.prepareDescription( description );
+            SomeType.prepareDescription( description );
         }
 
         // find CustomType by name
@@ -90,6 +90,12 @@ export default class Type {
         return description;
     }
 
+    public primary?: boolean;
+    public required: boolean;
+    public type: string;
+    public const: boolean;
+    public enum?: any[];
+
     constructor({
         type,
         required = false,
@@ -113,7 +119,7 @@ export default class Type {
 
         // default can be: false, 0, or function
         if ( "default" in params ) {
-            if ( typeof params.default == "function" ) {
+            if ( typeof params.default === "function" ) {
                 this.default = params.default;
             } else {
                 this.default = () => params.default;
@@ -121,7 +127,7 @@ export default class Type {
         }
 
         // custom prepare not null value, after default prepare
-        if ( typeof prepare == "function" ) {
+        if ( typeof prepare === "function" ) {
             const prepareByType = this.prepare.bind(this);
             const customPrepare = prepare;
 
@@ -136,7 +142,7 @@ export default class Type {
             };
         }
 
-        if ( typeof toJSON == "function" ) {
+        if ( typeof toJSON === "function" ) {
             this.toJSON = toJSON;
         }
 
@@ -148,10 +154,10 @@ export default class Type {
             // validate by RegExp or function
             const customValidate = validate;
 
-            if ( typeof validate == "function" ) {
-                this.validate = (value, key) => {
+            if ( typeof validate === "function" ) {
+                this.validate = (value, modelKey) => {
                     return (
-                        validateByType( value, key ) &&
+                        validateByType( value, modelKey ) &&
                         (
                             value == null ||
                             customValidate( value )
@@ -160,9 +166,9 @@ export default class Type {
                 };
             }
             else if ( validate instanceof RegExp ) {
-                this.validate = (value, key) => {
+                this.validate = (value, modelKey) => {
                     return (
-                        validateByType( value, key ) &&
+                        validateByType( value, modelKey ) &&
                         (
                             value == null ||
                             validate.test( value )
@@ -183,11 +189,11 @@ export default class Type {
             const customValidateKey = key;
 
             if ( customValidateKey instanceof RegExp ) {
-                this.validateKey = (key) => {
-                    return customValidateKey.test( key );
+                this.validateKey = (modelKey) => {
+                    return customValidateKey.test( modelKey );
                 };
             }
-            else if ( typeof customValidateKey == "function" ) {
+            else if ( typeof customValidateKey === "function" ) {
                 this.validateKey = customValidateKey;
             }
 
@@ -207,11 +213,11 @@ export default class Type {
         return null;
     }
 
-    public validateKey(/* key */) {
+    public validateKey(key: string) {
         return true;
     }
 
-    public validate(value) {
+    public validate(value, key): boolean {
         if ( this.enum ) {
             if ( value != null ) {
                 return this.enum.includes( value );
