@@ -3,17 +3,17 @@
 interface IListItem {
     self: any;
     other: any;
-};
+}
 
 export default class EqualStack {
-    list: IListItem[];
+    public list: IListItem[];
 
     constructor() {
         this.list = [];
     }
 
-    get(selfValue: any): any {
-        let item = this.list.find(pair =>
+    public get(selfValue: any): any {
+        const item = this.list.find((pair) =>
             pair.self === selfValue
         );
 
@@ -22,7 +22,7 @@ export default class EqualStack {
         }
     }
         
-    add(selfValue: any, otherValue: any) {
+    public add(selfValue: any, otherValue: any) {
         this.list.push({
             self: selfValue,
             other: otherValue
