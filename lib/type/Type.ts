@@ -8,7 +8,23 @@ const FORBIDDEN_PRIMARY_KEYS = [
     "primaryValue"
 ];
 
-export default class Type {
+export interface ITypeParams {
+    key: ((key: string) => boolean) | RegExp;
+    type: string;
+    required?: boolean;
+    primary?: boolean;
+    prepare?: (value: any, key: string) => any;
+    toJSON?: (value: any) => any;
+    validate?: 
+        ((value: any, key: string) => boolean) |
+        RegExp
+    ;
+    enum?: any[];
+    default?: () => any;
+    const?: boolean;
+}
+
+export class Type {
     public static Model: any;
 
     public static registerType(typeName, CustomType) {
@@ -96,22 +112,13 @@ export default class Type {
     public const: boolean;
     public enum?: any[];
 
-    constructor({
-        type,
-        required = false,
-        prepare,
-        toJSON,
-        validate,
-        key,
-        ...params
-    }) {
+    constructor(params: ITypeParams) {
         if ( params.primary ) {
             this.primary = true;
-            required = true;
         }
 
-        this.type = type;
-        this.required = required;
+        this.type = params.type;
+        this.required = params.required || params.primary;
 
         if ( Array.isArray( params.enum ) ) {
             this.enum = params.enum;
@@ -127,51 +134,53 @@ export default class Type {
         }
 
         // custom prepare not null value, after default prepare
-        if ( typeof prepare === "function" ) {
+        if ( typeof params.prepare === "function" ) {
             const prepareByType = this.prepare.bind(this);
-            const customPrepare = prepare;
+            const customPrepare = params.prepare;
 
-            this.prepare = (value) => {
-                value = prepareByType( value );
+            this.prepare = (value, key) => {
+                value = prepareByType( value, key );
 
                 if ( value != null ) {
-                    value = customPrepare( value );
+                    value = customPrepare( value, key );
                 }
 
                 return value;
             };
         }
 
-        if ( typeof toJSON === "function" ) {
-            this.toJSON = toJSON;
+        if ( typeof params.toJSON === "function" ) {
+            this.toJSON = params.toJSON;
         }
 
 
         // custom validate by RegExp or function
-        if ( validate ) {
+        if ( params.validate ) {
             // validate by required, enum, "unique" (ArrayType)
             const validateByType = this.validate.bind(this);
-            // validate by RegExp or function
-            const customValidate = validate;
 
-            if ( typeof validate === "function" ) {
+            if ( typeof params.validate === "function" ) {
+                const customValidate = params.validate;
+
                 this.validate = (value, modelKey) => {
                     return (
                         validateByType( value, modelKey ) &&
                         (
                             value == null ||
-                            customValidate( value )
+                            customValidate( value, modelKey )
                         )
                     );
                 };
             }
-            else if ( validate instanceof RegExp ) {
+            else if ( params.validate instanceof RegExp ) {
+                const regExp = params.validate;
+
                 this.validate = (value, modelKey) => {
                     return (
                         validateByType( value, modelKey ) &&
                         (
                             value == null ||
-                            validate.test( value )
+                            regExp.test( value )
                         )
                     );
                 };
@@ -179,14 +188,14 @@ export default class Type {
 
             else {
                 throw new Error("validate should be function or RegExp: " + 
-                    invalidValuesAsString( validate ));
+                    invalidValuesAsString( params.validate ));
             }
         }
 
 
         // validate key for models with "*"
-        if ( key ) {
-            const customValidateKey = key;
+        if ( params.key ) {
+            const customValidateKey = params.key;
 
             if ( customValidateKey instanceof RegExp ) {
                 this.validateKey = (modelKey) => {
@@ -227,23 +236,23 @@ export default class Type {
         return true;
     }
 
-    public prepare(value) {
+    public prepare(value, key): any {
         return value;
     }
 
-    public toJSON(value) {
+    public toJSON(value): any {
         return value;
     }
 
-    public clone(value) {
+    public clone(value): any {
         return this.toJSON( value );
     }
 
-    public typeAsString() {
+    public typeAsString(): string {
         return this.type;
     }
 
-    public equal(selfValue, otherValue /*, stack */) {
+    public equal(selfValue, otherValue /*, stack */): boolean {
         return selfValue === otherValue;
     }
 }

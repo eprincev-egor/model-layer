@@ -1,37 +1,43 @@
 "use strict";
 
-const Type = require("./Type");
-const {isObject, isNaN, invalidValuesAsString} = require("../utils");
+import {Type, ITypeParams} from "./Type";
+import {isObject, isNaN, invalidValuesAsString} from "../utils";
+
+interface IStringTypeParams extends ITypeParams {
+    nullAsEmpty: boolean;
+    emptyAsNull: boolean;
+    trim: boolean;
+    lower: boolean;
+    upper: boolean;
+}
 
 class StringType extends Type {
 
-    static prepareDescription(description) {
+    public static prepareDescription(description) {
         
-        if ( description.type == "text" ) {
+        if ( description.type === "text" ) {
             description.type = "string";
         }
     }
+    
+    public nullAsEmpty: boolean;
+    public emptyAsNull: boolean;
+    public trim: boolean;
+    public lower: boolean;
+    public upper: boolean;
 
-    constructor({
-        nullAsEmpty = false, 
-        emptyAsNull = false,
-        trim = false, 
-        lower = false, 
-        upper = false,
-
-        ...params
-    }) {
+    constructor(params: IStringTypeParams) {
         super(params);
 
-        this.nullAsEmpty = nullAsEmpty;
-        this.emptyAsNull = emptyAsNull;
+        this.nullAsEmpty = params.nullAsEmpty;
+        this.emptyAsNull = params.emptyAsNull;
 
-        this.trim = trim;
-        this.lower = lower;
-        this.upper = upper;
+        this.trim = params.trim;
+        this.lower = params.lower;
+        this.upper = params.upper;
     }
 
-    prepare(value, key) {
+    public prepare(value, key) {
         if ( value == null ) {
             if ( this.nullAsEmpty ) {
                 return "";
@@ -42,14 +48,14 @@ class StringType extends Type {
     
         if ( 
             isNaN(value) ||
-            typeof value == "boolean" ||
+            typeof value === "boolean" ||
             isObject(value) ||
             Array.isArray(value) ||
             // infinity
             value === 1 / 0 ||
             value === -1 / 0
         ) {
-            let valueAsString = invalidValuesAsString( value );
+            const valueAsString = invalidValuesAsString( value );
     
             throw new Error(`invalid string for ${key}: ${valueAsString}`);
         }

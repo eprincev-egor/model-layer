@@ -1,6 +1,6 @@
 import * as EventEmitter from "events";
 import EqualStack from "./EqualStack";
-import Type from "./type/Type";
+import {Type} from "./type/Type";
 import { invalidValuesAsString, isObject, MODELS } from "./utils";
 import Walker from "./Walker";
 
