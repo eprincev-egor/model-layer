@@ -1,49 +1,53 @@
 "use strict";
 
-const Type = require("./Type");
-const {invalidValuesAsString, isObject, eol} = require("../utils");
+import {Type, ITypeParams} from "./Type";
+import {invalidValuesAsString, isObject, eol} from "../utils";
+
+interface IObjectTypeParams extends ITypeParams {
+    nullAsEmpty?: boolean;
+    emptyAsNull?: boolean;
+    element?: any;
+}
 
 class ObjectType extends Type {
 
-    static prepareDescription(description) {
-        let isObject = (
+    public static prepareDescription(description, key) {
+        const isObjectDescription = (
             description.type &&
-            typeof description.type == "object" &&
+            typeof description.type === "object" &&
             description.type.constructor === Object
         );
 
-        if ( isObject ) {
-            let elementType = description.type.element;
+        if ( isObjectDescription ) {
+            const elementType = description.type.element;
             
             description.type = "object";
             description.element = elementType;
         }
 
 
-        if ( description.type == "object" ) {
+        if ( description.type === "object" ) {
             // prepare element description
-            description.element = Type.create( description.element || "*" );
+            description.element = Type.create( description.element || "*", key );
         }
     }
 
+    public nullAsEmpty: boolean;
+    public emptyAsNull: boolean;
+    public element: any;
 
-    constructor({
-        nullAsEmpty = false, 
-        emptyAsNull = false,
-        element,
-        ... params
-    }) {
+    constructor(params: IObjectTypeParams) {
         super(params);
 
-        this.element = element;
-        this.nullAsEmpty = nullAsEmpty;
-        this.emptyAsNull = emptyAsNull;
+        this.element = params.element;
+        this.nullAsEmpty = params.nullAsEmpty;
+        this.emptyAsNull = params.emptyAsNull;
     }
 
-    prepare(originalObject, modelKey) {
+    public prepare(originalObject, modelKey) {
         if ( originalObject == null ) {
             if ( this.nullAsEmpty ) {
-                let value = {};
+                const value = {};
                 Object.freeze(value);
     
                 return value;
@@ -51,30 +55,30 @@ class ObjectType extends Type {
             return null;
         }
     
-        let isObject = (
-            typeof originalObject == "object" &&
+        const isObjectValue = (
+            typeof originalObject === "object" &&
             !Array.isArray( originalObject ) &&
             !(originalObject instanceof RegExp)
         );
     
-        if ( !isObject ) {
-            let valueAsString = invalidValuesAsString( originalObject );
+        if ( !isObjectValue ) {
+            const valueAsString = invalidValuesAsString( originalObject );
     
             throw new Error(`invalid object for ${modelKey}: ${valueAsString}`);
         }
         
-        let object = {};
+        const object = {};
         let isEmpty = true;
-        let elementDescription = this.element;
-        let elementTypeAsString = elementDescription.typeAsString();
+        const elementDescription = this.element;
+        const elementTypeAsString = elementDescription.typeAsString();
     
-        for (let key in originalObject) {
+        for (const key in originalObject) {
             let element = originalObject[ key ];
     
             try {
                 element = elementDescription.prepare( element, key );
-            } catch(err) {
-                let valueAsString = invalidValuesAsString( originalObject );
+            } catch (err) {
+                const valueAsString = invalidValuesAsString( originalObject );
     
                 throw new Error(`invalid object[${ elementTypeAsString }] for ${modelKey}: ${valueAsString},${eol} ${err.message}`);
             }
@@ -95,31 +99,31 @@ class ObjectType extends Type {
         return object;
     }
 
-    toJSON(value) {
-        let obj = value;
-        let json = {};
+    public toJSON(value) {
+        const obj = value;
+        const json = {};
 
-        for (let key in obj) {
-            let value = obj[ key ];
-            json[ key ] = this.element.toJSON( value );
+        for (const key in obj) {
+            const objValue = obj[ key ];
+            json[ key ] = this.element.toJSON( objValue );
         }
 
         return json;
     }
 
-    clone(value) {
-        let obj = value;
-        let json = {};
+    public clone(value) {
+        const obj = value;
+        const json = {};
 
-        for (let key in obj) {
-            let value = obj[ key ];
-            json[ key ] = this.element.clone( value );
+        for (const key in obj) {
+            const objValue = obj[ key ];
+            json[ key ] = this.element.clone( objValue );
         }
 
         return json;
     }
 
-    equal(selfObj, otherObj, stack) {
+    public equal(selfObj, otherObj, stack) {
         if ( selfObj == null ) {
             return otherObj === null;
         }
@@ -128,10 +132,10 @@ class ObjectType extends Type {
             return false;
         }
 
-        for (let key in selfObj) {
-            let selfValue = selfObj[ key ];
-            let otherValue = otherObj[ key ];
-            let isEqual = this.element.equal( selfValue, otherValue, stack );
+        for (const key in selfObj) {
+            const selfValue = selfObj[ key ];
+            const otherValue = otherObj[ key ];
+            const isEqual = this.element.equal( selfValue, otherValue, stack );
 
             if ( !isEqual ) {
                 return false;
@@ -139,7 +143,7 @@ class ObjectType extends Type {
         }
 
         // check additional keys from otherObj
-        for (let key in otherObj) {
+        for (const key in otherObj) {
             if ( key in selfObj) {
                 continue;
             }

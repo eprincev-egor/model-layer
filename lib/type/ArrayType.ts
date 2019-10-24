@@ -4,11 +4,11 @@ import {Type, ITypeParams} from "./Type";
 import {invalidValuesAsString, eol} from "../utils";
 
 interface IArrayTypeParams extends ITypeParams {
-    sort: boolean;
-    unique: boolean;
-    emptyAsNull: boolean;
-    nullAsEmpty: boolean;
-    element: any;
+    sort?: boolean;
+    unique?: boolean;
+    emptyAsNull?: boolean;
+    nullAsEmpty?: boolean;
+    element?: any;
 }
 
 export default class ArrayType extends Type {
