@@ -9,7 +9,7 @@ interface ICollectionTypeParams extends ITypeParams {
     nullAsEmpty?: boolean;
 }
 
-class CollectionType extends Type {
+export default class CollectionType extends Type {
     public static prepareDescription(description) {
         
         const isCollection = (
