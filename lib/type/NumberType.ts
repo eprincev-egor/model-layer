@@ -1,54 +1,56 @@
 "use strict";
 
-const Type = require("./Type");
-const {isNaN, invalidValuesAsString} = require("../utils");
+import {Type, ITypeParams} from "./Type";
+import {isNaN, invalidValuesAsString} from "../utils";
+
+interface INumberTypeParams extends ITypeParams {
+    nullAsZero: boolean;
+    zeroAsNull: boolean;
+    ceil: number;
+    round: number;
+    floor: number;
+}
 
 class NumberType extends Type {
-    constructor({
-        nullAsZero = false, 
-        zeroAsNull = false,
-        ceil = null, 
-        round = null, 
-        floor = null,
+    public nullAsZero: boolean;
+    public zeroAsNull: boolean;
+    public ceil: number;
+    public round: number;
+    public floor: number;
 
-        ...params
-    }) {
+    constructor(params: INumberTypeParams) {
         super(params);
 
         
-        this.nullAsZero = nullAsZero;
-        this.zeroAsNull = zeroAsNull;
+        this.nullAsZero = params.nullAsZero;
+        this.zeroAsNull = params.zeroAsNull;
 
-        if ( ceil !== null ) {
-            if ( isNaN(+ceil) ) {
-                throw new Error("invalid ceil: " + invalidValuesAsString(ceil));
+        if ( params.ceil !== null ) {
+            if ( isNaN(+params.ceil) ) {
+                throw new Error("invalid ceil: " + invalidValuesAsString(params.ceil));
             }
 
-            ceil = +ceil;
+            this.ceil = +params.ceil;
         }
 
-        if ( round !== null ) {
-            if ( isNaN(+round) ) {
-                throw new Error("invalid round: " + invalidValuesAsString(round));
+        if ( params.round !== null ) {
+            if ( isNaN(+params.round) ) {
+                throw new Error("invalid round: " + invalidValuesAsString(params.round));
             }
 
-            round = +round;
+            this.round = +params.round;
         }
 
-        if ( floor !== null ) {
-            if ( isNaN(+floor) ) {
-                throw new Error("invalid floor: " + invalidValuesAsString(floor));
+        if ( params.floor !== null ) {
+            if ( isNaN(+params.floor) ) {
+                throw new Error("invalid floor: " + invalidValuesAsString(params.floor));
             }
             
-            floor = +floor;
+            this.floor = +params.floor;
         }
-
-        this.ceil = ceil;
-        this.round = round;
-        this.floor = floor;
     }
 
-    prepare(originalValue,  key) {
+    public prepare(originalValue,  key) {
         if ( originalValue == null ) {
             if ( this.nullAsZero ) {
                 return 0;
@@ -61,21 +63,21 @@ class NumberType extends Type {
     
         if ( 
             isNaN(value) ||
-            typeof originalValue == "boolean" ||
+            typeof originalValue === "boolean" ||
             originalValue instanceof RegExp ||
             Array.isArray(originalValue) ||
             // infinity
             value === 1 / 0 ||
             value === -1 / 0
         ) {
-            let valueAsString = invalidValuesAsString( originalValue );
+            const valueAsString = invalidValuesAsString( originalValue );
     
             throw new Error(`invalid number for ${key}: ${valueAsString}`);
         }
     
         
         if ( this.round !== null ) {
-            let desc = Math.pow( 10, this.round );
+            const desc = Math.pow( 10, this.round );
     
             value = Math.round(  
                 value * 
@@ -84,7 +86,7 @@ class NumberType extends Type {
         }
     
         else if ( this.floor !== null ) {
-            let desc = Math.pow( 10, this.floor );
+            const desc = Math.pow( 10, this.floor );
     
             value = Math.floor(
                 value * 
@@ -93,7 +95,7 @@ class NumberType extends Type {
         }
     
         else if ( this.ceil !== null ) {
-            let desc = Math.pow( 10, this.ceil );
+            const desc = Math.pow( 10, this.ceil );
     
             value = Math.ceil(
                 value * 

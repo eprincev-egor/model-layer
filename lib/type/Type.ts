@@ -27,16 +27,16 @@ export interface ITypeParams {
 export class Type {
     public static Model: any;
 
-    public static registerType(typeName, CustomType) {
+    public static registerType(typeName: string, CustomType: new(ITypeParams) => Type) {
         registeredTypes[ typeName ] = CustomType;
     }
 
-    public static getType(typeName) {
+    public static getType(typeName: string) {
         return registeredTypes[ typeName ];
     }
 
     // create type by params
-    public static create(description, key) {
+    public static create(description, key: string) {
         
         const isPlainDescription = (
             description && 
