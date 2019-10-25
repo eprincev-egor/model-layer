@@ -297,7 +297,7 @@ class Collection<TModel extends Model<ISimpleObject>> extends EventEmitter {
         return this.models.some(iteration, context || this);
     }
 
-    public slice(begin, end): TModel[] {
+    public slice(begin?: number, end?: number): TModel[] {
         return this.models.slice(begin, end);
     }
 

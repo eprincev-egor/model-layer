@@ -1,14 +1,19 @@
 
+import {Collection, Model} from "../../../lib/index";
+import assert from "assert";
 
-const {Collection} = require("../../../lib/index");
-const assert = require("assert");
+interface IProduct {
+    name: string;
+    price: number;
+}
+class Product extends Model<IProduct> {}
 
 describe("Collection.slice", () => {
 
     it("slice()", () => {
 
-        class Products extends Collection {
-            static data() {
+        class Products extends Collection<Product> {
+            public static data() {
                 return {
                     name: "text",
                     price: "number"
@@ -16,13 +21,13 @@ describe("Collection.slice", () => {
             }
         }
 
-        let products = new Products([
+        const products = new Products([
             {name: "Eggs", price: 1.8},
             {name: "Pie", price: 10},
             {name: "Milk", price: 4}
         ]);
 
-        let result = products.slice();
+        const result = products.slice();
         assert.strictEqual( result.length, 3 );
         assert.strictEqual( result[0].get("name"), "Eggs" );
         assert.strictEqual( result[1].get("name"), "Pie" );
@@ -32,8 +37,8 @@ describe("Collection.slice", () => {
     
     it("slice(begin)", () => {
 
-        class Products extends Collection {
-            static data() {
+        class Products extends Collection<Product> {
+            public static data() {
                 return {
                     name: "text",
                     price: "number"
@@ -41,7 +46,7 @@ describe("Collection.slice", () => {
             }
         }
 
-        let products = new Products([
+        const products = new Products([
             {name: "Eggs", price: 1.8},
             {name: "Pie", price: 10},
             {name: "Milk", price: 4}
@@ -62,8 +67,8 @@ describe("Collection.slice", () => {
     
     it("slice(begin, end)", () => {
 
-        class Products extends Collection {
-            static data() {
+        class Products extends Collection<Product> {
+            public static data() {
                 return {
                     name: "text",
                     price: "number"
@@ -71,7 +76,7 @@ describe("Collection.slice", () => {
             }
         }
 
-        let products = new Products([
+        const products = new Products([
             {name: "Eggs", price: 1.8},
             {name: "Pie", price: 10},
             {name: "Milk", price: 4}
