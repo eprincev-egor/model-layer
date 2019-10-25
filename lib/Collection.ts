@@ -269,11 +269,17 @@ class Collection<TModel extends Model<ISimpleObject>> extends EventEmitter {
         return output;
     }
 
-    public reduce(iteration, initialValue) {
+    public reduce<T>(
+        iteration: (total: T, nextModel: TModel) => T,
+        initialValue?: T
+    ): T {
         return this.models.reduce(iteration, initialValue);
     }
 
-    public reduceRight(iteration, initialValue) {
+    public reduceRight<T>(
+        iteration: (total: T, nextModel: TModel) => T,
+        initialValue?: T
+    ): T {
         return this.models.reduceRight(iteration, initialValue);
     }
 
