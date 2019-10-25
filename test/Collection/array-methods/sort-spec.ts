@@ -1,14 +1,19 @@
 
+import {Collection, Model} from "../../../lib/index";
+import assert from "assert";
 
-const {Collection} = require("../../../lib/index");
-const assert = require("assert");
+interface IProduct {
+    name: string;
+    price: number;
+}
+class Product extends Model<IProduct> {}
 
 describe("Collection.sort", () => {
 
     it("sort(compareFunction)", () => {
         
-        class Products extends Collection {
-            static data() {
+        class Products extends Collection<Product> {
+            public static data() {
                 return {
                     name: "text",
                     price: "number"
@@ -16,7 +21,7 @@ describe("Collection.sort", () => {
             }
         }
 
-        let products = new Products([
+        const products = new Products([
             {name: "Pie", price: 10},
             {name: "Eggs", price: 1.8},
             {name: "Milk", price: 4}
@@ -37,8 +42,8 @@ describe("Collection.sort", () => {
 
     it("sort(key)", () => {
         
-        class Products extends Collection {
-            static data() {
+        class Products extends Collection<Product> {
+            public static data() {
                 return {
                     name: "text",
                     price: "number"
@@ -46,7 +51,7 @@ describe("Collection.sort", () => {
             }
         }
 
-        let products = new Products([
+        const products = new Products([
             {name: "Pie", price: 10},
             {name: "Eggs", price: 1.8},
             {name: "Milk", price: 40}
@@ -71,8 +76,8 @@ describe("Collection.sort", () => {
 
     it("sort(key1, key2)", () => {
         
-        class Products extends Collection {
-            static data() {
+        class Products extends Collection<Product> {
+            public static data() {
                 return {
                     name: "text",
                     price: "number"
@@ -80,7 +85,7 @@ describe("Collection.sort", () => {
             }
         }
 
-        let products = new Products([
+        const products = new Products([
             {name: "Pie", price: 10},
             {name: "Pie", price: 2},
             {name: "Pie", price: 3},
@@ -116,8 +121,8 @@ describe("Collection.sort", () => {
 
     it("sort(somethingWrong)", () => {
         
-        class Products extends Collection {
-            static data() {
+        class Products extends Collection<Product> {
+            public static data() {
                 return {
                     name: "text",
                     price: "number"
@@ -125,7 +130,7 @@ describe("Collection.sort", () => {
             }
         }
 
-        let products = new Products([
+        const products = new Products([
             {name: "Pie", price: 10},
             {name: "Eggs", price: 1.8},
             {name: "Milk", price: 40}
@@ -134,8 +139,8 @@ describe("Collection.sort", () => {
         assert.throws(
             () => {
                 products.sort();
-            }, err =>
-                err.message == "invalid compareFunction or key: undefined"
+            }, (err) =>
+                err.message === "invalid compareFunction or key: undefined"
         );
     });
 

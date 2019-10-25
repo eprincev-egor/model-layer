@@ -380,7 +380,7 @@ class Collection<TModel extends Model<ISimpleObject>> extends EventEmitter {
     }
 
     public sort(
-        compareFunctionOrKey: 
+        compareFunctionOrKey?: 
             keyof TModel["data"] |
             ((modelA: TModel, modelB: TModel) => number), 
         ...otherKeys: Array<keyof TModel["data"] & string>
