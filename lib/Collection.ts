@@ -289,7 +289,7 @@ class Collection<TModel extends Model<ISimpleObject>> extends EventEmitter {
         return this.models.slice(begin, end);
     }
 
-    public flat() {
+    public flat(): TModel[] {
         return this.models.slice();
     }
 
