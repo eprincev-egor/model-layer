@@ -1,14 +1,19 @@
 
+import {Collection, Model} from "../../../lib/index";
+import assert from "assert";
 
-const {Collection} = require("../../../lib/index");
-const assert = require("assert");
+interface IProduct {
+    name: string;
+    price: number;
+}
+class Product extends Model<IProduct> {}
 
 describe("Collection.map", () => {
 
     it("map()", () => {
 
-        class Products extends Collection {
-            static data() {
+        class Products extends Collection<Product> {
+            public static data() {
                 return {
                     name: "text",
                     price: "number"
@@ -16,13 +21,13 @@ describe("Collection.map", () => {
             }
         }
 
-        let products = new Products([
+        const products = new Products([
             {name: "Eggs", price: 1.8},
             {name: "Pie", price: 10},
             {name: "Milk", price: 4}
         ]);
 
-        let prices = products.map(product =>
+        const prices = products.map((product) =>
             product.get("price")
         );
 
@@ -30,8 +35,8 @@ describe("Collection.map", () => {
     });
     
     it("map(f, context)", () => {
-        class Products extends Collection {
-            static data() {
+        class Products extends Collection<Product> {
+            public static data() {
                 return {
                     name: "text",
                     price: "number"
@@ -39,12 +44,12 @@ describe("Collection.map", () => {
             }
         }
 
-        let products = new Products([
+        const products = new Products([
             {name: "Eggs", price: 1.2}
         ]);
 
         
-        let context = {
+        const context = {
             changed: false
         };
 

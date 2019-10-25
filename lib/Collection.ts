@@ -241,7 +241,10 @@ class Collection<TModel extends Model<ISimpleObject>> extends EventEmitter {
         return this.models.filter(iteration, context || this);
     }
 
-    public map(iteration, context?): TModel[] {
+    public map<T>(
+        iteration: (model: TModel, index: number, models: TModel[]) => T, 
+        context?
+    ): T[] {
         return this.models.map(iteration, context || this);
     }
 
