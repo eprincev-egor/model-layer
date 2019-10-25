@@ -5,6 +5,15 @@ import {Model, ISimpleObject, JSONData} from "./Model";
 import EqualStack from "./EqualStack";
 import {invalidValuesAsString, isPlainObject} from "./utils";
 
+type IRow<TModel extends Model<ISimpleObject>> = TModel["data"] | TModel;
+type IRows<
+    TCollection extends Collection<Model<ISimpleObject>>, 
+    TModel extends Model<ISimpleObject>
+> = (
+    TCollection | 
+    Array< IRow<TModel> >
+);
+
 interface IAddEvent<TCollection, TModel> {
     type: "add";
     model: TModel;
@@ -36,7 +45,7 @@ class Collection<TModel extends Model<ISimpleObject>> extends EventEmitter {
     public length: number;
     public Model: new (object) => TModel;
 
-    constructor(rows) {
+    constructor(rows: TModel[] | Array<TModel["data"]>) {
         super();
 
         if ( !this.constructor.prototype.hasOwnProperty( "Model" ) ) {
@@ -402,25 +411,26 @@ class Collection<TModel extends Model<ISimpleObject>> extends EventEmitter {
         return this;
     }
 
-    public concat(...values: TModel[][] | this[]): this {
+    public concat(...values: Array<IRows< this, TModel >>): this {
         
         const CustomCollection = this.constructor as any;
-        let models = this.models;
+        let outputModels = this.models;
 
         for (let i = 0, n = values.length; i < n; i++) {
             const rowsOrCollection = values[ i ];
 
             if ( rowsOrCollection instanceof Collection ) {
                 const collection = rowsOrCollection;
-                models = models.concat( collection.models );
+                outputModels = outputModels.concat( collection.models );
             } 
             else {
                 const rows = rowsOrCollection;
-                models = models.concat( rows );
+                const models = rows.map((row) => this.prepareRow(row));
+                outputModels = outputModels.concat( models );
             }
         }
 
-        return new CustomCollection(models);
+        return new CustomCollection(outputModels);
     }
 
     public join(separator: string): string {

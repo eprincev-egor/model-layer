@@ -13,7 +13,7 @@ describe("Collection.concat", () => {
         class Product extends Model<IProduct> {}
 
         class Products extends Collection<Product> {
-            static data() {
+            public static data() {
                 return {
                     name: "text",
                     price: "number"
@@ -21,17 +21,17 @@ describe("Collection.concat", () => {
             }
         }
 
-        let arr1 = new Products([
+        const arr1 = new Products([
             {name: "Eggs", price: 1.8},
             {name: "Pie", price: 10}
         ]);
 
-        let arr2 = new Products([
+        const arr2 = new Products([
             {name: "Bread", price: 2.3},
             {name: "Milk", price: 10}
         ]);
 
-        let arr3 = arr1.concat( arr2 );
+        const arr3 = arr1.concat( arr2 );
         assert.strictEqual( arr3.length, 4 );
 
         assert.strictEqual( arr3.at(1).get("name"), "Pie" );
@@ -39,9 +39,14 @@ describe("Collection.concat", () => {
     });
 
     it("concat(rows)", () => {
+        interface IProduct {
+            name: string;
+            price: number;
+        }
+        class Product extends Model<IProduct> {}
         
-        class Products extends Collection {
-            static data() {
+        class Products extends Collection<Product> {
+            public static data() {
                 return {
                     name: "text",
                     price: "number"
@@ -49,17 +54,17 @@ describe("Collection.concat", () => {
             }
         }
 
-        let arr1 = new Products([
+        const arr1 = new Products([
             {name: "Eggs", price: 1.8},
             {name: "Pie", price: 10}
         ]);
 
-        let arr2 = [
+        const arr2 = [
             {name: "Bread", price: 2.3},
             {name: "Milk", price: 10}
         ];
 
-        let arr3 = arr1.concat( arr2 );
+        const arr3 = arr1.concat( arr2 );
         assert.strictEqual( arr3.length, 4 );
 
         assert.strictEqual( arr3.at(1).get("name"), "Pie" );
@@ -67,9 +72,14 @@ describe("Collection.concat", () => {
     });
 
     it("concat(rows1, rows2)", () => {
+        interface IProduct {
+            name: string;
+            price: number;
+        }
+        class Product extends Model<IProduct> {}
         
-        class Products extends Collection {
-            static data() {
+        class Products extends Collection<Product> {
+            public static data() {
                 return {
                     name: "text",
                     price: "number"
@@ -77,19 +87,19 @@ describe("Collection.concat", () => {
             }
         }
 
-        let arr1 = new Products([
+        const arr1 = new Products([
             {name: "Eggs", price: 1.8},
             {name: "Pie", price: 10}
         ]);
 
-        let arr2 = [
+        const arr2 = [
             {name: "Bread", price: 2.3}
         ];
-        let arr3 = [
+        const arr3 = [
             {name: "Milk", price: 10}
         ];
 
-        let arr4 = arr1.concat( arr2, arr3 );
+        const arr4 = arr1.concat( arr2, arr3 );
         assert.strictEqual( arr4.length, 4 );
 
         assert.strictEqual( arr4.at(1).get("name"), "Pie" );
@@ -98,9 +108,14 @@ describe("Collection.concat", () => {
     });
 
     it("concat(rows, collection)", () => {
+        interface IProduct {
+            name: string;
+            price: number;
+        }
+        class Product extends Model<IProduct> {}
         
-        class Products extends Collection {
-            static data() {
+        class Products extends Collection<Product> {
+            public static data() {
                 return {
                     name: "text",
                     price: "number"
@@ -108,19 +123,19 @@ describe("Collection.concat", () => {
             }
         }
 
-        let arr1 = new Products([
+        const arr1 = new Products([
             {name: "Eggs", price: 1.8},
             {name: "Pie", price: 10}
         ]);
 
-        let arr2 = [
+        const arr2 = [
             {name: "Bread", price: 2.3}
         ];
-        let arr3 = new Products([
+        const arr3 = new Products([
             {name: "Milk", price: 10}
         ]);
 
-        let arr4 = arr1.concat( arr2, arr3 );
+        const arr4 = arr1.concat( arr2, arr3 );
         assert.strictEqual( arr4.length, 4 );
 
         assert.strictEqual( arr4.at(1).get("name"), "Pie" );
@@ -130,9 +145,14 @@ describe("Collection.concat", () => {
 
     
     it("concat()", () => {
+        interface IProduct {
+            name: string;
+            price: number;
+        }
+        class Product extends Model<IProduct> {}
         
-        class Products extends Collection {
-            static data() {
+        class Products extends Collection<Product> {
+            public static data() {
                 return {
                     name: "text",
                     price: "number"
@@ -140,12 +160,12 @@ describe("Collection.concat", () => {
             }
         }
 
-        let arr1 = new Products([
+        const arr1 = new Products([
             {name: "Eggs", price: 1.8},
             {name: "Pie", price: 10}
         ]);
 
-        let arr2 = arr1.concat();
+        const arr2 = arr1.concat();
         assert.strictEqual( arr2.length, 2 );
 
         assert.strictEqual( arr2.at(1).get("name"), "Pie" );
