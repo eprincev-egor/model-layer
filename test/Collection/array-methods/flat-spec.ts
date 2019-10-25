@@ -8,7 +8,7 @@ describe("Collection.flat", () => {
     it("flat()", () => {
 
         class Products extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text",
                     price: "number"

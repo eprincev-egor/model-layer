@@ -7,7 +7,7 @@ describe("Collection.add", () => {
 
     it("add object", () => {
         class Users extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -33,7 +33,7 @@ describe("Collection.add", () => {
 
     it("add(a, b, ...)", () => {
         class Users extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -66,7 +66,7 @@ describe("Collection.add", () => {
 
     it("add CustomModel", () => {
         class User extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -74,7 +74,7 @@ describe("Collection.add", () => {
         }
 
         class Users extends Collection {
-            static structure() {
+            static data() {
                 return User;
             }
         }
@@ -96,7 +96,7 @@ describe("Collection.add", () => {
 
     it("add SomeModel", () => {
         class User extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -104,7 +104,7 @@ describe("Collection.add", () => {
         }
 
         class Users extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -130,7 +130,7 @@ describe("Collection.add", () => {
     it("add()", () => {
 
         class Users extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -149,7 +149,7 @@ describe("Collection.add", () => {
     it("add(undefined)", () => {
 
         class Users extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -168,7 +168,7 @@ describe("Collection.add", () => {
 
     it("add([obj, obj])", () => {
         class Users extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -203,7 +203,7 @@ describe("Collection.add", () => {
 
     it("add([obj, model])", () => {
         class User extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -211,7 +211,7 @@ describe("Collection.add", () => {
         }
 
         class Users extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -246,7 +246,7 @@ describe("Collection.add", () => {
 
     it("add([obj], [model])", () => {
         class User extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -254,7 +254,7 @@ describe("Collection.add", () => {
         }
 
         class Users extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };

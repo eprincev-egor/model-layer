@@ -8,7 +8,7 @@ describe("Collection.lastIndexOf", () => {
     it("lastIndexOf(model)", () => {
 
         class Products extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text",
                     price: "number"
@@ -26,7 +26,7 @@ describe("Collection.lastIndexOf", () => {
         let lastModel = products.at(2);
 
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {"*": "*"};
             }
         }
@@ -46,7 +46,7 @@ describe("Collection.lastIndexOf", () => {
     it("lastIndexOf(model, fromIndex)", () => {
 
         class Products extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text",
                     price: "number"

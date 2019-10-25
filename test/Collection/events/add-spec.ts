@@ -8,7 +8,7 @@ describe("Collection event add", () => {
     it("add(row)", () => {
         
         class Users extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -45,7 +45,7 @@ describe("Collection event add", () => {
     it("create(row)", () => {
         
         class Users extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -81,7 +81,7 @@ describe("Collection event add", () => {
     it("push(row)", () => {
         
         class Users extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -117,7 +117,7 @@ describe("Collection event add", () => {
     it("unshift(row)", () => {
         
         class Users extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -153,7 +153,7 @@ describe("Collection event add", () => {
     it("splice(0, 0, row)", () => {
         
         class Users extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -189,7 +189,7 @@ describe("Collection event add", () => {
     it("at(0, row)", () => {
         
         class Users extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -225,7 +225,7 @@ describe("Collection event add", () => {
     it("fill(row, start, end)", () => {
         
         class Users extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };

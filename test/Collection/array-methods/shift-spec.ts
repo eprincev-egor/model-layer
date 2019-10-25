@@ -8,7 +8,7 @@ describe("Collection.shift", () => {
     it("shift()", () => {
         
         class Products extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text",
                     price: "number"

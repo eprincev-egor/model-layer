@@ -8,7 +8,7 @@ describe("Collection.flatMap", () => {
     it("flatMap()", () => {
 
         class Books extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text",
                     price: "number"
@@ -30,7 +30,7 @@ describe("Collection.flatMap", () => {
     
     it("flatMap(f, context)", () => {
         class Products extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text",
                     price: "number"

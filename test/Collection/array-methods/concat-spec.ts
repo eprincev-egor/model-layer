@@ -1,14 +1,19 @@
 "use strict";
 
-const {Collection} = require("../../../lib/index");
-const assert = require("assert");
+import {Collection, Model} from "../../../lib/index";
+import assert from "assert";
 
 describe("Collection.concat", () => {
 
     it("concat(collection)", () => {
-        
-        class Products extends Collection {
-            static structure() {
+        interface IProduct {
+            name: string;
+            price: number;
+        }
+        class Product extends Model<IProduct> {}
+
+        class Products extends Collection<Product> {
+            static data() {
                 return {
                     name: "text",
                     price: "number"
@@ -36,7 +41,7 @@ describe("Collection.concat", () => {
     it("concat(rows)", () => {
         
         class Products extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text",
                     price: "number"
@@ -64,7 +69,7 @@ describe("Collection.concat", () => {
     it("concat(rows1, rows2)", () => {
         
         class Products extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text",
                     price: "number"
@@ -95,7 +100,7 @@ describe("Collection.concat", () => {
     it("concat(rows, collection)", () => {
         
         class Products extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text",
                     price: "number"
@@ -127,7 +132,7 @@ describe("Collection.concat", () => {
     it("concat()", () => {
         
         class Products extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text",
                     price: "number"

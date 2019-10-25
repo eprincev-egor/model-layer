@@ -8,7 +8,7 @@ describe("Collection.filter", () => {
     it("filter()", () => {
 
         class Products extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text",
                     price: "number"
@@ -33,7 +33,7 @@ describe("Collection.filter", () => {
     
     it("filter(f, context)", () => {
         class Products extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text",
                     price: "number"

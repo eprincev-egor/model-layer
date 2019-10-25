@@ -8,7 +8,7 @@ describe("Collection.clone", () => {
     it("clone()", () => {
         
         class Companies extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };

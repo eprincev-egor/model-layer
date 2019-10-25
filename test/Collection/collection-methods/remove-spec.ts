@@ -8,7 +8,7 @@ describe("Collection.remove", () => {
     it("remove(model)", () => {
         
         class Products extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -39,7 +39,7 @@ describe("Collection.remove", () => {
     it("remove(id)", () => {
         
         class Companies extends Collection {
-            static structure() {
+            static data() {
                 return {
                     id: {
                         type: "number",

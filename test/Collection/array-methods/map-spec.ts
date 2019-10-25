@@ -8,7 +8,7 @@ describe("Collection.map", () => {
     it("map()", () => {
 
         class Products extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text",
                     price: "number"
@@ -31,7 +31,7 @@ describe("Collection.map", () => {
     
     it("map(f, context)", () => {
         class Products extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text",
                     price: "number"

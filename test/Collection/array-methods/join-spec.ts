@@ -8,7 +8,7 @@ describe("Collection.join", () => {
     it("join()", () => {
         
         class Product extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: "text",
                     price: "number"
@@ -21,7 +21,7 @@ describe("Collection.join", () => {
         }
 
         class Products extends Collection {
-            static structure() {
+            static data() {
                 return Product;
             }
         }

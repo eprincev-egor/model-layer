@@ -8,7 +8,7 @@ describe("Collection tests", () => {
     it("create empty collection", () => {
 
         class Users extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -25,7 +25,7 @@ describe("Collection tests", () => {
 
     it("create collection with rows", () => {
         class Users extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -48,7 +48,7 @@ describe("Collection tests", () => {
 
     it("create collection with models", () => {
         class User extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -56,7 +56,7 @@ describe("Collection tests", () => {
         }
 
         class Users extends Collection {
-            static structure() {
+            static data() {
                 return User;
             }
         }
@@ -79,7 +79,7 @@ describe("Collection tests", () => {
 
     it("set model by index", () => {
         class Users extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -99,11 +99,11 @@ describe("Collection tests", () => {
         assert.strictEqual( user.get("name"), "Bob" );
     });
 
-    it("once call structure", () => {
+    it("once call data", () => {
         let calls = 0;
 
         class Products extends Collection {
-            static structure() {
+            static data() {
                 calls++;
                 return {
                     name: "text",
@@ -123,7 +123,7 @@ describe("Collection tests", () => {
 
     it("one model inside two collections", () => {
         class Company extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -131,7 +131,7 @@ describe("Collection tests", () => {
         }
 
         class Companies extends Collection {
-            static structure() {
+            static data() {
                 return Company;
             }
         }

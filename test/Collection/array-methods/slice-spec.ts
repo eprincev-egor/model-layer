@@ -8,7 +8,7 @@ describe("Collection.slice", () => {
     it("slice()", () => {
 
         class Products extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text",
                     price: "number"
@@ -33,7 +33,7 @@ describe("Collection.slice", () => {
     it("slice(begin)", () => {
 
         class Products extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text",
                     price: "number"
@@ -63,7 +63,7 @@ describe("Collection.slice", () => {
     it("slice(begin, end)", () => {
 
         class Products extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text",
                     price: "number"

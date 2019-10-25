@@ -8,7 +8,7 @@ describe("Collection.findIndex", () => {
     it("findIndex()", () => {
 
         class Colors extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -30,7 +30,7 @@ describe("Collection.findIndex", () => {
     
     it("findIndex(f, context)", () => {
         class Products extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text",
                     price: "number"

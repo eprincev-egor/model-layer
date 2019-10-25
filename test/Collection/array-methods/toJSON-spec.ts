@@ -8,7 +8,7 @@ describe("Collection.toJSON", () => {
     it("toJSON()", () => {
         
         class Users extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };

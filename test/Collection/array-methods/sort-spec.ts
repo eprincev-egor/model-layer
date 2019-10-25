@@ -8,7 +8,7 @@ describe("Collection.sort", () => {
     it("sort(compareFunction)", () => {
         
         class Products extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text",
                     price: "number"
@@ -38,7 +38,7 @@ describe("Collection.sort", () => {
     it("sort(key)", () => {
         
         class Products extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text",
                     price: "number"
@@ -72,7 +72,7 @@ describe("Collection.sort", () => {
     it("sort(key1, key2)", () => {
         
         class Products extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text",
                     price: "number"
@@ -117,7 +117,7 @@ describe("Collection.sort", () => {
     it("sort(somethingWrong)", () => {
         
         class Products extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text",
                     price: "number"

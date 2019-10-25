@@ -8,7 +8,7 @@ describe("Collection.splice", () => {
     it("splice(start, deleteCount)", () => {
         
         class Users extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -41,7 +41,7 @@ describe("Collection.splice", () => {
     it("splice(start, deleteCount, row)", () => {
         
         class Users extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -70,7 +70,7 @@ describe("Collection.splice", () => {
     it("splice(start, deleteCount, row1, row2)", () => {
         
         class Users extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -99,7 +99,7 @@ describe("Collection.splice", () => {
     it("splice(start, deleteCount, model)", () => {
         
         class User extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -107,7 +107,7 @@ describe("Collection.splice", () => {
         }
 
         class Users extends Collection {
-            static structure() {
+            static data() {
                 return User;
             }
         }

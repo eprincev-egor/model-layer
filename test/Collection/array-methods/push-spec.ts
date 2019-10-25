@@ -7,7 +7,7 @@ describe("Collection.push", () => {
 
     it("push object", () => {
         class Users extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -33,7 +33,7 @@ describe("Collection.push", () => {
 
     it("push(a, b, ...)", () => {
         class Users extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -66,7 +66,7 @@ describe("Collection.push", () => {
 
     it("push CustomModel", () => {
         class User extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -74,7 +74,7 @@ describe("Collection.push", () => {
         }
 
         class Users extends Collection {
-            static structure() {
+            static data() {
                 return User;
             }
         }
@@ -96,7 +96,7 @@ describe("Collection.push", () => {
 
     it("push SomeModel", () => {
         class User extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -104,7 +104,7 @@ describe("Collection.push", () => {
         }
 
         class Users extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -130,7 +130,7 @@ describe("Collection.push", () => {
     it("push()", () => {
 
         class Users extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -149,7 +149,7 @@ describe("Collection.push", () => {
     it("push(undefined)", () => {
 
         class Users extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };

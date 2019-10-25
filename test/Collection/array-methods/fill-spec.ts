@@ -8,7 +8,7 @@ describe("Collection.fill", () => {
     it("fill(row, start, end)", () => {
         
         class Products extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -49,7 +49,7 @@ describe("Collection.fill", () => {
     it("fill(row, start)", () => {
         
         class Products extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -87,7 +87,7 @@ describe("Collection.fill", () => {
     it("fill(row, -start)", () => {
         
         class Products extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -117,7 +117,7 @@ describe("Collection.fill", () => {
     it("fill(row, -start, -end)", () => {
         
         class Products extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };

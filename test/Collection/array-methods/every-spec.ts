@@ -8,7 +8,7 @@ describe("Collection.every", () => {
     it("every()", () => {
 
         class Products extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text",
                     price: "number"
@@ -36,7 +36,7 @@ describe("Collection.every", () => {
     
     it("every(f, context)", () => {
         class Products extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text",
                     price: "number"

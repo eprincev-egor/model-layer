@@ -8,7 +8,7 @@ describe("Collection event add", () => {
     it("remove(id)", () => {
         
         class Users extends Collection {
-            static structure() {
+            static data() {
                 return {
                     id: {
                         type: "number",
@@ -50,7 +50,7 @@ describe("Collection event add", () => {
     it("reset()", () => {
         
         class Users extends Collection {
-            static structure() {
+            static data() {
                 return {
                     id: {
                         type: "number",
@@ -93,7 +93,7 @@ describe("Collection event add", () => {
     it("at(index, row)", () => {
         
         class Users extends Collection {
-            static structure() {
+            static data() {
                 return {
                     id: {
                         type: "number",
@@ -138,7 +138,7 @@ describe("Collection event add", () => {
     it("pop()", () => {
         
         class Users extends Collection {
-            static structure() {
+            static data() {
                 return {
                     id: {
                         type: "number",
@@ -180,7 +180,7 @@ describe("Collection event add", () => {
     it("shift()", () => {
         
         class Users extends Collection {
-            static structure() {
+            static data() {
                 return {
                     id: {
                         type: "number",
@@ -222,7 +222,7 @@ describe("Collection event add", () => {
     it("splice(0, 1)", () => {
         
         class Users extends Collection {
-            static structure() {
+            static data() {
                 return {
                     id: {
                         type: "number",

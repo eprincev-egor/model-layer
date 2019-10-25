@@ -8,7 +8,7 @@ describe("Collection.equal", () => {
     it("equal()", () => {
         
         class Companies extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -57,7 +57,7 @@ describe("Collection.equal", () => {
 
     it("equal Collections, circular recursion", () => {
         class CustomCollection extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text",
                     child: CustomCollection

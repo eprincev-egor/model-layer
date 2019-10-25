@@ -8,7 +8,7 @@ describe("Collection.forEach", () => {
     it("forEach", () => {
 
         class Products extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text",
                     price: "number"
@@ -45,7 +45,7 @@ describe("Collection.forEach", () => {
     it("forEach(f, context)", () => {
 
         class Products extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text",
                     price: "number"
