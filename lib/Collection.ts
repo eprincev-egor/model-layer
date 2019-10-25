@@ -296,11 +296,11 @@ class Collection<TModel extends Model<ISimpleObject>> extends EventEmitter {
         return this.models.slice();
     }
 
-    public indexOf(searchElement, fromIndex): number {
+    public indexOf(searchElement: TModel, fromIndex?: number): number {
         return this.models.indexOf(searchElement, fromIndex);
     }
 
-    public lastIndexOf(searchElement, fromIndex): number {
+    public lastIndexOf(searchElement: TModel, fromIndex?: number): number {
         if ( arguments.length === 2 ) {
             return this.models.lastIndexOf(searchElement, fromIndex);
         }
