@@ -350,7 +350,7 @@ class Collection<TModel extends Model<ISimpleObject>> extends EventEmitter {
         return model;
     }
 
-    public unshift(...models: TModel[] | object[]) {
+    public unshift(...models: Array<IRow<TModel>>) {
         if ( !models.length ) {
             return;
         }
