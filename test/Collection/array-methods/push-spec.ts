@@ -1,20 +1,24 @@
 
-
-const {Collection, Model} = require("../../../lib/index");
-const assert = require("assert");
+import {Collection, Model} from "../../../lib/index";
+import assert from "assert";
 
 describe("Collection.push", () => {
 
     it("push object", () => {
-        class Users extends Collection {
-            static data() {
+        interface IUser {
+            name: string;
+        }
+        class User extends Model<IUser> {}
+        
+        class Users extends Collection<User> {
+            public static data() {
                 return {
                     name: "text"
                 };
             }
         }
 
-        let users = new Users([
+        const users = new Users([
             {name: "Oliver"}
         ]);
         
@@ -26,21 +30,26 @@ describe("Collection.push", () => {
 
         assert.strictEqual( users.length, 2 );
 
-        let user = users.at(1);
+        const user = users.at(1);
         assert.ok( user instanceof Model );
         assert.strictEqual( user.get("name"), "Bob" );
     });
 
     it("push(a, b, ...)", () => {
-        class Users extends Collection {
-            static data() {
+        interface IUser {
+            name: string;
+        }
+        class User extends Model<IUser> {}
+
+        class Users extends Collection<User> {
+            public static data() {
                 return {
                     name: "text"
                 };
             }
         }
 
-        let users = new Users();
+        const users = new Users();
         
         assert.strictEqual( users.length, 0 );
 
@@ -65,24 +74,28 @@ describe("Collection.push", () => {
     });
 
     it("push CustomModel", () => {
-        class User extends Model {
-            static data() {
+        interface IUser {
+            name: string;
+        }
+        
+        class User extends Model<IUser> {
+            public static data() {
                 return {
                     name: "text"
                 };
             }
         }
 
-        class Users extends Collection {
-            static data() {
+        class Users extends Collection<User> {
+            public static data() {
                 return User;
             }
         }
 
-        let user = new User({
+        const user = new User({
             name: "Bob"
         });
-        let users = new Users();
+        const users = new Users();
         
         assert.strictEqual( users.length, 0 );
 
@@ -90,31 +103,35 @@ describe("Collection.push", () => {
 
         assert.strictEqual( users.length, 1 );
 
-        let pushedUser = users.at(0);
-        assert.ok( pushedUser == user );
+        const pushedUser = users.at(0);
+        assert.ok( pushedUser === user );
     });
 
     it("push SomeModel", () => {
-        class User extends Model {
-            static data() {
+        interface IUser {
+            name: string;
+        }
+
+        class User extends Model<IUser> {
+            public static data() {
                 return {
                     name: "text"
                 };
             }
         }
 
-        class Users extends Collection {
-            static data() {
+        class Users extends Collection<User> {
+            public static data() {
                 return {
                     name: "text"
                 };
             }
         }
 
-        let user = new User({
+        const user = new User({
             name: "Bob"
         });
-        let users = new Users();
+        const users = new Users();
         
         assert.strictEqual( users.length, 0 );
 
@@ -122,22 +139,26 @@ describe("Collection.push", () => {
 
         assert.strictEqual( users.length, 1 );
 
-        let pushedUser = users.at(0);
+        const pushedUser = users.at(0);
         assert.ok( pushedUser instanceof Model );
-        assert.ok( pushedUser != user );
+        assert.ok( pushedUser !== user );
     });
 
     it("push()", () => {
+        interface IUser {
+            name: string;
+        }
+        class User extends Model<IUser> {}
 
-        class Users extends Collection {
-            static data() {
+        class Users extends Collection<User> {
+            public static data() {
                 return {
                     name: "text"
                 };
             }
         }
 
-        let users = new Users();
+        const users = new Users();
         
         assert.strictEqual( users.length, 0 );
 
@@ -147,22 +168,26 @@ describe("Collection.push", () => {
     });
 
     it("push(undefined)", () => {
+        interface IUser {
+            name: string;
+        }
+        class User extends Model<IUser> {}
 
-        class Users extends Collection {
-            static data() {
+        class Users extends Collection<User> {
+            public static data() {
                 return {
                     name: "text"
                 };
             }
         }
 
-        let users = new Users();
+        const users = new Users();
         
         assert.throws(
             () => {
                 users.push(undefined);
-            }, err =>
-                err.message == "invalid model: undefined"
+            }, (err) =>
+                err.message === "invalid model: undefined"
         );
     });
 

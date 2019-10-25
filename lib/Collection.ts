@@ -44,7 +44,7 @@ class Collection<TModel extends Model<ISimpleObject>> extends EventEmitter {
     public length: number;
     public Model: new (object) => TModel;
 
-    constructor(rows: TModel[] | Array<TModel["data"]>) {
+    constructor(rows?: TModel[] | Array<TModel["data"]>) {
         super();
 
         if ( !this.constructor.prototype.hasOwnProperty( "Model" ) ) {
@@ -136,16 +136,16 @@ class Collection<TModel extends Model<ISimpleObject>> extends EventEmitter {
         return model;
     }
 
-    public push(...models: TModel[]) {
+    public push(...models: Array<IRow<TModel>>) {
         if ( !models.length ) {
             return;
         }
 
         const addedModels = [];
         for (let i = 0, n = models.length; i < n; i++) {
-            let model = models[i];
+            const inputModel = models[i];
+            const model = this.prepareRow( inputModel );
 
-            model = this.prepareRow( model );
             addedModels.push( model );
             this.models.push( model );
         }
