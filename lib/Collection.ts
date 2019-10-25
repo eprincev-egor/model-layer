@@ -521,9 +521,11 @@ class Collection<TModel extends Model<ISimpleObject>> extends EventEmitter {
         return this;
     }
 
-    public splice(start: number, deleteCount: number, ...items) {
-        if ( items.length ) {
-            items = items.map((row) => 
+    public splice(start: number, deleteCount: number, ...inputItems: Array<IRow<TModel>>) {
+        let items: TModel[];
+
+        if ( inputItems && inputItems.length ) {
+            items = inputItems.map((row) => 
                 this.prepareRow(row)
             );
         }
