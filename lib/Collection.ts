@@ -207,11 +207,17 @@ class Collection<TModel extends Model<ISimpleObject>> extends EventEmitter {
         }
     }
 
-    public forEach(iteration, context?): void {
+    public forEach(
+        iteration: (model: TModel, index: number, models: TModel[]) => void, 
+        context?
+    ): void {
         this.models.forEach(iteration, context || this);
     }
 
-    public each(iteration, context?): void {
+    public each(
+        iteration: (model: TModel, index: number, models: TModel[]) => void, 
+        context?
+    ): void {
         this.models.forEach(iteration, context || this);
     }
 

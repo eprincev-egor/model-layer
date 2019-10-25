@@ -1,14 +1,19 @@
 "use strict";
 
-const {Collection, Model} = require("../../../lib/index");
-const assert = require("assert");
+import {Collection, Model} from "../../../lib/index";
+import assert from "assert";
 
 describe("Collection.each", () => {
 
     it("each", () => {
+        interface IProduct {
+            name: string;
+            price: number;
+        }
+        class Product extends Model<IProduct> {}
 
-        class Products extends Collection {
-            static data() {
+        class Products extends Collection<Product> {
+            public static data() {
                 return {
                     name: "text",
                     price: "number"
@@ -16,7 +21,7 @@ describe("Collection.each", () => {
             }
         }
 
-        let products = new Products([
+        const products = new Products([
             {name: "Eggs", price: 1.2},
             {name: "Milk", price: 2.75}
         ]);
@@ -25,9 +30,9 @@ describe("Collection.each", () => {
         assert.strictEqual( products.length, 2 );
 
 
-        let names = [];
-        let prices = [];
-        let indexes = [];
+        const names = [];
+        const prices = [];
+        const indexes = [];
 
         products.each((product, i) => {
             assert.ok( product instanceof Model );
@@ -43,9 +48,14 @@ describe("Collection.each", () => {
     });
 
     it("each(f, context)", () => {
+        interface IProduct {
+            name: string;
+            price: number;
+        }
+        class Product extends Model<IProduct> {}
 
-        class Products extends Collection {
-            static data() {
+        class Products extends Collection<Product> {
+            public static data() {
                 return {
                     name: "text",
                     price: "number"
@@ -53,12 +63,12 @@ describe("Collection.each", () => {
             }
         }
 
-        let products = new Products([
+        const products = new Products([
             {name: "Eggs", price: 1.2}
         ]);
 
         
-        let context = {
+        const context = {
             changed: false
         };
 
