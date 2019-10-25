@@ -220,15 +220,24 @@ class Collection<TModel extends Model<ISimpleObject>> extends EventEmitter {
         this.models.forEach(iteration, context || this);
     }
 
-    public find(iteration, context?): TModel {
+    public find(
+        iteration: (model: TModel, index: number, models: TModel[]) => boolean, 
+        context?
+    ): TModel {
         return this.models.find(iteration, context || this);
     }
 
-    public findIndex(iteration, context?): number {
+    public findIndex(
+        iteration: (model: TModel, index: number, models: TModel[]) => boolean, 
+        context?
+    ): number {
         return this.models.findIndex(iteration, context || this);
     }
 
-    public filter(iteration, context?): TModel[] {
+    public filter(
+        iteration: (model: TModel, index: number, models: TModel[]) => boolean, 
+        context?
+    ): TModel[] {
         return this.models.filter(iteration, context || this);
     }
 
@@ -269,7 +278,10 @@ class Collection<TModel extends Model<ISimpleObject>> extends EventEmitter {
         return this.models.every(iteration, context || this);
     }
 
-    public some(iteration, context?): boolean {
+    public some(
+        iteration: (model: TModel, index: number, models: TModel[]) => boolean, 
+        context?
+    ): boolean {
         return this.models.some(iteration, context || this);
     }
 
