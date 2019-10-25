@@ -1,4 +1,4 @@
-"use strict";
+
 
 const registeredTypes = {};
 import {invalidValuesAsString} from "../utils";

@@ -1,4 +1,4 @@
-"use strict";
+
 
 import {Type, ITypeParams} from "./Type";
 import {invalidValuesAsString, isObject, eol} from "../utils";

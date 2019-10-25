@@ -1,4 +1,4 @@
-"use strict";
+
 
 const {Collection} = require("../../../lib/index");
 const assert = require("assert");

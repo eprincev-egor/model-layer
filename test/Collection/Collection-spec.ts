@@ -1,4 +1,4 @@
-"use strict";
+
 
 const {Collection, Model} = require("../../lib/index");
 const assert = require("assert");

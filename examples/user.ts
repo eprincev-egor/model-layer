@@ -1,4 +1,4 @@
-"use strict";
+
 
 // const {Model} = require("model-layer");
 const {Model} = require("../lib/index");

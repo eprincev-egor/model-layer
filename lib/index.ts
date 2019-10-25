@@ -1,4 +1,4 @@
-"use strict";
+
 
 import {Model} from "./Model";
 import Collection from "./Collection";

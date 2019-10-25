@@ -1,4 +1,4 @@
-"use strict";
+
 
 import {Type} from "./Type";
 import {invalidValuesAsString} from "../utils";

@@ -1,4 +1,4 @@
-"use strict";
+
 
 require("../examples/user");
 require("../examples/products");
