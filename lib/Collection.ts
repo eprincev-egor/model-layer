@@ -309,7 +309,7 @@ class Collection<TModel extends Model<ISimpleObject>> extends EventEmitter {
         }
     }
 
-    public includes(searchElement, fromIndex): boolean {
+    public includes(searchElement: TModel, fromIndex?: number): boolean {
         return this.models.includes(searchElement, fromIndex);
     }
 
