@@ -1,14 +1,19 @@
 
+import {Collection, Model} from "../../../lib/index";
+import assert from "assert";
 
-const {Collection} = require("../../../lib/index");
-const assert = require("assert");
+interface IProduct {
+    name: string;
+    price: number;
+}
+class Product extends Model<IProduct> {}
 
 describe("Collection.reverse", () => {
 
     it("reverse()", () => {
         
-        class Products extends Collection {
-            static data() {
+        class Products extends Collection<Product> {
+            public static data() {
                 return {
                     name: "text",
                     price: "number"
@@ -16,7 +21,7 @@ describe("Collection.reverse", () => {
             }
         }
 
-        let products = new Products([
+        const products = new Products([
             {name: "Pie", price: 10},
             {name: "Eggs", price: 1.8},
             {name: "Milk", price: 4}
