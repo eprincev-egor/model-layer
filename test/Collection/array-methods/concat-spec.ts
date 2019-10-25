@@ -1,4 +1,3 @@
-"use strict";
 
 import {Collection, Model} from "../../../lib/index";
 import assert from "assert";

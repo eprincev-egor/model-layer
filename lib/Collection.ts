@@ -1,4 +1,3 @@
-"use strict";
 
 import * as EventEmitter from "events";
 import {Model, ISimpleObject, JSONData} from "./Model";
@@ -447,7 +446,7 @@ class Collection<TModel extends Model<ISimpleObject>> extends EventEmitter {
     }
 
     // https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/fill
-    public fill(row, start, end) {
+    public fill(row: IRow<TModel>, start: number, end?: number) {
         // Step 3-5.
         // tslint:disable-next-line: no-bitwise
         const len = this.length >>> 0;
