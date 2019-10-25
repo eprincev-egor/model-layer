@@ -3,15 +3,15 @@
 import {Collection, Model} from "../../../lib/index";
 import assert from "assert";
 
+interface IProduct {
+    name: string;
+    price: number;
+}
+class Product extends Model<IProduct> {}
+
 describe("Collection.concat", () => {
 
     it("concat(collection)", () => {
-        interface IProduct {
-            name: string;
-            price: number;
-        }
-        class Product extends Model<IProduct> {}
-
         class Products extends Collection<Product> {
             public static data() {
                 return {
@@ -39,11 +39,6 @@ describe("Collection.concat", () => {
     });
 
     it("concat(rows)", () => {
-        interface IProduct {
-            name: string;
-            price: number;
-        }
-        class Product extends Model<IProduct> {}
         
         class Products extends Collection<Product> {
             public static data() {
@@ -72,11 +67,6 @@ describe("Collection.concat", () => {
     });
 
     it("concat(rows1, rows2)", () => {
-        interface IProduct {
-            name: string;
-            price: number;
-        }
-        class Product extends Model<IProduct> {}
         
         class Products extends Collection<Product> {
             public static data() {
@@ -108,11 +98,6 @@ describe("Collection.concat", () => {
     });
 
     it("concat(rows, collection)", () => {
-        interface IProduct {
-            name: string;
-            price: number;
-        }
-        class Product extends Model<IProduct> {}
         
         class Products extends Collection<Product> {
             public static data() {
@@ -145,11 +130,6 @@ describe("Collection.concat", () => {
 
     
     it("concat()", () => {
-        interface IProduct {
-            name: string;
-            price: number;
-        }
-        class Product extends Model<IProduct> {}
         
         class Products extends Collection<Product> {
             public static data() {

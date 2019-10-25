@@ -263,7 +263,10 @@ class Collection<TModel extends Model<ISimpleObject>> extends EventEmitter {
         return this.models.reduceRight(iteration, initialValue);
     }
 
-    public every(iteration, context?): boolean {
+    public every(
+        iteration: (model: TModel, index: number, models: TModel[]) => boolean, 
+        context?
+    ): boolean {
         return this.models.every(iteration, context || this);
     }
 

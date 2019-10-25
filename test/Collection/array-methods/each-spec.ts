@@ -3,14 +3,15 @@
 import {Collection, Model} from "../../../lib/index";
 import assert from "assert";
 
+interface IProduct {
+    name: string;
+    price: number;
+}
+class Product extends Model<IProduct> {}
+
 describe("Collection.each", () => {
 
     it("each", () => {
-        interface IProduct {
-            name: string;
-            price: number;
-        }
-        class Product extends Model<IProduct> {}
 
         class Products extends Collection<Product> {
             public static data() {
@@ -48,11 +49,6 @@ describe("Collection.each", () => {
     });
 
     it("each(f, context)", () => {
-        interface IProduct {
-            name: string;
-            price: number;
-        }
-        class Product extends Model<IProduct> {}
 
         class Products extends Collection<Product> {
             public static data() {
