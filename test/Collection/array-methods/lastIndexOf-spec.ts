@@ -1,14 +1,19 @@
 
+import {Collection, Model} from "../../../lib/index";
+import assert from "assert";
 
-const {Collection, Model} = require("../../../lib/index");
-const assert = require("assert");
+interface IProduct {
+    name: string;
+    price: number;
+}
+class Product extends Model<IProduct> {}
 
 describe("Collection.lastIndexOf", () => {
 
     it("lastIndexOf(model)", () => {
 
-        class Products extends Collection {
-            static data() {
+        class Products extends Collection<Product> {
+            public static data() {
                 return {
                     name: "text",
                     price: "number"
@@ -16,21 +21,21 @@ describe("Collection.lastIndexOf", () => {
             }
         }
 
-        let products = new Products([
+        const products = new Products([
             {name: "Eggs", price: 1.8},
             {name: "Pie", price: 10},
             {name: "Milk", price: 4}
         ]);
 
-        let firstModel = products.at(0);
-        let lastModel = products.at(2);
+        const firstModel = products.at(0);
+        const lastModel = products.at(2);
 
-        class SomeModel extends Model {
-            static data() {
+        class SomeModel extends Model<object> {
+            public static data() {
                 return {"*": "*"};
             }
         }
-        let unknownModel = new SomeModel();
+        const unknownModel = new SomeModel();
 
         
         let result = products.lastIndexOf( lastModel );
@@ -45,8 +50,8 @@ describe("Collection.lastIndexOf", () => {
     
     it("lastIndexOf(model, fromIndex)", () => {
 
-        class Products extends Collection {
-            static data() {
+        class Products extends Collection<Product> {
+            public static data() {
                 return {
                     name: "text",
                     price: "number"
@@ -54,14 +59,14 @@ describe("Collection.lastIndexOf", () => {
             }
         }
 
-        let products = new Products([
+        const products = new Products([
             {name: "Eggs", price: 1.8},
             {name: "Pie", price: 10},
             {name: "Milk", price: 4}
         ]);
 
-        let firstModel = products.at(0);
-        let lastModel = products.at(2);
+        const firstModel = products.at(0);
+        const lastModel = products.at(2);
 
         
         let result = products.lastIndexOf( lastModel, 1 );
