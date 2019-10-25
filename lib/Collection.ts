@@ -245,7 +245,10 @@ class Collection<TModel extends Model<ISimpleObject>> extends EventEmitter {
         return this.models.map(iteration, context || this);
     }
 
-    public flatMap(iteration, context?) {
+    public flatMap<TArr extends any[]>(
+        iteration: (model: TModel, index: number, models: TModel[]) => TArr, 
+        context?
+    ): Array<TArr[0]> {
         const result = this.models.map(iteration, context || this);
             
         let output = [];
