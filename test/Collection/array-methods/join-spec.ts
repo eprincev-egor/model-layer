@@ -1,32 +1,35 @@
 
-
-const {Collection, Model} = require("../../../lib/index");
-const assert = require("assert");
+import {Collection, Model} from "../../../lib/index";
+import assert from "assert";
 
 describe("Collection.join", () => {
 
     it("join()", () => {
         
-        class Product extends Model {
-            static data() {
+        interface IProduct {
+            name: string;
+            price: number;
+        }
+        class Product extends Model<IProduct> {
+            public static data() {
                 return {
                     name: "text",
                     price: "number"
                 };
             }
 
-            toString() {
+            public toString() {
                 return `${ this.get("name") } (${ this.get("price") })`;
             }
         }
 
-        class Products extends Collection {
-            static data() {
+        class Products extends Collection<Product> {
+            public static data() {
                 return Product;
             }
         }
 
-        let products = new Products([
+        const products = new Products([
             {name: "Eggs", price: 1.8},
             {name: "Pie", price: 10},
             {name: "Milk", price: 4}
