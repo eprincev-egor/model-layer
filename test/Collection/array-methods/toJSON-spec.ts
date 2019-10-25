@@ -1,21 +1,25 @@
 
-
-const {Collection} = require("../../../lib/index");
-const assert = require("assert");
+import {Collection, Model} from "../../../lib/index";
+import assert from "assert";
 
 describe("Collection.toJSON", () => {
 
     it("toJSON()", () => {
         
-        class Users extends Collection {
-            static data() {
+        interface IUser {
+            name: string;
+        }
+        class User extends Model<IUser> {}
+
+        class Users extends Collection<User> {
+            public static data() {
                 return {
                     name: "text"
                 };
             }
         }
 
-        let users = new Users([
+        const users = new Users([
             {name: "a"},
             {name: "b"},
             {name: "c"},
