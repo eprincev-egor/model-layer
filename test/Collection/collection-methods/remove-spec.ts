@@ -1,21 +1,26 @@
 
-
-const {Collection} = require("../../../lib/index");
-const assert = require("assert");
+import {Collection, Model} from "../../../lib/index";
+import assert from "assert";
 
 describe("Collection.remove", () => {
 
     it("remove(model)", () => {
         
-        class Products extends Collection {
-            static data() {
+        interface IProduct {
+            name: string;
+            price: number;
+        }
+        class Product extends Model<IProduct> {}
+
+        class Products extends Collection<Product> {
+            public static data() {
                 return {
                     name: "text"
                 };
             }
         }
 
-        let products = new Products([
+        const products = new Products([
             {name: "Pie"},
             {name: "Milk"}
         ]);
@@ -25,7 +30,7 @@ describe("Collection.remove", () => {
             {name: "Milk"}
         ]);
 
-        let firstModel = products.first();
+        const firstModel = products.first();
         products.remove( firstModel );
 
         assert.deepStrictEqual( products.toJSON(), [
@@ -38,8 +43,14 @@ describe("Collection.remove", () => {
 
     it("remove(id)", () => {
         
-        class Companies extends Collection {
-            static data() {
+        interface ICompany {
+            id: number;
+            name: string;
+        }
+        class Company extends Model<ICompany> {}
+
+        class Companies extends Collection<Company> {
+            public static data() {
                 return {
                     id: {
                         type: "number",
@@ -50,7 +61,7 @@ describe("Collection.remove", () => {
             }
         }
 
-        let companies = new Companies([
+        const companies = new Companies([
             {id: 1, name: "X"},
             {id: 2, name: "Y"}
         ]);
