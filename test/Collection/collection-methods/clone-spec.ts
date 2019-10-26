@@ -1,34 +1,37 @@
 
-
-const {Collection} = require("../../../lib/index");
-const assert = require("assert");
+import {Collection, Model} from "../../../lib/index";
+import assert from "assert";
 
 describe("Collection.clone", () => {
 
     it("clone()", () => {
-        
-        class Companies extends Collection {
-            static data() {
+        interface ICompany {
+            name: string;
+        }
+        class Company extends Model<ICompany> {}
+
+        class Companies extends Collection<Company> {
+            public static data() {
                 return {
                     name: "text"
                 };
             }
         }
 
-        let companies = new Companies([
+        const companies = new Companies([
             {name: "X"},
             {name: "Y"}
         ]);
 
 
-        let clone = companies.clone();
+        const clone = companies.clone();
 
         assert.deepStrictEqual(clone.toJSON(), [
             {name: "X"},
             {name: "Y"}
         ]);
 
-        assert.ok( clone != companies );
+        assert.ok( clone !== companies );
         assert.ok( clone instanceof Companies );
     });
 
