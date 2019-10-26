@@ -1,38 +1,43 @@
 
-
-const {Collection, Model} = require("../../../lib/index");
-const assert = require("assert");
+import {Collection, Model} from "../../../lib/index";
+import assert from "assert";
 
 describe("Collection.equal", () => {
 
     it("equal()", () => {
         
-        class Companies extends Collection {
-            static data() {
+        interface ICompany {
+            name: string;
+            price: number;
+        }
+        class Company extends Model<ICompany> {}
+
+        class Companies extends Collection<Company> {
+            public static data() {
                 return {
                     name: "text"
                 };
             }
         }
 
-        let collection1 = new Companies([
+        const collection1 = new Companies([
             {name: "X"}
         ]);
-        let collection2 = new Companies([
+        const collection2 = new Companies([
             {name: "X"}
         ]);
-        let collection3 = new Companies([
+        const collection3 = new Companies([
             {name: "X"},
             {name: "Y"}
         ]);
-        let collection4 = new Companies([
+        const collection4 = new Companies([
             {name: "Y"}
         ]);
-        let collection5 = new Companies();
-        let arr1 = [
+        const collection5 = new Companies();
+        const arr1 = [
             {name: "X"}
         ];
-        let arr2 = [
+        const arr2 = [
             {name: "Y"}
         ];
 
@@ -56,8 +61,15 @@ describe("Collection.equal", () => {
 
 
     it("equal Collections, circular recursion", () => {
-        class CustomCollection extends Collection {
-            static data() {
+        interface ICustom {
+            name: string;
+            child: CustomCollection;
+        }
+
+        class Custom extends Model<ICustom> {}
+
+        class CustomCollection extends Collection<Custom> {
+            public static data() {
                 return {
                     name: "text",
                     child: CustomCollection
@@ -65,15 +77,15 @@ describe("Collection.equal", () => {
             }
         }
 
-        let collection1 = new CustomCollection([
+        const collection1 = new CustomCollection([
             {name: "X"}
         ]);
-        collection1.first().set("child", collection1);
+        collection1.first().set({child: collection1});
 
-        let collection2 = new CustomCollection([
+        const collection2 = new CustomCollection([
             {name: "X"}
         ]);
-        collection2.first().set("child", collection2);
+        collection2.first().set({child: collection2});
 
         assert.ok( collection1.equal( collection2 ) );
         assert.ok( collection2.equal( collection1 ) );
