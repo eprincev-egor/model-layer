@@ -1,20 +1,24 @@
 
+import {Model} from "../../lib/index";
+import assert from "assert";
 
-const {Model} = require("../../lib/index");
-const assert = require("assert");
+interface ISomeData {
+    prop: string;
+}
 
 describe("Model events", () => {
     
     it("listen changes", () => {
-        class SomeModel extends Model {
-            static structure() {
+
+        class SomeModel extends Model<ISomeData> {
+            public static structure() {
                 return {
                     prop: "string"
                 };
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
 
         let event;
         let counter = 0;
@@ -23,7 +27,7 @@ describe("Model events", () => {
             event = e;
         });
 
-        model.set("prop", "some");
+        model.set({prop: "some"});
 
         assert.equal(counter, 1);
         assert.deepEqual(event, {
@@ -37,49 +41,49 @@ describe("Model events", () => {
     });
 
     it("no changes - no event", () => {
-        class SomeModel extends Model {
-            static structure() {
+        class SomeModel extends Model<ISomeData> {
+            public static structure() {
                 return {
                     prop: "string"
                 };
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
 
-        let throwError = () => {
+        const throwError = () => {
             throw new Error("unexpected call");
         };
         try {
             throwError();
-        } catch(err) {
+        } catch (err) {
             assert.ok( err );
         }
 
         model.on("change", throwError);
 
-        model.set("prop", null);
+        model.set({prop: null});
     });
 
     it("listen change:prop", () => {
-        class SomeModel extends Model {
-            static structure() {
+        class SomeModel extends Model<ISomeData> {
+            public static structure() {
                 return {
                     prop: "string"
                 };
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
 
         let event;
         let counter = 0;
-        model.on("change:prop", (e) => {
+        model.on("change", "prop", (e) => {
             counter++;
             event = e;
         });
 
-        model.set("prop", "some");
+        model.set({prop: "some"});
 
         assert.equal(counter, 1);
         assert.deepEqual(event, {
