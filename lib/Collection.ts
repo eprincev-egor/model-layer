@@ -164,7 +164,7 @@ class Collection<TModel extends Model<ISimpleObject>> extends EventEmitter {
         }
     }
 
-    public add(...models) {
+    public add(...models: Array<IRow<TModel> | Array<IRow<TModel>>>) {
         if ( !models.length ) {
             return;
         }
