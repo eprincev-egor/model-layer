@@ -82,12 +82,12 @@ class Collection<TModel extends Model<ISimpleObject>> extends EventEmitter {
         }
     }
 
-    public at(index: number, model?: TModel): TModel {
+    public at(index: number, rowOrModel?: IRow<TModel>): TModel {
         // set
-        if ( model ) {
+        if ( rowOrModel ) {
             const removedModel = this.models[ index ];
 
-            model = this.prepareRow( model );
+            const model = this.prepareRow( rowOrModel );
             this.models[ index ] = model;
             this.length = this.models.length;
 

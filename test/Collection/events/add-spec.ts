@@ -1,21 +1,25 @@
 
-
-const {Collection} = require("../../../lib/index");
-const assert = require("assert");
+import {Collection, Model} from "../../../lib/index";
+import assert from "assert";
 
 describe("Collection event add", () => {
 
     it("add(row)", () => {
         
-        class Users extends Collection {
-            static data() {
+        interface IUser {
+            name: string;
+        }
+        class User extends Model<IUser> {}
+
+        class Users extends Collection<User> {
+            public static data() {
                 return {
                     name: "text"
                 };
             }
         }
 
-        let users = new Users();
+        const users = new Users();
 
         let model;
         let type;
@@ -38,21 +42,26 @@ describe("Collection event add", () => {
         assert.strictEqual(count, 1);
         assert.strictEqual(length, 1);
         assert.strictEqual(model.get("name"), "Bob");
-        assert.ok(collection == users);
+        assert.ok(collection === users);
     });
 
 
     it("create(row)", () => {
         
-        class Users extends Collection {
-            static data() {
+        interface IUser {
+            name: string;
+        }
+        class User extends Model<IUser> {}
+
+        class Users extends Collection<User> {
+            public static data() {
                 return {
                     name: "text"
                 };
             }
         }
 
-        let users = new Users();
+        const users = new Users();
 
         let model;
         let type;
@@ -75,20 +84,25 @@ describe("Collection event add", () => {
         assert.strictEqual(count, 1);
         assert.strictEqual(length, 1);
         assert.strictEqual(model.get("name"), "Bob");
-        assert.ok(collection == users);
+        assert.ok(collection === users);
     });
 
     it("push(row)", () => {
         
-        class Users extends Collection {
-            static data() {
+        interface IUser {
+            name: string;
+        }
+        class User extends Model<IUser> {}
+
+        class Users extends Collection<User> {
+            public static data() {
                 return {
                     name: "text"
                 };
             }
         }
 
-        let users = new Users();
+        const users = new Users();
 
         let model;
         let type;
@@ -111,20 +125,25 @@ describe("Collection event add", () => {
         assert.strictEqual(count, 1);
         assert.strictEqual(length, 1);
         assert.strictEqual(model.get("name"), "Bob");
-        assert.ok(collection == users);
+        assert.ok(collection === users);
     });
 
     it("unshift(row)", () => {
         
-        class Users extends Collection {
-            static data() {
+        interface IUser {
+            name: string;
+        }
+        class User extends Model<IUser> {}
+
+        class Users extends Collection<User> {
+            public static data() {
                 return {
                     name: "text"
                 };
             }
         }
 
-        let users = new Users();
+        const users = new Users();
 
         let model;
         let type;
@@ -147,20 +166,25 @@ describe("Collection event add", () => {
         assert.strictEqual(count, 1);
         assert.strictEqual(length, 1);
         assert.strictEqual(model.get("name"), "Bob");
-        assert.ok(collection == users);
+        assert.ok(collection === users);
     });
 
     it("splice(0, 0, row)", () => {
         
-        class Users extends Collection {
-            static data() {
+        interface IUser {
+            name: string;
+        }
+        class User extends Model<IUser> {}
+
+        class Users extends Collection<User> {
+            public static data() {
                 return {
                     name: "text"
                 };
             }
         }
 
-        let users = new Users();
+        const users = new Users();
 
         let model;
         let type;
@@ -183,20 +207,25 @@ describe("Collection event add", () => {
         assert.strictEqual(count, 1);
         assert.strictEqual(length, 1);
         assert.strictEqual(model.get("name"), "Bob");
-        assert.ok(collection == users);
+        assert.ok(collection === users);
     });
 
     it("at(0, row)", () => {
         
-        class Users extends Collection {
-            static data() {
+        interface IUser {
+            name: string;
+        }
+        class User extends Model<IUser> {}
+
+        class Users extends Collection<User> {
+            public static data() {
                 return {
                     name: "text"
                 };
             }
         }
 
-        let users = new Users();
+        const users = new Users();
 
         let model;
         let type;
@@ -219,20 +248,25 @@ describe("Collection event add", () => {
         assert.strictEqual(count, 1);
         assert.strictEqual(length, 1);
         assert.strictEqual(model.get("name"), "Bob");
-        assert.ok(collection == users);
+        assert.ok(collection === users);
     });
 
     it("fill(row, start, end)", () => {
         
-        class Users extends Collection {
-            static data() {
+        interface IUser {
+            name: string;
+        }
+        class User extends Model<IUser> {}
+
+        class Users extends Collection<User> {
+            public static data() {
                 return {
                     name: "text"
                 };
             }
         }
 
-        let users = new Users([
+        const users = new Users([
             {name: "A"},
             {name: "B"},
             {name: "C"}
@@ -259,7 +293,7 @@ describe("Collection event add", () => {
         assert.strictEqual(count, 1);
         assert.strictEqual(length, 3);
         assert.strictEqual(model.get("name"), "Bob");
-        assert.ok(collection == users);
+        assert.ok(collection === users);
     });
 
 });
