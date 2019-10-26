@@ -1,14 +1,19 @@
 
+import {Collection, Model} from "../../../lib/index";
+import assert from "assert";
 
-const {Collection} = require("../../../lib/index");
-const assert = require("assert");
+interface ICompany {
+    id: number;
+    name: string;
+}
+class Company extends Model<ICompany> {}
 
 describe("Collection.get", () => {
 
     it("get(id)", () => {
         
-        class Companies extends Collection {
-            static data() {
+        class Companies extends Collection<Company> {
+            public static data() {
                 return {
                     id: {
                         type: "number",
@@ -19,19 +24,19 @@ describe("Collection.get", () => {
             }
         }
 
-        let companies = new Companies([
+        const companies = new Companies([
             {id: 1, name: "X"},
             {id: 2, name: "Y"}
         ]);
 
 
-        let first = companies.get(1);
+        const first = companies.get(1);
         assert.deepStrictEqual( first.toJSON(), {
             id: 1, 
             name: "X"
         });
 
-        let second = companies.get(2);
+        const second = companies.get(2);
         assert.deepStrictEqual( second.toJSON(), {
             id: 2, 
             name: "Y"
