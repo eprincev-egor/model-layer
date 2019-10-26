@@ -1,21 +1,25 @@
 
-
-const {Collection, Model} = require("../../lib/index");
-const assert = require("assert");
+import {Collection, Model} from "../../lib/index";
+import assert from "assert";
 
 describe("Collection tests", () => {
 
     it("create empty collection", () => {
 
-        class Users extends Collection {
-            static data() {
+        interface IUser {
+            name: string;
+        }
+        class User extends Model<IUser> {}
+
+        class Users extends Collection<User> {
+            public static data() {
                 return {
                     name: "text"
                 };
             }
         }
         
-        let users = new Users();
+        const users = new Users();
 
         assert.ok( users instanceof Users );
         assert.ok( users instanceof Collection );
@@ -24,22 +28,27 @@ describe("Collection tests", () => {
     });
 
     it("create collection with rows", () => {
-        class Users extends Collection {
-            static data() {
+        interface IUser {
+            name: string;
+        }
+        class User extends Model<IUser> {}
+
+        class Users extends Collection<User> {
+            public static data() {
                 return {
                     name: "text"
                 };
             }
         }
 
-        let users = new Users([
+        const users = new Users([
             {name: "Bob"}
         ]);
 
         assert.strictEqual( users.length, 1 );
         
        
-        let user = users.at(0);
+        const user = users.at(0);
 
         assert.ok( user instanceof Model );
         assert.strictEqual( user.get("name"), "Bob" );
@@ -47,46 +56,55 @@ describe("Collection tests", () => {
     });
 
     it("create collection with models", () => {
-        class User extends Model {
-            static data() {
+        interface IUser {
+            name: string;
+        }
+        
+        class User extends Model<IUser> {
+            public static data() {
                 return {
                     name: "text"
                 };
             }
         }
 
-        class Users extends Collection {
-            static data() {
+        class Users extends Collection<User> {
+            public static data() {
                 return User;
             }
         }
 
-        let user = new User({
+        const user = new User({
             name: "Bob"
         });
-        let users = new Users([
+        const users = new Users([
             user
         ]);
 
         assert.strictEqual( users.length, 1 );
         
-        let firstUser = users.at(0);
+        const firstUser = users.at(0);
 
-        assert.ok( firstUser == user );
+        assert.ok( firstUser === user );
         assert.strictEqual( firstUser.get("name"), "Bob" );
 
     });
 
     it("set model by index", () => {
-        class Users extends Collection {
-            static data() {
+        interface IUser {
+            name: string;
+        }
+        class User extends Model<IUser> {}
+
+        class Users extends Collection<User> {
+            public static data() {
                 return {
                     name: "text"
                 };
             }
         }
 
-        let users = new Users();
+        const users = new Users();
         
         assert.strictEqual( users.length, 0 );
 
@@ -94,7 +112,7 @@ describe("Collection tests", () => {
 
         assert.strictEqual( users.length, 1 );
 
-        let user = users.at(0);
+        const user = users.at(0);
         assert.ok( user instanceof Model );
         assert.strictEqual( user.get("name"), "Bob" );
     });
@@ -102,8 +120,14 @@ describe("Collection tests", () => {
     it("once call data", () => {
         let calls = 0;
 
-        class Products extends Collection {
-            static data() {
+        interface IProduct {
+            name: string;
+            price: number;
+        }
+        class Product extends Model<IProduct> {}
+
+        class Products extends Collection<Product> {
+            public static data() {
                 calls++;
                 return {
                     name: "text",
@@ -112,9 +136,9 @@ describe("Collection tests", () => {
             }
         }
 
-        new Products();
-        new Products();
-        new Products([
+        const products1 = new Products();
+        const products2 = new Products();
+        const products3 = new Products([
             {name: "Pie", price: 10}
         ]);
 
@@ -122,31 +146,35 @@ describe("Collection tests", () => {
     });
 
     it("one model inside two collections", () => {
-        class Company extends Model {
-            static data() {
+        interface ICompany {
+            name: string;
+        }
+
+        class Company extends Model<ICompany> {
+            public static data() {
                 return {
                     name: "text"
                 };
             }
         }
 
-        class Companies extends Collection {
-            static data() {
+        class Companies extends Collection<Company> {
+            public static data() {
                 return Company;
             }
         }
 
-        let company = new Company({
+        const company = new Company({
             name: "MicroApple"
         });
 
-        let collection1 = new Companies();
-        let collection2 = new Companies();
+        const collection1 = new Companies();
+        const collection2 = new Companies();
 
         collection1.add( company );
         collection2.add( company );
 
-        assert.ok( collection1.first() == collection2.first() );
+        assert.ok( collection1.first() === collection2.first() );
     });
 
 });
