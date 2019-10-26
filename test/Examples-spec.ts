@@ -1,6 +1,5 @@
 
-
-require("../examples/user");
-require("../examples/products");
-require("../examples/binary-tree");
-require("../examples/walk");
+import "../examples/user";
+import "../examples/products";
+import "../examples/binary-tree";
+import "../examples/walk";
