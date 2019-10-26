@@ -35,6 +35,12 @@ export declare interface Model<TData extends ISimpleObject> extends EventEmitter
         listener: (event: IChangeEvent<TData>) => void
     ): this;
 
+    on(
+        event: "change", 
+        key: keyof ISimpleObject & string,
+        listener: (event: IChangeEvent<TData>) => void
+    ): this;
+
     // throw error if data is invalid
     validate(data: ReadOnlyPartial<TData>): void;
 
@@ -526,6 +532,31 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
 
     public prepareJSON(json: JSONData<TData>): void {
         // any calculations with json by reference
+    }
+
+    public on(
+        eventName: "change",
+        keyOrListener: (
+            string | 
+            ((event: IChangeEvent<TData>) => void)
+        ),
+        listener?: (event: IChangeEvent<TData>) => void
+    ): this {
+        if ( typeof keyOrListener === "string" ) {
+            const key = keyOrListener;
+            
+            const description = this.getDescription(key);
+            if ( !description ) {
+                throw new Error(`unknown property: ${ key }`);
+            }
+
+            super.on(eventName + ":" + key, listener);
+        }
+        else {
+            super.on(eventName, listener);
+        }
+
+        return this;
     }
 
     private prepareStructure(): void {

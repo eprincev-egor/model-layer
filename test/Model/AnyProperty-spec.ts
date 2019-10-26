@@ -1,30 +1,33 @@
 
 
-const {Model} = require("../../lib/index");
-const assert = require("assert");
+import {Model} from "../../lib/index";
+import assert from "assert";
 
 describe("Model with any property", () => {
 
     it("any key and any value", () => {
-        
-        class SomeModel extends Model {
-            static structure() {
+        interface IAnyData {
+            [key: string]: any;
+        }
+
+        class SomeModel extends Model<IAnyData> {
+            public static structure() {
                 return {
                     "*": "*"
                 };
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
         assert.deepEqual(model.data, {});
 
-        model.set("x", 10);
+        model.set({x: 10});
         assert.strictEqual(model.data.x, 10);
         
-        model.set("y", "text");
+        model.set({y: "text"});
         assert.strictEqual(model.data.y, "text");
 
-        model.set("z", true);
+        model.set({z: true});
         assert.strictEqual(model.data.z, true);
 
 
@@ -43,15 +46,19 @@ describe("Model with any property", () => {
     
     it("any number", () => {
 
-        class SomeModel extends Model {
-            static structure() {
+        interface IAnyNumber {
+            [key: string]: any;
+        }
+
+        class SomeModel extends Model<IAnyNumber> {
+            public static structure() {
                 return {
                     "*": "number"
                 };
             }
         }
 
-        let model = new SomeModel({
+        const model = new SomeModel({
             test: 1,
             value: 2
         });
@@ -73,17 +80,17 @@ describe("Model with any property", () => {
 
         assert.throws(
             () => {
-                new SomeModel({
+                const someModel = new SomeModel({
                     x: "wrong"
                 });
             }, 
-            err => 
-                err.message == "invalid number for x: \"wrong\""
+            (err) => 
+                err.message === "invalid number for x: \"wrong\""
         );
 
 
         // test method: y
-        model.set("y", 3);
+        model.set({y: 3});
         assert.strictEqual(
             model.get("y"),
             3
@@ -99,43 +106,49 @@ describe("Model with any property", () => {
         // model.data should be frozen
         assert.throws(
             () => {
-                model.data.y = 10;
+                const anyModel = model as any;
+                anyModel.data.y = 10;
             },
-            err =>
+            (err) =>
                 /Cannot assign to read only property/.test(err.message)
         );
 
         assert.throws(
             () => {
-                model.data.prop = 10;
+                const anyModel = model as any;
+                anyModel.data.prop = 10;
             },
-            err =>
+            (err) =>
                 /Cannot add property prop/.test(err.message)
         );
     });
 
     it("listen change event on any property", () => {
+        
+        interface IAnyString {
+            [key: string]: string;
+        }
 
-        class SomeModel extends Model {
-            static structure() {
+        class SomeModel extends Model<IAnyString> {
+            public static structure() {
                 return {
                     "*": "string"
                 };
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
 
         assert.deepEqual(model.data, {});
 
         let event;
         let counter = 0;
-        model.on("change:new", (e) => {
+        model.on("change", "new", (e) => {
             counter++;
             event = e;
         });
 
-        model.set("new", "value");
+        model.set({new: "value"});
 
         assert.equal(counter, 1);
         assert.deepEqual(event, {
@@ -148,11 +161,18 @@ describe("Model with any property", () => {
 
     
     it("any keys and declared keys", () => {
+        interface IAnyString {
+            [key: string]: string;
+        }
+        interface IAge {
+            age: number;
+        }
+        type IAnyStringAndAge = IAnyString & IAge;
 
-        class SomeModel extends Model {
-            static structure() {
+        class SomeModel extends Model<IAnyStringAndAge> {
+            public static structure() {
                 return {
-                    age: {
+                    "age": {
                         type: "number",
                         default: 0
                     },
@@ -161,7 +181,7 @@ describe("Model with any property", () => {
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
 
         assert.deepEqual(model.data, {
             age: 0
@@ -169,18 +189,20 @@ describe("Model with any property", () => {
 
         assert.throws(
             () => {
-                model.set("age", "wrong");
+                const anyModel = model as any;
+                anyModel.set({age: "wrong"});
             },
-            err =>
-                err.message == "invalid number for age: \"wrong\""
+            (err) =>
+                err.message === "invalid number for age: \"wrong\""
         );
 
         assert.throws(
             () => {
-                model.set("any", {});
+                const anyModel = model as any;
+                anyModel.set({any: {}});
             },
-            err =>
-                err.message == "invalid string for any: {}"
+            (err) =>
+                err.message === "invalid string for any: {}"
         );
 
 
@@ -202,19 +224,23 @@ describe("Model with any property", () => {
     });
 
     it("prepare any value", () => {
-        class SomeModel extends Model {
-            static structure() {
+        interface IAnyString {
+            [key: string]: string;
+        }
+
+        class SomeModel extends Model<IAnyString> {
+            public static structure() {
                 return {
                     "*": {
                         type: "string",
-                        prepare: value =>
+                        prepare: (value) =>
                             value.toUpperCase().trim()
                     }
                 };
             }
         }
 
-        let model = new SomeModel({
+        const model = new SomeModel({
             a: " super ",
             b: "Good "
         });
@@ -237,12 +263,16 @@ describe("Model with any property", () => {
     });
 
     it("validate any value", () => {
-        class SomeModel extends Model {
-            static structure() {
+        interface IAnyNumber {
+            [key: string]: number;
+        }
+
+        class SomeModel extends Model<IAnyNumber> {
+            public static structure() {
                 return {
                     "*": {
                         type: "number",
-                        validate: value =>
+                        validate: (value) =>
                             value >= 10
                     }
                 };
@@ -251,15 +281,15 @@ describe("Model with any property", () => {
 
         assert.throws(
             () => {
-                new SomeModel({
+                const someModel = new SomeModel({
                     prop: 9
                 });
             },
-            err =>
-                err.message == "invalid prop: 9"
+            (err) =>
+                err.message === "invalid prop: 9"
         );
 
-        let model = new SomeModel({
+        const model = new SomeModel({
             nice: 22
         });
 
@@ -273,8 +303,8 @@ describe("Model with any property", () => {
                     nice: 1
                 });
             },
-            err =>
-                err.message == "invalid nice: 1"
+            (err) =>
+                err.message === "invalid nice: 1"
         );
 
         assert.deepEqual(model.data, {
@@ -283,8 +313,12 @@ describe("Model with any property", () => {
     });
 
     it("validate any key by RegExp", () => {
-        class SomeModel extends Model {
-            static structure() {
+        interface IAnyString {
+            [key: string]: string;
+        }
+
+        class SomeModel extends Model<IAnyString> {
+            public static structure() {
                 return {
                     "*": {
                         type: "string",
@@ -296,15 +330,15 @@ describe("Model with any property", () => {
 
         assert.throws(
             () => {
-                new SomeModel({
+                const someModel = new SomeModel({
                     wrong: "key"
                 });
             },
-            err =>
-                err.message == "invalid key: wrong"
+            (err) =>
+                err.message === "invalid key: wrong"
         );
 
-        let model = new SomeModel({
+        const model = new SomeModel({
             1: "nice"
         });
 
@@ -319,8 +353,8 @@ describe("Model with any property", () => {
                     wrong: "key"
                 });
             },
-            err =>
-                err.message == "invalid key: wrong"
+            (err) =>
+                err.message === "invalid key: wrong"
         );
 
         
@@ -330,12 +364,16 @@ describe("Model with any property", () => {
     });
 
     it("validate any key by function", () => {
-        class SomeModel extends Model {
-            static structure() {
+        interface IAnyString {
+            [key: string]: string;
+        }
+
+        class SomeModel extends Model<IAnyString> {
+            public static structure() {
                 return {
                     "*": {
                         type: "string",
-                        key: key =>
+                        key: (key) =>
                             key.startsWith("$")
                     }
                 };
@@ -344,15 +382,15 @@ describe("Model with any property", () => {
 
         assert.throws(
             () => {
-                new SomeModel({
+                const someModel = new SomeModel({
                     wrong: "key"
                 });
             },
-            err =>
-                err.message == "invalid key: wrong"
+            (err) =>
+                err.message === "invalid key: wrong"
         );
 
-        let model = new SomeModel({
+        const model = new SomeModel({
             $name: "nice"
         });
 
@@ -366,8 +404,8 @@ describe("Model with any property", () => {
                     wrong: "key"
                 });
             },
-            err =>
-                err.message == "invalid key: wrong"
+            (err) =>
+                err.message === "invalid key: wrong"
         );
         
         assert.deepEqual(model.data, {
@@ -377,16 +415,19 @@ describe("Model with any property", () => {
     });
 
     it("toJSON() with any key", () => {
+        interface IAnyObject {
+            [key: string]: object;
+        }
 
-        class SomeModel extends Model {
-            static structure() {
+        class SomeModel extends Model<IAnyObject> {
+            public static structure() {
                 return {
                     "*": "object"
                 };
             }
         }
 
-        let model = new SomeModel({
+        const model = new SomeModel({
             manager: {name: "Bob"},
             company: {inn: "123"}
         });
@@ -398,21 +439,24 @@ describe("Model with any property", () => {
     });
 
     it("clone() with any key", () => {
+        interface IAnyObject {
+            [key: string]: object;
+        }
 
-        class SomeModel extends Model {
-            static structure() {
+        class SomeModel extends Model<IAnyObject> {
+            public static structure() {
                 return {
                     "*": "object"
                 };
             }
         }
 
-        let model = new SomeModel({
+        const model = new SomeModel({
             manager: {name: "Bob"},
             company: {inn: "123"}
         });
 
-        let clone = model.clone();
+        const clone = model.clone();
 
         assert.deepEqual(clone.toJSON(), {
             manager: {name: "Bob"},
@@ -420,11 +464,11 @@ describe("Model with any property", () => {
         });
 
         assert.ok(
-            model.get("manager") != clone.get("manager")
+            model.get("manager") !== clone.get("manager")
         );
 
         assert.ok(
-            model.get("company") != clone.get("company")
+            model.get("company") !== clone.get("company")
         );
     });
 
