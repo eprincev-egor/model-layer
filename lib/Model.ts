@@ -484,7 +484,7 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
         return clone;
     }
 
-    public equal(otherModel: Model<object> | object, stack): boolean {
+    public equal(otherModel: Model<object> | object, stack?): boolean {
         stack = stack || new EqualStack();
 
         for (const key in this.data) {

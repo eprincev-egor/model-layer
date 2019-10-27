@@ -11,22 +11,22 @@ describe("Model tests", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            static data() {
+            public static data() {
                 return {
                     prop: "string"
                 };
             }
         }
 
-        let data = {
+        const data = {
             prop: "nice"
         };
-        let model = new SomeModel(data);
+        const model = new SomeModel(data);
 
         assert.strictEqual( model.get("prop"), "nice" );
         assert.strictEqual( model.data.prop, "nice" );
 
-        assert.ok( model.data != data );
+        assert.ok( model.data !== data );
     });
 
     it("create model without data", () => {
@@ -35,14 +35,14 @@ describe("Model tests", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            static data() {
+            public static data() {
                 return {
                     prop: "string"
                 };
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
 
         assert.strictEqual( model.get("prop"), null );
         assert.strictEqual( model.data.prop, null );
@@ -55,7 +55,7 @@ describe("Model tests", () => {
 
         let model;
         class SomeModel extends Model<ISomeData> {
-            static data() {
+            public static data() {
                 return {
                     prop: {
                         type: "string",
@@ -96,10 +96,10 @@ describe("Model tests", () => {
             now: number;
         }
 
-        let now = Date.now();
+        const now = Date.now();
 
         class SomeModel extends Model<ISomeData> {
-            static data() {
+            public static data() {
                 return {
                     now: {
                         type: "number",
@@ -109,7 +109,7 @@ describe("Model tests", () => {
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
 
         assert.ok(
             model.data.now >= now
@@ -123,7 +123,7 @@ describe("Model tests", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            static data() {
+            public static data() {
                 return {
                     name: "string",
                     age: "number"
@@ -131,7 +131,7 @@ describe("Model tests", () => {
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
         let data = model.data;
 
         assert.strictEqual( model.get("name"), null );
@@ -145,7 +145,7 @@ describe("Model tests", () => {
         assert.strictEqual( model.get("age"), null );
         assert.strictEqual( model.data.age, null );
         
-        assert.ok( data != model.data );
+        assert.ok( data !== model.data );
         data = model.data;
 
         model.set({name: null});
@@ -154,7 +154,7 @@ describe("Model tests", () => {
         assert.strictEqual( model.get("age"), null );
         assert.strictEqual( model.data.age, null );
 
-        assert.ok( data != model.data );
+        assert.ok( data !== model.data );
         data = model.data;
 
         model.set({name: "test"});
@@ -163,7 +163,7 @@ describe("Model tests", () => {
         assert.strictEqual( model.get("age"), null );
         assert.strictEqual( model.data.age, null );
 
-        assert.ok( data != model.data );
+        assert.ok( data !== model.data );
         data = model.data;
 
         model.set({age: 101});
@@ -189,27 +189,27 @@ describe("Model tests", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            static data() {
+            public static data() {
                 return {
                     prop: "string"
                 };
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
 
         model.set({prop: "x"});
         assert.equal( model.get("prop"), "x" );
         assert.equal( model.data.prop, "x" );
         
-        let data = model.data;
+        const data = model.data;
 
         assert.throws(
             () => {
                 const anyModel = model as any;
                 anyModel.set({some: "1"});
-            }, err =>
-                err.message == "unknown property: some"
+            }, (err) =>
+                err.message === "unknown property: some"
         );
 
         // invalid action cannot change object
@@ -226,8 +226,8 @@ describe("Model tests", () => {
                     some: "x"
                 });
             },
-            err =>
-                err.message == "unknown property: some"
+            (err) =>
+                err.message === "unknown property: some"
         );
     });
 
@@ -238,21 +238,21 @@ describe("Model tests", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            static data() {
+            public static data() {
                 return {
                     prop: "string"
                 };
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
 
         assert.throws(
             () => {
                 const anyModel = model as any;
                 anyModel.data.prop = "a";
             }, 
-            err =>
+            (err) =>
                 /Cannot assign to read only property/.test(err.message)
         );
 
@@ -264,7 +264,7 @@ describe("Model tests", () => {
             () => {
                 const anyModel = model as any;
                 anyModel.data.prop = "y";
-            }, err =>
+            }, (err) =>
                 /Cannot assign to read only property/.test(err.message)
         );
 
@@ -278,58 +278,68 @@ describe("Model tests", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            static data() {
+            public static data() {
                 return {
                     prop: "string"
                 };
             }
         }
 
-        let model = new SomeModel({
+        const model = new SomeModel({
             prop: "value"
         });
 
-        let data = model.data;
+        const data = model.data;
 
-        model.set("prop", "value");
-        assert.ok( model.data == data );
+        model.set({prop: "value"});
+        assert.ok( model.data === data );
 
         model.set({
             prop: "value"
         });
-        assert.ok( model.data == data );
+        assert.ok( model.data === data );
     });
 
     it("model.hasProperty", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            prop: string;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     prop: "string"
                 };
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
 
         assert.strictEqual(
             model.hasProperty("prop"),
             true
         );
 
+        const anyModel = model as any;
         assert.strictEqual(
-            model.hasProperty("unknown"),
+            anyModel.hasProperty("unknown"),
             false
         );
 
         assert.strictEqual(
-            model.hasProperty("hasOwnProperty"),
+            anyModel.hasProperty("hasOwnProperty"),
             false
         );
     });
 
     it("model.hasValue", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            name: string;
+            age: number;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     name: "string",
                     age: "number"
@@ -337,7 +347,7 @@ describe("Model tests", () => {
             }
         }
 
-        let model = new SomeModel({
+        const model = new SomeModel({
             name: "Bob"
         });
 
@@ -368,15 +378,21 @@ describe("Model tests", () => {
 
 
         // unknown prop
+        const anyModel = model as any;
         assert.strictEqual(
-            model.hasValue("prop"),
+            anyModel.hasValue("prop"),
             false
         );
     });
 
     it("model.toJSON", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            name: string;
+            age: number;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     name: "string",
                     age: "number"
@@ -384,7 +400,7 @@ describe("Model tests", () => {
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
 
         assert.deepEqual(
             model.toJSON(),
@@ -409,20 +425,25 @@ describe("Model tests", () => {
     });
 
     it("model.prepareJSON", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            name: string;
+            age: number;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     name: "string",
                     age: "number"
                 };
             }
 
-            prepareJSON(json) {
+            public prepareJSON(json) {
                 delete json.age;
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
 
         assert.deepEqual(
             model.toJSON(),
@@ -445,8 +466,12 @@ describe("Model tests", () => {
     });
 
     it("model.clone() with required field", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            name: string;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     name: {
                         type: "string",
@@ -456,7 +481,7 @@ describe("Model tests", () => {
             }
         }
 
-        let model = new SomeModel({
+        const model = new SomeModel({
             name: "test"
         });
 
@@ -464,7 +489,7 @@ describe("Model tests", () => {
             name: "test"
         });
 
-        let clone = model.clone();
+        const clone = model.clone();
 
         assert.deepEqual(clone.data, {
             name: "test"
@@ -473,8 +498,12 @@ describe("Model tests", () => {
 
     
     it("extends from another Model with data", () => {
-        class FirstLevel extends Model {
-            static data() {
+        interface IAny {
+            [key: string]: any;
+        }
+
+        class FirstLevel extends Model<IAny> {
+            public static data(): any {
                 return {
                     lvl1: "string"
                 };
@@ -482,7 +511,7 @@ describe("Model tests", () => {
         }
 
         class SecondLevel extends FirstLevel {
-            static data() {
+            public static data(): any {
                 return {
                     lvl2: "string"
                 };
@@ -490,29 +519,34 @@ describe("Model tests", () => {
         }
 
         // create models without errors
-        new FirstLevel({ lvl1: "1"});
-        new SecondLevel({ lvl2: "2" });
+        const first = new FirstLevel({ lvl1: "1"});
+        const second = new SecondLevel({ lvl2: "2" });
     });
 
     it("custom toJSON, for field", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            name: string;
+            self: SomeModel;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     name: "string",
                     self: {
                         type: SomeModel,
-                        toJSON: model =>
-                            model.get("name")
+                        toJSON: (selfModel) =>
+                            selfModel.get("name")
                     }
                 };
             }
         }
 
-        let model = new SomeModel({
+        const model = new SomeModel({
             name: "circular"
         });
 
-        model.set("self", model);
+        model.set({self: model});
 
         assert.deepEqual(
             model.toJSON(),
@@ -524,8 +558,12 @@ describe("Model tests", () => {
     });
 
     it("custom toJSON, for any field", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            [key: string]: SomeModel;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     "*": {
                         type: SomeModel,
@@ -536,9 +574,9 @@ describe("Model tests", () => {
             }
         }
 
-        let model = new SomeModel();
-        model.set("self", model);
-        model.set("empty", null);
+        const model = new SomeModel();
+        model.set({self: model});
+        model.set({empty: null});
 
         assert.deepEqual(
             model.toJSON(),
@@ -550,17 +588,21 @@ describe("Model tests", () => {
     });
 
     it("clone, for any field", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            [key: string]: any;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     "*": "*"
                 };
             }
         }
 
-        let model = new SomeModel();
-        model.set("some", 12);
-        model.set("empty", null);
+        const model = new SomeModel();
+        model.set({some: 12});
+        model.set({empty: null});
 
         assert.deepEqual(
             model.clone().data,
@@ -574,22 +616,26 @@ describe("Model tests", () => {
     it("register new type", () => {
         
         class CustomType extends Model.Type {
-            prepare(value) {
+            public prepare(value) {
                 return +value * 2;
             }
         }
 
         Model.registerType("custom", CustomType);
 
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            prop: any;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     prop: "custom"
                 };
             }
         }
 
-        let model = new SomeModel({
+        const model = new SomeModel({
             prop: "10"
         });
 
@@ -598,79 +644,96 @@ describe("Model tests", () => {
 
     
     it("custom prepare field", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            money: number;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     money: {
                         type: "number",
                         default: 1,
-                        prepare: value =>
+                        prepare: (value) =>
                             value * 2
                     }
                 };
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
         assert.strictEqual( model.data.money, 2 );
 
-        model.set("money", 12);
+        model.set({money: 12});
         assert.strictEqual( model.data.money, 24 );
 
-        model.set("money", null);
+        model.set({money: null});
         assert.strictEqual( model.data.money, null );
     });
 
     it("check value type after custom prepare", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            name: string | number;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     name: "text"
                 };
             }
 
-            prepare(data) {
+            public prepare(data) {
                 data.name = 10;
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
         assert.strictEqual( model.data.name, "10" );
 
-        model.set("name", 12);
+        model.set({name: 12});
         assert.strictEqual( model.data.name, "10" );
     });
 
     it("check value type after custom prepare (any key)", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            [key: string]: string | number;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     "*": "text"
                 };
             }
 
-            prepare(data) {
+            public prepare(data) {
                 data.name = 10;
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
         assert.strictEqual( model.data.name, "10" );
 
-        model.set("name", 12);
+        model.set({name: 12});
         assert.strictEqual( model.data.name, "10" );
     });
 
     it("custom prepare field and standard prepares (round, trim, emptyAsNull)", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            name: string;
+            age: number;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     name: {
                         type: "string",
                         default: "  ",
                         trim: true,
                         emptyAsNull: true,
-                        prepare: value =>
+                        prepare: (value) =>
                             value[0].toUpperCase() + 
                                 value.slice(1).toLowerCase()
                     },
@@ -678,7 +741,7 @@ describe("Model tests", () => {
                         type: "number",
                         default: 0,
                         zeroAsNull: true,
-                        prepare: value =>
+                        prepare: (value) =>
                             +(value).toFixed(0)
                     }
                 };
@@ -698,6 +761,12 @@ describe("Model tests", () => {
     });
 
     it("custom prepare data", () => {
+        interface ISomeData {
+            firstName: string;
+            lastName: string;
+            fullName: string;
+        }
+
         function upFirstLetter(name) {
             return (
                 name[0].toUpperCase() + 
@@ -705,21 +774,21 @@ describe("Model tests", () => {
             );
         }
 
-        class SomeModel extends Model {
-            static data() {
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     firstName: {
                         type: "string",
                         trim: true,
                         emptyAsNull: true,
-                        prepare: name =>
+                        prepare: (name) =>
                             upFirstLetter( name )
                     },
                     lastName: {
                         type: "string",
                         trim: true,
                         emptyAsNull: true,
-                        prepare: name =>
+                        prepare: (name) =>
                             upFirstLetter( name )
                     },
                     fullName: {
@@ -730,11 +799,11 @@ describe("Model tests", () => {
                 };
             }
 
-            prepare(data) {
+            public prepare(data) {
                 // data.firstName can be null
-                let firstName = data.firstName || "";
+                const firstName = data.firstName || "";
                 // data.lastName can be null
-                let lastName = data.lastName || "";
+                const lastName = data.lastName || "";
 
                 data.fullName = `${ firstName } ${lastName}`;
             }
@@ -762,9 +831,13 @@ describe("Model tests", () => {
 
     
     it("custom required field", () => {
+        interface ISomeData {
+            name: string;
+            path: string;
+        }
 
-        class FileModel extends Model {
-            static data() {
+        class FileModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     name: {
                         type: "text",
@@ -774,54 +847,64 @@ describe("Model tests", () => {
                 };
             }
 
-            prepare(data) {
+            public prepare(data) {
                 data.name = data.path.split("/").pop();
             }
         }
 
-        let file = new FileModel({
+        const file = new FileModel({
             path: "test/name.txt"
         });
         assert.strictEqual( file.data.name, "name.txt" );
     });
 
     it("equal with same class model", () => {
+        interface ISomeData {
+            prop: string;
+        }
 
-        class SomeModel extends Model {
-            static data() {
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     prop: "string"
                 };
             }
         }
 
-        let firstModel = new SomeModel({
+        const firstModel = new SomeModel({
             prop: "first"
         });
-        let secondModel = new SomeModel({
+        const secondModel = new SomeModel({
             prop: "second"
         });
 
         assert.ok( !firstModel.equal( secondModel ) );
         assert.ok( !secondModel.equal( firstModel ) );
 
-        secondModel.set("prop", "first");
+        secondModel.set({prop: "first"});
 
         assert.ok( firstModel.equal( secondModel ) );
         assert.ok( secondModel.equal( firstModel ) );
     });
 
     it("equal model with another data", () => {
+        interface IModel1 {
+            some: number;
+        }
 
-        class Model1 extends Model {
-            static data() {
+        class Model1 extends Model<IModel1> {
+            public static data() {
                 return {
                     some: "number"
                 };
             }
         }
-        class Model2 extends Model {
-            static data() {
+
+        interface IModel2 {
+            [key: string]: any;
+        }
+        class Model2 extends Model<IModel2> {
+            public static data() {
                 return {
                     "*": "*"
                 };
@@ -829,17 +912,17 @@ describe("Model tests", () => {
         }
 
 
-        let firstModel = new Model1({
+        const firstModel = new Model1({
             some: 1
         });
-        let secondModel = new Model2({
+        const secondModel = new Model2({
             some: 1
         });
 
         assert.ok( firstModel.equal( secondModel ) );
         assert.ok( secondModel.equal( firstModel ) );
 
-        secondModel.set("another", "value");
+        secondModel.set({another: "value"});
 
         assert.ok( !firstModel.equal( secondModel ) );
         assert.ok( !secondModel.equal( firstModel ) );
@@ -847,8 +930,12 @@ describe("Model tests", () => {
 
 
     it("max error length on prepare", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            prop: string;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     prop: "number"
                 };
@@ -857,47 +944,57 @@ describe("Model tests", () => {
 
         assert.throws(
             () => {
-                new SomeModel({
+                const model = new SomeModel({
                     prop: "X1234568790123456879012345687901234568790123456879"
                 });
-            }, err =>
-                err.message == "invalid number for prop: \"X1234568790123456879012345687901234568790123456879\""
+            }, (err) =>
+                err.message === "invalid number for prop: \"X1234568790123456879012345687901234568790123456879\""
         );
 
         assert.throws(
             () => {
-                new SomeModel({
+                const model = new SomeModel({
                     prop: "X1234568790123456879012345687901234568790123456879y"
                 });
-            }, err =>
-                err.message == "invalid number for prop: \"X1234568790123456879012345687901234568790123456879...\""
+            }, (err) =>
+                err.message === "invalid number for prop: \"X1234568790123456879012345687901234568790123456879...\""
         );
 
         assert.throws(
             () => {
-                new SomeModel({
+                const AnyModel = SomeModel as any;
+                const model = new AnyModel({
                     prop: {some: 1}
                 });
-            }, err =>
-                err.message == "invalid number for prop: {\"some\":1}"
-        );
-
+            }, (err) =>
+            err.message === "invalid number for prop: {\"some\":1}"
+            );
+            
         assert.throws(
             () => {
-                new SomeModel({
+                const AnyModel = SomeModel as any;
+                const model = new AnyModel({
                     prop: {some: 1, sub: {bigString: "X1234568790123456879012345687901234568790123456879"}}
                 });
-            }, err =>
-                err.message == "invalid number for prop: {\"some\":1,\"sub\":{\"bigString\":\"X1234568790123456879..."
+            }, (err) =>
+                err.message === "invalid number for prop: {\"some\":1,\"sub\":{\"bigString\":\"X1234568790123456879..."
         );
     });
 
     it("test eol on linux", () => {
-        
+        interface ISomeObject {
+            [key: string]: number;
+        }
+
+        interface ISomeData {
+            arr: number[];
+            obj: ISomeObject;
+        }
+
         eol.define( "linux" );
 
-        class SomeModel extends Model {
-            static data() {
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     arr: ["number"],
                     obj: {element: "number"}
@@ -907,29 +1004,39 @@ describe("Model tests", () => {
 
         assert.throws(
             () => {
-                new SomeModel({
+                const AnyModel = SomeModel as any;
+                const model = new AnyModel({
                     arr: ["wrong"]
                 });
-            }, err =>
-                err.message == "invalid array[number] for arr: [\"wrong\"],\n invalid number for 0: \"wrong\""
+            }, (err) =>
+                err.message === "invalid array[number] for arr: [\"wrong\"],\n invalid number for 0: \"wrong\""
         );
 
         assert.throws(
             () => {
-                new SomeModel({
+                const AnyModel = SomeModel as any;
+                const model = new AnyModel({
                     obj: {prop: "wrong"}
                 });
-            }, err =>
-                err.message == "invalid object[number] for obj: {\"prop\":\"wrong\"},\n invalid number for prop: \"wrong\""
+            }, (err) =>
+                err.message === "invalid object[number] for obj: {\"prop\":\"wrong\"},\n invalid number for prop: \"wrong\""
         );
     });
 
     it("test eol on windows", () => {
-        
+        interface ISomeObject {
+            [key: string]: number;
+        }
+
+        interface ISomeData {
+            arr: number[];
+            obj: ISomeObject;
+        }
+
         eol.define( "windows" );
 
-        class SomeModel extends Model {
-            static data() {
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     arr: ["number"],
                     obj: {element: "number"}
@@ -939,20 +1046,22 @@ describe("Model tests", () => {
 
         assert.throws(
             () => {
-                new SomeModel({
+                const AnyModel = SomeModel as any;
+                const model = new AnyModel({
                     arr: ["wrong"]
                 });
-            }, err =>
-                err.message == "invalid array[number] for arr: [\"wrong\"],\r\n invalid number for 0: \"wrong\""
+            }, (err) =>
+                err.message === "invalid array[number] for arr: [\"wrong\"],\r\n invalid number for 0: \"wrong\""
         );
 
         assert.throws(
             () => {
-                new SomeModel({
+                const AnyModel = SomeModel as any;
+                const model = new AnyModel({
                     obj: {prop: "wrong"}
                 });
-            }, err =>
-                err.message == "invalid object[number] for obj: {\"prop\":\"wrong\"},\r\n invalid number for prop: \"wrong\""
+            }, (err) =>
+                err.message === "invalid object[number] for obj: {\"prop\":\"wrong\"},\r\n invalid number for prop: \"wrong\""
         );
     });
 });
