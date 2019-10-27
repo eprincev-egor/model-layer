@@ -5,7 +5,7 @@ const {Model} = require("../lib/index");
 const assert = require("assert");
 
 class Product extends Model {
-    static structure() {
+    static data() {
         return {
             
             name: {
@@ -29,7 +29,7 @@ class Product extends Model {
 }
 
 class Cart extends Model {
-    static structure() {
+    static data() {
         return {
             // define array of models
             products: [Product],

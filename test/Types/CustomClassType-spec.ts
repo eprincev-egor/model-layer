@@ -14,7 +14,7 @@ describe("CustomClassType", () => {
         }
 
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     some: CustomClass
                 };
@@ -49,7 +49,7 @@ describe("CustomClassType", () => {
         class CustomClass {}
 
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     some: CustomClass
                 };
@@ -83,7 +83,7 @@ describe("CustomClassType", () => {
         }
 
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     some: CustomClass
                 };
@@ -109,7 +109,7 @@ describe("CustomClassType", () => {
         class CustomClass {}
 
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     some: CustomClass
                 };
@@ -141,7 +141,7 @@ describe("CustomClassType", () => {
         }
 
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     some: CustomClass
                 };
@@ -165,7 +165,7 @@ describe("CustomClassType", () => {
         class MyClass {}
 
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     arr: [MyClass]
                 };
@@ -199,7 +199,7 @@ describe("CustomClassType", () => {
 
         pairs.forEach(pair => {
             class TestModel extends Model {
-                static structure() {
+                static data() {
                     return {
                         custom: CustomClass
                     };

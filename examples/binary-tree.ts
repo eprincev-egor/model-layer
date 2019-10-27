@@ -5,7 +5,7 @@ const {Model} = require("../lib/index");
 const assert = require("assert");
 
 class BinaryTreeModel extends Model {
-    static structure() {
+    static data() {
         return {
             // define model property
             left: BinaryTreeModel,

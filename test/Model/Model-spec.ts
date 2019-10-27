@@ -1,15 +1,17 @@
 
-
-const {Model} = require("../../lib/index");
-const assert = require("assert");
-const {eol} = require("../../lib/utils");
+import {Model} from "../../lib/index";
+import assert from "assert";
+import {eol} from "../../lib/utils";
 
 describe("Model tests", () => {
 
     it("create model with data", () => {
+        interface ISomeData {
+            prop: string;
+        }
 
-        class SomeModel extends Model {
-            static structure() {
+        class SomeModel extends Model<ISomeData> {
+            static data() {
                 return {
                     prop: "string"
                 };
@@ -28,9 +30,12 @@ describe("Model tests", () => {
     });
 
     it("create model without data", () => {
+        interface ISomeData {
+            prop: string;
+        }
 
-        class SomeModel extends Model {
-            static structure() {
+        class SomeModel extends Model<ISomeData> {
+            static data() {
                 return {
                     prop: "string"
                 };
@@ -44,9 +49,13 @@ describe("Model tests", () => {
     });
 
     it("default value", () => {
+        interface ISomeData {
+            prop: string;
+        }
+
         let model;
-        class SomeModel extends Model {
-            static structure() {
+        class SomeModel extends Model<ISomeData> {
+            static data() {
                 return {
                     prop: {
                         type: "string",
@@ -83,10 +92,14 @@ describe("Model tests", () => {
     });
 
     it("default() value", () => {
+        interface ISomeData {
+            now: number;
+        }
+
         let now = Date.now();
 
-        class SomeModel extends Model {
-            static structure() {
+        class SomeModel extends Model<ISomeData> {
+            static data() {
                 return {
                     now: {
                         type: "number",
@@ -104,9 +117,13 @@ describe("Model tests", () => {
     });
 
     it("set value", () => {
+        interface ISomeData {
+            name: string;
+            age: number;
+        }
 
-        class SomeModel extends Model {
-            static structure() {
+        class SomeModel extends Model<ISomeData> {
+            static data() {
                 return {
                     name: "string",
                     age: "number"
@@ -122,7 +139,7 @@ describe("Model tests", () => {
         assert.strictEqual( model.get("age"), null );
         assert.strictEqual( model.data.age, null );
         
-        model.set("name", "nice");
+        model.set({name: "nice"});
         assert.equal( model.get("name"), "nice" );
         assert.equal( model.data.name, "nice" );
         assert.strictEqual( model.get("age"), null );
@@ -131,7 +148,7 @@ describe("Model tests", () => {
         assert.ok( data != model.data );
         data = model.data;
 
-        model.set("name", null);
+        model.set({name: null});
         assert.strictEqual( model.get("name"), null );
         assert.strictEqual( model.data.name, null );
         assert.strictEqual( model.get("age"), null );
@@ -149,7 +166,7 @@ describe("Model tests", () => {
         assert.ok( data != model.data );
         data = model.data;
 
-        model.set("age", 101);
+        model.set({age: 101});
         assert.equal( model.get("name"), "test" );
         assert.equal( model.data.name, "test" );
         assert.strictEqual( model.get("age"), 101 );
@@ -167,8 +184,12 @@ describe("Model tests", () => {
     });
 
     it("error on set unknown property", () => {
-        class SomeModel extends Model {
-            static structure() {
+        interface ISomeData {
+            prop: string;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            static data() {
                 return {
                     prop: "string"
                 };
@@ -177,7 +198,7 @@ describe("Model tests", () => {
 
         let model = new SomeModel();
 
-        model.set("prop", "x");
+        model.set({prop: "x"});
         assert.equal( model.get("prop"), "x" );
         assert.equal( model.data.prop, "x" );
         
@@ -185,7 +206,8 @@ describe("Model tests", () => {
 
         assert.throws(
             () => {
-                model.set("some", "1");
+                const anyModel = model as any;
+                anyModel.set({some: "1"});
             }, err =>
                 err.message == "unknown property: some"
         );
@@ -199,7 +221,8 @@ describe("Model tests", () => {
 
         assert.throws(
             () => {
-                new SomeModel({
+                const AnyModel = SomeModel as any;
+                const someModel = new AnyModel({
                     some: "x"
                 });
             },
@@ -210,8 +233,12 @@ describe("Model tests", () => {
 
 
     it("model.data is freeze object", () => {
-        class SomeModel extends Model {
-            static structure() {
+        interface ISomeData {
+            prop: string;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            static data() {
                 return {
                     prop: "string"
                 };
@@ -222,19 +249,21 @@ describe("Model tests", () => {
 
         assert.throws(
             () => {
-                model.data.prop = "a";
+                const anyModel = model as any;
+                anyModel.data.prop = "a";
             }, 
             err =>
                 /Cannot assign to read only property/.test(err.message)
         );
 
-        model.set("prop", "x");
+        model.set({prop: "x"});
         assert.equal( model.get("prop"), "x" );
         assert.equal( model.data.prop, "x" );
 
         assert.throws(
             () => {
-                model.data.prop = "y";
+                const anyModel = model as any;
+                anyModel.data.prop = "y";
             }, err =>
                 /Cannot assign to read only property/.test(err.message)
         );
@@ -244,8 +273,12 @@ describe("Model tests", () => {
     });
 
     it("keep data if hasn't changes", () => {
-        class SomeModel extends Model {
-            static structure() {
+        interface ISomeData {
+            prop: string;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            static data() {
                 return {
                     prop: "string"
                 };
@@ -269,7 +302,7 @@ describe("Model tests", () => {
 
     it("model.hasProperty", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     prop: "string"
                 };
@@ -296,7 +329,7 @@ describe("Model tests", () => {
 
     it("model.hasValue", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: "string",
                     age: "number"
@@ -343,7 +376,7 @@ describe("Model tests", () => {
 
     it("model.toJSON", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: "string",
                     age: "number"
@@ -377,7 +410,7 @@ describe("Model tests", () => {
 
     it("model.prepareJSON", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: "string",
                     age: "number"
@@ -413,7 +446,7 @@ describe("Model tests", () => {
 
     it("model.clone() with required field", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: {
                         type: "string",
@@ -439,9 +472,9 @@ describe("Model tests", () => {
     });
 
     
-    it("extends from another Model with structure", () => {
+    it("extends from another Model with data", () => {
         class FirstLevel extends Model {
-            static structure() {
+            static data() {
                 return {
                     lvl1: "string"
                 };
@@ -449,7 +482,7 @@ describe("Model tests", () => {
         }
 
         class SecondLevel extends FirstLevel {
-            static structure() {
+            static data() {
                 return {
                     lvl2: "string"
                 };
@@ -463,7 +496,7 @@ describe("Model tests", () => {
 
     it("custom toJSON, for field", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: "string",
                     self: {
@@ -492,7 +525,7 @@ describe("Model tests", () => {
 
     it("custom toJSON, for any field", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     "*": {
                         type: SomeModel,
@@ -518,7 +551,7 @@ describe("Model tests", () => {
 
     it("clone, for any field", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     "*": "*"
                 };
@@ -549,7 +582,7 @@ describe("Model tests", () => {
         Model.registerType("custom", CustomType);
 
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     prop: "custom"
                 };
@@ -566,7 +599,7 @@ describe("Model tests", () => {
     
     it("custom prepare field", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     money: {
                         type: "number",
@@ -590,7 +623,7 @@ describe("Model tests", () => {
 
     it("check value type after custom prepare", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -610,7 +643,7 @@ describe("Model tests", () => {
 
     it("check value type after custom prepare (any key)", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     "*": "text"
                 };
@@ -630,7 +663,7 @@ describe("Model tests", () => {
 
     it("custom prepare field and standard prepares (round, trim, emptyAsNull)", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: {
                         type: "string",
@@ -673,7 +706,7 @@ describe("Model tests", () => {
         }
 
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     firstName: {
                         type: "string",
@@ -731,7 +764,7 @@ describe("Model tests", () => {
     it("custom required field", () => {
 
         class FileModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: {
                         type: "text",
@@ -755,7 +788,7 @@ describe("Model tests", () => {
     it("equal with same class model", () => {
 
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     prop: "string"
                 };
@@ -778,17 +811,17 @@ describe("Model tests", () => {
         assert.ok( secondModel.equal( firstModel ) );
     });
 
-    it("equal model with another structure", () => {
+    it("equal model with another data", () => {
 
         class Model1 extends Model {
-            static structure() {
+            static data() {
                 return {
                     some: "number"
                 };
             }
         }
         class Model2 extends Model {
-            static structure() {
+            static data() {
                 return {
                     "*": "*"
                 };
@@ -815,7 +848,7 @@ describe("Model tests", () => {
 
     it("max error length on prepare", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     prop: "number"
                 };
@@ -864,7 +897,7 @@ describe("Model tests", () => {
         eol.define( "linux" );
 
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     arr: ["number"],
                     obj: {element: "number"}
@@ -896,7 +929,7 @@ describe("Model tests", () => {
         eol.define( "windows" );
 
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     arr: ["number"],
                     obj: {element: "number"}

@@ -7,7 +7,7 @@ describe("Model validate", () => {
     
     it("required field", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: {
                         type: "string",
@@ -54,7 +54,7 @@ describe("Model validate", () => {
 
     it("validate method", () => {
         class AgeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     age: {
                         type: "number",
@@ -103,7 +103,7 @@ describe("Model validate", () => {
 
     it("cannot change state in validate method", () => {
         class AgeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     age: {
                         type: "number",
@@ -128,7 +128,7 @@ describe("Model validate", () => {
 
     it("this.data in validate is previous state", () => {
         class AgeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     age: {
                         type: "number",
@@ -150,7 +150,7 @@ describe("Model validate", () => {
 
     it("validate field", () => {
         class AgeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     age: {
                         type: "number",
@@ -195,7 +195,7 @@ describe("Model validate", () => {
 
     it("do not validate null value", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     prop: {
                         type: "string",
@@ -226,7 +226,7 @@ describe("Model validate", () => {
 
     it("validate field by RegExp", () => {
         class WordModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     word: {
                         type: "string",
@@ -269,7 +269,7 @@ describe("Model validate", () => {
 
     it("enum validate", () => {
         class EnumModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     color: {
                         type: "string",
@@ -319,7 +319,7 @@ describe("Model validate", () => {
 
     it("isValid(data)", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     sale: {
                         type: "number",
@@ -417,7 +417,7 @@ describe("Model validate", () => {
 
     it("const prop", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: {
                         type: "string",

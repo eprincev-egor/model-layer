@@ -39,7 +39,7 @@ describe("Model primary field", () => {
         RESERVED_KEYS.forEach(reservedKey => {
             
             class Company extends Model {
-                static structure() {
+                static data() {
                     return {
                         [reservedKey]: {
                             type: "text",
@@ -64,7 +64,7 @@ describe("Model primary field", () => {
 
     it("check property model.primaryKey", () => {
         class Company extends Model {
-            static structure() {
+            static data() {
                 return {
                     id: {
                         type: "number",
@@ -84,7 +84,7 @@ describe("Model primary field", () => {
 
     it("check property model.primaryValue", () => {
         class Company extends Model {
-            static structure() {
+            static data() {
                 return {
                     id: {
                         type: "number",
@@ -108,9 +108,9 @@ describe("Model primary field", () => {
         assert.strictEqual( company1.primaryValue, 2 );
     });
 
-    it("model.id, if exists static field 'id' in structure", () => {
+    it("model.id, if exists static field 'id' in data", () => {
         class Company extends Model {
-            static structure() {
+            static data() {
                 return {
                     id: {
                         type: "number",
@@ -140,7 +140,7 @@ describe("Model primary field", () => {
  
     it("primaryKey is required field", () => {
         class Company extends Model {
-            static structure() {
+            static data() {
                 return {
                     id: {
                         type: "number",

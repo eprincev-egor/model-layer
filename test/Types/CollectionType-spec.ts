@@ -8,7 +8,7 @@ describe("CollectionType", () => {
 
     it("Collection property", () => {
         class Products extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -16,7 +16,7 @@ describe("CollectionType", () => {
         }
 
         class Cart extends Model {
-            static structure() {
+            static data() {
                 return {
                     products: Products
                 };
@@ -49,7 +49,7 @@ describe("CollectionType", () => {
 
     it("create Collection by array", () => {
         class Products extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -57,7 +57,7 @@ describe("CollectionType", () => {
         }
 
         class Cart extends Model {
-            static structure() {
+            static data() {
                 return {
                     products: Products
                 };
@@ -79,7 +79,7 @@ describe("CollectionType", () => {
 
     it("Collection.toJSON()", () => {
         class SomeCollection extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -87,7 +87,7 @@ describe("CollectionType", () => {
         }
 
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     some: SomeCollection
                 };
@@ -110,7 +110,7 @@ describe("CollectionType", () => {
 
     it("Collection.clone()", () => {
         class SomeCollection extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -118,7 +118,7 @@ describe("CollectionType", () => {
         }
 
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     some: SomeCollection
                 };
@@ -140,7 +140,7 @@ describe("CollectionType", () => {
     
     it("array of Collection", () => {
         class MyCollection extends Collection {
-            static structure() {
+            static data() {
                 return {
                     id: {
                         type: "number",
@@ -151,7 +151,7 @@ describe("CollectionType", () => {
         }
 
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     arr: [MyCollection]
                 };
@@ -184,7 +184,7 @@ describe("CollectionType", () => {
     
     it("equal Collections", () => {
         class CustomCollection extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -228,7 +228,7 @@ describe("CollectionType", () => {
 
         pairs.forEach(pair => {
             class TestModel extends Model {
-                static structure() {
+                static data() {
                     return {
                         custom: CustomCollection
                     };
@@ -259,7 +259,7 @@ describe("CollectionType", () => {
 
     it("equal Collections, circular recursion", () => {
         class CustomCollection extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text",
                     child: CustomCollection
@@ -268,7 +268,7 @@ describe("CollectionType", () => {
         }
 
         class TestModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     collection: CustomCollection
                 };
@@ -301,7 +301,7 @@ describe("CollectionType", () => {
 
     it("nullAsEmpty", () => {
         class Products extends Collection {
-            static structure() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -309,7 +309,7 @@ describe("CollectionType", () => {
         }
 
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     products: {
                         type: Products,

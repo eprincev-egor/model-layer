@@ -7,7 +7,7 @@ describe("StringType", () => {
     
     it("prepare string", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: {
                         type: "string",
@@ -113,7 +113,7 @@ describe("StringType", () => {
 
     it("prepare trim", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: {
                         type: "string",
@@ -133,7 +133,7 @@ describe("StringType", () => {
 
     it("prepare emptyAsNull", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: {
                         type: "string",
@@ -156,7 +156,7 @@ describe("StringType", () => {
 
     it("prepare nullAsEmpty", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: {
                         type: "string",
@@ -178,7 +178,7 @@ describe("StringType", () => {
 
     it("prepare trim and emptyAsNull", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: {
                         type: "string",
@@ -202,7 +202,7 @@ describe("StringType", () => {
 
     it("prepare lower", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: {
                         type: "string",
@@ -222,7 +222,7 @@ describe("StringType", () => {
 
     it("prepare upper", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: {
                         type: "string",
@@ -242,7 +242,7 @@ describe("StringType", () => {
 
     it("prepare lower and trim", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: {
                         type: "string",
@@ -273,7 +273,7 @@ describe("StringType", () => {
         };
 
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: "string"
                 };
@@ -305,7 +305,7 @@ describe("StringType", () => {
 
         pairs.forEach(pair => {
             class TestModel extends Model {
-                static structure() {
+                static data() {
                     return {
                         str: "string"
                     };

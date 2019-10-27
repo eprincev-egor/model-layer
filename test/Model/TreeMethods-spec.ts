@@ -7,7 +7,7 @@ describe("TreeMethods, walk by children or parents", () => {
     
     it("BinaryTree", () => {
         class BinaryTreeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     left: BinaryTreeModel,
                     right: BinaryTreeModel,
@@ -119,7 +119,7 @@ describe("TreeMethods, walk by children or parents", () => {
 
     it("walker.skip(), skip one element", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     a: SomeModel,
                     b: SomeModel,
@@ -174,7 +174,7 @@ describe("TreeMethods, walk by children or parents", () => {
 
     it("findChild", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     child: SomeModel,
                     level: "number"
@@ -210,7 +210,7 @@ describe("TreeMethods, walk by children or parents", () => {
 
     it("filterChildren", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     child: SomeModel,
                     level: "number"
@@ -247,7 +247,7 @@ describe("TreeMethods, walk by children or parents", () => {
 
     it("findParent", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     child: SomeModel,
                     level: "number"
@@ -293,7 +293,7 @@ describe("TreeMethods, walk by children or parents", () => {
 
     it("filterParents", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     child: SomeModel,
                     level: "number"
@@ -333,14 +333,14 @@ describe("TreeMethods, walk by children or parents", () => {
 
     it("findParentInstance", () => {
         class CModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: "string"
                 };
             }
         }
         class BModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: "string",
                     child: CModel
@@ -348,7 +348,7 @@ describe("TreeMethods, walk by children or parents", () => {
             }
         }
         class AModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: "string",
                     child: BModel
@@ -382,7 +382,7 @@ describe("TreeMethods, walk by children or parents", () => {
 
     it("walk by array", () => {
         class JobModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: "string"
                 };
@@ -390,7 +390,7 @@ describe("TreeMethods, walk by children or parents", () => {
         }
 
         class UserModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: "string",
                     job: JobModel
@@ -399,7 +399,7 @@ describe("TreeMethods, walk by children or parents", () => {
         }
 
         class CompanyModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: "string",
                     managers: [UserModel]
@@ -408,7 +408,7 @@ describe("TreeMethods, walk by children or parents", () => {
         }
 
         class OrderModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     client: CompanyModel,
                     partner: CompanyModel
@@ -469,7 +469,7 @@ describe("TreeMethods, walk by children or parents", () => {
     it("walk by any key and any value", () => {
 
         class TreeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     "*": "*"
                 };
@@ -503,7 +503,7 @@ describe("TreeMethods, walk by children or parents", () => {
 
     it("circular walk", () => {
         class TreeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: "string",
                     child: TreeModel
@@ -536,7 +536,7 @@ describe("TreeMethods, walk by children or parents", () => {
 
     it("circular findParent", () => {
         class TreeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: "string",
                     child: TreeModel

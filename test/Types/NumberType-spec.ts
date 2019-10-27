@@ -7,7 +7,7 @@ describe("NumberType", () => {
     
     it("prepare number", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     age: {
                         type: "number",
@@ -132,7 +132,7 @@ describe("NumberType", () => {
 
     it("prepare round", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     money: {
                         type: "number",
@@ -152,7 +152,7 @@ describe("NumberType", () => {
 
     it("prepare floor", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     money: {
                         type: "number",
@@ -172,7 +172,7 @@ describe("NumberType", () => {
 
     it("prepare ceil", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     money: {
                         type: "number",
@@ -192,7 +192,7 @@ describe("NumberType", () => {
 
     it("prepare zeroAsNull", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     money: {
                         type: "number",
@@ -216,7 +216,7 @@ describe("NumberType", () => {
 
     it("prepare nullAsZero", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     money: {
                         type: "number",
@@ -248,7 +248,7 @@ describe("NumberType", () => {
         };
 
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     age: "number"
                 };
@@ -270,7 +270,7 @@ describe("NumberType", () => {
 
     it("invalid ceil in field description", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     money: {
                         type: "number",
@@ -291,7 +291,7 @@ describe("NumberType", () => {
 
     it("invalid floor in field description", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     money: {
                         type: "number",
@@ -312,7 +312,7 @@ describe("NumberType", () => {
 
     it("invalid round in field description", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     money: {
                         type: "number",
@@ -343,7 +343,7 @@ describe("NumberType", () => {
 
         pairs.forEach(pair => {
             class TestModel extends Model {
-                static structure() {
+                static data() {
                     return {
                         numb: "number"
                     };

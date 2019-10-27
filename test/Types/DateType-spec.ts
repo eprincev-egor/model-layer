@@ -13,7 +13,7 @@ describe("DateType", () => {
         let nowDate = new Date( now );
 
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     bornDate: {
                         type: "date",
@@ -148,7 +148,7 @@ describe("DateType", () => {
         };
 
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     bornDate: "date"
                 };
@@ -183,7 +183,7 @@ describe("DateType", () => {
 
         pairs.forEach(pair => {
             class TestModel extends Model {
-                static structure() {
+                static data() {
                     return {
                         date: "date"
                     };

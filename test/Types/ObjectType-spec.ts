@@ -8,7 +8,7 @@ describe("ObjectType", () => {
     
     it("object", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     map: "object"
                 };
@@ -158,7 +158,7 @@ describe("ObjectType", () => {
     
     it("emptyAsNull", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     words: {
                         type: "object",
@@ -180,7 +180,7 @@ describe("ObjectType", () => {
 
     it("nullAsEmpty", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     words: {
                         type: "object",
@@ -202,7 +202,7 @@ describe("ObjectType", () => {
 
     it("recursive clone object", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     tree: "object"
                 };
@@ -260,7 +260,7 @@ describe("ObjectType", () => {
     
     it("model.toJSON with object property", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     names: "object"
                 };
@@ -287,7 +287,7 @@ describe("ObjectType", () => {
 
     it("recursive convert object to json", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     tree: "object"
                 };
@@ -335,7 +335,7 @@ describe("ObjectType", () => {
 
     it("prepare object value", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     object: {
                         type: "object",
@@ -357,7 +357,7 @@ describe("ObjectType", () => {
 
     it("object of any values", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     object: {}
                 };
@@ -383,7 +383,7 @@ describe("ObjectType", () => {
 
     it("validate element", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     object: {
                         type: "object",
@@ -418,7 +418,7 @@ describe("ObjectType", () => {
 
         pairs.forEach(pair => {
             class TestModel extends Model {
-                static structure() {
+                static data() {
                     return {
                         obj: {element: "number"}
                     };
@@ -469,7 +469,7 @@ describe("ObjectType", () => {
 
         pairs.forEach(pair => {
             class TestModel extends Model {
-                static structure() {
+                static data() {
                     return {
                         obj: {
                             element: {
@@ -511,7 +511,7 @@ describe("ObjectType", () => {
         class FirstLevel extends Model {}
 
         class SecondLevel extends FirstLevel {
-            static structure() {
+            static data() {
                 return {
                     level: {
                         type: "number",
@@ -522,7 +522,7 @@ describe("ObjectType", () => {
         }
 
         class MainModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     obj: {element: FirstLevel}
                 };

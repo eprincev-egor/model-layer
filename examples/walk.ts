@@ -5,7 +5,7 @@ const {Model} = require("../lib/index");
 const assert = require("assert");
 
 class Tree extends Model {
-    static structure() {
+    static data() {
         return {
             name: "string",
             children: [Tree]

@@ -8,7 +8,7 @@ describe("ArrayType", () => {
     
     it("array of numbers", () => {
         class CompanyModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: "string",
                     managersIds: ["number"]
@@ -168,7 +168,7 @@ describe("ArrayType", () => {
     
     it("emptyAsNull", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     colors: {
                         type: ["string"],
@@ -191,7 +191,7 @@ describe("ArrayType", () => {
 
     it("nullAsEmpty", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     colors: {
                         type: ["string"],
@@ -214,7 +214,7 @@ describe("ArrayType", () => {
 
     it("array[boolean]", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     answers: ["boolean"]
                 };
@@ -245,7 +245,7 @@ describe("ArrayType", () => {
 
     it("array[date]", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     pays: ["date"]
                 };
@@ -276,7 +276,7 @@ describe("ArrayType", () => {
 
     it("array[ChildModel]", () => {
         class UserModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: {
                         type: "string",
@@ -287,7 +287,7 @@ describe("ArrayType", () => {
         }
 
         class CompanyModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     managers: [UserModel]
                 };
@@ -318,7 +318,7 @@ describe("ArrayType", () => {
 
     it("array[string]", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     colors: [{
                         type: "string",
@@ -359,7 +359,7 @@ describe("ArrayType", () => {
 
     it("array[object]", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     users: ["object"]
                 };
@@ -387,7 +387,7 @@ describe("ArrayType", () => {
 
     it("unique primitive", () => {
         class CompanyModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     managersIds: {
                         type: "array",
@@ -434,7 +434,7 @@ describe("ArrayType", () => {
 
     it("unique ChildModel", () => {
         class UserModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: "string"
                 };
@@ -442,7 +442,7 @@ describe("ArrayType", () => {
         }
 
         class CompanyModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     managers: {
                         type: "array",
@@ -496,7 +496,7 @@ describe("ArrayType", () => {
 
     it("sort", () => {
         class CompanyModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     managersIds: {
                         type: "array",
@@ -516,7 +516,7 @@ describe("ArrayType", () => {
 
     it("sort by custom comparator", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     names: {
                         type: "array",
@@ -540,7 +540,7 @@ describe("ArrayType", () => {
 
     it("matrix", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     matrix: [["number"]]
                 };
@@ -565,7 +565,7 @@ describe("ArrayType", () => {
     
     it("model.toJSON with array of models", () => {
         class TaskModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: "string"
                 };
@@ -573,7 +573,7 @@ describe("ArrayType", () => {
         }
 
         class UserModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: "string",
                     tasks: [TaskModel]
@@ -603,7 +603,7 @@ describe("ArrayType", () => {
 
     it("model.clone with array", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     ids: ["number"]
                 };
@@ -660,7 +660,7 @@ describe("ArrayType", () => {
         let testArr2 = [2];
 
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     ids: {
                         type: ["number"],
@@ -685,7 +685,7 @@ describe("ArrayType", () => {
 
     it("test array of any values", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     arr: []
                 };
@@ -713,7 +713,7 @@ describe("ArrayType", () => {
 
         pairs.forEach(pair => {
             class TestModel extends Model {
-                static structure() {
+                static data() {
                     return {
                         arr: ["number"]
                     };
@@ -767,7 +767,7 @@ describe("ArrayType", () => {
 
         pairs.forEach(pair => {
             class TestModel extends Model {
-                static structure() {
+                static data() {
                     return {
                         arr: [[]]
                     };
@@ -804,7 +804,7 @@ describe("ArrayType", () => {
         class FirstLevel extends Model {}
 
         class SecondLevel extends FirstLevel {
-            static structure() {
+            static data() {
                 return {
                     level: {
                         type: "number",
@@ -815,7 +815,7 @@ describe("ArrayType", () => {
         }
 
         class MainModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     arr: [FirstLevel]
                 };

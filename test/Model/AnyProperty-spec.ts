@@ -11,7 +11,7 @@ describe("Model with any property", () => {
         }
 
         class SomeModel extends Model<IAnyData> {
-            public static structure() {
+            public static data() {
                 return {
                     "*": "*"
                 };
@@ -51,7 +51,7 @@ describe("Model with any property", () => {
         }
 
         class SomeModel extends Model<IAnyNumber> {
-            public static structure() {
+            public static data() {
                 return {
                     "*": "number"
                 };
@@ -130,7 +130,7 @@ describe("Model with any property", () => {
         }
 
         class SomeModel extends Model<IAnyString> {
-            public static structure() {
+            public static data() {
                 return {
                     "*": "string"
                 };
@@ -170,7 +170,7 @@ describe("Model with any property", () => {
         type IAnyStringAndAge = IAnyString & IAge;
 
         class SomeModel extends Model<IAnyStringAndAge> {
-            public static structure() {
+            public static data() {
                 return {
                     "age": {
                         type: "number",
@@ -229,7 +229,7 @@ describe("Model with any property", () => {
         }
 
         class SomeModel extends Model<IAnyString> {
-            public static structure() {
+            public static data() {
                 return {
                     "*": {
                         type: "string",
@@ -268,7 +268,7 @@ describe("Model with any property", () => {
         }
 
         class SomeModel extends Model<IAnyNumber> {
-            public static structure() {
+            public static data() {
                 return {
                     "*": {
                         type: "number",
@@ -318,7 +318,7 @@ describe("Model with any property", () => {
         }
 
         class SomeModel extends Model<IAnyString> {
-            public static structure() {
+            public static data() {
                 return {
                     "*": {
                         type: "string",
@@ -369,7 +369,7 @@ describe("Model with any property", () => {
         }
 
         class SomeModel extends Model<IAnyString> {
-            public static structure() {
+            public static data() {
                 return {
                     "*": {
                         type: "string",
@@ -420,7 +420,7 @@ describe("Model with any property", () => {
         }
 
         class SomeModel extends Model<IAnyObject> {
-            public static structure() {
+            public static data() {
                 return {
                     "*": "object"
                 };
@@ -444,7 +444,7 @@ describe("Model with any property", () => {
         }
 
         class SomeModel extends Model<IAnyObject> {
-            public static structure() {
+            public static data() {
                 return {
                     "*": "object"
                 };

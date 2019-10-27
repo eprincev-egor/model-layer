@@ -8,7 +8,7 @@ describe("ModelType", () => {
     
     it("child model", () => {
         class UserModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: {
                         type: "string",
@@ -36,7 +36,7 @@ describe("ModelType", () => {
         }
 
         class RegistrationModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     user: {
                         type: UserModel,
@@ -157,7 +157,7 @@ describe("ModelType", () => {
     
     it("model.toJSON with custom models", () => {
         class CarModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     id: "number",
                     color: "string"
@@ -166,7 +166,7 @@ describe("ModelType", () => {
         }
 
         class UserModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: "string",
                     car: CarModel
@@ -197,7 +197,7 @@ describe("ModelType", () => {
 
     it("equal models", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     prop: "number"
                 };
@@ -233,7 +233,7 @@ describe("ModelType", () => {
 
         pairs.forEach(pair => {
             class TestModel extends Model {
-                static structure() {
+                static data() {
                     return {
                         model: SomeModel
                     };
@@ -264,7 +264,7 @@ describe("ModelType", () => {
 
     it("equal circular models", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: "string",
                     self: SomeModel
@@ -291,7 +291,7 @@ describe("ModelType", () => {
 
         pairs.forEach((pair, i) => {
             class TestModel extends Model {
-                static structure() {
+                static data() {
                     return {
                         model: SomeModel
                     };
@@ -322,7 +322,7 @@ describe("ModelType", () => {
 
     it("BaseModel.or(ChildModel1), default constructor is BaseModel", () => {
         class BaseModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     modelName: "string"
                 };
@@ -330,9 +330,9 @@ describe("ModelType", () => {
         }
 
         class ChildModel extends BaseModel {
-            static structure() {
+            static data() {
                 return {
-                    ...super.structure(),
+                    ...super.data(),
                     isChild: {
                         type: "boolean",
                         default: true
@@ -342,7 +342,7 @@ describe("ModelType", () => {
         }
 
         class MainModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     child: BaseModel.or( ChildModel )
                 };
@@ -409,7 +409,7 @@ describe("ModelType", () => {
     it("BaseModel.or(ChildModel1, ChildModel2, ...) get constructor by data", () => {
 
         class Product extends Model {
-            static structure() {
+            static data() {
                 return {
                     type: "string",
                     price: "number"
@@ -418,9 +418,9 @@ describe("ModelType", () => {
         }
 
         class DressProduct extends Product {
-            static structure() {
+            static data() {
                 return {
-                    ...super.structure(),
+                    ...super.data(),
 
                     size: "number"
                 };
@@ -428,9 +428,9 @@ describe("ModelType", () => {
         }
 
         class FoodProduct extends Product {
-            static structure() {
+            static data() {
                 return {
-                    ...super.structure(),
+                    ...super.data(),
 
                     color: "string"
                 };
@@ -438,7 +438,7 @@ describe("ModelType", () => {
         }
 
         class Cart extends Model {
-            static structure() {
+            static data() {
                 return {
                     products: {
                         type: "array",
@@ -482,7 +482,7 @@ describe("ModelType", () => {
     
     it("BaseModel.or(...), if custom getConstructor returns undefined, we using BaseModel", () => {
         class BaseModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     modelName: "string"
                 };
@@ -492,7 +492,7 @@ describe("ModelType", () => {
         class ChildModel extends BaseModel {}
 
         class MainModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     child: {
                         type: BaseModel.or( ChildModel ),
@@ -526,7 +526,7 @@ describe("ModelType", () => {
         class FirstLevel extends Model {}
 
         class SecondLevel extends FirstLevel {
-            static structure() {
+            static data() {
                 return {
                     level: {
                         type: "number",
@@ -537,7 +537,7 @@ describe("ModelType", () => {
         }
 
         class MainModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     some: FirstLevel
                 };

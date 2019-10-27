@@ -5,7 +5,7 @@ const {Model} = require("../lib/index");
 const assert = require("assert");
 
 class UserModel extends Model {
-    static structure() {
+    static data() {
         return {
             
             // simplest define string property

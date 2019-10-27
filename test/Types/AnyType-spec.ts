@@ -9,7 +9,7 @@ describe("AnyType", () => {
     it("any value", () => {
         
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     any: "*"
                 };
@@ -35,7 +35,7 @@ describe("AnyType", () => {
         let isoDate = date.toISOString();
 
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     any: "*"
                 };
@@ -89,7 +89,7 @@ describe("AnyType", () => {
         let obj2 = new CustomClass();
 
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     "*": "*"
                 };
@@ -239,7 +239,7 @@ describe("AnyType", () => {
 
         pairs.forEach((pair, i) => {
             class TestModel extends Model {
-                static structure() {
+                static data() {
                     return {
                         any: "*"
                     };

@@ -7,7 +7,7 @@ describe("BooleanType", () => {
     
     it("prepare boolean", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     some: {
                         type: "boolean",
@@ -106,7 +106,7 @@ describe("BooleanType", () => {
 
     it("prepare falseAsNull", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     some: {
                         type: "boolean",
@@ -135,7 +135,7 @@ describe("BooleanType", () => {
 
     it("prepare nullAsFalse", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     some: {
                         type: "boolean",
@@ -168,7 +168,7 @@ describe("BooleanType", () => {
         };
 
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     some: "boolean"
                 };
@@ -200,7 +200,7 @@ describe("BooleanType", () => {
 
         pairs.forEach(pair => {
             class TestModel extends Model {
-                static structure() {
+                static data() {
                     return {
                         bool: "boolean"
                     };

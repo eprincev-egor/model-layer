@@ -3,9 +3,9 @@
 const {Model} = require("../../lib/index");
 const assert = require("assert");
 
-describe("validate and prepare model structure", () => {
+describe("validate and prepare model data", () => {
     
-    it("model without structure", () => {
+    it("model without data", () => {
         
         class SomeModel extends Model {}
 
@@ -14,14 +14,14 @@ describe("validate and prepare model structure", () => {
                 new SomeModel();
             },
             err =>
-                err.message == "static SomeModel.structure() is not declared"
+                err.message == "static SomeModel.data() is not declared"
         );
 
     });
 
     it("unknown type", () => {
         class InvalidModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     prop: "wrong"
                 };
@@ -40,7 +40,7 @@ describe("validate and prepare model structure", () => {
         class SomeModel extends Model {}
 
         class ValidModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     any: "*",
 
@@ -69,11 +69,11 @@ describe("validate and prepare model structure", () => {
         new ValidModel();
     });
 
-    it("once call static structure method", () => {
+    it("once call static data method", () => {
         
         let count = 0;
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 count++;
 
                 return {
@@ -107,8 +107,8 @@ describe("validate and prepare model structure", () => {
         assert.strictEqual( count, 1 );
 
 
-        // calling structure only in first constructor call
-        // (save structure to prototype)
+        // calling data only in first constructor call
+        // (save data to prototype)
 
         let model2 = new SomeModel({
             age: "20"
@@ -122,9 +122,9 @@ describe("validate and prepare model structure", () => {
         assert.strictEqual( count, 1 );
     });
 
-    it("structure is freeze object", () => {
+    it("data is freeze object", () => {
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     arr: ["number"],
                     obj: {element: "number"}
@@ -136,7 +136,7 @@ describe("validate and prepare model structure", () => {
 
         assert.throws(
             () => {
-                model.structure.arr = 10;
+                model.data.arr = 10;
             },
             err =>
                 /Cannot assign to read only property/.test(err.message)
@@ -144,7 +144,7 @@ describe("validate and prepare model structure", () => {
 
         assert.throws(
             () => {
-                model.structure.arr.element.type = 10;
+                model.data.arr.element.type = 10;
             },
             err =>
                 /Cannot assign to read only property/.test(err.message)
@@ -152,18 +152,18 @@ describe("validate and prepare model structure", () => {
 
         assert.throws(
             () => {
-                model.structure.obj.element.type = 10;
+                model.data.obj.element.type = 10;
             },
             err =>
                 /Cannot assign to read only property/.test(err.message)
         );
     });
 
-    it("prepare structure, and save to model.structure", () => {
+    it("prepare data, and save to model.data", () => {
         class TestModel extends Model {}
 
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     name: "string",
                     text: "text",
@@ -186,7 +186,7 @@ describe("validate and prepare model structure", () => {
         let model = new SomeModel();
 
         assert.deepEqual(
-            model.structure,
+            model.data,
             {
                 name: {
                     type: "string",
@@ -346,7 +346,7 @@ describe("validate and prepare model structure", () => {
     it("invalid validate", () => {
         
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     prop: {
                         type: "number",
@@ -369,7 +369,7 @@ describe("validate and prepare model structure", () => {
     it("invalid validate key", () => {
         
         class SomeModel extends Model {
-            static structure() {
+            static data() {
                 return {
                     "*": {
                         type: "number",
