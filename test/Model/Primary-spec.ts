@@ -1,7 +1,6 @@
 
-
-const {Model} = require("../../lib/index");
-const assert = require("assert");
+import {Model} from "../../lib/index";
+import assert from "assert";
 
 describe("Model primary field", () => {
     
@@ -35,11 +34,14 @@ describe("Model primary field", () => {
             "emit"
         ];
 
+        interface IAny {
+            [key: string]: any;
+        }
 
-        RESERVED_KEYS.forEach(reservedKey => {
+        RESERVED_KEYS.forEach((reservedKey) => {
             
-            class Company extends Model {
-                static data() {
+            class Company extends Model<IAny> {
+                public static data() {
                     return {
                         [reservedKey]: {
                             type: "text",
@@ -51,20 +53,25 @@ describe("Model primary field", () => {
     
             assert.throws(
                 () => {
-                    new Company({
+                    const company = new Company({
                         [reservedKey]: 1
                     });
                 },
-                err =>
-                    err.message == `primary key cannot be reserved word: ${reservedKey}`
+                (err) =>
+                    err.message === `primary key cannot be reserved word: ${reservedKey}`
             );
 
         });
     });
 
     it("check property model.primaryKey", () => {
-        class Company extends Model {
-            static data() {
+        interface ICompany {
+            id: number;
+            name: string;
+        }
+
+        class Company extends Model<ICompany> {
+            public static data() {
                 return {
                     id: {
                         type: "number",
@@ -75,7 +82,7 @@ describe("Model primary field", () => {
             }
         }
 
-        let company1 = new Company({
+        const company1 = new Company({
             id: 1
         });
 
@@ -83,8 +90,13 @@ describe("Model primary field", () => {
     });
 
     it("check property model.primaryValue", () => {
-        class Company extends Model {
-            static data() {
+        interface ICompany {
+            id: number;
+            name: string;
+        }
+
+        class Company extends Model<ICompany> {
+            public static data() {
                 return {
                     id: {
                         type: "number",
@@ -95,7 +107,7 @@ describe("Model primary field", () => {
             }
         }
 
-        let company1 = new Company({
+        const company1 = new Company({
             id: 1
         });
 
@@ -109,8 +121,13 @@ describe("Model primary field", () => {
     });
 
     it("model.id, if exists static field 'id' in data", () => {
-        class Company extends Model {
-            static data() {
+        interface ICompany {
+            id: number;
+            name: string;
+        }
+
+        class Company extends Model<ICompany> {
+            public static data() {
                 return {
                     id: {
                         type: "number",
@@ -119,14 +136,16 @@ describe("Model primary field", () => {
                     name: "text"
                 };
             }
+            
+            public id: number;
         }
 
-        let company1 = new Company({
+        const company1 = new Company({
             id: 1,
             name: "Hello"
         });
 
-        let company2 = new Company({
+        const company2 = new Company({
             id: 2,
             name: "World"
         });
@@ -134,13 +153,17 @@ describe("Model primary field", () => {
         assert.strictEqual( company1.id, 1 );
         assert.strictEqual( company2.id, 2 );
 
-        company1.set("id", 3);
+        company1.set({id: 3});
         assert.strictEqual( company1.id, 3 );
     });
  
     it("primaryKey is required field", () => {
-        class Company extends Model {
-            static data() {
+        interface ICompany {
+            id: number;
+        }
+
+        class Company extends Model<ICompany> {
+            public static data() {
                 return {
                     id: {
                         type: "number",
@@ -152,10 +175,10 @@ describe("Model primary field", () => {
 
         assert.throws(
             () => {
-                new Company();
+                const company = new Company();
             },
-            err =>
-                err.message == "required id"
+            (err) =>
+                err.message === "required id"
         );
     });
 
