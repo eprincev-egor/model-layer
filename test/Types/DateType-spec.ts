@@ -1,19 +1,22 @@
 
-
-const {Model} = require("../../lib/index");
-const assert = require("assert");
+import {Model} from "../../lib/index";
+import assert from "assert";
 
 describe("DateType", () => {
     
     it("prepare date", () => {
+        interface ISomeData {
+            bornDate: Date | number | string;
+        }
+
         // Date.parse trimming ms
-        let now = Date.parse(
+        const now = Date.parse(
             new Date().toString()
         );
-        let nowDate = new Date( now );
+        const nowDate = new Date( now );
 
-        class SomeModel extends Model {
-            static data() {
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     bornDate: {
                         type: "date",
@@ -22,7 +25,7 @@ describe("DateType", () => {
                 };
             }
         }
-        let model;
+        let model: SomeModel;
 
         model = new SomeModel();
         assert.strictEqual( +model.data.bornDate, now );
@@ -34,102 +37,111 @@ describe("DateType", () => {
         assert.strictEqual( +model.data.bornDate, now );
         assert.ok( model.data.bornDate instanceof Date );
         
-        model.set("bornDate", now);
+        model.set({bornDate: now});
         assert.strictEqual( +model.data.bornDate, now );
         assert.ok( model.data.bornDate instanceof Date );
 
-        model.set("bornDate", null);
+        model.set({bornDate: null});
         assert.strictEqual( model.data.bornDate, null );
 
-        model.set("bornDate", nowDate.toString());
+        model.set({bornDate: nowDate.toString()});
         assert.strictEqual( +model.data.bornDate, now );
         assert.ok( model.data.bornDate instanceof Date );
 
-        model.set("bornDate", null);
+        model.set({bornDate: null});
         assert.strictEqual( model.data.bornDate, null );
 
-        model.set("bornDate", nowDate.toISOString());
+        model.set({bornDate: nowDate.toISOString()});
         assert.strictEqual( +model.data.bornDate, now );
         assert.ok( model.data.bornDate instanceof Date );
 
         assert.throws(
             () => {
-                model.set("bornDate", "wrong");
+                model.set({bornDate: "wrong"});
             },
-            err =>
-                err.message == "invalid date for bornDate: \"wrong\""
+            (err) =>
+                err.message === "invalid date for bornDate: \"wrong\""
         );
 
         assert.throws(
             () => {
-                model.set("bornDate", {});
+                const anyModel = model as any;
+                anyModel.set({bornDate: {}});
             },
-            err =>
-                err.message == "invalid date for bornDate: {}"
+            (err) =>
+                err.message === "invalid date for bornDate: {}"
         );
 
         assert.throws(
             () => {
-                model.set("bornDate", {bornDate: 1});
+                const anyModel = model as any;
+                anyModel.set({bornDate: {bornDate: 1}});
             },
-            err =>
-                err.message == "invalid date for bornDate: {\"bornDate\":1}"
+            (err) =>
+                err.message === "invalid date for bornDate: {\"bornDate\":1}"
         );
 
         assert.throws(
             () => {
-                model.set("bornDate", false);
+                const anyModel = model as any;
+                anyModel.set({bornDate: false});
             },
-            err =>
-                err.message == "invalid date for bornDate: false"
+            (err) =>
+                err.message === "invalid date for bornDate: false"
         );
 
         assert.throws(
             () => {
-                model.set("bornDate", true);
+                const anyModel = model as any;
+                anyModel.set({bornDate: true});
             },
-            err =>
-                err.message == "invalid date for bornDate: true"
+            (err) =>
+                err.message === "invalid date for bornDate: true"
         );
 
         assert.throws(
             () => {
-                model.set("bornDate", -1 / 0);
+                const anyModel = model as any;
+                anyModel.set({bornDate: -1 / 0});
             },
-            err =>
-                err.message == "invalid date for bornDate: -Infinity"
+            (err) =>
+                err.message === "invalid date for bornDate: -Infinity"
         );
 
         assert.throws(
             () => {
-                model.set("bornDate", 1 / 0);
+                const anyModel = model as any;
+                anyModel.set({bornDate: 1 / 0});
             },
-            err =>
-                err.message == "invalid date for bornDate: Infinity"
+            (err) =>
+                err.message === "invalid date for bornDate: Infinity"
         );
 
         assert.throws(
             () => {
-                model.set("bornDate", NaN);
+                const anyModel = model as any;
+                anyModel.set({bornDate: NaN});
             },
-            err =>
-                err.message == "invalid date for bornDate: NaN"
+            (err) =>
+                err.message === "invalid date for bornDate: NaN"
         );
 
         assert.throws(
             () => {
-                model.set("bornDate", /x/);
+                const anyModel = model as any;
+                anyModel.set({bornDate: /x/});
             },
-            err =>
-                err.message == "invalid date for bornDate: /x/"
+            (err) =>
+                err.message === "invalid date for bornDate: /x/"
         );
 
         assert.throws(
             () => {
-                model.set("bornDate", [0]);
+                const anyModel = model as any;
+                anyModel.set({bornDate: [0]});
             },
-            err =>
-                err.message == "invalid date for bornDate: [0]"
+            (err) =>
+                err.message === "invalid date for bornDate: [0]"
         );
 
         assert.strictEqual( +model.data.bornDate, now );
@@ -137,26 +149,30 @@ describe("DateType", () => {
     });
 
     it("redefine standard prepare date", () => {
-        let callArgs = false;
+        let callArgs: any = false;
 
         const DateType = Model.getType("date");
-        let originalPrepare = DateType.prototype.prepare;
+        const originalPrepare = DateType.prototype.prepare;
 
-        DateType.prototype.prepare = function(value, key, model) {
+        DateType.prototype.prepare = function(value, key, anyModel) {
             callArgs = [value, key];
-            return originalPrepare.call(this, value, key, model);
+            return originalPrepare.call(this, value, key, anyModel);
         };
 
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            bornDate: Date | number | string;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     bornDate: "date"
                 };
             }
         }
 
-        let now = Date.now();
-        let model = new SomeModel({
+        const now = Date.now();
+        const model = new SomeModel({
             bornDate: now
         });
 
@@ -170,10 +186,10 @@ describe("DateType", () => {
     });
     
     it("equal Date", () => {
-        let now1 = new Date();
-        let now2 = new Date( +now1 );
+        const now1 = new Date();
+        const now2 = new Date( +now1 );
 
-        let pairs = [
+        const pairs: any[][] = [
             [null, null, true],
             [null, 0, false],
             [null, now1, false],
@@ -181,33 +197,37 @@ describe("DateType", () => {
             [now1, now2, true]
         ];
 
-        pairs.forEach(pair => {
-            class TestModel extends Model {
-                static data() {
+        interface ISomeData {
+            date: Date | number | string;
+        }
+
+        pairs.forEach((pair) => {
+            class TestModel extends Model<ISomeData> {
+                public static data() {
                     return {
                         date: "date"
                     };
                 }
             }
 
-            let model1 = new TestModel({
+            const model1 = new TestModel({
                 date: pair[0]
             });
 
-            let model2 = new TestModel({
+            const model2 = new TestModel({
                 date: pair[1]
             });
 
             assert.strictEqual(
                 model1.equal( model2 ),
                 pair[2],
-                pair
+                pair.toString()
             );
 
             assert.strictEqual(
                 model2.equal( model1 ),
                 pair[2],
-                pair
+                pair.toString()
             );
         });
     });
