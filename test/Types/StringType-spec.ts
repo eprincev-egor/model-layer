@@ -1,13 +1,16 @@
 
-
-const {Model} = require("../../lib/index");
-const assert = require("assert");
+import {Model} from "../../lib/index";
+import assert from "assert";
 
 describe("StringType", () => {
     
     it("prepare string", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            name: string | number;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     name: {
                         type: "string",
@@ -16,7 +19,7 @@ describe("StringType", () => {
                 };
             }
         }
-        let model;
+        let model: SomeModel;
 
         model = new SomeModel();
         assert.strictEqual( model.data.name, "10" );
@@ -26,94 +29,104 @@ describe("StringType", () => {
         });
         assert.strictEqual( model.data.name, "-20" );
         
-        model.set("name", 1.1);
+        model.set({name: 1.1});
         assert.strictEqual( model.data.name, "1.1" );
 
-        model.set("name", null);
+        model.set({name: null});
         assert.strictEqual( model.data.name, null );
 
-        model.set("name", "nice");
+        model.set({name: "nice"});
         assert.strictEqual( model.data.name, "nice" );
 
         
         assert.throws(
             () => {
-                model.set("name", {});
+                const anyModel = model as any;
+                anyModel.set({name: {}});
             },
-            err =>
-                err.message == "invalid string for name: {}"
+            (err) =>
+                err.message === "invalid string for name: {}"
         );
 
         assert.throws(
             () => {
-                model.set("name", {name: 1});
+                const anyModel = model as any;
+                anyModel.set({name: {name: 1}});
             },
-            err =>
-                err.message == "invalid string for name: {\"name\":1}"
+            (err) =>
+                err.message === "invalid string for name: {\"name\":1}"
         );
 
         assert.throws(
             () => {
-                model.set("name", false);
+                const anyModel = model as any;
+                anyModel.set({name: false});
             },
-            err =>
-                err.message == "invalid string for name: false"
+            (err) =>
+                err.message === "invalid string for name: false"
         );
 
         assert.throws(
             () => {
-                model.set("name", true);
+                const anyModel = model as any;
+                anyModel.set({name: true});
             },
-            err =>
-                err.message == "invalid string for name: true"
+            (err) =>
+                err.message === "invalid string for name: true"
         );
 
         assert.throws(
             () => {
-                model.set("name", -1 / 0);
+                model.set({name: -1 / 0});
             },
-            err =>
-                err.message == "invalid string for name: -Infinity"
+            (err) =>
+                err.message === "invalid string for name: -Infinity"
         );
 
         assert.throws(
             () => {
-                model.set("name", 1 / 0);
+                model.set({name: 1 / 0});
             },
-            err =>
-                err.message == "invalid string for name: Infinity"
+            (err) =>
+                err.message === "invalid string for name: Infinity"
         );
 
         assert.throws(
             () => {
-                model.set("name", NaN);
+                model.set({name: NaN});
             },
-            err =>
-                err.message == "invalid string for name: NaN"
+            (err) =>
+                err.message === "invalid string for name: NaN"
         );
 
         assert.throws(
             () => {
-                model.set("name", /x/);
+                const anyModel = model as any;
+                anyModel.set({name: /x/});
             },
-            err =>
-                err.message == "invalid string for name: /x/"
+            (err) =>
+                err.message === "invalid string for name: /x/"
         );
 
         assert.throws(
             () => {
-                model.set("name", [0]);
+                const anyModel = model as any;
+                anyModel.set({name: [0]});
             },
-            err =>
-                err.message == "invalid string for name: [0]"
+            (err) =>
+                err.message === "invalid string for name: [0]"
         );
 
         assert.strictEqual( model.data.name, "nice" );
     });
 
     it("prepare trim", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            name: string;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     name: {
                         type: "string",
@@ -124,16 +137,20 @@ describe("StringType", () => {
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
         assert.strictEqual( model.data.name, "bob" );
 
-        model.set("name", " word ");
+        model.set({name: " word "});
         assert.strictEqual( model.data.name, "word" );
     });
 
     it("prepare emptyAsNull", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            name: string;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     name: {
                         type: "string",
@@ -144,19 +161,23 @@ describe("StringType", () => {
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
         assert.strictEqual( model.data.name, null );
 
-        model.set("name", "word");
+        model.set({name: "word"});
         assert.strictEqual( model.data.name, "word" );
 
-        model.set("name", "");
+        model.set({name: ""});
         assert.strictEqual( model.data.name, null );
     });
 
     it("prepare nullAsEmpty", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            name: string;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     name: {
                         type: "string",
@@ -166,19 +187,23 @@ describe("StringType", () => {
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
         assert.strictEqual( model.data.name, "" );
 
-        model.set("name", "word");
+        model.set({name: "word"});
         assert.strictEqual( model.data.name, "word" );
 
-        model.set("name", null);
+        model.set({name: null});
         assert.strictEqual( model.data.name, "" );
     });
 
     it("prepare trim and emptyAsNull", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            name: string;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     name: {
                         type: "string",
@@ -190,19 +215,23 @@ describe("StringType", () => {
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
         assert.strictEqual( model.data.name, null );
 
-        model.set("name", " word ");
+        model.set({name: " word "});
         assert.strictEqual( model.data.name, "word" );
 
-        model.set("name", "   ");
+        model.set({name: "   "});
         assert.strictEqual( model.data.name, null );
     });
 
     it("prepare lower", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            name: string;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     name: {
                         type: "string",
@@ -213,16 +242,20 @@ describe("StringType", () => {
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
         assert.strictEqual( model.data.name, "bob" );
 
-        model.set("name", "WORD");
+        model.set({name: "WORD"});
         assert.strictEqual( model.data.name, "word" );
     });
 
     it("prepare upper", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            name: string;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     name: {
                         type: "string",
@@ -233,16 +266,20 @@ describe("StringType", () => {
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
         assert.strictEqual( model.data.name, "BOB" );
 
-        model.set("name", "word");
+        model.set({name: "word"});
         assert.strictEqual( model.data.name, "WORD" );
     });
 
     it("prepare lower and trim", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            name: string;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     name: {
                         type: "string",
@@ -254,33 +291,37 @@ describe("StringType", () => {
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
         assert.strictEqual( model.data.name, "bob" );
 
-        model.set("name", "WORD ");
+        model.set({name: "WORD "});
         assert.strictEqual( model.data.name, "word" );
     });
 
     it("redefine standard prepare string", () => {
-        let callArgs = false;
+        let callArgs: any = false;
 
         const StringType = Model.getType("string");
-        let originalPrepare = StringType.prototype.prepare;
+        const originalPrepare = StringType.prototype.prepare;
 
-        StringType.prototype.prepare = function(value, key, model) {
+        StringType.prototype.prepare = function(value, key, anyModel) {
             callArgs = [value, key];
-            return originalPrepare.call(this, value, key, model);
+            return originalPrepare.call(this, value, key, anyModel);
         };
 
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            name: string | number;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     name: "string"
                 };
             }
         }
 
-        let model = new SomeModel({
+        const model = new SomeModel({
             name: 0
         });
 
@@ -293,7 +334,7 @@ describe("StringType", () => {
     });
 
     it("equal strings", () => {
-        let pairs = [
+        const pairs: any[][] = [
             [null, null, true],
             [null, "", false],
             ["", null, false],
@@ -303,33 +344,37 @@ describe("StringType", () => {
             ["nice", "Nice", false]
         ];
 
-        pairs.forEach(pair => {
-            class TestModel extends Model {
-                static data() {
+        interface ISomeData {
+            str: string;
+        }
+
+        pairs.forEach((pair) => {
+            class TestModel extends Model<ISomeData> {
+                public static data() {
                     return {
                         str: "string"
                     };
                 }
             }
 
-            let model1 = new TestModel({
+            const model1 = new TestModel({
                 str: pair[0]
             });
 
-            let model2 = new TestModel({
+            const model2 = new TestModel({
                 str: pair[1]
             });
 
             assert.strictEqual(
                 model1.equal( model2 ),
                 pair[2],
-                pair
+                pair.toString()
             );
 
             assert.strictEqual(
                 model2.equal( model1 ),
                 pair[2],
-                pair
+                pair.toString()
             );
         });
     });
