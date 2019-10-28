@@ -1,13 +1,17 @@
 
-
-const {Model} = require("../../lib/index");
-const assert = require("assert");
+import {Model} from "../../lib/index";
+import assert from "assert";
+import { ISimpleObject } from "../../lib/Model";
 
 describe("NumberType", () => {
     
     it("prepare number", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            age: number | string;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     age: {
                         type: "number",
@@ -16,7 +20,7 @@ describe("NumberType", () => {
                 };
             }
         }
-        let model;
+        let model: SomeModel;
 
         model = new SomeModel();
         assert.strictEqual( model.data.age, 0 );
@@ -26,104 +30,110 @@ describe("NumberType", () => {
         });
         assert.strictEqual( model.data.age, 1 );
         
-        model.set("age", "2");
+        model.set({age: "2"});
         assert.strictEqual( model.data.age, 2 );
 
-        model.set("age", null);
+        model.set({age: null});
         assert.strictEqual( model.data.age, null );
 
-        model.set("age", "-2000.123");
+        model.set({age: "-2000.123"});
         assert.strictEqual( model.data.age, -2000.123 );
 
         assert.throws(
             () => {
-                model.set("age", "wrong");
+                model.set({age: "wrong"});
             },
-            err =>
-                err.message == "invalid number for age: \"wrong\""
+            (err) =>
+                err.message === "invalid number for age: \"wrong\""
         );
 
         assert.throws(
             () => {
-                model.set("age", {});
+                const anyModel = model as any;
+                anyModel.set({age: {}});
             },
-            err =>
-                err.message == "invalid number for age: {}"
+            (err) =>
+                err.message === "invalid number for age: {}"
         );
 
         assert.throws(
             () => {
-                model.set("age", {age: 1});
+                const anyModel = model as any;
+                anyModel.set({age: {age: 1}});
             },
-            err =>
-                err.message == "invalid number for age: {\"age\":1}"
+            (err) =>
+                err.message === "invalid number for age: {\"age\":1}"
         );
 
         assert.throws(
             () => {
-                model.set("age", false);
+                const anyModel = model as any;
+                anyModel.set({age: false});
             },
-            err =>
-                err.message == "invalid number for age: false"
+            (err) =>
+                err.message === "invalid number for age: false"
         );
 
         assert.throws(
             () => {
-                model.set("age", true);
+                const anyModel = model as any;
+                anyModel.set({age: true});
             },
-            err =>
-                err.message == "invalid number for age: true"
+            (err) =>
+                err.message === "invalid number for age: true"
         );
 
         assert.throws(
             () => {
-                model.set("age", /x/);
+                const anyModel = model as any;
+                anyModel.set({age: /x/});
             },
-            err =>
-                err.message == "invalid number for age: /x/"
+            (err) =>
+                err.message === "invalid number for age: /x/"
         );
 
         assert.throws(
             () => {
-                model.set("age", -1 / 0);
+                model.set({age: -1 / 0});
             },
-            err =>
-                err.message == "invalid number for age: -Infinity"
+            (err) =>
+                err.message === "invalid number for age: -Infinity"
         );
 
         assert.throws(
             () => {
-                model.set("age", 1 / 0);
+                model.set({age: 1 / 0});
             },
-            err =>
-                err.message == "invalid number for age: Infinity"
+            (err) =>
+                err.message === "invalid number for age: Infinity"
         );
 
         assert.throws(
             () => {
-                model.set("age", NaN);
+                model.set({age: NaN});
             },
-            err =>
-                err.message == "invalid number for age: NaN"
+            (err) =>
+                err.message === "invalid number for age: NaN"
         );
 
         assert.throws(
             () => {
-                model.set("age", [0]);
+                const anyModel = model as any;
+                anyModel.set({age: [0]});
             },
-            err =>
-                err.message == "invalid number for age: [0]"
+            (err) =>
+                err.message === "invalid number for age: [0]"
         );
 
 
-        let circularJSON = {};
+        const circularJSON: any = {};
         circularJSON.test = circularJSON;
         assert.throws(
             () => {
-                model.set("age", circularJSON);
+                model.set({age: circularJSON});
             },
-            err =>
-                err.message == "invalid number for age: [object Object]"
+            (err) =>
+                err.message === "invalid number for age: [object Object]"
         );
 
 
@@ -131,8 +141,12 @@ describe("NumberType", () => {
     });
 
     it("prepare round", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            money: number;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     money: {
                         type: "number",
@@ -143,16 +157,20 @@ describe("NumberType", () => {
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
         assert.strictEqual( model.data.money, 1.11 );
 
-        model.set("money", 1.999);
+        model.set({money: 1.999});
         assert.strictEqual( model.data.money, 2 );
     });
 
     it("prepare floor", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            money: number;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     money: {
                         type: "number",
@@ -163,16 +181,20 @@ describe("NumberType", () => {
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
         assert.strictEqual( model.data.money, 1.11 );
 
-        model.set("money", 1.999);
+        model.set({money: 1.999});
         assert.strictEqual( model.data.money, 1.99 );
     });
 
     it("prepare ceil", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            money: number;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     money: {
                         type: "number",
@@ -183,16 +205,20 @@ describe("NumberType", () => {
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
         assert.strictEqual( model.data.money, 1.12 );
 
-        model.set("money", 1.599);
+        model.set({money: 1.599});
         assert.strictEqual( model.data.money, 1.6 );
     });
 
     it("prepare zeroAsNull", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            money: number;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     money: {
                         type: "number",
@@ -204,19 +230,23 @@ describe("NumberType", () => {
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
         assert.strictEqual( model.data.money, null );
 
-        model.set("money", 1.1111);
+        model.set({money: 1.1111});
         assert.strictEqual( model.data.money, 1 );
 
-        model.set("money", 0.0001);
+        model.set({money: 0.0001});
         assert.strictEqual( model.data.money, null );
     });
 
     it("prepare nullAsZero", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            money: number;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     money: {
                         type: "number",
@@ -226,36 +256,40 @@ describe("NumberType", () => {
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
         assert.strictEqual( model.data.money, 0 );
 
-        model.set("money", 1);
+        model.set({money: 1});
         assert.strictEqual( model.data.money, 1 );
 
-        model.set("money", null);
+        model.set({money: null});
         assert.strictEqual( model.data.money, 0 );
     });
 
     it("redefine standard prepare number", () => {
-        let callArgs = false;
+        let callArgs: any = false;
         
         const NumberType = Model.getType("number");
-        let originalPrepare = NumberType.prototype.prepare;
+        const originalPrepare = NumberType.prototype.prepare;
 
-        NumberType.prototype.prepare = function(value, key, model) {
+        NumberType.prototype.prepare = function(value, key, anyModel) {
             callArgs = [value, key];
-            return originalPrepare.call(this, value, key, model);
+            return originalPrepare.call(this, value, key, anyModel);
         };
 
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            age: number | string;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     age: "number"
                 };
             }
         }
 
-        let model = new SomeModel({
+        const model = new SomeModel({
             age: "10"
         });
 
@@ -269,8 +303,12 @@ describe("NumberType", () => {
     });
 
     it("invalid ceil in field description", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            money: number;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     money: {
                         type: "number",
@@ -282,16 +320,20 @@ describe("NumberType", () => {
 
         assert.throws(
             () => {
-                new SomeModel();
+                const model = new SomeModel();
             },
-            err =>
-                err.message == "money: invalid ceil: \"wrong\""
+            (err) =>
+                err.message === "money: invalid ceil: \"wrong\""
         );
     });
 
     it("invalid floor in field description", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            money: number;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     money: {
                         type: "number",
@@ -303,16 +345,20 @@ describe("NumberType", () => {
 
         assert.throws(
             () => {
-                new SomeModel();
+                const model = new SomeModel();
             },
-            err =>
-                err.message == "money: invalid floor: \"wrong\""
+            (err) =>
+                err.message === "money: invalid floor: \"wrong\""
         );
     });
 
     it("invalid round in field description", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            money: number;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     money: {
                         type: "number",
@@ -324,15 +370,15 @@ describe("NumberType", () => {
 
         assert.throws(
             () => {
-                new SomeModel();
+                const model = new SomeModel();
             },
-            err =>
-                err.message == "money: invalid round: \"wrong\""
+            (err) =>
+                err.message === "money: invalid round: \"wrong\""
         );
     });
     
     it("equal numbers", () => {
-        let pairs = [
+        const pairs: any[][] = [
             [null, null, true],
             [null, 0, false],
             [0, null, false],
@@ -341,33 +387,37 @@ describe("NumberType", () => {
             [10.12, 10.12, true]
         ];
 
-        pairs.forEach(pair => {
-            class TestModel extends Model {
-                static data() {
+        interface ISomeData {
+            numb: number;
+        }
+
+        pairs.forEach((pair) => {
+            class TestModel extends Model<ISomeData> {
+                public static data() {
                     return {
                         numb: "number"
                     };
                 }
             }
 
-            let model1 = new TestModel({
+            const model1 = new TestModel({
                 numb: pair[0]
             });
 
-            let model2 = new TestModel({
+            const model2 = new TestModel({
                 numb: pair[1]
             });
 
             assert.strictEqual(
                 model1.equal( model2 ),
                 pair[2],
-                pair
+                pair.toString()
             );
 
             assert.strictEqual(
                 model2.equal( model1 ),
                 pair[2],
-                pair
+                pair.toString()
             );
         });
     });
