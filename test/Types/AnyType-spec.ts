@@ -1,48 +1,54 @@
 
 
-const {Model} = require("../../lib/index");
-const assert = require("assert");
-const {invalidValuesAsString} = require("../../lib/utils");
+import {Model} from "../../lib/index";
+import assert from "assert";
+import {invalidValuesAsString} from "../../lib/utils";
 
 describe("AnyType", () => {
 
     it("any value", () => {
+        interface ISomeData {
+            any: any;
+        }
         
-        class SomeModel extends Model {
-            static data() {
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     any: "*"
                 };
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
         assert.strictEqual(model.data.any, null);
 
-        model.set("any", 10);
+        model.set({any: 10});
         assert.strictEqual(model.data.any, 10);
         
-        model.set("any", "text");
+        model.set({any: "text"});
         assert.strictEqual(model.data.any, "text");
 
-        model.set("any", true);
+        model.set({any: true});
         assert.strictEqual(model.data.any, true);
     });
 
     it("any value toJSON()", () => {
-        
-        let date = new Date();
-        let isoDate = date.toISOString();
+        interface ISomeData {
+            any: any;
+        }
 
-        class SomeModel extends Model {
-            static data() {
+        const date = new Date();
+        const isoDate = date.toISOString();
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     any: "*"
                 };
             }
         }
 
-        let model = new SomeModel({
+        const model = new SomeModel({
             any: {
                 str: "",
                 numb: 0,
@@ -80,66 +86,70 @@ describe("AnyType", () => {
     });
 
     it("equal any values", () => {
-        let now1 = new Date();
-        let now2 = new Date( +now1 );
-        let date2000 = new Date(2000);
+        interface ISomeData {
+            [key: string]: any;
+        }
+
+        const now1 = new Date();
+        const now2 = new Date( +now1 );
+        const date2000 = new Date(2000);
 
         class CustomClass {}
-        let obj1 = new CustomClass();
-        let obj2 = new CustomClass();
+        const obj1 = new CustomClass();
+        const obj2 = new CustomClass();
 
-        class SomeModel extends Model {
-            static data() {
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     "*": "*"
                 };
             }
         }
-        let emptyModel1 = new SomeModel();
-        let emptyModel2 = new SomeModel();
-        let sameModel1 = new SomeModel({
+        const emptyModel1 = new SomeModel();
+        const emptyModel2 = new SomeModel();
+        const sameModel1 = new SomeModel({
             x: {a: 1}
         });
-        let sameModel2 = new SomeModel({
+        const sameModel2 = new SomeModel({
             x: {a: 1}
         });
 
         // circular object
-        let circularObj1 = {};
+        const circularObj1: any = {};
         circularObj1.self = circularObj1;
 
-        let circularObj2 = {};
+        const circularObj2: any = {};
         circularObj2.self = circularObj2;
 
-        let circularObj3 = {x: 1};
+        const circularObj3: any = {x: 1};
         circularObj3.self = circularObj3;
 
-        let circularObj4 = {};
+        const circularObj4: any = {};
         circularObj4.self = circularObj2;
 
         // circular arr
-        let circularArr1 = [];
+        const circularArr1 = [];
         circularArr1[0] = circularArr1;
 
-        let circularArr2 = [];
+        const circularArr2 = [];
         circularArr2[0] = circularArr2;
 
-        let circularArr3 = [];
+        const circularArr3 = [];
         circularArr3[0] = circularArr3;
         circularArr3[1] = 0;
 
         // circular model
-        let circularModel1 = new SomeModel();
-        circularModel1.set("self", circularModel1);
+        const circularModel1 = new SomeModel();
+        circularModel1.set({self: circularModel1});
 
-        let circularModel2 = new SomeModel();
-        circularModel2.set("self", circularModel2);
+        const circularModel2 = new SomeModel();
+        circularModel2.set({self: circularModel2});
 
-        let circularModel3 = new SomeModel({x: 1});
-        circularModel3.set("self", circularModel3);
+        const circularModel3 = new SomeModel({x: 1});
+        circularModel3.set({self: circularModel3});
 
 
-        let pairs = [
+        const pairs = [
             [null, null, true],
             [null, undefined, false],
             [undefined, undefined, true],
@@ -238,19 +248,19 @@ describe("AnyType", () => {
         ];
 
         pairs.forEach((pair, i) => {
-            class TestModel extends Model {
-                static data() {
+            class TestModel extends Model<ISomeData> {
+                public static data() {
                     return {
                         any: "*"
                     };
                 }
             }
 
-            let model1 = new TestModel({
+            const model1 = new TestModel({
                 any: pair[0]
             });
 
-            let model2 = new TestModel({
+            const model2 = new TestModel({
                 any: pair[1]
             });
 
