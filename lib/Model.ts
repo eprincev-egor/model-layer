@@ -8,6 +8,8 @@ export interface ISimpleObject extends Object {
     [propName: string]: any;
 }
 
+type Constructor<T> = new (...args: any[]) => T;
+
 type ReadOnlyPartial<TData> = {
     readonly [key in keyof TData]?: TData[key];
 };
@@ -439,10 +441,12 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
         return parents;
     }
 
-    public findParentInstance(SomeModel): Model<object> {
+    public findParentInstance<TModel extends Model<ISimpleObject>>(
+        SomeModel: Constructor<TModel>
+    ): TModel {
         return this.findParent((model) =>
             model instanceof SomeModel
-        );
+        ) as TModel;
     }
 
     public toJSON(): JSONData<TData> {
