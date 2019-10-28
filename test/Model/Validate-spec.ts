@@ -1,13 +1,18 @@
 
-
-const {Model} = require("../../lib/index");
-const assert = require("assert");
+import {Model} from "../../lib/index";
+import assert from "assert";
+import { ISimpleObject } from "../../lib/Model";
 
 describe("Model validate", () => {
     
     it("required field", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            name: string;
+            age: number;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     name: {
                         type: "string",
@@ -20,29 +25,29 @@ describe("Model validate", () => {
 
         assert.throws(
             () => {
-                new SomeModel();
+                const someModel = new SomeModel();
             },
-            err =>
-                err.message == "required name"
+            (err) =>
+                err.message === "required name"
         );
 
 
-        let model = new SomeModel({
+        const model = new SomeModel({
             name: "Andrew"
         });
         assert.equal( model.get("name"), "Andrew" );
         assert.equal( model.data.name, "Andrew" );
 
-        model.set("age", 40);
+        model.set({age: 40});
         assert.strictEqual( model.get("age"), 40 );
         assert.strictEqual( model.data.age, 40 );
 
         assert.throws(
             () => {
-                model.set("name", null);
+                model.set({name: null});
             },
-            err =>
-                err.message == "required name"
+            (err) =>
+                err.message === "required name"
         );
 
 
@@ -53,8 +58,12 @@ describe("Model validate", () => {
     });
 
     it("validate method", () => {
-        class AgeModel extends Model {
-            static data() {
+        interface ISomeData {
+            age: number;
+        }
+
+        class AgeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     age: {
                         type: "number",
@@ -63,7 +72,7 @@ describe("Model validate", () => {
                 };
             }
 
-            validate(data) {
+            public validate(data) {
                 if ( data.age < 0 ) {
                     throw new Error("invalid age");
                 }
@@ -73,16 +82,16 @@ describe("Model validate", () => {
         // validate in constructor
         assert.throws(
             () => {
-                new AgeModel({
+                const ageModel = new AgeModel({
                     age: -1
                 });
             },
-            err =>
-                err.message == "invalid age"
+            (err) =>
+                err.message === "invalid age"
         );
 
 
-        let model = new AgeModel({
+        const model = new AgeModel({
             age: 100
         });
 
@@ -93,8 +102,8 @@ describe("Model validate", () => {
                     age: -100
                 });
             },
-            err =>
-                err.message == "invalid age"
+            (err) =>
+                err.message === "invalid age"
         );
 
         // error in validate, returns previous state
@@ -102,8 +111,12 @@ describe("Model validate", () => {
     });
 
     it("cannot change state in validate method", () => {
-        class AgeModel extends Model {
-            static data() {
+        interface ISomeData {
+            age: number;
+        }
+
+        class AgeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     age: {
                         type: "number",
@@ -112,23 +125,27 @@ describe("Model validate", () => {
                 };
             }
 
-            validate(data) {
+            public validate(data) {
                 data.age = 200;
             }
         }
 
         assert.throws(
             () => {
-                new AgeModel({ age: 1 });
+                const ageModel = new AgeModel({ age: 1 });
             },
-            err =>
+            (err) =>
                 /Cannot assign to read only property/.test(err.message)
         );
     });
 
     it("this.data in validate is previous state", () => {
-        class AgeModel extends Model {
-            static data() {
+        interface ISomeData {
+            age: number;
+        }
+
+        class AgeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     age: {
                         type: "number",
@@ -137,25 +154,29 @@ describe("Model validate", () => {
                 };
             }
 
-            validate(data) {
+            public validate(data) {
                 assert.equal( this.data.age, 100 );
                 assert.equal( data.age, 200 );
             }
         }
         
-        new AgeModel({
+        const ageModel = new AgeModel({
             age: 200
         });
     });
 
     it("validate field", () => {
-        class AgeModel extends Model {
-            static data() {
+        interface ISomeData {
+            age: number;
+        }
+
+        class AgeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     age: {
                         type: "number",
                         default: 0,
-                        validate: age =>
+                        validate: (age) =>
                             age >= 0
                     }
                 };
@@ -165,16 +186,16 @@ describe("Model validate", () => {
         // validate in constructor
         assert.throws(
             () => {
-                new AgeModel({
+                const ageModel = new AgeModel({
                     age: -1
                 });
             },
-            err =>
-                err.message == "invalid age: -1"
+            (err) =>
+                err.message === "invalid age: -1"
         );
 
 
-        let model = new AgeModel({
+        const model = new AgeModel({
             age: 100
         });
 
@@ -185,8 +206,8 @@ describe("Model validate", () => {
                     age: -100
                 });
             },
-            err =>
-                err.message == "invalid age: -100"
+            (err) =>
+                err.message === "invalid age: -100"
         );
 
         // error in validate, returns previous state
@@ -194,12 +215,16 @@ describe("Model validate", () => {
     });
 
     it("do not validate null value", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            prop: string;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     prop: {
                         type: "string",
-                        validate: value => 
+                        validate: (value) => 
                             value === "nice"
                     }
                 };
@@ -209,7 +234,7 @@ describe("Model validate", () => {
         let model;
 
         // safety create empty model
-        new SomeModel();
+        const someModel = new SomeModel();
 
         // safety set null
         model = new SomeModel({
@@ -225,8 +250,12 @@ describe("Model validate", () => {
 
 
     it("validate field by RegExp", () => {
-        class WordModel extends Model {
-            static data() {
+        interface ISomeData {
+            word: string;
+        }
+
+        class WordModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     word: {
                         type: "string",
@@ -239,16 +268,16 @@ describe("Model validate", () => {
         // validate in constructor
         assert.throws(
             () => {
-                new WordModel({
+                const wordModel = new WordModel({
                     word: " some 12123 "
                 });
             },
-            err =>
-                err.message == "invalid word: \" some 12123 \""
+            (err) =>
+                err.message === "invalid word: \" some 12123 \""
         );
 
 
-        let model = new WordModel({
+        const model = new WordModel({
             word: "test"
         });
 
@@ -259,8 +288,8 @@ describe("Model validate", () => {
                     word: "some wrong"
                 });
             },
-            err =>
-                err.message == "invalid word: \"some wrong\""
+            (err) =>
+                err.message === "invalid word: \"some wrong\""
         );
 
         // error in validate, returns previous state
@@ -268,8 +297,12 @@ describe("Model validate", () => {
     });
 
     it("enum validate", () => {
-        class EnumModel extends Model {
-            static data() {
+        interface ISomeData {
+            color: string;
+        }
+
+        class EnumModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     color: {
                         type: "string",
@@ -279,7 +312,7 @@ describe("Model validate", () => {
             }
         }
 
-        let model = new EnumModel();
+        const model = new EnumModel();
         assert.strictEqual( model.data.color, null );
 
         // validate in set
@@ -289,8 +322,8 @@ describe("Model validate", () => {
                     color: "orange"
                 });
             },
-            err =>
-                err.message == "invalid color: \"orange\""
+            (err) =>
+                err.message === "invalid color: \"orange\""
         );
 
         // error in validate, returns previous state
@@ -300,26 +333,35 @@ describe("Model validate", () => {
         // validate in constructor
         assert.throws(
             () => {
-                new EnumModel({
+                const enumModel = new EnumModel({
                     color: "dark blue"
                 });
             },
-            err =>
-                err.message == "invalid color: \"dark blue\""
+            (err) =>
+                err.message === "invalid color: \"dark blue\""
         );
 
 
-        model.set("color", "red");
+        model.set({color: "red"});
         assert.equal(model.get("color"), "red");
 
         // null is valid value for enum validation
-        model.set("color", null);
+        model.set({color: null});
         assert.equal(model.get("color"), null);
     });
 
     it("isValid(data)", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            sale: number;
+            buy: number;
+            color: string;
+            word: string;
+            age: number;
+            prop: string;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     sale: {
                         type: "number",
@@ -339,21 +381,21 @@ describe("Model validate", () => {
                     },
                     age: {
                         type: "number",
-                        validate: age => 
+                        validate: (age) => 
                             age > 0
                     },
                     prop: "string"
                 };
             }
 
-            validate(data) {
+            public validate(data) {
                 if ( data.buy > data.sale ) {
                     throw new Error("invalid sale");
                 }
             }
         }
 
-        let model = new SomeModel({
+        const model = new SomeModel({
             buy: 10,
             sale: 30
         });
@@ -393,8 +435,10 @@ describe("Model validate", () => {
             age: -1
         }), false);
 
+        const anyModel = model as any;
+
         // unknown property
-        assert.strictEqual(model.isValid({
+        assert.strictEqual(anyModel.isValid({
             buy: 1,
             sale: 101,
             xx: true
@@ -408,16 +452,20 @@ describe("Model validate", () => {
 
         assert.throws(
             () => {
-                model.isValid();
+                anyModel.isValid();
             },
-            err =>
-                err.message == "data must be are object"
+            (err) =>
+                err.message === "data must be are object"
         );
     });
 
     it("const prop", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            name: string;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     name: {
                         type: "string",
@@ -433,10 +481,10 @@ describe("Model validate", () => {
 
         assert.throws(
             () => {
-                model.set("name", "new name");
+                model.set({name: "new name"});
             },
-            err =>
-                err.message == "cannot assign to read only property: name"
+            (err) =>
+                err.message === "cannot assign to read only property: name"
         );
 
 
@@ -447,10 +495,10 @@ describe("Model validate", () => {
 
         assert.throws(
             () => {
-                model.set("name", "new name");
+                model.set({name: "new name"});
             },
-            err =>
-                err.message == "cannot assign to read only property: name"
+            (err) =>
+                err.message === "cannot assign to read only property: name"
         );
     });
 
