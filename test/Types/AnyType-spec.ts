@@ -1,5 +1,4 @@
 
-
 import {Model} from "../../lib/index";
 import assert from "assert";
 import {invalidValuesAsString} from "../../lib/utils";

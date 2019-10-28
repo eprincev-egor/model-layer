@@ -1,22 +1,31 @@
 
-
-const {Model, Collection} = require("../../lib/index");
-const assert = require("assert");
-const {eol} = require("../../lib/utils");
+import {Model, Collection} from "../../lib/index";
+import assert from "assert";
+import {eol} from "../../lib/utils";
+import { ISimpleObject } from "../../lib/Model";
 
 describe("CollectionType", () => {
 
     it("Collection property", () => {
-        class Products extends Collection {
-            static data() {
+        interface IProduct {
+            name: string;
+        }
+        class Product extends Model<IProduct> {}
+
+        class Products extends Collection<Product> {
+            public static data() {
                 return {
                     name: "text"
                 };
             }
         }
 
-        class Cart extends Model {
-            static data() {
+        interface ICart {
+            products: Products;
+        }
+
+        class Cart extends Model<ICart> {
+            public static data() {
                 return {
                     products: Products
                 };
@@ -31,15 +40,16 @@ describe("CollectionType", () => {
 
         assert.throws(
             () => {
-                new Cart({
+                const AnyCart = Cart as any;
+                const someCart = new AnyCart({
                     products: false
                 });
             },
-            err =>
-                err.message == "invalid collection Products for products: false"
+            (err) =>
+                err.message === "invalid collection Products for products: false"
         );
 
-        let products = new Products();
+        const products = new Products();
         cart = new Cart({
             products
         });
@@ -48,23 +58,32 @@ describe("CollectionType", () => {
     });
 
     it("create Collection by array", () => {
-        class Products extends Collection {
-            static data() {
+        interface IProduct {
+            name: string;
+        }
+        class Product extends Model<IProduct> {}
+
+        class Products extends Collection<Product> {
+            public static data() {
                 return {
                     name: "text"
                 };
             }
         }
 
-        class Cart extends Model {
-            static data() {
+        interface ICart {
+            products: Products | IProduct[];
+        }
+
+        class Cart extends Model<ICart> {
+            public static data() {
                 return {
                     products: Products
                 };
             }
         }
 
-        let cart = new Cart({
+        const cart = new Cart({
             products: [
                 {name: "nice"}
             ]
@@ -78,24 +97,33 @@ describe("CollectionType", () => {
     });
 
     it("Collection.toJSON()", () => {
-        class SomeCollection extends Collection {
-            static data() {
+        interface IData {
+            name: string;
+        }
+        class Data extends Model<IData> {}
+
+        class SomeCollection extends Collection<Data> {
+            public static data() {
                 return {
                     name: "text"
                 };
             }
         }
 
-        class SomeModel extends Model {
-            static data() {
+        interface ISome {
+            some: SomeCollection;
+        }
+
+        class SomeModel extends Model<ISome> {
+            public static data() {
                 return {
                     some: SomeCollection
                 };
             }
         }
 
-        let value = new SomeCollection();
-        let model = new SomeModel({
+        const value = new SomeCollection();
+        const model = new SomeModel({
             some: value
         });
 
@@ -109,38 +137,52 @@ describe("CollectionType", () => {
 
 
     it("Collection.clone()", () => {
-        class SomeCollection extends Collection {
-            static data() {
+        interface IData {
+            name: string;
+        }
+        class Data extends Model<IData> {}
+
+        class SomeCollection extends Collection<Data> {
+            public static data() {
                 return {
                     name: "text"
                 };
             }
         }
 
-        class SomeModel extends Model {
-            static data() {
+        interface ISome {
+            some: SomeCollection;
+        }
+
+        class SomeModel extends Model<ISome> {
+            public static data() {
                 return {
                     some: SomeCollection
                 };
             }
         }
 
-        let value = new SomeCollection();
-        let model = new SomeModel({
+        const value = new SomeCollection();
+        const model = new SomeModel({
             some: value
         });
 
-        let clone = model.clone();
+        const clone = model.clone();
         
         assert.ok(
-            clone.get("some") != value
+            clone.get("some") !== value
         );
     });
 
     
     it("array of Collection", () => {
-        class MyCollection extends Collection {
-            static data() {
+        interface IData {
+            id: number;
+        }
+        class Data extends Model<IData> {}
+
+        class MyCollection extends Collection<Data> {
+            public static data() {
                 return {
                     id: {
                         type: "number",
@@ -150,8 +192,12 @@ describe("CollectionType", () => {
             }
         }
 
-        class SomeModel extends Model {
-            static data() {
+        interface ISome {
+            arr: Array<MyCollection | IData[]>;
+        }
+
+        class SomeModel extends Model<ISome> {
+            public static data() {
                 return {
                     arr: [MyCollection]
                 };
@@ -160,15 +206,16 @@ describe("CollectionType", () => {
 
         assert.throws(
             () => {
-                new SomeModel({
+                const AnyModel = SomeModel as any;
+                const someModel = new AnyModel({
                     arr: [false]
                 });
             },
-            err =>
-                err.message == `invalid array[collection MyCollection] for arr: [false],${eol} invalid collection MyCollection for 0: false`
+            (err) =>
+                err.message === `invalid array[collection MyCollection] for arr: [false],${eol} invalid collection MyCollection for 0: false`
         );
 
-        let model = new SomeModel({
+        const model = new SomeModel({
             arr: [
                 [{id: 1}]
             ]
@@ -183,36 +230,41 @@ describe("CollectionType", () => {
 
     
     it("equal Collections", () => {
-        class CustomCollection extends Collection {
-            static data() {
+        interface IData {
+            name: string;
+        }
+        class Data extends Model<IData> {}
+
+        class CustomCollection extends Collection<Data> {
+            public static data() {
                 return {
                     name: "text"
                 };
             }
         }
 
-        let collection1 = new CustomCollection([
+        const collection1 = new CustomCollection([
             {name: "X"}
         ]);
-        let collection2 = new CustomCollection([
+        const collection2 = new CustomCollection([
             {name: "X"}
         ]);
-        let collection3 = new CustomCollection([
+        const collection3 = new CustomCollection([
             {name: "X"},
             {name: "Y"}
         ]);
-        let collection4 = new CustomCollection([
+        const collection4 = new CustomCollection([
             {name: "Y"}
         ]);
-        let collection5 = new CustomCollection();
-        let arr1 = [
+        const collection5 = new CustomCollection();
+        const arr1 = [
             {name: "X"}
         ];
-        let arr2 = [
+        const arr2 = [
             {name: "Y"}
         ];
 
-        let pairs = [
+        const pairs: any[][] = [
             [null, null, true],
             [null, collection1, false],
             [collection1, collection1, true],
@@ -226,20 +278,24 @@ describe("CollectionType", () => {
             [collection4, arr2, true]
         ];
 
-        pairs.forEach(pair => {
-            class TestModel extends Model {
-                static data() {
+        interface ITest {
+            custom: CustomCollection;
+        }
+
+        pairs.forEach((pair) => {
+            class TestModel extends Model<ITest> {
+                public static data() {
                     return {
                         custom: CustomCollection
                     };
                 }
             }
 
-            let model1 = new TestModel({
+            const model1 = new TestModel({
                 custom: pair[0]
             });
 
-            let model2 = new TestModel({
+            const model2 = new TestModel({
                 custom: pair[1]
             });
 
@@ -258,8 +314,14 @@ describe("CollectionType", () => {
     });
 
     it("equal Collections, circular recursion", () => {
-        class CustomCollection extends Collection {
-            static data() {
+        interface IItem {
+            name: string;
+            child: CustomCollection;
+        }
+        class Item extends Model<IItem> {}
+
+        class CustomCollection extends Collection<Item> {
+            public static data() {
                 return {
                     name: "text",
                     child: CustomCollection
@@ -267,29 +329,32 @@ describe("CollectionType", () => {
             }
         }
 
-        class TestModel extends Model {
-            static data() {
+        interface ITest {
+            collection: CustomCollection;
+        }
+        class TestModel extends Model<ITest> {
+            public static data() {
                 return {
                     collection: CustomCollection
                 };
             }
         }
 
-        let collection1 = new CustomCollection([
+        const collection1 = new CustomCollection([
             {name: "X"}
         ]);
-        collection1.first().set("child", collection1);
+        collection1.first().set({child: collection1});
 
-        let collection2 = new CustomCollection([
+        const collection2 = new CustomCollection([
             {name: "X"}
         ]);
-        collection2.first().set("child", collection2);
+        collection2.first().set({child: collection2});
 
-        let model1 = new TestModel({
+        const model1 = new TestModel({
             collection: collection1
         });
 
-        let model2 = new TestModel({
+        const model2 = new TestModel({
             collection: collection2
         });
 
@@ -300,16 +365,25 @@ describe("CollectionType", () => {
    
 
     it("nullAsEmpty", () => {
-        class Products extends Collection {
-            static data() {
+        interface IProduct {
+            name: string;
+        }
+        class Product extends Model<IProduct> {}
+
+        class Products extends Collection<Product> {
+            public static data() {
                 return {
                     name: "text"
                 };
             }
         }
 
-        class SomeModel extends Model {
-            static data() {
+        interface ISome {
+            products: Products | IProduct[];
+        }
+
+        class SomeModel extends Model<ISome> {
+            public static data() {
                 return {
                     products: {
                         type: Products,
@@ -319,21 +393,23 @@ describe("CollectionType", () => {
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
         assert.deepEqual( model.toJSON(), {
             products: []
         });
 
-        model.set("products", [{
-            name: "Milk"
-        }]);
+        model.set({
+            products: [{
+                name: "Milk"
+            }]
+        });
         assert.deepEqual( model.toJSON(), {
             products: [{
                 name: "Milk"
             }]
         });
 
-        model.set("products", null);
+        model.set({products: null});
         assert.deepEqual( model.toJSON(), {
             products: []
         });
