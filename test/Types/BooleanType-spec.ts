@@ -1,13 +1,17 @@
 
 
-const {Model} = require("../../lib/index");
-const assert = require("assert");
+import {Model} from "../../lib/index";
+import assert from "assert";
 
 describe("BooleanType", () => {
     
     it("prepare boolean", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            some: boolean | 0 | 1;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     some: {
                         type: "boolean",
@@ -40,64 +44,64 @@ describe("BooleanType", () => {
             () => {
                 model.set("some", {});
             },
-            err =>
-                err.message == "invalid boolean for some: {}"
+            (err) =>
+                err.message === "invalid boolean for some: {}"
         );
 
         assert.throws(
             () => {
                 model.set("some", {some: 1});
             },
-            err =>
-                err.message == "invalid boolean for some: {\"some\":1}"
+            (err) =>
+                err.message === "invalid boolean for some: {\"some\":1}"
         );
 
         assert.throws(
             () => {
                 model.set("some", -1 / 0);
             },
-            err =>
-                err.message == "invalid boolean for some: -Infinity"
+            (err) =>
+                err.message === "invalid boolean for some: -Infinity"
         );
 
         assert.throws(
             () => {
                 model.set("some", 1 / 0);
             },
-            err =>
-                err.message == "invalid boolean for some: Infinity"
+            (err) =>
+                err.message === "invalid boolean for some: Infinity"
         );
 
         assert.throws(
             () => {
                 model.set("some", NaN);
             },
-            err =>
-                err.message == "invalid boolean for some: NaN"
+            (err) =>
+                err.message === "invalid boolean for some: NaN"
         );
 
         assert.throws(
             () => {
                 model.set("some", /x/);
             },
-            err =>
-                err.message == "invalid boolean for some: /x/"
+            (err) =>
+                err.message === "invalid boolean for some: /x/"
         );
 
         assert.throws(
             () => {
                 model.set("some", "wrong");
             },
-            err =>
-                err.message == "invalid boolean for some: \"wrong\""
+            (err) =>
+                err.message === "invalid boolean for some: \"wrong\""
         );
 
         assert.throws(
             () => {
                 model.set("some", [0]);
             },
-            err =>
-                err.message == "invalid boolean for some: [0]"
+            (err) =>
+                err.message === "invalid boolean for some: [0]"
         );
 
         assert.strictEqual( model.data.some, true );
@@ -105,8 +109,12 @@ describe("BooleanType", () => {
 
 
     it("prepare falseAsNull", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            some: boolean | 0 | 1;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     some: {
                         type: "boolean",
@@ -117,25 +125,29 @@ describe("BooleanType", () => {
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
         assert.strictEqual( model.data.some, null );
 
-        model.set("some", false);
+        model.set({some: false});
         assert.strictEqual( model.data.some, null );
 
-        model.set("some", true);
+        model.set({some: true});
         assert.strictEqual( model.data.some, true );
 
-        model.set("some", 0);
+        model.set({some: 0});
         assert.strictEqual( model.data.some, null );
 
-        model.set("some", 1);
+        model.set({some: 1});
         assert.strictEqual( model.data.some, true );
     });
 
     it("prepare nullAsFalse", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            some: boolean | 0 | 1;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     some: {
                         type: "boolean",
@@ -145,37 +157,41 @@ describe("BooleanType", () => {
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
         assert.strictEqual( model.data.some, false );
 
-        model.set("some", true);
+        model.set({some: true});
         assert.strictEqual( model.data.some, true );
 
-        model.set("some", null);
+        model.set({some: null});
         assert.strictEqual( model.data.some, false );
     });
 
 
     it("redefine standard prepare boolean", () => {
-        let callArgs = false;
+        let callArgs: any = false;
 
         const BooleanType = Model.getType("boolean");
-        let originalPrepare = BooleanType.prototype.prepare;
+        const originalPrepare = BooleanType.prototype.prepare;
 
-        BooleanType.prototype.prepare = function(value, key, model) {
+        BooleanType.prototype.prepare = function(value, key, anyModel) {
             callArgs = [value, key];
-            return originalPrepare.call(this, value, key, model);
+            return originalPrepare.call(this, value, key, anyModel);
         };
 
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            some: boolean | 0 | 1;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     some: "boolean"
                 };
             }
         }
 
-        let model = new SomeModel({
+        const model = new SomeModel({
             some: 0
         });
 
@@ -189,7 +205,7 @@ describe("BooleanType", () => {
 
 
     it("equal booleans", () => {
-        let pairs = [
+        const pairs: Array<Array<boolean | 0 | 1>> = [
             [null, false, false],
             [null, true, false],
             [false, false, true],
@@ -198,33 +214,37 @@ describe("BooleanType", () => {
             [1, true, true]
         ];
 
-        pairs.forEach(pair => {
-            class TestModel extends Model {
-                static data() {
+        interface ISomeData {
+            bool: boolean | 0 | 1;
+        }
+
+        pairs.forEach((pair) => {
+            class TestModel extends Model<ISomeData> {
+                public static data() {
                     return {
                         bool: "boolean"
                     };
                 }
             }
 
-            let model1 = new TestModel({
+            const model1 = new TestModel({
                 bool: pair[0]
             });
 
-            let model2 = new TestModel({
+            const model2 = new TestModel({
                 bool: pair[1]
             });
 
             assert.strictEqual(
                 model1.equal( model2 ),
                 pair[2],
-                pair
+                pair.toString()
             );
 
             assert.strictEqual(
                 model2.equal( model1 ),
                 pair[2],
-                pair
+                pair.toString()
             );
         });
     });
