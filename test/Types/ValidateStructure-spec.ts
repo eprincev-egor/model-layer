@@ -1,27 +1,26 @@
 
-
-const {Model} = require("../../lib/index");
-const assert = require("assert");
+import {Model} from "../../lib/index";
+import assert from "assert";
 
 describe("validate and prepare model data", () => {
     
     it("model without data", () => {
         
-        class SomeModel extends Model {}
+        class SomeModel extends Model<object> {}
 
         assert.throws(
             () => {
-                new SomeModel();
+                const model = new SomeModel();
             },
-            err =>
-                err.message == "static SomeModel.data() is not declared"
+            (err) =>
+                err.message === "static SomeModel.data() is not declared"
         );
 
     });
 
     it("unknown type", () => {
-        class InvalidModel extends Model {
-            static data() {
+        class InvalidModel extends Model<object> {
+            public static data() {
                 return {
                     prop: "wrong"
                 };
@@ -30,17 +29,17 @@ describe("validate and prepare model data", () => {
 
         assert.throws(
             () => {
-                new InvalidModel();
+                const someModel = new InvalidModel();
             },
-            err =>
-                err.message == "prop: unknown type: wrong"
+            (err) =>
+                err.message === "prop: unknown type: wrong"
         );
 
         class CustomClass {}
-        class SomeModel extends Model {}
+        class SomeModel extends Model<object> {}
 
-        class ValidModel extends Model {
-            static data() {
+        class ValidModel extends Model<object> {
+            public static data() {
                 return {
                     any: "*",
 
@@ -66,14 +65,19 @@ describe("validate and prepare model data", () => {
         }
 
         // create valid model without errors
-        new ValidModel();
+        const model = new ValidModel();
     });
 
     it("once call static data method", () => {
+
+        interface ISomeData {
+            name: string;
+            age: number | string;
+        }
         
         let count = 0;
-        class SomeModel extends Model {
-            static data() {
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 count++;
 
                 return {
@@ -83,7 +87,7 @@ describe("validate and prepare model data", () => {
             }
         }
 
-        let model = new SomeModel({
+        const model = new SomeModel({
             age: 10
         });
 
@@ -110,7 +114,7 @@ describe("validate and prepare model data", () => {
         // calling data only in first constructor call
         // (save data to prototype)
 
-        let model2 = new SomeModel({
+        const model2 = new SomeModel({
             age: "20"
         });
 
@@ -123,8 +127,18 @@ describe("validate and prepare model data", () => {
     });
 
     it("data is freeze object", () => {
-        class SomeModel extends Model {
-            static data() {
+        
+        interface IObj {
+            [key: string]: number;
+        }
+
+        interface ISomeData {
+            arr: number[];
+            obj: IObj;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     arr: ["number"],
                     obj: {element: "number"}
@@ -132,38 +146,41 @@ describe("validate and prepare model data", () => {
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
 
         assert.throws(
             () => {
-                model.data.arr = 10;
+                const anyModel = model as any;
+                anyModel.data.arr = 10;
             },
-            err =>
+            (err) =>
                 /Cannot assign to read only property/.test(err.message)
         );
 
         assert.throws(
             () => {
-                model.data.arr.element.type = 10;
+                const anyModel = model as any;
+                anyModel.data.arr.element.type = 10;
             },
-            err =>
+            (err) =>
                 /Cannot assign to read only property/.test(err.message)
         );
 
         assert.throws(
             () => {
-                model.data.obj.element.type = 10;
+                const anyModel = model as any;
+                anyModel.data.obj.element.type = 10;
             },
-            err =>
+            (err) =>
                 /Cannot assign to read only property/.test(err.message)
         );
     });
 
     it("prepare data, and save to model.data", () => {
-        class TestModel extends Model {}
+        class TestModel extends Model<object> {}
 
-        class SomeModel extends Model {
-            static data() {
+        class SomeModel extends Model<object> {
+            public static data() {
                 return {
                     name: "string",
                     text: "text",
@@ -183,7 +200,7 @@ describe("validate and prepare model data", () => {
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
 
         assert.deepEqual(
             model.data,
@@ -344,9 +361,12 @@ describe("validate and prepare model data", () => {
     });
 
     it("invalid validate", () => {
-        
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            prop: number;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     prop: {
                         type: "number",
@@ -358,18 +378,18 @@ describe("validate and prepare model data", () => {
 
         assert.throws(
             () => {
-                new SomeModel();
+                const model = new SomeModel();
             },
-            err =>
-                err.message == "prop: validate should be function or RegExp: \"wrong\""
+            (err) =>
+                err.message === "prop: validate should be function or RegExp: \"wrong\""
         );
 
     });
 
     it("invalid validate key", () => {
         
-        class SomeModel extends Model {
-            static data() {
+        class SomeModel extends Model<object> {
+            public static data() {
                 return {
                     "*": {
                         type: "number",
@@ -381,10 +401,10 @@ describe("validate and prepare model data", () => {
 
         assert.throws(
             () => {
-                new SomeModel();
+                const model = new SomeModel();
             },
-            err =>
-                err.message == "*: validate key should be function or RegExp: \"wrong\""
+            (err) =>
+                err.message === "*: validate key should be function or RegExp: \"wrong\""
         );
 
     });
