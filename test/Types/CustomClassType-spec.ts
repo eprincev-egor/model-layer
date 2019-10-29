@@ -1,20 +1,25 @@
 
-
-const {Model} = require("../../lib/index");
-const assert = require("assert");
-const {eol} = require("../../lib/utils");
+import {Model} from "../../lib/index";
+import assert from "assert";
+import {eol} from "../../lib/utils";
 
 describe("CustomClassType", () => {
     
     it("custom class (not Model) property", () => {
         class CustomClass {
-            constructor(params) {
+            public params: any;
+
+            constructor(params?) {
                 this.params = params;
             }
         }
 
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            some: CustomClass;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     some: CustomClass
                 };
@@ -29,15 +34,16 @@ describe("CustomClassType", () => {
 
         assert.throws(
             () => {
-                new SomeModel({
+                const AnyModel = SomeModel as any;
+                const someModel = new AnyModel({
                     some: false
                 });
             },
-            err =>
-                err.message == "invalid CustomClass for some: false"
+            (err) =>
+                err.message === "invalid CustomClass for some: false"
         );
 
-        let value = new CustomClass();
+        const value = new CustomClass();
         model = new SomeModel({
             some: value
         });
@@ -48,16 +54,20 @@ describe("CustomClassType", () => {
     it("CustomClass.toJSON(), just copy by reference", () => {
         class CustomClass {}
 
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            some: CustomClass;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     some: CustomClass
                 };
             }
         }
 
-        let value = new CustomClass();
-        let model = new SomeModel({
+        const value = new CustomClass();
+        const model = new SomeModel({
             some: value
         });
 
@@ -68,30 +78,31 @@ describe("CustomClassType", () => {
             }
         );
 
-        assert.ok( model.toJSON().some == value );
+        assert.ok( model.toJSON().some === value );
     });
 
 
     it("CustomClass.toJSON(), if CustomClass has method toJSON", () => {
         class CustomClass {
-            constructor() {
-            }
-
-            toJSON() {
+            public toJSON() {
                 return {nice: true};
             }
         }
 
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            some: CustomClass;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     some: CustomClass
                 };
             }
         }
 
-        let value = new CustomClass();
-        let model = new SomeModel({
+        const value = new CustomClass();
+        const model = new SomeModel({
             some: value
         });
 
@@ -108,52 +119,59 @@ describe("CustomClassType", () => {
     it("CustomClass.clone(), just clone by reference", () => {
         class CustomClass {}
 
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            some: CustomClass;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     some: CustomClass
                 };
             }
         }
 
-        let value = new CustomClass();
-        let model = new SomeModel({
+        const value = new CustomClass();
+        const model = new SomeModel({
             some: value
         });
 
-        let clone = model.clone();
+        const clone = model.clone();
         
-        assert.ok( clone.data.some == value );
+        assert.ok( clone.data.some === value );
     });
     
     it("CustomClass.clone(), if CustomClass has method clone", () => {
         class CustomClass {
-            constructor() {
-            }
+            public nice?: boolean;
 
-            clone() {
-                let clone = new CustomClass();
+            public clone() {
+                const cloneCustomClass = new CustomClass();
 
-                clone.nice = true;
+                cloneCustomClass.nice = true;
 
-                return clone;
+                return cloneCustomClass;
             }
         }
 
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            some: CustomClass;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     some: CustomClass
                 };
             }
         }
 
-        let value = new CustomClass();
-        let model = new SomeModel({
+        const value = new CustomClass();
+        const model = new SomeModel({
             some: value
         });
 
-        let clone = model.clone();
+        const clone = model.clone();
         
         assert.strictEqual(
             clone.get("some").nice,
@@ -164,8 +182,12 @@ describe("CustomClassType", () => {
     it("array of CustomClass", () => {
         class MyClass {}
 
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            some: MyClass;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     arr: [MyClass]
                 };
@@ -174,12 +196,13 @@ describe("CustomClassType", () => {
 
         assert.throws(
             () => {
-                new SomeModel({
+                const AnyModel = SomeModel as any;
+                const somModel = new AnyModel({
                     arr: [false]
                 });
             },
-            err =>
-                err.message == `invalid array[MyClass] for arr: [false],${eol} invalid MyClass for 0: false`
+            (err) =>
+                err.message === `invalid array[MyClass] for arr: [false],${eol} invalid MyClass for 0: false`
         );
     });
 
@@ -187,30 +210,34 @@ describe("CustomClassType", () => {
     it("equal CustomClass", () => {
         class CustomClass {}
 
-        let obj1 = new CustomClass();
-        let obj2 = new CustomClass();
+        const obj1 = new CustomClass();
+        const obj2 = new CustomClass();
 
-        let pairs = [
+        const pairs: any[][] = [
             [null, null, true],
             [null, obj1, false],
             [obj1, obj1, true],
             [obj1, obj2, false]
         ];
 
-        pairs.forEach(pair => {
-            class TestModel extends Model {
-                static data() {
+        interface ISomeData {
+            custom: CustomClass;
+        }
+
+        pairs.forEach((pair) => {
+            class TestModel extends Model<ISomeData> {
+                public static data() {
                     return {
                         custom: CustomClass
                     };
                 }
             }
 
-            let model1 = new TestModel({
+            const model1 = new TestModel({
                 custom: pair[0]
             });
 
-            let model2 = new TestModel({
+            const model2 = new TestModel({
                 custom: pair[1]
             });
 
