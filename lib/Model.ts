@@ -14,6 +14,20 @@ type ReadOnlyPartial<TData> = {
     readonly [key in keyof TData]?: TData[key];
 };
 
+type InputData<T> = {
+    readonly [key in keyof T]?: InputValue< T[key] >;
+};
+
+type InputValue<T> = 
+    T extends Model<ISimpleObject> ?
+        T | T["data"] :
+        T extends object ?
+            InputData<T> :
+                T extends any[] ?
+                    InputData<T> :
+                    T
+;
+
 type JSONValue<TValueType> = 
     TValueType extends Model<ISimpleObject> ?
         JSONData<TValueType["data"]> :
@@ -107,7 +121,7 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
     
     private parent: Model<object>;
 
-    constructor(inputData?: ReadOnlyPartial<TData>) {
+    constructor(inputData?: InputData<TData>) {
         super();
 
         this.prepareStructure();
@@ -148,7 +162,7 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
         return this.data[ key ];
     }
 
-    public set(data: ReadOnlyPartial<TData>, options?) {
+    public set(data: InputData<TData>, options?: ISimpleObject) {
         options = options || {
             onlyValidate: false
         };
@@ -296,8 +310,9 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
         return this.data.hasOwnProperty( key );
     }
 
-    public getDescription(key) {
-        return this.structure[ key ] || this.structure["*"];
+    public getDescription<Key extends keyof TData>(key: Key) {
+        const iKey = key as any;
+        return this.structure[ iKey ] || this.structure["*"];
     }
 
     public hasValue<Key extends keyof TData>(key: Key): boolean {
@@ -526,7 +541,7 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
         return true;
     }
 
-    public validate(data: ReadOnlyPartial<TData>): void {
+    public validate(data: InputData<TData>): void {
         // for invalid data throw error here
     }
 
