@@ -1,144 +1,151 @@
 
-
-const {Model} = require("../../lib/index");
-const assert = require("assert");
-const {eol} = require("../../lib/utils");
+import {Model, Collection} from "../../lib/index";
+import assert from "assert";
+import {eol} from "../../lib/utils";
+import { ISimpleObject } from "../../lib/Model";
 
 describe("ObjectType", () => {
     
     it("object", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeModel {
+            map: {
+                [key: string]: any;
+            };
+        }
+
+        class SomeModel extends Model<ISomeModel> {
+            public static data() {
                 return {
                     map: "object"
                 };
             }
         }
+        const AnyModel = SomeModel as any;
 
         assert.throws(
             () => {
-                new SomeModel({
+                const someModel = new AnyModel({
                     map: false
                 });
             }, 
-            err => 
-                err.message ==  "invalid object for map: false"
+            (err) => 
+                err.message ===  "invalid object for map: false"
         );
         
 
         assert.throws(
             () => {
-                new SomeModel({
+                const someModel = new AnyModel({
                     map: true
                 });
             }, 
-            err => 
-                err.message ==  "invalid object for map: true"
+            (err) => 
+                err.message ===  "invalid object for map: true"
         );
         
 
         assert.throws(
             () => {
-                new SomeModel({
+                const someModel = new AnyModel({
                     map: "1,2"
                 });
             }, 
-            err => 
-                err.message ==  "invalid object for map: \"1,2\""
+            (err) => 
+                err.message ===  "invalid object for map: \"1,2\""
         );
         
 
         assert.throws(
             () => {
-                new SomeModel({
+                const someModel = new AnyModel({
                     map: NaN
                 });
             }, 
-            err => 
-                err.message ==  "invalid object for map: NaN"
+            (err) => 
+                err.message ===  "invalid object for map: NaN"
         );
         
 
         assert.throws(
             () => {
-                new SomeModel({
+                const someModel = new AnyModel({
                     map: /x/
                 });
             }, 
-            err => 
-                err.message ==  "invalid object for map: /x/"
+            (err) => 
+                err.message ===  "invalid object for map: /x/"
         );
         
         assert.throws(
             () => {
-                new SomeModel({
+                const someModel = new AnyModel({
                     map: []
                 });
             }, 
-            err => 
-                err.message ==  "invalid object for map: []"
+            (err) => 
+                err.message ===  "invalid object for map: []"
         );
         
 
         assert.throws(
             () => {
-                new SomeModel({
+                const someModel = new AnyModel({
                     map: Infinity
                 });
             }, 
-            err => 
-                err.message ==  "invalid object for map: Infinity"
+            (err) => 
+                err.message ===  "invalid object for map: Infinity"
         );
         
 
         assert.throws(
             () => {
-                new SomeModel({
+                const someModel = new AnyModel({
                     map: -Infinity
                 });
             }, 
-            err =>
-                err.message == "invalid object for map: -Infinity"
+            (err) =>
+                err.message === "invalid object for map: -Infinity"
         );
         
 
         assert.throws(
             () => {
-                new SomeModel({
+                const someModel = new AnyModel({
                     map: 0
                 });
             }, 
-            err => 
-                err.message ==  "invalid object for map: 0"
+            (err) => 
+                err.message ===  "invalid object for map: 0"
         );
         
 
 
         assert.throws(
             () => {
-                new SomeModel({
+                const someModel = new AnyModel({
                     map: [false]
                 });
             }, 
-            err => 
-                err.message == "invalid object for map: [false]"
+            (err) => 
+                err.message === "invalid object for map: [false]"
         );
         
 
 
-        let outsideObj = {
+        const outsideObj = {
             a: "1",
             b: "2"
         };
-        let model = new SomeModel({
+        const model = new SomeModel({
             map: outsideObj
         });
 
-        let map = model.get("map");
+        const map = model.get("map");
 
         assert.deepEqual( map, outsideObj );
 
-        assert.ok( outsideObj != map );
+        assert.ok( outsideObj !== map );
 
 
         // array should be frozen
@@ -146,7 +153,7 @@ describe("ObjectType", () => {
             () => {
                 map.a = 10;
             },
-            err =>
+            (err) =>
                 /Cannot assign to read only property/.test(err.message)
         );
         
@@ -157,8 +164,12 @@ describe("ObjectType", () => {
     
     
     it("emptyAsNull", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            words: object;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     words: {
                         type: "object",
@@ -168,19 +179,23 @@ describe("ObjectType", () => {
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
         assert.strictEqual( model.data.words, null );
 
-        model.set("words", {red: true});
+        model.set({words: {red: true}});
         assert.deepEqual( model.data.words, {red: true} );
 
-        model.set("words", {});
+        model.set({words: {}});
         assert.strictEqual( model.data.words, null );
     });
 
     it("nullAsEmpty", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            words: object;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     words: {
                         type: "object",
@@ -190,26 +205,30 @@ describe("ObjectType", () => {
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
         assert.deepEqual( model.data.words, [] );
 
-        model.set("words", {water: true});
+        model.set({words: {water: true}});
         assert.deepEqual( model.data.words, {water: true} );
 
-        model.set("words", null);
+        model.set({words: null});
         assert.deepEqual( model.data.words, {} );
     });
 
     it("recursive clone object", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            tree: any;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     tree: "object"
                 };
             }
         }
 
-        let model = new SomeModel({
+        const model = new SomeModel({
             tree: {
                 name: "test",
                 tree: {
@@ -229,7 +248,7 @@ describe("ObjectType", () => {
             }
         });
 
-        let clone = model.clone();
+        const clone = model.clone();
 
         assert.deepEqual( clone.data, {
             tree: {
@@ -242,32 +261,38 @@ describe("ObjectType", () => {
         });
 
         assert.ok(
-            clone.data.tree != model.data.tree
+            clone.data.tree !== model.data.tree
         );
 
         assert.ok(
-            clone.data.tree.tree != model.data.tree.tree
+            clone.data.tree.tree !== model.data.tree.tree
         );
 
         assert.ok(
-            clone.data.tree.tree.arr != model.data.tree.tree.arr
+            clone.data.tree.tree.arr !== model.data.tree.tree.arr
         );
 
         assert.ok(
-            clone.data.tree.tree.arr[0] != model.data.tree.tree.arr[0]
+            clone.data.tree.tree.arr[0] !== model.data.tree.tree.arr[0]
         );
     });
     
     it("model.toJSON with object property", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            names: {
+                [key: string]: boolean;
+            };
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     names: "object"
                 };
             }
         }
 
-        let model = new SomeModel({
+        const model = new SomeModel({
             names: {
                 Bob: true,
                 James: true
@@ -286,15 +311,19 @@ describe("ObjectType", () => {
     });
 
     it("recursive convert object to json", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            tree: any;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     tree: "object"
                 };
             }
         }
 
-        let model = new SomeModel({
+        const model = new SomeModel({
             tree: {
                 name: "test",
                 tree: {
@@ -304,7 +333,7 @@ describe("ObjectType", () => {
             }
         });
 
-        let json = model.toJSON();
+        const json = model.toJSON();
 
         assert.deepEqual( json, {
             tree: {
@@ -317,25 +346,31 @@ describe("ObjectType", () => {
         });
 
         assert.ok(
-            json.tree != model.data.tree
+            json.tree !== model.data.tree
         );
 
         assert.ok(
-            json.tree.tree != model.data.tree.tree
+            json.tree.tree !== model.data.tree.tree
         );
 
         assert.ok(
-            json.tree.tree.arr != model.data.tree.tree.arr
+            json.tree.tree.arr !== model.data.tree.tree.arr
         );
 
         assert.ok(
-            json.tree.tree.arr[0] != model.data.tree.tree.arr[0]
+            json.tree.tree.arr[0] !== model.data.tree.tree.arr[0]
         );
     });
 
     it("prepare object value", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            object: {
+                [key: string]: number | string;
+            };
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     object: {
                         type: "object",
@@ -345,7 +380,7 @@ describe("ObjectType", () => {
             }
         }
 
-        let model = new SomeModel({
+        const model = new SomeModel({
             object: {
                 a: "10",
                 b: "20"
@@ -356,15 +391,19 @@ describe("ObjectType", () => {
     });
 
     it("object of any values", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            object: object;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     object: {}
                 };
             }
         }
 
-        let model = new SomeModel({
+        const model = new SomeModel({
             object: {
                 a: 10,
                 b: true,
@@ -382,8 +421,14 @@ describe("ObjectType", () => {
     });
 
     it("validate element", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            object: {
+                [key: string]: number | string;
+            };
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     object: {
                         type: "object",
@@ -395,20 +440,20 @@ describe("ObjectType", () => {
 
         assert.throws(
             () => {
-                new SomeModel({
+                const model = new SomeModel({
                     object: {
                         a: 10,
                         b: "nice"
                     }
                 });
             }, 
-            err => 
-                err.message == `invalid object[number] for object: {"a":10,"b":"nice"},${eol} invalid number for b: "nice"`
+            (err) => 
+                err.message === `invalid object[number] for object: {"a":10,"b":"nice"},${eol} invalid number for b: "nice"`
         );
     });
 
     it("equal objects", () => {
-        let pairs = [
+        const pairs: any[][] = [
             [null, null, true],
             [null, {}, false],
             [{}, {}, true],
@@ -416,20 +461,26 @@ describe("ObjectType", () => {
             [{x: 1}, {x: 1, y: 2}, false]
         ];
 
-        pairs.forEach(pair => {
-            class TestModel extends Model {
-                static data() {
+        interface ISomeData {
+            obj: {
+                [key: string]: number | string;
+            };
+        }
+
+        pairs.forEach((pair) => {
+            class TestModel extends Model<ISomeData> {
+                public static data() {
                     return {
                         obj: {element: "number"}
                     };
                 }
             }
 
-            let model1 = new TestModel({
+            const model1 = new TestModel({
                 obj: pair[0]
             });
 
-            let model2 = new TestModel({
+            const model2 = new TestModel({
                 obj: pair[1]
             });
 
@@ -449,17 +500,17 @@ describe("ObjectType", () => {
 
 
     it("equal circular objects", () => {
-        let circular1 = {};
+        const circular1: any = {};
         circular1.self = circular1;
 
-        let circular2 = {};
+        const circular2: any = {};
         circular2.self = circular2;
 
-        let circular3 = {};
+        const circular3: any = {};
         circular3.self = circular3;
         circular3.x = {};
 
-        let pairs = [
+        const pairs = [
             [circular1, circular1, true],
             [circular1, circular2, true],
             [circular2, circular2, true],
@@ -467,9 +518,13 @@ describe("ObjectType", () => {
             [circular2, circular3, false]
         ];
 
-        pairs.forEach(pair => {
-            class TestModel extends Model {
-                static data() {
+        interface ISomeData {
+            obj: any;
+        }
+
+        pairs.forEach((pair) => {
+            class TestModel extends Model<ISomeData> {
+                public static data() {
                     return {
                         obj: {
                             element: {
@@ -481,24 +536,24 @@ describe("ObjectType", () => {
                 }
             }
 
-            let model1 = new TestModel({
+            const model1 = new TestModel({
                 obj: pair[0]
             });
 
-            let model2 = new TestModel({
+            const model2 = new TestModel({
                 obj: pair[1]
             });
 
             assert.strictEqual(
                 model1.equal( model2 ),
                 pair[2],
-                pair
+                pair.toString()
             );
 
             assert.strictEqual(
                 model2.equal( model1 ),
                 pair[2],
-                pair
+                pair.toString()
             );
         });
     });
@@ -507,11 +562,11 @@ describe("ObjectType", () => {
     // when in type defined BaseModel, and in data we have ChildModel (extends BaseModel), 
     // then clone should be instance of ChildModel
     it("clone object of models, should return object of instance of Child", () => {
-
-        class FirstLevel extends Model {}
+        
+        class FirstLevel extends Model<ISimpleObject> {}
 
         class SecondLevel extends FirstLevel {
-            static data() {
+            public static data() {
                 return {
                     level: {
                         type: "number",
@@ -521,16 +576,21 @@ describe("ObjectType", () => {
             }
         }
 
-        class MainModel extends Model {
-            static data() {
+        interface IMain {
+            obj: {
+                [key: string]: FirstLevel
+            };
+        }
+        class MainModel extends Model<IMain> {
+            public static data() {
                 return {
                     obj: {element: FirstLevel}
                 };
             }
         }
 
-        let second = new SecondLevel();
-        let main = new MainModel({
+        const second = new SecondLevel();
+        const main = new MainModel({
             obj: {prop: second}
         });
 
@@ -543,7 +603,7 @@ describe("ObjectType", () => {
             }
         );
 
-        let clone = main.clone();
+        const clone = main.clone();
 
         assert.ok( clone.get("obj").prop instanceof SecondLevel );
 
