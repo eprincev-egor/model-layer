@@ -1,17 +1,8 @@
 
 import * as EventEmitter from "events";
-import {Model, ISimpleObject, JSONData} from "./Model";
+import {Model, ISimpleObject, InputData, JSONData} from "./Model";
 import EqualStack from "./EqualStack";
 import {invalidValuesAsString, isPlainObject} from "./utils";
-
-type IRow<TModel extends Model<ISimpleObject>> = TModel["data"] | TModel;
-type IRows<
-    TCollection extends Collection<Model<ISimpleObject>>, 
-    TModel extends Model<ISimpleObject>
-> = (
-    TCollection | 
-    Array< IRow<TModel> >
-);
 
 interface IAddEvent<TCollection, TModel> {
     type: "add";
@@ -44,7 +35,7 @@ class Collection<TModel extends Model<ISimpleObject>> extends EventEmitter {
     public length: number;
     public Model: new (object) => TModel;
 
-    constructor(rows?: TModel[] | Array<TModel["data"]>) {
+    constructor(rows?: Array< InputData<TModel> >) {
         super();
 
         if ( !this.constructor.prototype.hasOwnProperty( "Model" ) ) {
@@ -82,7 +73,7 @@ class Collection<TModel extends Model<ISimpleObject>> extends EventEmitter {
         }
     }
 
-    public at(index: number, rowOrModel?: IRow<TModel>): TModel {
+    public at(index: number, rowOrModel?: InputData<TModel>): TModel {
         // set
         if ( rowOrModel ) {
             const removedModel = this.models[ index ];
@@ -136,7 +127,7 @@ class Collection<TModel extends Model<ISimpleObject>> extends EventEmitter {
         return model;
     }
 
-    public push(...models: Array<IRow<TModel>>) {
+    public push(...models: Array<InputData<TModel>>) {
         if ( !models.length ) {
             return;
         }
@@ -164,7 +155,7 @@ class Collection<TModel extends Model<ISimpleObject>> extends EventEmitter {
         }
     }
 
-    public add(...models: Array<IRow<TModel> | Array<IRow<TModel>>>) {
+    public add(...models: Array<InputData<TModel> | Array<InputData<TModel>>>) {
         if ( !models.length ) {
             return;
         }
@@ -350,7 +341,7 @@ class Collection<TModel extends Model<ISimpleObject>> extends EventEmitter {
         return model;
     }
 
-    public unshift(...models: Array<IRow<TModel>>) {
+    public unshift(...models: Array<InputData<TModel>>) {
         if ( !models.length ) {
             return;
         }
@@ -443,7 +434,7 @@ class Collection<TModel extends Model<ISimpleObject>> extends EventEmitter {
         return this;
     }
 
-    public concat(...values: Array<IRows< this, TModel >>): this {
+    public concat(...values: Array< Array< InputData<TModel> > >): this {
         
         const CustomCollection = this.constructor as any;
         let outputModels = this.models;
@@ -470,7 +461,7 @@ class Collection<TModel extends Model<ISimpleObject>> extends EventEmitter {
     }
 
     // https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/fill
-    public fill(row: IRow<TModel>, start: number, end?: number) {
+    public fill(row: InputData<TModel>, start: number, end?: number) {
         // Step 3-5.
         // tslint:disable-next-line: no-bitwise
         const len = this.length >>> 0;
@@ -521,7 +512,7 @@ class Collection<TModel extends Model<ISimpleObject>> extends EventEmitter {
         return this;
     }
 
-    public splice(start: number, deleteCount: number, ...inputItems: Array<IRow<TModel>>) {
+    public splice(start: number, deleteCount: number, ...inputItems: Array<InputData<TModel>>) {
         let items: TModel[];
 
         if ( inputItems && inputItems.length ) {

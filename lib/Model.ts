@@ -14,19 +14,29 @@ type ReadOnlyPartial<TData> = {
     readonly [key in keyof TData]?: TData[key];
 };
 
-type InputData<T> = {
-    readonly [key in keyof T]?: InputValue< T[key] >;
+interface ILikeCollection {
+    length: number;
+    models: Array<Model<ISimpleObject>>;
+    Model: new (object) => Model<ISimpleObject>;
+    [key: string]: any;
+}
+
+export type InputValue<T> = (
+    T extends Model<ISimpleObject> ?
+        T | T["data"] : (
+            T extends ILikeCollection ?
+                T | Array< 
+                    T["models"][0]["data"] | 
+                    T["models"] 
+                > :
+                T
+    )
+);
+
+export type InputData<TData> = {
+    readonly [key in keyof TData]?: InputValue< TData[key] >;
 };
 
-type InputValue<T> = 
-    T extends Model<ISimpleObject> ?
-        T | T["data"] :
-        T extends object ?
-            InputData<T> :
-                T extends any[] ?
-                    InputData<T> :
-                    T
-;
 
 type JSONValue<TValueType> = 
     TValueType extends Model<ISimpleObject> ?
@@ -115,11 +125,11 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
     public primaryValue: number | string;
 
     // data properties
-    private structure: object;
+    private structure: ISimpleObject;
     
     private isInit: boolean;
     
-    private parent: Model<object>;
+    private parent: Model<ISimpleObject>;
 
     constructor(inputData?: InputData<TData>) {
         super();
@@ -178,8 +188,7 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
         const anyKeyDescription = this.structure["*"];
 
         for (const key in data) {
-            const anyKey: any = key;
-            let description = this.structure[ anyKey ];
+            let description = this.structure[ key ];
 
             if ( !description ) {
                 if ( anyKeyDescription ) {
@@ -195,7 +204,7 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
                 }
             }
 
-            let value = data[ key ];
+            let value = data[ key ] as any;
 
             // cast input value to expected format
             value = description.prepare(value, key, this);

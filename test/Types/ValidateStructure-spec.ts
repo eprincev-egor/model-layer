@@ -177,9 +177,13 @@ describe("validate and prepare model data", () => {
     });
 
     it("prepare data, and save to model.data", () => {
+        interface IAny {
+            [key: string]: any;
+        }
+
         class TestModel extends Model<object> {}
 
-        class SomeModel extends Model<object> {
+        class SomeModel extends Model<IAny> {
             public static data() {
                 return {
                     name: "string",

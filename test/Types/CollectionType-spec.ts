@@ -71,7 +71,7 @@ describe("CollectionType", () => {
         }
 
         interface ICart {
-            products: Products | IProduct[];
+            products: Products;
         }
 
         class Cart extends Model<ICart> {
@@ -378,7 +378,7 @@ describe("CollectionType", () => {
         }
 
         interface ISome {
-            products: Products | IProduct[];
+            products: Products;
         }
 
         class SomeModel extends Model<ISome> {
