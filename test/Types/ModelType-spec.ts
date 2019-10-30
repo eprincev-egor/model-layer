@@ -1,14 +1,21 @@
 
-
-const {Model} = require("../../lib/index");
-const assert = require("assert");
-const {invalidValuesAsString, eol} = require("../../lib/utils");
+import {Model} from "../../lib/index";
+import assert from "assert";
+import {invalidValuesAsString, eol} from "../../lib/utils";
+import { ISimpleObject } from "../../lib/Model";
 
 describe("ModelType", () => {
     
     it("child model", () => {
-        class UserModel extends Model {
-            static data() {
+        interface IUser {
+            name: string;
+            phone: string;
+            email: string;
+            age: number | string;
+        }
+
+        class UserModel extends Model<IUser> {
+            public static data() {
                 return {
                     name: {
                         type: "string",
@@ -28,15 +35,20 @@ describe("ModelType", () => {
                     age: {
                         type: "number",
                         required: true,
-                        validate: age =>
+                        validate: (age) =>
                             age > 0
                     }
                 };
             }
         }
 
-        class RegistrationModel extends Model {
-            static data() {
+        interface IRegistration {
+            user: UserModel;
+            date: Date | number;
+        }
+
+        class RegistrationModel extends Model<IRegistration> {
+            public static data() {
                 return {
                     user: {
                         type: UserModel,
@@ -50,75 +62,77 @@ describe("ModelType", () => {
             }
         }
 
+        const AnyRegistrationModel = RegistrationModel as any;
+
         assert.throws(
             () => {
-                new RegistrationModel({
+                const regModel = new RegistrationModel({
                     date: Date.now()
                 });
             }, 
-            err =>
-                err.message == "required user"
+            (err) =>
+                err.message === "required user"
         );
 
         assert.throws(
             () => {
-                new RegistrationModel({
+                const regModel = new RegistrationModel({
                     date: Date.now(),
                     user: null
                 });
             }, 
-            err =>
-                err.message == "required user"
+            (err) =>
+                err.message === "required user"
         );
 
         assert.throws(
             () => {
-                new RegistrationModel({
+                const regModel = new AnyRegistrationModel({
                     date: Date.now(),
                     user: []
                 });
             }, 
-            err =>
-                err.message == "invalid UserModel for user: []"
+            (err) =>
+                err.message === "invalid UserModel for user: []"
         );
 
         assert.throws(
             () => {
-                new RegistrationModel({
+                const regModel = new AnyRegistrationModel({
                     date: Date.now(),
                     user: false
                 });
             }, 
-            err =>
-                err.message == "invalid UserModel for user: false"
+            (err) =>
+                err.message === "invalid UserModel for user: false"
         );
 
         assert.throws(
             () => {
-                new RegistrationModel({
+                const regModel = new AnyRegistrationModel({
                     date: Date.now(),
                     user: NaN
                 });
             }, 
-            err =>
-                err.message == "invalid UserModel for user: NaN"
+            (err) =>
+                err.message === "invalid UserModel for user: NaN"
         );
 
         assert.throws(
             () => {
-                new RegistrationModel({
+                const regModel = new AnyRegistrationModel({
                     date: Date.now(),
                     user: /x/
                 });
             }, 
-            err =>
-                err.message == "invalid UserModel for user: /x/"
+            (err) =>
+                err.message === "invalid UserModel for user: /x/"
         );
 
 
         assert.throws(
             () => {
-                new RegistrationModel({
+                const regModel = new RegistrationModel({
                     date: Date.now(),
                     user: {
                         name: "10",
@@ -126,16 +140,16 @@ describe("ModelType", () => {
                     }
                 });
             },
-            err =>
-                err.message == `invalid UserModel for user: {"name":"10","age":101,"email":null},${eol} required email`
+            (err) =>
+                err.message === `invalid UserModel for user: {"name":"10","age":101,"email":null},${eol} required email`
         );
 
 
 
 
 
-        let now = Date.now();
-        let registrationModel = new RegistrationModel({
+        const now = Date.now();
+        const registrationModel = new RegistrationModel({
             date: now,
             user: {
                 name: "Bob ",
@@ -147,7 +161,7 @@ describe("ModelType", () => {
         assert.strictEqual( +registrationModel.data.date, now );
         assert.ok( registrationModel.data.date instanceof Date );
 
-        let user = registrationModel.data.user;
+        const user = registrationModel.data.user;
         assert.strictEqual( user.data.name, "Bob" );
         assert.strictEqual( user.data.age, 99 );
         assert.strictEqual( user.data.email, "x@x.x" );
@@ -156,8 +170,13 @@ describe("ModelType", () => {
 
     
     it("model.toJSON with custom models", () => {
-        class CarModel extends Model {
-            static data() {
+        interface ICar {
+            id: number | string;
+            color: string;
+        }
+
+        class CarModel extends Model<ICar> {
+            public static data() {
                 return {
                     id: "number",
                     color: "string"
@@ -165,8 +184,13 @@ describe("ModelType", () => {
             }
         }
 
-        class UserModel extends Model {
-            static data() {
+        interface IUser {
+            name: string;
+            car: CarModel;
+        }
+
+        class UserModel extends Model<IUser> {
+            public static data() {
                 return {
                     name: "string",
                     car: CarModel
@@ -174,7 +198,7 @@ describe("ModelType", () => {
             }
         }
 
-        let userModel = new UserModel({
+        const userModel = new UserModel({
             name: "Jack",
             car: {
                 id: "1",
@@ -196,27 +220,31 @@ describe("ModelType", () => {
     
 
     it("equal models", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            prop: number;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     prop: "number"
                 };
             }
         }
 
-        let model1 = new SomeModel({
+        const model1 = new SomeModel({
             prop: 1
         });
-        let model2 = new SomeModel({
+        const model2 = new SomeModel({
             prop: 1
         });
-        let model3 = new SomeModel({
+        const model3 = new SomeModel({
             prop: 3
         });
-        let obj1 = {prop: 1};
-        let obj2 = {prop: 3};
+        const obj1 = {prop: 1};
+        const obj2 = {prop: 3};
 
-        let pairs = [
+        const pairs: any[][] = [
             [null, null, true],
             [null, model1, false],
             [null, model2, false],
@@ -231,40 +259,49 @@ describe("ModelType", () => {
             [model3, obj2, true]
         ];
 
-        pairs.forEach(pair => {
-            class TestModel extends Model {
-                static data() {
+        interface ITest {
+            model: SomeModel;
+        }
+
+        pairs.forEach((pair) => {
+            class TestModel extends Model<ITest> {
+                public static data() {
                     return {
                         model: SomeModel
                     };
                 }
             }
 
-            let model1 = new TestModel({
+            const testModel1 = new TestModel({
                 model: pair[0]
             });
 
-            let model2 = new TestModel({
+            const testModel2 = new TestModel({
                 model: pair[1]
             });
 
             assert.strictEqual(
-                model1.equal( model2 ),
+                testModel1.equal( testModel2 ),
                 pair[2],
-                pair
+                pair.toString()
             );
 
             assert.strictEqual(
-                model2.equal( model1 ),
+                testModel2.equal( testModel1 ),
                 pair[2],
-                pair
+                pair.toString()
             );
         });
     });
 
     it("equal circular models", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            name: string;
+            self: SomeModel;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     name: "string",
                     self: SomeModel
@@ -272,16 +309,16 @@ describe("ModelType", () => {
             }
         }
 
-        let circular1 = new SomeModel();
-        circular1.set("self", circular1);
+        const circular1 = new SomeModel();
+        circular1.set({self: circular1});
 
-        let circular2 = new SomeModel();
-        circular2.set("self", circular2);
+        const circular2 = new SomeModel();
+        circular2.set({self: circular2});
 
-        let circular3 = new SomeModel({name: "nice"});
-        circular3.set("self", circular3);
+        const circular3 = new SomeModel({name: "nice"});
+        circular3.set({self: circular3});
 
-        let pairs = [
+        const pairs: any[][] = [
             [circular1, circular1, true],
             [circular1, circular2, true],
             [circular2, circular2, true],
@@ -289,20 +326,24 @@ describe("ModelType", () => {
             [circular2, circular3, false]
         ];
 
+        interface ITest {
+            model: SomeModel;
+        }
+
         pairs.forEach((pair, i) => {
-            class TestModel extends Model {
-                static data() {
+            class TestModel extends Model<ITest> {
+                public static data() {
                     return {
                         model: SomeModel
                     };
                 }
             }
 
-            let model1 = new TestModel({
+            const model1 = new TestModel({
                 model: pair[0]
             });
 
-            let model2 = new TestModel({
+            const model2 = new TestModel({
                 model: pair[1]
             });
 
@@ -321,16 +362,24 @@ describe("ModelType", () => {
     });
 
     it("BaseModel.or(ChildModel1), default constructor is BaseModel", () => {
-        class BaseModel extends Model {
-            static data() {
+        interface IBase {
+            modelName: string;
+        }
+
+        class BaseModel<T extends IBase = IBase> extends Model<T> {
+            public static data() {
                 return {
                     modelName: "string"
                 };
             }
         }
 
-        class ChildModel extends BaseModel {
-            static data() {
+        interface IChild extends IBase {
+            isChild: boolean;
+        }
+
+        class ChildModel extends BaseModel<IChild> {
+            public static data() {
                 return {
                     ...super.data(),
                     isChild: {
@@ -341,15 +390,19 @@ describe("ModelType", () => {
             }
         }
 
-        class MainModel extends Model {
-            static data() {
+        interface IMain {
+            child: BaseModel | ChildModel;
+        }
+
+        class MainModel extends Model<IMain> {
+            public static data() {
                 return {
                     child: BaseModel.or( ChildModel )
                 };
             }
         }
 
-        let main = new MainModel({
+        const main = new MainModel({
             child: {
                 modelName: "base"
             }
@@ -364,7 +417,7 @@ describe("ModelType", () => {
             }
         );
 
-        main.set("child", new ChildModel());
+        main.set({child: new ChildModel()});
 
         assert.deepEqual(
             main.toJSON(),
@@ -379,37 +432,41 @@ describe("ModelType", () => {
 
     it("BaseModel.or(ChildModel) ChildModel should be inherited from BaseModel", () => {
         
-        class BaseModel extends Model {}
-        class ChildModel extends Model {}
+        class BaseModel extends Model<ISimpleObject> {}
+        class ChildModel extends Model<ISimpleObject> {}
 
         assert.throws(
             () => {
                 BaseModel.or( ChildModel );
             }, 
-            err =>
-                err.message == "ChildModel should be inherited from BaseModel"
+            (err) =>
+                err.message === "ChildModel should be inherited from BaseModel"
         );
         
     });
 
     it("BaseModel.or() expected children Models", () => {
-        class BaseModel extends Model {}
+        class BaseModel extends Model<ISimpleObject> {}
 
         assert.throws(
             () => {
                 BaseModel.or();
             }, 
-            err =>
-                err.message == "expected children Models"
+            (err) =>
+                err.message === "expected children Models"
         );
         
     });
 
 
     it("BaseModel.or(ChildModel1, ChildModel2, ...) get constructor by data", () => {
+        interface IProduct {
+            type: string;
+            price: number;
+        }
 
-        class Product extends Model {
-            static data() {
+        class Product<T extends IProduct = IProduct> extends Model<T> {
+            public static data() {
                 return {
                     type: "string",
                     price: "number"
@@ -417,8 +474,12 @@ describe("ModelType", () => {
             }
         }
 
-        class DressProduct extends Product {
-            static data() {
+        interface IDressProduct extends IProduct {
+            size: number;
+        }
+
+        class DressProduct extends Product<IDressProduct> {
+            public static data() {
                 return {
                     ...super.data(),
 
@@ -427,8 +488,12 @@ describe("ModelType", () => {
             }
         }
 
-        class FoodProduct extends Product {
-            static data() {
+        interface IFoodProduct extends IProduct {
+            color: string;
+        }
+
+        class FoodProduct extends Product<IFoodProduct> {
+            public static data() {
                 return {
                     ...super.data(),
 
@@ -437,19 +502,27 @@ describe("ModelType", () => {
             }
         }
 
-        class Cart extends Model {
-            static data() {
+        interface ICart {
+            products: Array<
+                IProduct | Product | 
+                IDressProduct | DressProduct | 
+                IFoodProduct | FoodProduct
+            >;
+        }
+
+        class Cart extends Model<ICart> {
+            public static data() {
                 return {
                     products: {
                         type: "array",
                         element: {
                             type: Product.or( DressProduct, FoodProduct ),
-                            constructor: data => {
-                                if ( data.type == "dress" ) {
+                            constructor: (data) => {
+                                if ( data.type === "dress" ) {
                                     return DressProduct;
                                 }
 
-                                if ( data.type == "car" ) {
+                                if ( data.type === "car" ) {
                                     return FoodProduct;
                                 }
                             }
@@ -459,7 +532,7 @@ describe("ModelType", () => {
             }
         }
 
-        let cart = new Cart({
+        const cart = new Cart({
             products: [
                 {type: "car", price: 10000, color: "red"},
                 {type: "dress", price: 100, size: 34},
@@ -481,8 +554,12 @@ describe("ModelType", () => {
 
     
     it("BaseModel.or(...), if custom getConstructor returns undefined, we using BaseModel", () => {
-        class BaseModel extends Model {
-            static data() {
+        interface IBase {
+            modelName: string;
+        }
+
+        class BaseModel extends Model<IBase> {
+            public static data() {
                 return {
                     modelName: "string"
                 };
@@ -491,8 +568,12 @@ describe("ModelType", () => {
 
         class ChildModel extends BaseModel {}
 
-        class MainModel extends Model {
-            static data() {
+        interface IMain {
+            child: BaseModel | ChildModel;
+        }
+
+        class MainModel extends Model<IMain> {
+            public static data() {
                 return {
                     child: {
                         type: BaseModel.or( ChildModel ),
@@ -502,7 +583,7 @@ describe("ModelType", () => {
             }
         }
 
-        let main = new MainModel({
+        const main = new MainModel({
             child: {
                 modelName: "base"
             }
@@ -523,10 +604,14 @@ describe("ModelType", () => {
     // then clone should be instance of ChildModel
     it("clone model, should return instance of Child", () => {
 
-        class FirstLevel extends Model {}
+        class FirstLevel<T = ISimpleObject> extends Model<T> {}
 
-        class SecondLevel extends FirstLevel {
-            static data() {
+        interface ISecond {
+            level: number;
+        }
+
+        class SecondLevel extends FirstLevel<ISecond> {
+            public static data() {
                 return {
                     level: {
                         type: "number",
@@ -536,16 +621,20 @@ describe("ModelType", () => {
             }
         }
 
-        class MainModel extends Model {
-            static data() {
+        interface IMain {
+            some: FirstLevel;
+        }
+
+        class MainModel extends Model<IMain> {
+            public static data() {
                 return {
                     some: FirstLevel
                 };
             }
         }
 
-        let second = new SecondLevel();
-        let main = new MainModel({
+        const second = new SecondLevel();
+        const main = new MainModel({
             some: second
         });
 
@@ -558,7 +647,7 @@ describe("ModelType", () => {
             }
         );
 
-        let clone = main.clone();
+        const clone = main.clone();
 
         assert.ok( clone.get("some") instanceof SecondLevel );
 
