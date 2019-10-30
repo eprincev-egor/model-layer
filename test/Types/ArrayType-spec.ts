@@ -1,14 +1,19 @@
 
-
-const {Model} = require("../../lib/index");
-const assert = require("assert");
-const {eol} = require("../../lib/utils");
+import {Model} from "../../lib/index";
+import assert from "assert";
+import {eol} from "../../lib/utils";
+import { ISimpleObject } from "../../lib/Model";
 
 describe("ArrayType", () => {
     
     it("array of numbers", () => {
-        class CompanyModel extends Model {
-            static data() {
+        interface ICompany {
+            name: string;
+            managersIds: number[];
+        }
+
+        class CompanyModel extends Model<ICompany> {
+            public static data() {
                 return {
                     name: "string",
                     managersIds: ["number"]
@@ -16,140 +21,142 @@ describe("ArrayType", () => {
             }
         }
 
+        const AnyCompany = CompanyModel as any;
+
         assert.throws(
             () => {
-                new CompanyModel({
+                const company = new AnyCompany({
                     managersIds: false
                 });
             }, 
-            err => 
-                err.message ==  "invalid array[number] for managersIds: false"
+            (err) => 
+                err.message === "invalid array[number] for managersIds: false"
         );
         
 
         assert.throws(
             () => {
-                new CompanyModel({
+                const company = new AnyCompany({
                     managersIds: true
                 });
             }, 
-            err => 
-                err.message ==  "invalid array[number] for managersIds: true"
+            (err) => 
+                err.message ===  "invalid array[number] for managersIds: true"
         );
         
 
         assert.throws(
             () => {
-                new CompanyModel({
+                const company = new AnyCompany({
                     managersIds: {}
                 });
             }, 
-            err => 
-                err.message ==  "invalid array[number] for managersIds: {}"
+            (err) => 
+                err.message === "invalid array[number] for managersIds: {}"
         );
         
 
         assert.throws(
             () => {
-                new CompanyModel({
+                const company = new AnyCompany({
                     managersIds: "1,2"
                 });
             }, 
-            err => 
-                err.message ==  "invalid array[number] for managersIds: \"1,2\""
+            (err) => 
+                err.message === "invalid array[number] for managersIds: \"1,2\""
         );
         
 
         assert.throws(
             () => {
-                new CompanyModel({
+                const company = new AnyCompany({
                     managersIds: NaN
                 });
             }, 
-            err => 
-                err.message ==  "invalid array[number] for managersIds: NaN"
+            (err) => 
+                err.message === "invalid array[number] for managersIds: NaN"
         );
         
 
         assert.throws(
             () => {
-                new CompanyModel({
+                const company = new AnyCompany({
                     managersIds: /x/
                 });
             }, 
-            err => 
-                err.message ==  "invalid array[number] for managersIds: /x/"
+            (err) => 
+                err.message === "invalid array[number] for managersIds: /x/"
         );
         
 
         assert.throws(
             () => {
-                new CompanyModel({
+                const company = new AnyCompany({
                     managersIds: Infinity
                 });
             }, 
-            err => 
-                err.message ==  "invalid array[number] for managersIds: Infinity"
+            (err) => 
+                err.message === "invalid array[number] for managersIds: Infinity"
         );
         
 
         assert.throws(
             () => {
-                new CompanyModel({
+                const company = new AnyCompany({
                     managersIds: -Infinity
                 });
             }, 
-            err =>
-                err.message == "invalid array[number] for managersIds: -Infinity"
+            (err) =>
+                err.message === "invalid array[number] for managersIds: -Infinity"
         );
         
 
         assert.throws(
             () => {
-                new CompanyModel({
+                const company = new AnyCompany({
                     managersIds: 0
                 });
             }, 
-            err => 
-                err.message ==  "invalid array[number] for managersIds: 0"
+            (err) => 
+                err.message === "invalid array[number] for managersIds: 0"
         );
         
 
 
         assert.throws(
             () => {
-                new CompanyModel({
+                const company = new AnyCompany({
                     managersIds: [false]
                 });
             }, 
-            err => 
-                err.message == `invalid array[number] for managersIds: [false],${eol} invalid number for 0: false`
+            (err) => 
+                err.message === `invalid array[number] for managersIds: [false],${eol} invalid number for 0: false`
         );
         
 
         assert.throws(
             () => {
-                new CompanyModel({
+                const company = new AnyCompany({
                     managersIds: ["1", "wrong"]
                 });
             }, 
-            err => 
-                err.message == `invalid array[number] for managersIds: ["1","wrong"],${eol} invalid number for 1: "wrong"`
+            (err) => 
+                err.message === `invalid array[number] for managersIds: ["1","wrong"],${eol} invalid number for 1: "wrong"`
         );
         
 
 
-        let outsideArr = ["1", 2];
-        let companyModel = new CompanyModel({
+        const outsideArr = ["1", 2] as number[];
+        const companyModel = new CompanyModel({
             managersIds: outsideArr
         });
 
-        let managersIds = companyModel.get("managersIds");
+        const managersIds = companyModel.get("managersIds");
 
         assert.deepEqual( managersIds, [1, 2] );
         assert.strictEqual( managersIds[0], 1 );
 
-        assert.ok( outsideArr != managersIds );
+        assert.ok( outsideArr !== managersIds );
 
 
         // array should be frozen
@@ -157,7 +164,7 @@ describe("ArrayType", () => {
             () => {
                 managersIds[0] = 10;
             },
-            err =>
+            (err) =>
                 /Cannot assign to read only property/.test(err.message)
         );
         
@@ -167,8 +174,12 @@ describe("ArrayType", () => {
 
     
     it("emptyAsNull", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            colors: string[];
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     colors: {
                         type: ["string"],
@@ -179,19 +190,23 @@ describe("ArrayType", () => {
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
         assert.strictEqual( model.data.colors, null );
 
-        model.set("colors", ["red"]);
+        model.set({colors: ["red"]});
         assert.deepEqual( model.data.colors, ["red"] );
 
-        model.set("colors", []);
+        model.set({colors: []});
         assert.strictEqual( model.data.colors, null );
     });
 
     it("nullAsEmpty", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            colors: string[];
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     colors: {
                         type: ["string"],
@@ -201,42 +216,47 @@ describe("ArrayType", () => {
             }
         }
 
-        let model = new SomeModel();
+        const model = new SomeModel();
         assert.deepEqual( model.data.colors, [] );
 
-        model.set("colors", ["red"]);
+        model.set({colors: ["red"]});
         assert.deepEqual( model.data.colors, ["red"] );
 
-        model.set("colors", null);
+        model.set({colors: null});
         assert.deepEqual( model.data.colors, [] );
     });
 
 
     it("array[boolean]", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            answers: boolean[];
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     answers: ["boolean"]
                 };
             }
         }
+        const AnyModel = SomeModel as any;
 
         assert.throws(
             () => {
-                new SomeModel({
+                const anyModel = new AnyModel({
                     answers: [1, 0, false, true, "wrong"]
                 });
             }, 
-            err => 
-                err.message == `invalid array[boolean] for answers: [1,0,false,true,"wrong"],${eol} invalid boolean for 4: "wrong"`
+            (err) => 
+                err.message === `invalid array[boolean] for answers: [1,0,false,true,"wrong"],${eol} invalid boolean for 4: "wrong"`
         );
         
-
-        let model = new SomeModel({
-            answers: [1, true]
+        const someAnswers = [1, true] as boolean[];
+        const model = new SomeModel({
+            answers: someAnswers
         });
 
-        let answers = model.data.answers;
+        const answers = model.data.answers;
         assert.deepEqual( answers, [true, true] );
 
         assert.strictEqual( answers[0], true );
@@ -244,8 +264,12 @@ describe("ArrayType", () => {
     });
 
     it("array[date]", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            pays: Date[] | number[];
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     pays: ["date"]
                 };
@@ -254,29 +278,34 @@ describe("ArrayType", () => {
 
         assert.throws(
             () => {
-                new SomeModel({
+                const AnyModel = SomeModel as any;
+                const someModel = new AnyModel({
                     pays: ["wrong"]
                 });
             }, 
-            err => 
-                err.message == `invalid array[date] for pays: ["wrong"],${eol} invalid date for 0: "wrong"`
+            (err) => 
+                err.message === `invalid array[date] for pays: ["wrong"],${eol} invalid date for 0: "wrong"`
         );
         
 
-        let now = Date.now();
-        let model = new SomeModel({
+        const now = Date.now();
+        const model = new SomeModel({
             pays: [now]
         });
 
-        let pays = model.data.pays;
+        const pays = model.data.pays;
 
         assert.strictEqual( +pays[0], now );
         assert.ok( pays[0] instanceof Date );
     });
 
     it("array[ChildModel]", () => {
-        class UserModel extends Model {
-            static data() {
+        interface IUser {
+            name: string;
+        }
+
+        class UserModel extends Model<IUser> {
+            public static data() {
                 return {
                     name: {
                         type: "string",
@@ -286,8 +315,12 @@ describe("ArrayType", () => {
             }
         }
 
-        class CompanyModel extends Model {
-            static data() {
+        interface ICompany {
+            managers: UserModel[];
+        }
+
+        class CompanyModel extends Model<ICompany> {
+            public static data() {
                 return {
                     managers: [UserModel]
                 };
@@ -296,29 +329,35 @@ describe("ArrayType", () => {
 
         assert.throws(
             () => {
-                new CompanyModel({
+                const AnyModel = CompanyModel as any;
+                const model = new AnyModel({
                     managers: [false]
                 });
             }, 
-            err => 
-                err.message == `invalid array[UserModel] for managers: [false],${eol} invalid UserModel for 0: false`
+            (err) => 
+                err.message === `invalid array[UserModel] for managers: [false],${eol} invalid UserModel for 0: false`
         );
         
 
-        let companyModel = new CompanyModel({
+        const companyModel = new CompanyModel({
             managers: [{
                 name: " Bob "
             }]
         });
 
-        let managers = companyModel.data.managers;
+        const managers = companyModel.data.managers;
         assert.ok( managers[0] instanceof UserModel );
         assert.equal( managers[0].get("name"), "Bob" );
     });
 
     it("array[string]", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            colors: string[];
+            names: string[];
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     colors: [{
                         type: "string",
@@ -337,16 +376,17 @@ describe("ArrayType", () => {
 
         assert.throws(
             () => {
-                new SomeModel({
+                const AnyModel = SomeModel as any;
+                const someModel = new AnyModel({
                     names: [false]
                 });
             }, 
-            err => 
-                err.message == `invalid array[string] for names: [false],${eol} invalid string for 0: false`
+            (err) => 
+                err.message === `invalid array[string] for names: [false],${eol} invalid string for 0: false`
         );
         
 
-        let model = new SomeModel({
+        const model = new SomeModel({
             colors: ["red"],
             names: [" Bob "]
         });
@@ -358,8 +398,16 @@ describe("ArrayType", () => {
     });
 
     it("array[object]", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface IAnyObject {
+            [key: string]: any;
+        }
+
+        interface ISomeData {
+            users: IAnyObject[];
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     users: ["object"]
                 };
@@ -368,26 +416,32 @@ describe("ArrayType", () => {
 
         assert.throws(
             () => {
-                new SomeModel({
+                const AnyModel = SomeModel as any;
+                const someModel = new AnyModel({
                     users: [{id: 1}, false]
                 });
             }, 
-            err => 
-                err.message == `invalid array[object] for users: [{"id":1},false],${eol} invalid object for 1: false`
+            (err) => 
+                err.message === `invalid array[object] for users: [{"id":1},false],${eol} invalid object for 1: false`
         );
         
 
-        let model = new SomeModel({
+        const model = new SomeModel({
             users: [{id: 1}]
         });
 
-        let users = model.data.users;
+        const users = model.data.users;
         assert.deepEqual( users, [{id: 1}] );
     });
 
     it("unique primitive", () => {
-        class CompanyModel extends Model {
-            static data() {
+        
+        interface ICompany {
+            managersIds: number[];
+        }
+
+        class CompanyModel extends Model<ICompany> {
+            public static data() {
                 return {
                     managersIds: {
                         type: "array",
@@ -400,49 +454,57 @@ describe("ArrayType", () => {
 
         assert.throws(
             () => {
-                new CompanyModel({
+                const someCompany = new CompanyModel({
                     managersIds: [1, 2, 1]
                 });
             }, 
-            err => 
-                err.message == "managersIds is not unique: [1,2,1]"
+            (err) => 
+                err.message === "managersIds is not unique: [1,2,1]"
         );
         
 
-        let companyModel = new CompanyModel({
+        const companyModel = new CompanyModel({
             managersIds: [1, 2]
         });
 
         assert.throws(
             () => {
-                companyModel.set("managersIds", [2, 2]);
+                companyModel.set({managersIds: [2, 2]});
 
             
         
             }, 
-            err => 
-                err.message == "managersIds is not unique: [2,2]"
+            (err) => 
+                err.message === "managersIds is not unique: [2,2]"
         );
         
 
         assert.deepEqual(companyModel.data.managersIds, [1, 2]);
         
         // in unique validation   null != null
-        companyModel.set("managersIds", [null, undefined, null]);
+        companyModel.set({managersIds: [null, undefined, null]});
         assert.deepEqual(companyModel.data.managersIds, [null, null, null]);
     });
 
     it("unique ChildModel", () => {
-        class UserModel extends Model {
-            static data() {
+        interface IUser {
+            name: string;
+        }
+
+        class UserModel extends Model<IUser> {
+            public static data() {
                 return {
                     name: "string"
                 };
             }
         }
 
-        class CompanyModel extends Model {
-            static data() {
+        interface ICompany {
+            managers: UserModel[];
+        }
+
+        class CompanyModel extends Model<ICompany> {
+            public static data() {
                 return {
                     managers: {
                         type: "array",
@@ -453,50 +515,54 @@ describe("ArrayType", () => {
             }
         }
 
-        let userModel1 = new UserModel({
+        const userModel1 = new UserModel({
             name: "test"
         });
 
         assert.throws(
             () => {
-                new CompanyModel({
+                const someCompany = new CompanyModel({
                     managers: [userModel1, userModel1]
                 });
             }, 
-            err => 
-                err.message == "managers is not unique: [{\"name\":\"test\"},{\"name\":\"test\"}]"
+            (err) => 
+                err.message === "managers is not unique: [{\"name\":\"test\"},{\"name\":\"test\"}]"
         );
         
 
-        let userModel2 = new UserModel({
+        const userModel2 = new UserModel({
             name: "test"
         }); 
 
-        let companyModel = new CompanyModel({
+        const companyModel = new CompanyModel({
             managers: [userModel1, userModel2]
         });
 
         let managers = companyModel.data.managers;
-        assert.ok( managers[0] == userModel1 );
-        assert.ok( managers[1] == userModel2 );
+        assert.ok( managers[0] === userModel1 );
+        assert.ok( managers[1] === userModel2 );
 
         assert.throws(
             () => {
-                companyModel.set("managers", [userModel2, userModel2]);
+                companyModel.set({managers: [userModel2, userModel2]});
             }, 
-            err => 
-                err.message == "managers is not unique: [{\"name\":\"test\"},{\"name\":\"test\"}]"
+            (err) => 
+                err.message === "managers is not unique: [{\"name\":\"test\"},{\"name\":\"test\"}]"
         );
         
 
         managers = companyModel.data.managers;
-        assert.ok( managers[0] == userModel1 );
-        assert.ok( managers[1] == userModel2 );
+        assert.ok( managers[0] === userModel1 );
+        assert.ok( managers[1] === userModel2 );
     });
 
     it("sort", () => {
-        class CompanyModel extends Model {
-            static data() {
+        interface ICompany {
+            managersIds: Array<number | string>;
+        }
+
+        class CompanyModel extends Model<ICompany> {
+            public static data() {
                 return {
                     managersIds: {
                         type: "array",
@@ -507,7 +573,7 @@ describe("ArrayType", () => {
             }
         }
 
-        let companyModel = new CompanyModel({
+        const companyModel = new CompanyModel({
             managersIds: ["30", 2, -10]
         });
 
@@ -515,8 +581,13 @@ describe("ArrayType", () => {
     });
 
     it("sort by custom comparator", () => {
-        class SomeModel extends Model {
-            static data() {
+
+        interface ISomeData {
+            names: string[];
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     names: {
                         type: "array",
@@ -531,7 +602,7 @@ describe("ArrayType", () => {
             }
         }
 
-        let model = new SomeModel({
+        const model = new SomeModel({
             names: ["a3", "d4", "b2", "c1"]
         });
 
@@ -539,15 +610,19 @@ describe("ArrayType", () => {
     });
 
     it("matrix", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            matrix: number[][];
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     matrix: [["number"]]
                 };
             }
         }
 
-        let model = new SomeModel({
+        const model = new SomeModel({
             matrix: [
                 [1, 2, 3],
                 [4, 5, 6],
@@ -564,16 +639,25 @@ describe("ArrayType", () => {
 
     
     it("model.toJSON with array of models", () => {
-        class TaskModel extends Model {
-            static data() {
+        interface ITask {
+            name: string;
+        }
+
+        class TaskModel extends Model<ITask> {
+            public static data() {
                 return {
                     name: "string"
                 };
             }
         }
 
-        class UserModel extends Model {
-            static data() {
+        interface IUser {
+            name: string;
+            tasks: TaskModel[];
+        }
+
+        class UserModel extends Model<IUser> {
+            public static data() {
                 return {
                     name: "string",
                     tasks: [TaskModel]
@@ -581,7 +665,7 @@ describe("ArrayType", () => {
             }
         }
 
-        let userModel = new UserModel({
+        const userModel = new UserModel({
             name: "Jack",
             tasks: [
                 {name: "task 1"},
@@ -602,15 +686,19 @@ describe("ArrayType", () => {
     });
 
     it("model.clone with array", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            ids: number[];
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     ids: ["number"]
                 };
             }
         }
 
-        let model = new SomeModel({
+        const model = new SomeModel({
             ids: [1, 2, 3]
         });
 
@@ -618,11 +706,11 @@ describe("ArrayType", () => {
             ids: [1, 2, 3]
         });
 
-        let clone = model.clone();
+        const clone = model.clone();
 
         assert.ok( clone instanceof SomeModel );
-        assert.ok( clone != model );
-        assert.ok( clone.data.ids != model.data.ids );
+        assert.ok( clone !== model );
+        assert.ok( clone.data.ids !== model.data.ids );
 
         assert.deepEqual(clone.data, {
             ids: [1, 2, 3]
@@ -656,11 +744,15 @@ describe("ArrayType", () => {
     });
 
     it("test base validate as prior validation", () => {
-        let testArr1 = [1];
-        let testArr2 = [2];
+        const testArr1 = [1];
+        const testArr2 = [2];
 
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            ids: number[];
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     ids: {
                         type: ["number"],
@@ -673,26 +765,30 @@ describe("ArrayType", () => {
 
         assert.throws(
             () => {
-                new SomeModel({
+                const someModel = new SomeModel({
                     ids: [3, 3]
                 });
             }, 
-            err => 
-                err.message ==  "invalid ids: [3,3]"
+            (err) => 
+                err.message ===  "invalid ids: [3,3]"
         );
         
     });
 
     it("test array of any values", () => {
-        class SomeModel extends Model {
-            static data() {
+        interface ISomeData {
+            arr: any[];
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
                 return {
                     arr: []
                 };
             }
         }
 
-        let model = new SomeModel({
+        const model = new SomeModel({
             arr: [1, "nice"]
         });
 
@@ -702,60 +798,64 @@ describe("ArrayType", () => {
     });
 
     it("equal arrays", () => {
-        let pairs = [
+        const pairs: any[][] = [
             [null, null, true],
             [null, [], false],
             [[], [], true],
-            [[1,2], [1,2], true],
-            [[2,1], [1,2], false],
-            [[1], [1,2], false]
+            [[1, 2], [1, 2], true],
+            [[2, 1], [1, 2], false],
+            [[1], [1, 2], false]
         ];
 
-        pairs.forEach(pair => {
-            class TestModel extends Model {
-                static data() {
+        interface ISomeData {
+            arr: number[];
+        }
+
+        pairs.forEach((pair) => {
+            class TestModel extends Model<ISomeData> {
+                public static data() {
                     return {
                         arr: ["number"]
                     };
                 }
             }
 
-            let model1 = new TestModel({
+            const model1 = new TestModel({
                 arr: pair[0]
             });
 
-            let model2 = new TestModel({
+            const model2 = new TestModel({
                 arr: pair[1]
             });
 
             assert.strictEqual(
                 model1.equal( model2 ),
                 pair[2],
-                pair
+                pair.toString()
             );
 
             assert.strictEqual(
                 model2.equal( model1 ),
                 pair[2],
-                pair
+                pair.toString()
             );
         });
     });
 
     it("equal circular arrays", () => {
-        let circular1 = [];
+        const circular1 = [];
         circular1[0] = circular1;
 
-        let circular2 = [];
+        const circular2 = [];
         circular2[0] = circular2;
 
-        let circular3 = [];
+        const circular3 = [];
         circular3[0] = circular3;
         circular3[1] = [];
 
-        let circular4 = [circular2, circular2];
+        const circular4 = [circular2, circular2];
 
-        let pairs = [
+        const pairs: any[][] = [
             [circular1, circular1, true],
             [circular1, circular2, true],
             [circular2, circular2, true],
@@ -765,33 +865,37 @@ describe("ArrayType", () => {
             [circular4, circular4, true]
         ];
 
-        pairs.forEach(pair => {
-            class TestModel extends Model {
-                static data() {
+        interface ISomeData {
+            arr: any[][];
+        }
+
+        pairs.forEach((pair) => {
+            class TestModel extends Model<ISomeData> {
+                public static data() {
                     return {
                         arr: [[]]
                     };
                 }
             }
 
-            let model1 = new TestModel({
+            const model1 = new TestModel({
                 arr: pair[0]
             });
 
-            let model2 = new TestModel({
+            const model2 = new TestModel({
                 arr: pair[1]
             });
 
             assert.strictEqual(
                 model1.equal( model2 ),
                 pair[2],
-                pair
+                pair.toString()
             );
 
             assert.strictEqual(
                 model2.equal( model1 ),
                 pair[2],
-                pair
+                pair.toString()
             );
         });
     });
@@ -801,10 +905,10 @@ describe("ArrayType", () => {
     // then clone should be instance of ChildModel
     it("clone array of models, should return array of instance of Child", () => {
 
-        class FirstLevel extends Model {}
+        class FirstLevel extends Model<ISimpleObject> {}
 
         class SecondLevel extends FirstLevel {
-            static data() {
+            public static data() {
                 return {
                     level: {
                         type: "number",
@@ -814,16 +918,20 @@ describe("ArrayType", () => {
             }
         }
 
-        class MainModel extends Model {
-            static data() {
+        interface IMain {
+            arr: FirstLevel[];
+        }
+
+        class MainModel extends Model<IMain> {
+            public static data() {
                 return {
                     arr: [FirstLevel]
                 };
             }
         }
 
-        let second = new SecondLevel();
-        let main = new MainModel({
+        const second = new SecondLevel();
+        const main = new MainModel({
             arr: [second]
         });
 
@@ -836,7 +944,7 @@ describe("ArrayType", () => {
             }
         );
 
-        let clone = main.clone();
+        const clone = main.clone();
 
         assert.ok( clone.get("arr")[0] instanceof SecondLevel );
 
