@@ -653,4 +653,72 @@ describe("ModelType", () => {
 
     });
 
+    it("triple extending", () => {
+        interface IFirst {
+            first: number;
+        }
+        interface ISecond extends IFirst {
+            second: number;
+        }
+        interface IThird extends ISecond {
+            third: number;
+        }
+
+        class First<T extends IFirst = IFirst> extends Model<T> {
+            public static data() {
+                return {
+                    first: "number"
+                };
+            }
+        }
+
+        class Second<T extends ISecond = ISecond> extends First<T> {
+            public static data() {
+                return {
+                    ...super.data(),
+                    second: "number"
+                };
+            }
+        }
+
+        class Third extends Second<IThird> {
+            public static data() {
+                return {
+                    ...super.data(),
+                    third: "number"
+                };
+            }
+        }
+
+        const first = new First({
+            first: 1
+        });
+        const second = new Second({
+            first: 1,
+            second: 2
+        });
+        const third = new Third({
+            first: 1,
+            second: 2,
+            third: 3
+        });
+
+        assert.deepStrictEqual( first.toJSON(), {
+            first: 1
+        });
+        assert.deepStrictEqual( second.toJSON(), {
+            first: 1,
+            second: 2
+        });
+        assert.deepStrictEqual( second.toJSON(), {
+            first: 1,
+            second: 2,
+            third: 3
+        });
+
+        assert.strictEqual( first.get("first"), 1 );
+        assert.strictEqual( second.get("second"), 2 );
+        assert.strictEqual( third.get("third"), 3 );
+    });
+
 });

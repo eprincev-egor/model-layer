@@ -1,11 +1,16 @@
 
 
 // const {Model} = require("model-layer");
-const {Model} = require("../lib/index");
-const assert = require("assert");
+import {Model} from "../lib/index";
+import assert from "assert";
 
-class Tree extends Model {
-    static data() {
+interface ITree {
+    name: string;
+    children: Tree[];
+}
+
+class Tree extends Model<ITree> {
+    public static data() {
         return {
             name: "string",
             children: [Tree]
@@ -13,7 +18,7 @@ class Tree extends Model {
     }
 }
 
-let tree = new Tree({
+const tree = new Tree({
     name: "Grandfather",
     children: [
         {
@@ -29,10 +34,10 @@ let tree = new Tree({
 
 // any model has property .walk,
 // for scan children models
-let children = [];
+const children = [];
 
-tree.walk(child => {
-    let name = child.get("name");
+tree.walk((child) => {
+    const name = child.get("name");
     children.push( name );
 });
 

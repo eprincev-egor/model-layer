@@ -1,11 +1,18 @@
 
 
 // const {Model} = require("model-layer");
-const {Model} = require("../lib/index");
-const assert = require("assert");
+import {Model} from "../lib/index";
+import assert from "assert";
 
-class BinaryTreeModel extends Model {
-    static data() {
+interface IBinaryTree {
+    left: BinaryTreeModel;
+    right: BinaryTreeModel;
+    id: number;
+    name: string;
+}
+
+class BinaryTreeModel extends Model<IBinaryTree> {
+    public static data() {
         return {
             // define model property
             left: BinaryTreeModel,
@@ -16,19 +23,19 @@ class BinaryTreeModel extends Model {
         };
     }
 
-    findName(id) {
-        if ( id == this.get("id") ) {
+    public findName(id) {
+        if ( id === this.get("id") ) {
             return this.get("name");
         }
 
         if ( id > this.get("id") ) {
-            let right = this.get("right");
+            const right = this.get("right");
             if ( right ) {
                 return right.findName(id);
             }
         }
         else {
-            let left = this.get("left");
+            const left = this.get("left");
             if ( left ) {
                 return left.findName(id);
             }
@@ -38,7 +45,7 @@ class BinaryTreeModel extends Model {
     }
 }
 
-let tree = new BinaryTreeModel({
+const tree = new BinaryTreeModel({
     id: 4,
     name: "Bob",
     left: {

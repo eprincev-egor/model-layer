@@ -1,11 +1,17 @@
 
 
 // const {Model} = require("model-layer");
-const {Model} = require("../lib/index");
-const assert = require("assert");
+import {Model} from "../lib/index";
+import assert from "assert";
 
-class Product extends Model {
-    static data() {
+interface IProduct {
+    name: string;
+    price: number;
+    quantity: number;
+}
+
+class Product extends Model<IProduct> {
+    public static data() {
         return {
             
             name: {
@@ -28,8 +34,14 @@ class Product extends Model {
     }
 }
 
-class Cart extends Model {
-    static data() {
+interface ICart {
+    products: Product[];
+    total: number;
+}
+
+// tslint:disable-next-line: max-classes-per-file
+class Cart extends Model<ICart> {
+    public static data() {
         return {
             // define array of models
             products: [Product],
@@ -40,7 +52,7 @@ class Cart extends Model {
     }
 
     // calc total price for cart
-    prepare(data) {
+    public prepare(data) {
         data.total = data.products.reduce((total, product) =>
             total + product.get("price") * product.get("quantity"), 0
         );
@@ -48,18 +60,18 @@ class Cart extends Model {
 }
 
 
-let milk = new Product({
+const milk = new Product({
     name: "milk",
     price: 10.333
 });
 
-let eggs = new Product({
+const eggs = new Product({
     name: "eggs",
     price: 1.6,
     quantity: 10
 });
 
-let cart = new Cart({
+const cart = new Cart({
     products: [milk, eggs]
 });
 

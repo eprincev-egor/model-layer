@@ -1,11 +1,16 @@
 
 
 // const {Model} = require("model-layer");
-const {Model} = require("../lib/index");
-const assert = require("assert");
+import {Model} from "../lib/index";
+import assert from "assert";
 
-class UserModel extends Model {
-    static data() {
+interface IUser {
+    name: string;
+    email: string;
+}
+
+class UserModel extends Model<IUser> {
+    public static data() {
         return {
             
             // simplest define string property
@@ -22,7 +27,7 @@ class UserModel extends Model {
     }
 }
 
-let user = new UserModel({
+const user = new UserModel({
     name: "Bob",
     email: "bob@mail.com"
 });

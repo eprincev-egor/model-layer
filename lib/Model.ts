@@ -1,4 +1,4 @@
-import * as EventEmitter from "events";
+import EventEmitter from "events";
 import EqualStack from "./EqualStack";
 import {Type} from "./type/Type";
 import { invalidValuesAsString, isObject, MODELS } from "./utils";
@@ -17,19 +17,34 @@ type ReadOnlyPartial<TData> = {
 interface ILikeCollection {
     length: number;
     models: Array<Model<ISimpleObject>>;
-    Model: new (object) => Model<ISimpleObject>;
+    Model: new (row?: any) => Model<ISimpleObject>;
     [key: string]: any;
 }
 
-export type InputValue<T> = (
-    T extends Model<ISimpleObject> ?
-        T | T["data"] : (
-            T extends ILikeCollection ?
-                T | Array< 
-                    T["models"][0]["data"] | 
-                    T["models"] 
-                > :
-                T
+export type InputModel<TModel extends Model<ISimpleObject>> = (
+    TModel | InputData< TModel["data"] >
+);
+
+export type InputCollection<TCollection extends ILikeCollection> = (
+    TCollection | 
+    Array< 
+        InputData< TCollection["models"][0]["data"] >
+    >
+);
+
+type InputArray<TArray extends any[]> = (
+    Array< InputValue< TArray[number] > >
+);
+
+type InputValue<TValue> = (
+    TValue extends Model<ISimpleObject> ?
+        InputModel<TValue> : (
+            TValue extends ILikeCollection ?
+                InputCollection< TValue > : (
+                    TValue extends any[] ?
+                        Array< InputValue< TValue[number] > >:
+                        TValue
+                )
     )
 );
 
@@ -168,7 +183,7 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
         delete this.isInit;
     }
 
-    public get<Key extends keyof TData>(key: Key) {
+    public get<TKey extends keyof TData>(key: TKey): TData[TKey] {
         return this.data[ key ];
     }
 
