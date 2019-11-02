@@ -32,19 +32,12 @@ export type InputCollection<TCollection extends ILikeCollection> = (
     >
 );
 
-type InputArray<TArray extends any[]> = (
-    Array< InputValue< TArray[number] > >
-);
-
 type InputValue<TValue> = (
     TValue extends Model<ISimpleObject> ?
         InputModel<TValue> : (
             TValue extends ILikeCollection ?
-                InputCollection< TValue > : (
-                    TValue extends any[] ?
-                        Array< InputValue< TValue[number] > >:
-                        TValue
-                )
+                InputCollection< TValue > : 
+                TValue
     )
 );
 
@@ -172,14 +165,15 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
 
             // throw required error in method .set
             if ( description.required ) {
-                if ( !(key in data) ) {
-                    data[key] = null;
+                if ( !(key in inputData) ) {
+                    (inputData as any)[key] = null;
                 }
             }
         }
         
         this.isInit = true; // do not check const
-        this.set(data);
+        this.data = data;
+        this.set(inputData);
         delete this.isInit;
     }
 

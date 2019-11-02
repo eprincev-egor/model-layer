@@ -25,7 +25,7 @@ export default class NumberType extends Type {
         this.nullAsZero = params.nullAsZero;
         this.zeroAsNull = params.zeroAsNull;
 
-        if ( params.ceil !== null ) {
+        if ( params.ceil != null ) {
             if ( isNaN(+params.ceil) ) {
                 throw new Error("invalid ceil: " + invalidValuesAsString(params.ceil));
             }
@@ -33,7 +33,7 @@ export default class NumberType extends Type {
             this.ceil = +params.ceil;
         }
 
-        if ( params.round !== null ) {
+        if ( params.round != null ) {
             if ( isNaN(+params.round) ) {
                 throw new Error("invalid round: " + invalidValuesAsString(params.round));
             }
@@ -41,7 +41,7 @@ export default class NumberType extends Type {
             this.round = +params.round;
         }
 
-        if ( params.floor !== null ) {
+        if ( params.floor != null ) {
             if ( isNaN(+params.floor) ) {
                 throw new Error("invalid floor: " + invalidValuesAsString(params.floor));
             }

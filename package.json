@@ -10,7 +10,8 @@
   "scripts": {
     "build": "tsc",
     "lint": "tslint -c tslint.json 'lib/**/*.ts' && tslint -c test/tslint.json 'test/**/*.ts'",
-    "test": "nyc mocha",
+    "test": "mocha -r ts-node/register test/**/*-spec.ts",
+    "coverage": "nyc -r lcov -e .ts -x \"*-spec.ts\" npm run test",
     "prepublishOnly": "tsc"
   },
   "nyc": {
