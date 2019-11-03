@@ -520,6 +520,9 @@ class Collection<TModel extends Model<ISimpleObject>> extends EventEmitter {
                 this.prepareRow(row)
             );
         }
+        else {
+            items = [];
+        }
 
         const removedModels = this.models.slice(start, start + deleteCount);
 

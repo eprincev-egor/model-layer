@@ -175,6 +175,8 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
         this.data = data;
         this.set(inputData);
         delete this.isInit;
+
+        Object.freeze(this.data);
     }
 
     public get<TKey extends keyof TData>(key: TKey): TData[TKey] {
@@ -590,6 +592,7 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
             super.on(eventName + ":" + key, listener);
         }
         else {
+            listener = keyOrListener;
             super.on(eventName, listener);
         }
 

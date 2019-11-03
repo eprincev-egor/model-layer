@@ -29,19 +29,19 @@ describe("BooleanType", () => {
         });
         assert.strictEqual( model.data.some, true );
         
-        model.set("some", false);
+        model.set({some: false});
         assert.strictEqual( model.data.some, false );
 
-        model.set("some", null);
+        model.set({some: null});
         assert.strictEqual( model.data.some, null );
 
-        model.set("some", true);
+        model.set({some: true});
         assert.strictEqual( model.data.some, true );
 
         
         assert.throws(
             () => {
-                model.set("some", {});
+                model.set({some: {}});
             },
             (err) =>
                 err.message === "invalid boolean for some: {}"
@@ -49,7 +49,7 @@ describe("BooleanType", () => {
 
         assert.throws(
             () => {
-                model.set("some", {some: 1});
+                model.set({some: {some: 1}});
             },
             (err) =>
                 err.message === "invalid boolean for some: {\"some\":1}"
@@ -57,7 +57,7 @@ describe("BooleanType", () => {
 
         assert.throws(
             () => {
-                model.set("some", -1 / 0);
+                model.set({some: -1 / 0});
             },
             (err) =>
                 err.message === "invalid boolean for some: -Infinity"
@@ -65,7 +65,7 @@ describe("BooleanType", () => {
 
         assert.throws(
             () => {
-                model.set("some", 1 / 0);
+                model.set({some: 1 / 0});
             },
             (err) =>
                 err.message === "invalid boolean for some: Infinity"
@@ -73,7 +73,7 @@ describe("BooleanType", () => {
 
         assert.throws(
             () => {
-                model.set("some", NaN);
+                model.set({some: NaN});
             },
             (err) =>
                 err.message === "invalid boolean for some: NaN"
@@ -81,7 +81,7 @@ describe("BooleanType", () => {
 
         assert.throws(
             () => {
-                model.set("some", /x/);
+                model.set({some: /x/});
             },
             (err) =>
                 err.message === "invalid boolean for some: /x/"
@@ -89,7 +89,7 @@ describe("BooleanType", () => {
 
         assert.throws(
             () => {
-                model.set("some", "wrong");
+                model.set({some: "wrong"});
             },
             (err) =>
                 err.message === "invalid boolean for some: \"wrong\""
@@ -97,7 +97,7 @@ describe("BooleanType", () => {
 
         assert.throws(
             () => {
-                model.set("some", [0]);
+                model.set({some: [0]});
             },
             (err) =>
                 err.message === "invalid boolean for some: [0]"

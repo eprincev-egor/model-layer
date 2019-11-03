@@ -244,7 +244,7 @@ describe("Model validate", () => {
         assert.strictEqual(model.data.prop, "nice");
 
 
-        model.set("prop", null);
+        model.set({prop: null});
         assert.strictEqual(model.data.prop, null);
     });
 
