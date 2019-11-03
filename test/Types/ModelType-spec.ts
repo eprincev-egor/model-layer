@@ -710,7 +710,7 @@ describe("ModelType", () => {
             first: 1,
             second: 2
         });
-        assert.deepStrictEqual( second.toJSON(), {
+        assert.deepStrictEqual( third.toJSON(), {
             first: 1,
             second: 2,
             third: 3

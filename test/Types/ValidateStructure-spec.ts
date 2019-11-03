@@ -151,7 +151,7 @@ describe("validate and prepare model data", () => {
         assert.throws(
             () => {
                 const anyModel = model as any;
-                anyModel.data.arr = 10;
+                anyModel.structure.arr = 10;
             },
             (err) =>
                 /Cannot assign to read only property/.test(err.message)
@@ -160,7 +160,7 @@ describe("validate and prepare model data", () => {
         assert.throws(
             () => {
                 const anyModel = model as any;
-                anyModel.data.arr.element.type = 10;
+                anyModel.structure.arr.element.type = 10;
             },
             (err) =>
                 /Cannot assign to read only property/.test(err.message)
@@ -169,7 +169,7 @@ describe("validate and prepare model data", () => {
         assert.throws(
             () => {
                 const anyModel = model as any;
-                anyModel.data.obj.element.type = 10;
+                anyModel.structure.obj.element.type = 10;
             },
             (err) =>
                 /Cannot assign to read only property/.test(err.message)
@@ -188,6 +188,7 @@ describe("validate and prepare model data", () => {
                 return {
                     name: "string",
                     text: "text",
+                    age: "number",
                     user: TestModel,
                     arrayOfModels: [TestModel],
                     arrayOfNumbers: ["number"],
@@ -205,9 +206,10 @@ describe("validate and prepare model data", () => {
         }
 
         const model = new SomeModel();
+        const anyModel = model as any;
 
         assert.deepEqual(
-            model.data,
+            anyModel.structure,
             {
                 name: {
                     type: "string",
@@ -226,6 +228,15 @@ describe("validate and prepare model data", () => {
                     trim: false,
                     upper: false,
                     lower: false
+                },
+                age: {
+                    type: "number",
+                    required: false,
+                    ceil: null,
+                    round: null,
+                    floor: null,
+                    nullAsZero: false,
+                    zeroAsNull: false
                 },
                 user: {
                     type: "model",

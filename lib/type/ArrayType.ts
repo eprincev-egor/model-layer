@@ -36,14 +36,21 @@ export default class ArrayType extends Type {
     public nullAsEmpty: boolean;
     public element: any;
 
-    constructor(params: IArrayTypeParams) {
-        super(params);
+    constructor({
+        sort = false,
+        unique = false,
+        emptyAsNull = false,
+        nullAsEmpty = false,
+        element,
+        ...otherParams
+    }: IArrayTypeParams) {
+        super(otherParams);
 
-        this.emptyAsNull = params.emptyAsNull;
-        this.nullAsEmpty = params.nullAsEmpty;
-        this.sort = params.sort;
-        this.unique = params.unique;
-        this.element = params.element;
+        this.emptyAsNull = emptyAsNull;
+        this.nullAsEmpty = nullAsEmpty;
+        this.sort = sort;
+        this.unique = unique;
+        this.element = element;
     }
 
     public prepare(originalValue, key) {

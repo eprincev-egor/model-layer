@@ -118,7 +118,7 @@ export class Type {
         }
 
         this.type = params.type;
-        this.required = params.required || params.primary;
+        this.required = params.required || params.primary || false;
 
         if ( Array.isArray( params.enum ) ) {
             this.enum = params.enum;

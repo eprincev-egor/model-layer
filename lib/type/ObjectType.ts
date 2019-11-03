@@ -36,12 +36,17 @@ class ObjectType extends Type {
     public emptyAsNull: boolean;
     public element: any;
 
-    constructor(params: IObjectTypeParams) {
-        super(params);
+    constructor({
+        nullAsEmpty = false,
+        emptyAsNull = false,
+        element,
+        ...otherParams
+    }: IObjectTypeParams) {
+        super(otherParams);
 
-        this.element = params.element;
-        this.nullAsEmpty = params.nullAsEmpty;
-        this.emptyAsNull = params.emptyAsNull;
+        this.element = element;
+        this.nullAsEmpty = nullAsEmpty;
+        this.emptyAsNull = emptyAsNull;
     }
 
     public prepare(originalObject, modelKey) {

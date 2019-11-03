@@ -18,36 +18,45 @@ export default class NumberType extends Type {
     public round: number;
     public floor: number;
 
-    constructor(params: INumberTypeParams) {
-        super(params);
+    constructor({
+        nullAsZero = false,
+        zeroAsNull = false,
+        ceil = null,
+        round = null,
+        floor = null,
+        ...otherParams
+    }: INumberTypeParams) {
+        super(otherParams);
 
         
-        this.nullAsZero = params.nullAsZero;
-        this.zeroAsNull = params.zeroAsNull;
+        this.nullAsZero = nullAsZero;
+        this.zeroAsNull = zeroAsNull;
 
-        if ( params.ceil != null ) {
-            if ( isNaN(+params.ceil) ) {
-                throw new Error("invalid ceil: " + invalidValuesAsString(params.ceil));
+        if ( ceil != null ) {
+            if ( isNaN(+ceil) ) {
+                throw new Error("invalid ceil: " + invalidValuesAsString(ceil));
+            }
+            ceil = +ceil;
+        }
+        this.ceil = ceil;
+
+        if ( round != null ) {
+            if ( isNaN(+round) ) {
+                throw new Error("invalid round: " + invalidValuesAsString(round));
             }
 
-            this.ceil = +params.ceil;
+            round = +round;
         }
+        this.round = round;
 
-        if ( params.round != null ) {
-            if ( isNaN(+params.round) ) {
-                throw new Error("invalid round: " + invalidValuesAsString(params.round));
-            }
-
-            this.round = +params.round;
-        }
-
-        if ( params.floor != null ) {
-            if ( isNaN(+params.floor) ) {
-                throw new Error("invalid floor: " + invalidValuesAsString(params.floor));
+        if ( floor != null ) {
+            if ( isNaN(+floor) ) {
+                throw new Error("invalid floor: " + invalidValuesAsString(floor));
             }
             
-            this.floor = +params.floor;
+            floor = +floor;
         }
+        this.floor = floor;
     }
 
     public prepare(originalValue,  key) {

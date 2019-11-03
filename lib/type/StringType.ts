@@ -26,15 +26,22 @@ export default class StringType extends Type {
     public lower: boolean;
     public upper: boolean;
 
-    constructor(params: IStringTypeParams) {
-        super(params);
+    constructor({
+        nullAsEmpty = false,
+        emptyAsNull = false,
+        trim = false,
+        lower = false,
+        upper = false,
+        ...otherParams
+    }: IStringTypeParams) {
+        super(otherParams);
 
-        this.nullAsEmpty = params.nullAsEmpty;
-        this.emptyAsNull = params.emptyAsNull;
+        this.nullAsEmpty = nullAsEmpty;
+        this.emptyAsNull = emptyAsNull;
 
-        this.trim = params.trim;
-        this.lower = params.lower;
-        this.upper = params.upper;
+        this.trim = trim;
+        this.lower = lower;
+        this.upper = upper;
     }
 
     public prepare(value, key) {
