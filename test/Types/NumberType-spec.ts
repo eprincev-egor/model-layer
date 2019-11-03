@@ -430,4 +430,108 @@ describe("NumberType", () => {
         });
     });
     
+    it("conflicting parameters: ceil and round", () => {
+        interface ISomeData {
+            money: number;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
+                return {
+                    money: {
+                        type: "number",
+                        ceil: 0,
+                        round: 0
+                    }
+                };
+            }
+        }
+
+        assert.throws(
+            () => {
+                const model = new SomeModel();
+            },
+            (err) =>
+                err.message === "money: conflicting parameters: use only round or only ceil"
+        );
+    });
+
+    it("conflicting parameters: floor and ceil", () => {
+        interface ISomeData {
+            money: number;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
+                return {
+                    money: {
+                        type: "number",
+                        ceil: 0,
+                        floor: 0
+                    }
+                };
+            }
+        }
+
+        assert.throws(
+            () => {
+                const model = new SomeModel();
+            },
+            (err) =>
+                err.message === "money: conflicting parameters: use only floor or only ceil"
+        );
+    });
+
+    it("conflicting parameters: floor and round", () => {
+        interface ISomeData {
+            money: number;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
+                return {
+                    money: {
+                        type: "number",
+                        round: 0,
+                        floor: 0
+                    }
+                };
+            }
+        }
+
+        assert.throws(
+            () => {
+                const model = new SomeModel();
+            },
+            (err) =>
+                err.message === "money: conflicting parameters: use only floor or only round"
+        );
+    });
+
+    it("conflicting parameters: floor and round", () => {
+        interface ISomeData {
+            age: number;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
+                return {
+                    age: {
+                        type: "number",
+                        nullAsZero: true,
+                        zeroAsNull: true
+                    }
+                };
+            }
+        }
+
+        assert.throws(
+            () => {
+                const model = new SomeModel();
+            },
+            (err) =>
+                err.message === "age: conflicting parameters: use only nullAsZero or only zeroAsNull"
+        );
+    });
+
 });

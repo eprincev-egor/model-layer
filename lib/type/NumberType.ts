@@ -32,6 +32,10 @@ export default class NumberType extends Type {
         this.nullAsZero = nullAsZero;
         this.zeroAsNull = zeroAsNull;
 
+        if ( nullAsZero && zeroAsNull ) {
+            throw new Error("conflicting parameters: use only nullAsZero or only zeroAsNull");
+        }
+
         if ( ceil != null ) {
             if ( isNaN(+ceil) ) {
                 throw new Error("invalid ceil: " + invalidValuesAsString(ceil));
@@ -45,6 +49,10 @@ export default class NumberType extends Type {
                 throw new Error("invalid round: " + invalidValuesAsString(round));
             }
 
+            if ( ceil != null ) {
+                throw new Error("conflicting parameters: use only round or only ceil");
+            }
+
             round = +round;
         }
         this.round = round;
@@ -52,6 +60,13 @@ export default class NumberType extends Type {
         if ( floor != null ) {
             if ( isNaN(+floor) ) {
                 throw new Error("invalid floor: " + invalidValuesAsString(floor));
+            }
+
+            if ( ceil != null ) {
+                throw new Error("conflicting parameters: use only floor or only ceil");
+            }
+            if ( round != null ) {
+                throw new Error("conflicting parameters: use only floor or only round");
             }
             
             floor = +floor;
