@@ -609,4 +609,30 @@ describe("ObjectType", () => {
 
     });
 
+    it("conflicting parameters: nullAsEmpty and emptyAsNull", () => {
+        interface ISomeData {
+            obj: object;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
+                return {
+                    obj: {
+                        type: "object",
+                        nullAsEmpty: true,
+                        emptyAsNull: true
+                    }
+                };
+            }
+        }
+
+        assert.throws(
+            () => {
+                const model = new SomeModel();
+            },
+            (err) =>
+                err.message === "obj: conflicting parameters: use only nullAsEmpty or only emptyAsNull"
+        );
+    });
+
 });

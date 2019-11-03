@@ -47,6 +47,10 @@ class ObjectType extends Type {
         this.element = element;
         this.nullAsEmpty = nullAsEmpty;
         this.emptyAsNull = emptyAsNull;
+
+        if ( nullAsEmpty && emptyAsNull ) {
+            throw new Error("conflicting parameters: use only nullAsEmpty or only emptyAsNull");
+        }
     }
 
     public prepare(originalObject, modelKey) {
