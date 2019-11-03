@@ -456,7 +456,7 @@ class Collection<TModel extends Model<ISimpleObject>> extends EventEmitter {
         return new CustomCollection(outputModels);
     }
 
-    public join(separator: string = ""): string {
+    public join(separator: string = ","): string {
         return this.models.join(separator);
     }
 

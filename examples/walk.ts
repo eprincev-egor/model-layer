@@ -5,8 +5,8 @@ import {Model} from "../lib/index";
 import assert from "assert";
 
 interface ITree {
-    name: string;
-    children: Tree[];
+    name?: string;
+    children?: Array<Tree | ITree>;
 }
 
 class Tree extends Model<ITree> {
@@ -36,7 +36,7 @@ const tree = new Tree({
 // for scan children models
 const children = [];
 
-tree.walk((child) => {
+tree.walk((child: Tree) => {
     const name = child.get("name");
     children.push( name );
 });

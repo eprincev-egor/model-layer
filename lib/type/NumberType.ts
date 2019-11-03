@@ -76,7 +76,7 @@ export default class NumberType extends Type {
         }
     
         
-        if ( this.round !== null ) {
+        if ( this.round != null ) {
             const desc = Math.pow( 10, this.round );
     
             value = Math.round(  
@@ -85,7 +85,7 @@ export default class NumberType extends Type {
             ) / desc;
         }
     
-        else if ( this.floor !== null ) {
+        else if ( this.floor != null ) {
             const desc = Math.pow( 10, this.floor );
     
             value = Math.floor(
@@ -94,7 +94,7 @@ export default class NumberType extends Type {
             ) / desc;
         }
     
-        else if ( this.ceil !== null ) {
+        else if ( this.ceil != null ) {
             const desc = Math.pow( 10, this.ceil );
     
             value = Math.ceil(

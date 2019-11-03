@@ -316,7 +316,7 @@ describe("ArrayType", () => {
         }
 
         interface ICompany {
-            managers: UserModel[];
+            managers: Array<UserModel | IUser>;
         }
 
         class CompanyModel extends Model<ICompany> {
@@ -345,7 +345,7 @@ describe("ArrayType", () => {
             }]
         });
 
-        const managers = companyModel.data.managers;
+        const managers = companyModel.data.managers as UserModel[];
         assert.ok( managers[0] instanceof UserModel );
         assert.equal( managers[0].get("name"), "Bob" );
     });
@@ -653,7 +653,7 @@ describe("ArrayType", () => {
 
         interface IUser {
             name: string;
-            tasks: TaskModel[];
+            tasks: Array<TaskModel | ITask>;
         }
 
         class UserModel extends Model<IUser> {
