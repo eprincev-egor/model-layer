@@ -144,7 +144,9 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
 
         this.prepareStructure();
         
-        const data = {};
+        const data: Partial<TData> = {};
+        this.data = data;
+
         if ( !isObject(inputData) ) {
             inputData = {};
         }
@@ -161,7 +163,7 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
             // default can be invalid
             value = description.prepare(value, key, this);
 
-            data[ key ] = value;
+            data[ key as keyof TData ] = value;
 
             // throw required error in method .set
             if ( description.required ) {
@@ -172,7 +174,6 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
         }
         
         this.isInit = true; // do not check const
-        this.data = data;
         this.set(inputData);
         delete this.isInit;
 
@@ -248,7 +249,7 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
 
             // if field has type string,
             // then he must be string or null in anyway!
-            if ( this.prepare ) {
+            if ( this.prepare !== Model.prototype.prepare ) {
                 newValue = description.prepare(newValue, key, this);
             }
 
