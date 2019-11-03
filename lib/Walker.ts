@@ -1,21 +1,21 @@
 
 export default class Walker {
-    private _exited: boolean;
-    private _continued: boolean;
+    private exited: boolean;
+    private continued: boolean;
 
     public exit(): void {
-        this._exited = true;
+        this.exited = true;
     }
 
     public isExited(): boolean {
-        return this._exited;
+        return this.exited;
     }
 
     public continue(): void {
-        this._continued = true;
+        this.continued = true;
     }
 
     public isContinued(): boolean {
-        return this._continued;
+        return this.continued;
     }
 }
