@@ -42,6 +42,13 @@ export default class StringType extends Type {
         this.trim = trim;
         this.lower = lower;
         this.upper = upper;
+
+        if ( nullAsEmpty && emptyAsNull ) {
+            throw new Error("conflicting parameters: use only nullAsEmpty or only emptyAsNull");
+        }
+        if ( lower && upper ) {
+            throw new Error("conflicting parameters: use only lower or only upper");
+        }
     }
 
     public prepare(value, key) {

@@ -379,4 +379,56 @@ describe("StringType", () => {
         });
     });
 
+    it("conflicting parameters: nullAsEmpty and emptyAsNull", () => {
+        interface ISomeData {
+            name: string;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
+                return {
+                    name: {
+                        type: "string",
+                        nullAsEmpty: true,
+                        emptyAsNull: true
+                    }
+                };
+            }
+        }
+
+        assert.throws(
+            () => {
+                const model = new SomeModel();
+            },
+            (err) =>
+                err.message === "name: conflicting parameters: use only nullAsEmpty or only emptyAsNull"
+        );
+    });
+
+    it("conflicting parameters: lower and upper", () => {
+        interface ISomeData {
+            name: string;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
+                return {
+                    name: {
+                        type: "string",
+                        lower: true,
+                        upper: true
+                    }
+                };
+            }
+        }
+
+        assert.throws(
+            () => {
+                const model = new SomeModel();
+            },
+            (err) =>
+                err.message === "name: conflicting parameters: use only lower or only upper"
+        );
+    });
+
 });
