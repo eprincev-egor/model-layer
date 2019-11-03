@@ -17,6 +17,10 @@ export default class BooleanType extends Type {
 
         this.nullAsFalse = params.nullAsFalse;
         this.falseAsNull = params.falseAsNull;
+
+        if ( params.nullAsFalse && params.falseAsNull ) {
+            throw new Error("conflicting parameters: use only nullAsFalse or only falseAsNull");
+        }
     }
 
     public prepare(value, key) {

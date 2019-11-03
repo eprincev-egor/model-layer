@@ -248,5 +248,31 @@ describe("BooleanType", () => {
         });
     });
 
+    it("conflicting parameters: nullAsFalse and falseAsNull", () => {
+        interface ISomeData {
+            flag: boolean;
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
+                return {
+                    flag: {
+                        type: "boolean",
+                        nullAsFalse: true,
+                        falseAsNull: true
+                    }
+                };
+            }
+        }
+
+        assert.throws(
+            () => {
+                const model = new SomeModel();
+            },
+            (err) =>
+                err.message === "flag: conflicting parameters: use only nullAsFalse or only falseAsNull"
+        );
+    });
+
     
 });
