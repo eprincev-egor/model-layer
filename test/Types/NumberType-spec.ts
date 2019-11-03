@@ -508,7 +508,7 @@ describe("NumberType", () => {
         );
     });
 
-    it("conflicting parameters: floor and round", () => {
+    it("conflicting parameters: nullAsZero and zeroAsNull", () => {
         interface ISomeData {
             age: number;
         }
