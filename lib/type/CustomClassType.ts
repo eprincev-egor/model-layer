@@ -7,8 +7,6 @@ import {invalidValuesAsString} from "../utils";
 
 interface ICustomClassTypeParams extends ITypeParams {
     CustomClass: any;
-    nullAsEmpty?: boolean;
-    emptyAsNull?: boolean;
 }
 
 export default class CustomClassType extends Type {
@@ -37,8 +35,6 @@ export default class CustomClassType extends Type {
     constructor(params: ICustomClassTypeParams) {
         super(params);
 
-        this.nullAsEmpty = params.nullAsEmpty;
-        this.emptyAsNull = params.emptyAsNull;
         this.CustomClass = params.CustomClass;
     }
 
