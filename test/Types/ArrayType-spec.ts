@@ -950,4 +950,31 @@ describe("ArrayType", () => {
 
     });
 
+
+    it("conflicting parameters: nullAsZero and zeroAsNull", () => {
+        interface ISomeData {
+            arr: number[];
+        }
+
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
+                return {
+                    arr: {
+                        type: ["number"],
+                        emptyAsNull: true,
+                        nullAsEmpty: true
+                    }
+                };
+            }
+        }
+
+        assert.throws(
+            () => {
+                const model = new SomeModel();
+            },
+            (err) =>
+                err.message === "arr: conflicting parameters: use only nullAsEmpty or only emptyAsNull"
+        );
+    });
+
 });

@@ -46,6 +46,10 @@ export default class ArrayType extends Type {
     }: IArrayTypeParams) {
         super(otherParams);
 
+        if ( emptyAsNull && nullAsEmpty ) {
+            throw new Error("conflicting parameters: use only nullAsEmpty or only emptyAsNull");
+        }
+
         this.emptyAsNull = emptyAsNull;
         this.nullAsEmpty = nullAsEmpty;
         this.sort = sort;
