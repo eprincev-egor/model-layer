@@ -281,9 +281,7 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
         // stick on his hands
         Object.freeze(newData);
 
-        if ( this.validate ) {
-            this.validate(newData);
-        }
+        this.validate(newData);
 
         // do not call emit and set newData
         if ( options.onlyValidate ) {

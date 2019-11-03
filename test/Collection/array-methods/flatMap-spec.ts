@@ -23,22 +23,30 @@ describe("Collection.flatMap", () => {
 
         const books = new Books([
             {name: "Book 1", price: 1.23},
-            {name: "Book 2", price: 2.3}
+            {name: "Book 2", price: 2.3},
+            {name: "Book 3", price: null}
         ]);
 
         const words = books.flatMap((book) =>
             book.get("name").split(" ")
         );
 
-        assert.deepStrictEqual( words, ["Book", "1", "Book", "2"] );
+        assert.deepStrictEqual( words, ["Book", "1", "Book", "2", "Book", "3"] );
 
-        const digits = books.flatMap((book) => 
-            book.get("price").toString()
-                .split(".")
-                .map((str) => +str)
-        );
+        const digits = books.flatMap((book) => {
+            const price = book.get("price");
+            
+            if ( price != null ) {
+                return price.toString()
+                    .split(".")
+                    .map((str) => +str);
+            }
+            else {
+                return null;
+            }
+        });
         
-        assert.deepStrictEqual( digits, [1, 23, 2, 3] );
+        assert.deepStrictEqual( digits, [1, 23, 2, 3, null] );
     });
     
     it("flatMap(f, context)", () => {

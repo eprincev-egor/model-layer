@@ -97,4 +97,26 @@ describe("Model events", () => {
     });
 
 
+    it("listen change:unknownProp", () => {
+        class SomeModel extends Model<ISomeData> {
+            public static data() {
+                return {
+                    prop: "string"
+                };
+            }
+        }
+
+        const model = new SomeModel();
+        const handler = () => false;
+        handler(); // for coverage
+
+        assert.throws(
+            () => {
+                model.on("change", "unknownProp", handler);
+            }, (err) =>
+                err.message === "unknown property: unknownProp"
+        );
+
+    });
+
 });
