@@ -104,12 +104,25 @@ export default class NumberType extends Type {
         }
     
         else if ( this.ceil != null ) {
-            const desc = Math.pow( 10, this.ceil );
-    
-            value = Math.ceil(
-                value * 
-                desc
-            ) / desc;
+            // 1.12 * 100 == 112.00000000000001
+
+            let valueStr = value.toString();
+            let commaPosition = valueStr.indexOf(".");
+            
+            if ( commaPosition !== -1 ) {
+                commaPosition += this.ceil;
+                valueStr = valueStr.replace(".", "");
+                valueStr = (
+                    valueStr.slice(0, commaPosition) + 
+                    "." +
+                    valueStr.slice(commaPosition)
+                );
+
+                value = +valueStr;
+                
+                const desc = Math.pow( 10, this.ceil );
+                value = Math.ceil(value) / desc;
+            }
         }
     
     

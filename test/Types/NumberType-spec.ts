@@ -209,6 +209,15 @@ describe("NumberType", () => {
 
         model.set({money: 1.599});
         assert.strictEqual( model.data.money, 1.6 );
+
+        model.set({money: 1.12});
+        assert.strictEqual( model.data.money, 1.12 );
+
+        model.set({money: 1.13});
+        assert.strictEqual( model.data.money, 1.13 );
+
+        model.set({money: 18014398509481984});
+        assert.strictEqual( model.data.money, 18014398509481984 );
     });
 
     it("prepare zeroAsNull", () => {
