@@ -237,29 +237,65 @@ const Types = {
 
 
 
+interface IObjectWithAnyKey {
+    "*": any;
+}
+
+// output
 type outputValue<T extends any> = (
     TInstanceOrT<T>["outputType"]
 );
-
-type output<T> = {
+type outputData<T> = {
     readonly [key in keyof T]: outputValue< T[key] >;
 };
 
+interface IOutputAnyData<T> {
+    readonly [key: string]: outputValue< T >;
+}
+
+type output<T> = (
+    T extends IObjectWithAnyKey ?
+        IOutputAnyData< T["*"] > :
+        outputData< T >
+);
+
+// input
 type inputValue<T extends any> = (
     TInstanceOrT<T>["inputType"]
 );
 
-type input<T> = {
+type inputData<T> = {
     [key in keyof T]?: inputValue< T[key] >;
 };
 
+interface IInputAnyData<T> {
+    [key: string]: inputValue< T >;
+}
+
+type input<T> = (
+    T extends IObjectWithAnyKey ?
+        IInputAnyData< T["*"] > :
+        inputData< T >
+);
+
+// json
 type jsonValue<T extends any> = (
     TInstanceOrT<T>["jsonType"]
 );
 
-type json<T> = {
+interface IJsonAnyData<T> {
+    [key: string]: jsonValue< T >;
+}
+
+type jsonData<T> = {
     [key in keyof T]?: jsonValue< T[key] >;
 };
+
+type json<T> = (
+    T extends IObjectWithAnyKey ?
+        IJsonAnyData< T["*"] > :
+        jsonData< T >
+);
 
 // type myDataType = convert<typeof myData>;
 // tslint:disable-next-line: max-classes-per-file
@@ -326,7 +362,8 @@ class Dictionary extends BaseModel<typeof dictionaryData> {
 
 const dictionary = new Dictionary();
 dictionary.set({
-    nice: "Nice"
+    nice: "Nice",
+    lol: 2
 });
 
 
