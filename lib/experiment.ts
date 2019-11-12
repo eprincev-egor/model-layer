@@ -255,7 +255,7 @@ interface IOutputAnyData<T> {
 
 type output<T> = (
     T extends IObjectWithAnyKey ?
-        IOutputAnyData< T["*"] > :
+        IOutputAnyData< T["*"] > & outputData< Omit< T, "*" > > :
         outputData< T >
 );
 
@@ -274,7 +274,7 @@ interface IInputAnyData<T> {
 
 type input<T> = (
     T extends IObjectWithAnyKey ?
-        IInputAnyData< T["*"] > :
+        IInputAnyData< T["*"] > & inputData< Omit< T, "*" > > :
         inputData< T >
 );
 
@@ -293,7 +293,7 @@ type jsonData<T> = {
 
 type json<T> = (
     T extends IObjectWithAnyKey ?
-        IJsonAnyData< T["*"] > :
+        IJsonAnyData< T["*"] > & jsonData< Omit< T, "*" > > :
         jsonData< T >
 );
 
@@ -352,7 +352,11 @@ abstract class BaseModel<
 // Examples:::
 
 const dictionaryData = () => ({
-    "*": Types.String
+    "*": Types.Or({
+        or: [Types.Boolean, Types.Number]
+    }),
+    "n": Types.Number,
+    "bool": Types.Boolean
 });
 
 // tslint:disable-next-line: max-classes-per-file
@@ -361,9 +365,13 @@ class Dictionary extends BaseModel<typeof dictionaryData> {
 }
 
 const dictionary = new Dictionary();
+
+type iii = typeof dictionary.inputType;
+
 dictionary.set({
-    nice: "Nice",
-    lol: 2
+    x: true,
+    n: 2,
+    bool: false
 });
 
 
