@@ -333,7 +333,29 @@ abstract class BaseModel<
 }
 
 
+// tslint:disable-next-line: max-classes-per-file
+abstract class BaseCollection<TModel extends BaseModel<any>> {
+    public models: TModel[];
+    public Model: (new (...args: any) => TModel);
+    
+    public inputType: Array< TModel["inputType"] >;
+    public outputType: this;
+    public jsonType: Array< TModel["jsonType"] >;
 
+    public prepareRow(row: TModel["inputType"]) {
+        if ( row instanceof this.Model ) {
+            return row;
+        }
+        else {
+            return new this.Model( row );
+        }
+    }
+
+    public push(row: TModel["inputType"]) {
+        const model = this.prepareRow( row );
+        this.models.push( model );
+    }
+}
 
 
 
@@ -389,6 +411,18 @@ class Product extends BaseModel<typeof productData> {
     public static data = productData;
 }
 
+// tslint:disable-next-line: max-classes-per-file
+class Cart extends BaseCollection<Product> {
+    public static Model = Product;
+}
+
+const cart = new Cart();
+
+cart.push({
+    name: "eggs",
+    price: 100
+});
+
 
 const myData = () => ({
     x: Types.Number({
@@ -417,7 +451,8 @@ const myData = () => ({
     }),
     productById: Types.Object({
         element: Product
-    })
+    }),
+    cart: Cart
 });
 
 // tslint:disable-next-line: max-classes-per-file
@@ -436,6 +471,7 @@ const z = myModel.get("z");
 const m = myModel.get("m");
 const numbers = myModel.get("numbers");
 const products = myModel.get("products");
+const mCart = myModel.get("cart");
 
 const mx = m.get("x");
 const my = m.get("y");
@@ -464,7 +500,11 @@ myModel.set({
     productById: {
         1: {name: "Test", price: 100},
         2: new Product()
-    }
+    },
+    cart: [
+        {name: "Eggs", price: 20},
+        new Product()
+    ]
 });
 
 const childData = () => ({
