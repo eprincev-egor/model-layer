@@ -8,84 +8,101 @@ export interface ISimpleObject extends Object {
     [propName: string]: any;
 }
 
-type Constructor<T> = new (...args: any[]) => T;
-
 type ReadOnlyPartial<TData> = {
     readonly [key in keyof TData]?: TData[key];
 };
 
-interface ILikeCollection {
-    length: number;
-    models: Array<Model<ISimpleObject>>;
-    Model: new (row?: any) => Model<ISimpleObject>;
-    [key: string]: any;
+
+interface IObjectWithAnyKey {
+    "*": any;
 }
 
-export type InputModel<TModel extends Model<ISimpleObject>> = (
-    TModel | InputData< TModel["data"] >
+// output
+type outputValue<T extends any> = (
+    TInstanceOrT<T>["output"]
 );
-
-export type InputCollection<TCollection extends ILikeCollection> = (
-    TCollection | 
-    Array< 
-        InputData< TCollection["models"][0]["data"] >
-    >
-);
-
-type InputValue<TValue> = (
-    TValue extends Model<ISimpleObject> ?
-        InputModel<TValue> : (
-            TValue extends ILikeCollection ?
-                InputCollection< TValue > : 
-                TValue
-    )
-);
-
-export type InputData<TData> = {
-    readonly [key in keyof TData]?: InputValue< TData[key] >;
+type outputData<T> = {
+    readonly [key in keyof T]?: outputValue< T[key] >;
 };
 
+interface IOutputAnyData<T> {
+    readonly [key: string]: outputValue< T >;
+}
 
-type JSONValue<TValueType> = 
-    TValueType extends Model<ISimpleObject> ?
-        JSONData<TValueType["data"]> :
-        TValueType
-;
+type output<T> = (
+    T extends IObjectWithAnyKey ?
+        IOutputAnyData< T["*"] > & outputData< Omit< T, "*" > > :
+        outputData< T >
+);
 
-export type JSONData<TData> = {
-    [key in keyof TData & string]?: JSONValue< TData[key] >;
+// input
+type inputValue<T extends any> = (
+    TInstanceOrT<T>["input"]
+);
+
+type inputData<T> = {
+    [key in keyof T]?: inputValue< T[key] >;
 };
 
-interface IChangeEvent<TData extends ISimpleObject> {
-    prev: ReadOnlyPartial<TData>;
-    changes: ReadOnlyPartial<TData>;
+interface IInputAnyData<T> {
+    [key: string]: inputValue< T >;
+}
+
+type input<T> = (
+    T extends IObjectWithAnyKey ?
+        IInputAnyData< T["*"] > & inputData< Omit< T, "*" > > :
+        inputData< T >
+);
+
+// json
+type jsonValue<T extends any> = (
+    TInstanceOrT<T>["json"]
+);
+
+interface IJsonAnyData<T> {
+    [key: string]: jsonValue< T >;
+}
+
+type jsonData<T> = {
+    [key in keyof T]?: jsonValue< T[key] >;
+};
+
+type json<T> = (
+    T extends IObjectWithAnyKey ?
+        IJsonAnyData< T["*"] > & jsonData< Omit< T, "*" > > :
+        jsonData< T >
+);
+
+interface IChangeEvent<TModel extends Model<any>> {
+    prev: TModel["data"];
+    changes: ReadOnlyPartial<TModel["data"]>;
 }
 
 // tslint:disable-next-line:interface-name
-export declare interface Model<TData extends ISimpleObject> extends EventEmitter {
-    // events
-    on(
-        event: "change", 
-        listener: (event: IChangeEvent<TData>) => void
-    ): this;
-
-    on(
-        event: "change", 
-        key: keyof ISimpleObject & string,
-        listener: (event: IChangeEvent<TData>) => void
-    ): this;
-
+export declare interface Model<
+    T extends (() => ISimpleObject),
+    TStructure = ReturnType<T>, 
+    TData = output<TStructure>, 
+    InputData = input<TStructure>, 
+    JSONData = json<TStructure>
+> extends EventEmitter {
     // throw error if data is invalid
     validate(data: ReadOnlyPartial<TData>): void;
 
     // prepare data before validation
-    prepare(data: Partial<TData>): void;
+    prepare(data: InputData): void;
 
     // prepare json before toJSON
-    prepareJSON(json: JSONData<TData>): void;
+    prepareJSON(json: JSONData): void;
 }
 
-export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
+export abstract class Model<
+    T extends (() => ISimpleObject),
+    TStructure = ReturnType<T>, 
+    TData = output<TStructure>, 
+    InputData = input<TStructure>, 
+    JSONData = json<TStructure>
+> extends EventEmitter {
 
     public static Type = Type;
 
@@ -125,7 +142,11 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
         );
     }
 
-    public data: ReadOnlyPartial<TData>;
+    public output: this;
+    public input: InputData | this;
+    public json: JSONData;
+
+    public data: TData;
     
     // "id"
     public primaryKey: string;
@@ -133,22 +154,22 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
     public primaryValue: number | string;
 
     // data properties
-    private structure: ISimpleObject;
+    private structure: any;
     
     private isInit: boolean;
     
-    private parent: Model<ISimpleObject>;
+    private parent: Model<any>;
 
-    constructor(inputData?: InputData<TData>) {
+    constructor(newData?: InputData) {
         super();
 
         this.prepareStructure();
         
-        const data: Partial<TData> = {};
-        this.data = data;
+        const data = {};
+        this.data = data as TData;
 
-        if ( !isObject(inputData) ) {
-            inputData = {};
+        if ( !isObject(newData) ) {
+            newData = {} as InputData;
         }
         
         for (const key in this.structure) {
@@ -163,18 +184,18 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
             // default can be invalid
             value = description.prepare(value, key, this);
 
-            data[ key as keyof TData ] = value;
+            data[ key ] = value;
 
             // throw required error in method .set
             if ( description.required ) {
-                if ( !(key in inputData) ) {
-                    (inputData as any)[key] = null;
+                if ( !(key in newData) ) {
+                    newData[key] = null;
                 }
             }
         }
         
         this.isInit = true; // do not check const
-        this.set(inputData);
+        this.set(newData);
         delete this.isInit;
 
         Object.freeze(this.data);
@@ -184,7 +205,7 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
         return this.data[ key ];
     }
 
-    public set(data: InputData<TData>, options?: ISimpleObject) {
+    public set(data: InputData, options?: ISimpleObject) {
         options = options || {
             onlyValidate: false
         };
@@ -229,7 +250,7 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
                 throw new Error(`invalid ${ key }: ${ valueAsString }`);
             }
 
-            newData[ key ] = value;
+            newData[ key as any ] = value;
         }
 
         // modify by reference
@@ -309,7 +330,7 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
         });
     }
 
-    public isValid(data: Partial<TData>): boolean {
+    public isValid(data: InputData): boolean {
         if ( !isObject(data) ) {
             throw new Error("data must be are object");
         }
@@ -345,7 +366,7 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
     }
 
     public walk(
-        iteration: (model: Model<object>, walker: Walker) => void, 
+        iteration: (model: Model<any>, walker: Walker) => void, 
         stack?
     ) {
         stack = stack || [];
@@ -396,8 +417,8 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
     }
 
     public findChild(
-        iteration: (model: Model<object>) => boolean
-    ): Model<object> {
+        iteration: (model: Model<any>) => boolean
+    ): Model<any> {
         let child;
 
         this.walk((model, walker) => {
@@ -413,10 +434,10 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
     }
 
     public filterChildren(
-        iteration: (model: Model<object>) => boolean
-    ): Array<Model<object>> {
+        iteration: (model: Model<any>) => boolean
+    ): Array<Model<any>> {
 
-        const children: Array<Model<object>> = [];
+        const children: Array<Model<any>> = [];
 
         this.walk((model) => {
             const result = iteration( model );
@@ -430,9 +451,9 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
     }
 
     public findParent(
-        iteration: (model: Model<object>) => boolean, 
+        iteration: (model: Model<any>) => boolean, 
         stack?
-    ): Model<object> {
+    ): Model<any> {
         stack = stack || [];
 
         let parent = this.parent;
@@ -456,10 +477,10 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
     }
 
     public filterParents(
-        iteration: (model: Model<object>) => boolean
-    ): Array<Model<object>> {
+        iteration: (model: Model<any>) => boolean
+    ): Array<Model<any>> {
 
-        const parents: Array<Model<object>> = [];
+        const parents: Array<Model<any>> = [];
         let parent = this.parent;
 
         while ( parent ) {
@@ -475,16 +496,16 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
         return parents;
     }
 
-    public findParentInstance<TModel extends Model<ISimpleObject>>(
-        SomeModel: Constructor<TModel>
+    public findParentInstance<TModel extends Model<any>>(
+        SomeModel: new (...args: any) => TModel
     ): TModel {
         return this.findParent((model) =>
             model instanceof SomeModel
         ) as TModel;
     }
 
-    public toJSON(): JSONData<TData> {
-        const json: JSONData<TData> = {};
+    public toJSON(): JSONData {
+        const json: JSONData = {};
         
         for (const key in this.data) {
             const description = this.getDescription( key );
@@ -494,7 +515,7 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
                 value = description.toJSON( value ); 
             }
 
-            json[ key ] = value as JSONValue<any>;
+            json[ key ] = value;
         }
 
         this.prepareJSON( json );
@@ -522,7 +543,7 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
         return clone;
     }
 
-    public equal(otherModel: Model<object> | object, stack?): boolean {
+    public equal(otherModel: Model<any> | object, stack?): boolean {
         stack = stack || new EqualStack();
 
         for (const key in this.data) {
@@ -560,15 +581,15 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
         return true;
     }
 
-    public validate(data: InputData<TData>): void {
+    public validate(data: InputData): void {
         // for invalid data throw error here
     }
 
-    public prepare(data: Partial<TData>): void {
+    public prepare(data: InputData): void {
         // any calculations with data by reference
     }
 
-    public prepareJSON(json: JSONData<TData>): void {
+    public prepareJSON(json: JSONData): void {
         // any calculations with json by reference
     }
 
@@ -576,9 +597,9 @@ export abstract class Model<TData extends ISimpleObject> extends EventEmitter {
         eventName: "change",
         keyOrListener: (
             string | 
-            ((event: IChangeEvent<TData>) => void)
+            ((event: IChangeEvent<this>) => void)
         ),
-        listener?: (event: IChangeEvent<TData>) => void
+        listener?: (event: IChangeEvent<this>) => void
     ): this {
         if ( typeof keyOrListener === "string" ) {
             const key = keyOrListener;
