@@ -29,7 +29,7 @@ interface IOutputAnyData<T> {
     readonly [key: string]: outputValue< T >;
 }
 
-type output<T> = (
+type OutputType<T> = (
     T extends IObjectWithAnyKey ?
         IOutputAnyData< T["*"] > & outputData< Omit< T, "*" > > :
         outputData< T >
@@ -48,7 +48,7 @@ interface IInputAnyData<T> {
     [key: string]: inputValue< T >;
 }
 
-type input<T> = (
+type InputType<T> = (
     T extends IObjectWithAnyKey ?
         IInputAnyData< T["*"] > & inputData< Omit< T, "*" > > :
         inputData< T >
@@ -67,7 +67,7 @@ type jsonData<T> = {
     [key in keyof T]?: jsonValue< T[key] >;
 };
 
-type json<T> = (
+type JsonType<T> = (
     T extends IObjectWithAnyKey ?
         IJsonAnyData< T["*"] > & jsonData< Omit< T, "*" > > :
         jsonData< T >
@@ -82,9 +82,9 @@ interface IChangeEvent<TModel extends Model<any>> {
 export declare interface Model<
     T extends (() => ISimpleObject),
     TStructure = ReturnType<T>, 
-    TData = output<TStructure>, 
-    InputData = input<TStructure>, 
-    JSONData = json<TStructure>
+    TData = OutputType<TStructure>, 
+    InputData = InputType<TStructure>, 
+    JSONData = JsonType<TStructure>
 > extends EventEmitter {
     // throw error if data is invalid
     validate(data: ReadOnlyPartial<TData>): void;
@@ -99,9 +99,9 @@ export declare interface Model<
 export abstract class Model<
     T extends (() => ISimpleObject),
     TStructure = ReturnType<T>, 
-    TData = output<TStructure>, 
-    InputData = input<TStructure>, 
-    JSONData = json<TStructure>
+    TData = OutputType<TStructure>, 
+    InputData = InputType<TStructure>, 
+    JSONData = JsonType<TStructure>
 > extends EventEmitter {
 
     public static Type = Type;
@@ -210,7 +210,7 @@ export abstract class Model<
             onlyValidate: false
         };
         
-        const newData: Partial<TData> = {};
+        const newData: any = {};
         const oldData = this.data;
 
         // clone old values in oldData
@@ -237,7 +237,7 @@ export abstract class Model<
                 }
             }
 
-            let value = data[ key ] as any;
+            let value = data[ key ];
 
             // cast input value to expected format
             value = description.prepare(value, key, this);
@@ -250,7 +250,7 @@ export abstract class Model<
                 throw new Error(`invalid ${ key }: ${ valueAsString }`);
             }
 
-            newData[ key as any ] = value;
+            newData[ key ] = value;
         }
 
         // modify by reference
@@ -505,7 +505,7 @@ export abstract class Model<
     }
 
     public toJSON(): JSONData {
-        const json: JSONData = {};
+        const json: any = {};
         
         for (const key in this.data) {
             const description = this.getDescription( key );
@@ -604,7 +604,7 @@ export abstract class Model<
         if ( typeof keyOrListener === "string" ) {
             const key = keyOrListener;
             
-            const description = this.getDescription(key);
+            const description = this.getDescription(key as any);
             if ( !description ) {
                 throw new Error(`unknown property: ${ key }`);
             }
