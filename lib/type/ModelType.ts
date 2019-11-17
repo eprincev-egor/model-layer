@@ -35,7 +35,7 @@ export default class ModelType extends Type {
     }
 
     public Models: any[];
-    public getConstructorByData: (model: Model<ISimpleObject>) => (new() => Model<ISimpleObject>);
+    public getConstructorByData: (model: Model<any>) => (new() => Model<any>);
 
     constructor(params: IModelTypeParams) {
         super(params);
@@ -47,7 +47,7 @@ export default class ModelType extends Type {
             typeof params.constructor === "function" 
         ) {
             this.getConstructorByData = (
-                params.constructor as (model: Model<ISimpleObject>) => (new() => Model<ISimpleObject>)
+                params.constructor as (model: Model<any>) => (new() => Model<any>)
             );
         }
         else {
