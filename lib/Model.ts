@@ -1,6 +1,6 @@
 import EventEmitter from "events";
 import EqualStack from "./EqualStack";
-import {Type} from "./type/Type";
+import {Type, InputType, OutputType, JsonType} from "./type/Type";
 import { invalidValuesAsString, isObject, MODELS } from "./utils";
 import Walker from "./Walker";
 
@@ -16,62 +16,6 @@ type ReadOnlyPartial<TData> = {
 interface IObjectWithAnyKey {
     "*": any;
 }
-
-// output
-type outputValue<T extends any> = (
-    TInstanceOrT<T>["output"]
-);
-type outputData<T> = {
-    readonly [key in keyof T]?: outputValue< T[key] >;
-};
-
-interface IOutputAnyData<T> {
-    readonly [key: string]: outputValue< T >;
-}
-
-type OutputType<T> = (
-    T extends IObjectWithAnyKey ?
-        IOutputAnyData< T["*"] > & outputData< Omit< T, "*" > > :
-        outputData< T >
-);
-
-// input
-type inputValue<T extends any> = (
-    TInstanceOrT<T>["input"]
-);
-
-type inputData<T> = {
-    [key in keyof T]?: inputValue< T[key] >;
-};
-
-interface IInputAnyData<T> {
-    [key: string]: inputValue< T >;
-}
-
-type InputType<T> = (
-    T extends IObjectWithAnyKey ?
-        IInputAnyData< T["*"] > & inputData< Omit< T, "*" > > :
-        inputData< T >
-);
-
-// json
-type jsonValue<T extends any> = (
-    TInstanceOrT<T>["json"]
-);
-
-interface IJsonAnyData<T> {
-    [key: string]: jsonValue< T >;
-}
-
-type jsonData<T> = {
-    [key in keyof T]?: jsonValue< T[key] >;
-};
-
-type JsonType<T> = (
-    T extends IObjectWithAnyKey ?
-        IJsonAnyData< T["*"] > & jsonData< Omit< T, "*" > > :
-        jsonData< T >
-);
 
 interface IChangeEvent<TModel extends Model<any>> {
     prev: TModel["data"];
@@ -108,14 +52,6 @@ export abstract class Model<
 
     public static data(): object {
         throw new Error(`static ${ this.name }.data() is not declared`);
-    }
-
-    public static registerType(typeName, CustomType) {
-        Type.registerType(typeName, CustomType);
-    }
-
-    public static getType(typeName) {
-        return Type.getType( typeName );
     }
 
     public static or(...Models) {

@@ -4,12 +4,12 @@ import {Type, ITypeParams} from "./Type";
 import Collection from "../Collection";
 import {invalidValuesAsString} from "../utils";
 
-interface ICollectionTypeParams extends ITypeParams {
+export interface ICollectionTypeParams extends ITypeParams {
     Collection: any;
     nullAsEmpty?: boolean;
 }
 
-export default class CollectionType extends Type {
+export class CollectionType extends Type {
     public static prepareDescription(description) {
         
         const isCollection = (
@@ -82,5 +82,3 @@ export default class CollectionType extends Type {
         return selfCollection.equal( otherCollection, stack );
     }
 }
-
-Type.registerType("Collection", CollectionType);

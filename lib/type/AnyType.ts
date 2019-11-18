@@ -1,11 +1,22 @@
 
 
-import {Type} from "./Type";
+import {Type, IType, ITypeParams} from "./Type";
 import {Model} from "../Model";
 import {isObject, isPlainObject, isNaN} from "../utils";
 
+// tslint:disable-next-line: no-empty-interface
+export interface IAnyTypeParams extends ITypeParams {
+}
 
-class AnyType extends Type {
+export interface IAnyType extends IType {
+    (params: IAnyTypeParams): ITypeAny;
+
+    output: any;
+    input: any;
+    json: any;
+}
+
+export class AnyType extends Type {
     public toJSON(value) {
         return value2json( value );
     }
@@ -131,5 +142,3 @@ function value2json(value) {
 
     return value;
 }
-
-Type.registerType("*", AnyType);

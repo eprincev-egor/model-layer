@@ -1,9 +1,9 @@
 
 
-import {Type, ITypeParams} from "./Type";
+import {Type, IType, ITypeParams} from "./Type";
 import {isNaN, invalidValuesAsString} from "../utils";
 
-interface INumberTypeParams extends ITypeParams {
+export interface INumberTypeParams extends ITypeParams {
     nullAsZero?: boolean;
     zeroAsNull?: boolean;
     ceil?: number;
@@ -11,7 +11,14 @@ interface INumberTypeParams extends ITypeParams {
     floor?: number;
 }
 
-export default class NumberType extends Type {
+export interface INumberType extends IType {
+    (params: INumberTypeParams): INumberType;
+    output: number;
+    input: number;
+    json: number;
+}
+
+export class NumberType extends Type {
     public nullAsZero: boolean;
     public zeroAsNull: boolean;
     public ceil: number;
@@ -150,7 +157,5 @@ export default class NumberType extends Type {
         return value;
     }
 }
-
-Type.registerType("number", NumberType);
 
 module.exports = NumberType;

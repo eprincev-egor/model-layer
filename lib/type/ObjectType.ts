@@ -1,15 +1,31 @@
 
 
-import {Type, ITypeParams} from "./Type";
+import {Type, IType, ITypeParams, TInstanceOrT} from "./Type";
+import {Model} from "../Model";
 import {invalidValuesAsString, isObject, eol} from "../utils";
 
-interface IObjectTypeParams extends ITypeParams {
+export interface IObjectTypeParams extends ITypeParams {
     nullAsEmpty?: boolean;
     emptyAsNull?: boolean;
     element?: any;
 }
 
-class ObjectType extends Type {
+interface IObject<T> {
+    [key: string]: T;
+}
+
+export interface IObjectType<T extends IType> extends IType {
+    <TElement extends IType | (new (...args: any) => Model<any>)>(
+        params: IObjectTypeParams & 
+        {element: TElement}
+    ): IObjectType< TInstanceOrT<TElement> >;
+
+    output: IObject< T["output"] >;
+    input: IObject< T["input"] >;
+    json: IObject< T["json"] >;
+}
+
+export class ObjectType extends Type {
 
     public static prepareDescription(description, key) {
         const isObjectDescription = (
@@ -164,7 +180,5 @@ class ObjectType extends Type {
         return true;
     }
 }
-
-Type.registerType("object", ObjectType);
 
 module.exports = ObjectType;

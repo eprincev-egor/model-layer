@@ -1,9 +1,19 @@
 
-
-import {Type} from "./Type";
+import {Type, IType, ITypeParams} from "./Type";
 import {invalidValuesAsString} from "../utils";
 
-export default class DateType extends Type {
+// tslint:disable-next-line: no-empty-interface
+export interface IDateTypeParams extends ITypeParams {
+}
+
+export interface IDateType extends IType {
+    (params: IDateTypeParams): ITypeDate;
+    output: Date;
+    input: number | string | Date;
+    json: string;
+}
+
+export class DateType extends Type {
     public prepare(originalValue, key) {
         if ( originalValue == null ) {
             return null;
@@ -48,5 +58,3 @@ export default class DateType extends Type {
         return +selfValue === +anotherValue;
     }
 }
-
-Type.registerType("date", DateType);

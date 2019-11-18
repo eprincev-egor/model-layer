@@ -1,9 +1,9 @@
 
 
-import {Type, ITypeParams} from "./Type";
+import {Type, IType, ITypeParams} from "./Type";
 import {isObject, isNaN, invalidValuesAsString} from "../utils";
 
-interface IStringTypeParams extends ITypeParams {
+export interface IStringTypeParams extends ITypeParams {
     nullAsEmpty?: boolean;
     emptyAsNull?: boolean;
     trim?: boolean;
@@ -11,7 +11,14 @@ interface IStringTypeParams extends ITypeParams {
     upper?: boolean;
 }
 
-export default class StringType extends Type {
+export interface IStringType extends IType {
+    (params: IStringTypeParams): IStringType;
+    output: string;
+    input: number | string;
+    json: string;
+}
+
+export class StringType extends Type {
 
     public static prepareDescription(description) {
         
@@ -97,5 +104,3 @@ export default class StringType extends Type {
         return value;
     }
 }
-
-Type.registerType("string", StringType);

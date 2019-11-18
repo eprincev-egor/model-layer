@@ -75,5 +75,3 @@ export default class CustomClassType extends Type {
         return value;
     }
 }
-
-Type.registerType("CustomClass", CustomClassType);

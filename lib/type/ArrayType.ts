@@ -1,9 +1,10 @@
 
 
-import {Type, ITypeParams} from "./Type";
+import {Type, IType, ITypeParams, TInstanceOrT} from "./Type";
+import {Model} from "../Model";
 import {invalidValuesAsString, eol} from "../utils";
 
-interface IArrayTypeParams extends ITypeParams {
+export interface IArrayTypeParams extends ITypeParams {
     sort?: boolean;
     unique?: boolean;
     emptyAsNull?: boolean;
@@ -11,7 +12,17 @@ interface IArrayTypeParams extends ITypeParams {
     element?: any;
 }
 
-export default class ArrayType extends Type {
+export interface IArrayType<T extends IType> {
+    <TElement extends IType | (new (...args: any) => Model<any>)>(
+        params: IArrayTypeParams & 
+        {element: TElement}
+    ): IArrayType< TInstanceOrT< TElement > >;
+
+    output: Array< T["output"] >;
+    input: Array< T["input"] >;
+    json: Array< T["json"] >;
+}
+export class ArrayType extends Type {
 
     public static prepareDescription(description, key) {
         // structure: {prop: []}
@@ -180,5 +191,3 @@ export default class ArrayType extends Type {
         return true;
     }
 }
-
-Type.registerType("array", ArrayType);

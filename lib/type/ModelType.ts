@@ -1,14 +1,14 @@
 
 
 import {Type, ITypeParams} from "./Type";
-import {Model, ISimpleObject} from "../Model";
+import {Model} from "../Model";
 import {invalidValuesAsString, isNaN, MODELS, eol} from "../utils";
 
-interface IModelTypeParams extends ITypeParams {
+export interface IModelTypeParams extends ITypeParams {
     Models: any[];
 }
 
-export default class ModelType extends Type {
+export class ModelType extends Type {
 
     public static prepareDescription(description) {
         
@@ -136,6 +136,3 @@ export default class ModelType extends Type {
         return selfModel.equal( otherModel, stack );
     }
 }
-
-Type.registerType("model", ModelType);
-

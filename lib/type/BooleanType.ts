@@ -1,14 +1,21 @@
 
 
-import {Type, ITypeParams} from "./Type";
+import {Type, IType, ITypeParams} from "./Type";
 import {isObject, isNaN, invalidValuesAsString} from "../utils";
 
-interface IBooleanTypeParams extends ITypeParams {
+export interface IBooleanTypeParams extends ITypeParams {
     nullAsFalse?: boolean;
     falseAsNull?: boolean;
 }
 
-export default class BooleanType extends Type {
+export interface IBooleanType extends IType {
+    (params: IBooleanTypeParams): IBooleanType;
+    outputType: boolean;
+    inputType: boolean | 1 | 0;
+    jsonType: boolean;
+}
+
+export class BooleanType extends Type {
     public nullAsFalse: boolean;
     public falseAsNull: boolean;
 
@@ -63,5 +70,3 @@ export default class BooleanType extends Type {
         return value;
     }
 }
-
-Type.registerType("boolean", BooleanType);

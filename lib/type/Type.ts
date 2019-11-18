@@ -1,12 +1,80 @@
 
-
-const registeredTypes = {};
 import {invalidValuesAsString} from "../utils";
 const FORBIDDEN_PRIMARY_KEYS = [
     "data",
     "primaryKey",
     "primaryValue"
 ];
+
+export type TInstanceOrT<T> = (
+    T extends new (...args: any) => any ?
+        InstanceType<T> :
+        T
+);
+
+// output
+type outputValue<T extends any> = (
+    TInstanceOrT<T>["output"]
+);
+type outputData<T> = {
+    readonly [key in keyof T]?: outputValue< T[key] >;
+};
+
+interface IOutputAnyData<T> {
+    readonly [key: string]: outputValue< T >;
+}
+
+export type OutputType<T> = (
+    T extends IObjectWithAnyKey ?
+        IOutputAnyData< T["*"] > & outputData< Omit< T, "*" > > :
+        outputData< T >
+);
+
+// input
+type inputValue<T extends any> = (
+    TInstanceOrT<T>["input"]
+);
+
+type inputData<T> = {
+    [key in keyof T]?: inputValue< T[key] >;
+};
+
+interface IInputAnyData<T> {
+    [key: string]: inputValue< T >;
+}
+
+export type InputType<T> = (
+    T extends IObjectWithAnyKey ?
+        IInputAnyData< T["*"] > & inputData< Omit< T, "*" > > :
+        inputData< T >
+);
+
+// json
+type jsonValue<T extends any> = (
+    TInstanceOrT<T>["json"]
+);
+
+interface IJsonAnyData<T> {
+    [key: string]: jsonValue< T >;
+}
+
+type jsonData<T> = {
+    [key in keyof T]?: jsonValue< T[key] >;
+};
+
+export type JsonType<T> = (
+    T extends IObjectWithAnyKey ?
+        IJsonAnyData< T["*"] > & jsonData< Omit< T, "*" > > :
+        jsonData< T >
+);
+
+export interface IType {
+    output: any;
+    input: any;
+    json: any;
+}
+
+const Types = {};
 
 export interface ITypeParams {
     key: ((key: string) => boolean) | RegExp;
@@ -27,17 +95,18 @@ export interface ITypeParams {
 export class Type {
     public static Model: any;
 
-    public static registerType(typeName: string, CustomType: new(ITypeParams) => Type) {
-        registeredTypes[ typeName ] = CustomType;
-    }
-
-    public static getType(typeName: string) {
-        return registeredTypes[ typeName ];
-    }
-
     // create type by params
     public static create(description, key: string) {
         
+        const isTypeHelper = (
+            typeof description === "function" &&
+            description.isTypeHelper === true
+        );
+
+        if ( isTypeHelper ) {
+            description = description();
+        }
+
         const isPlainDescription = (
             description && 
             description.type
@@ -61,15 +130,15 @@ export class Type {
 
         // prepare description: ["string"] 
         // to { type: "array", element: {type: "string"} }
-        for (const typeName in registeredTypes) {
-            const SomeType = registeredTypes[ typeName ];
+        for (const typeName in Types) {
+            const SomeType = Types[ typeName ];
 
             // CustomType can use some variations for declare structure
             SomeType.prepareDescription( description, key );
         }
 
         // find CustomType by name
-        const CustomType = registeredTypes[ description.type ];
+        const CustomType = Types[ description.type ];
         if ( !CustomType ) {
             throw new Error(`${key}: unknown type: ${ description.type }`);
         }
