@@ -13,46 +13,14 @@ type ReadOnlyPartial<TData> = {
 };
 
 
-interface IObjectWithAnyKey {
-    "*": any;
-}
-
-interface IChangeEvent<TModel extends Model<any>> {
+interface IChangeEvent<TModel extends Model> {
     prev: TModel["data"];
     changes: ReadOnlyPartial<TModel["data"]>;
 }
 
-// tslint:disable-next-line:interface-name
-export declare interface Model<
-    T extends (() => ISimpleObject),
-    TStructure = ReturnType<T>, 
-    TData = OutputType<TStructure>, 
-    InputData = InputType<TStructure>, 
-    JSONData = JsonType<TStructure>
-> extends EventEmitter {
-    // throw error if data is invalid
-    validate(data: ReadOnlyPartial<TData>): void;
-
-    // prepare data before validation
-    prepare(data: InputData): void;
-
-    // prepare json before toJSON
-    prepareJSON(json: JSONData): void;
-}
-
-export abstract class Model<
-    T extends (() => ISimpleObject),
-    TStructure = ReturnType<T>, 
-    TData = OutputType<TStructure>, 
-    InputData = InputType<TStructure>, 
-    JSONData = JsonType<TStructure>
-> extends EventEmitter {
+export abstract class Model extends EventEmitter {
 
     public static Type = Type;
-
-    public static data(): object {
-        throw new Error(`static ${ this.name }.data() is not declared`);
-    }
 
     public static or(...Models) {
         if ( !Models.length ) {
@@ -78,11 +46,10 @@ export abstract class Model<
         );
     }
 
-    public output: this;
-    public input: InputData | this;
-    public json: JSONData;
-
-    public data: TData;
+    public inputData: InputType< ReturnType< this["structure"] > >;
+    public input: this["inputData"] | this;
+    public json: JsonType< ReturnType< this["structure"] > >;
+    public data: ReadOnlyPartial< OutputType< ReturnType< this["structure"] > > >;
     
     // "id"
     public primaryKey: string;
@@ -90,30 +57,30 @@ export abstract class Model<
     public primaryValue: number | string;
 
     // data properties
-    private structure: any;
+    private properties: any;
     
     private isInit: boolean;
     
-    private parent: Model<any>;
+    private parent: Model;
 
-    constructor(newData?: InputData) {
+    constructor(newData?: any) {
         super();
 
         this.prepareStructure();
         
         const data = {};
-        this.data = data as TData;
+        this.data = data as any;
 
         if ( !isObject(newData) ) {
-            newData = {} as InputData;
+            newData = {} as this["inputData"];
         }
         
-        for (const key in this.structure) {
+        for (const key in this.properties) {
             if ( key === "*" ) {
                 continue;
             }
 
-            const description = this.structure[ key ];
+            const description = this.properties[ key ];
 
             // default value is null, or something from description
             let value = description.default();
@@ -137,11 +104,15 @@ export abstract class Model<
         Object.freeze(this.data);
     }
 
-    public get<TKey extends keyof TData>(key: TKey): TData[TKey] {
+    public structure(): any {
+        throw new Error(`static ${ this.constructor.name }.structure() is not declared`);
+    }
+
+    public get<TKey extends keyof this["data"]>(key: TKey): this["data"][TKey] {
         return this.data[ key ];
     }
 
-    public set(data: InputData, options?: ISimpleObject) {
+    public set(data: this["inputData"], options?: ISimpleObject) {
         options = options || {
             onlyValidate: false
         };
@@ -154,10 +125,10 @@ export abstract class Model<
             newData[ key ] = oldData[ key ];
         }
 
-        const anyKeyDescription = this.structure["*"];
+        const anyKeyDescription = this.properties["*"];
 
         for (const key in data) {
-            let description = this.structure[ key ];
+            let description = this.properties[ key ];
 
             if ( !description ) {
                 if ( anyKeyDescription ) {
@@ -193,10 +164,10 @@ export abstract class Model<
         // because it conveniently
         this.prepare( newData );
 
-        const changes: Partial<TData> = {};
+        const changes: any = {};
         for (const key in newData) {
             const anyKey: any = key;
-            let description = this.structure[ anyKey ];
+            let description = this.properties[ anyKey ];
             if ( !description ) {
                 description = anyKeyDescription;
             }
@@ -266,7 +237,7 @@ export abstract class Model<
         });
     }
 
-    public isValid(data: InputData): boolean {
+    public isValid(data: this["inputData"]): boolean {
         if ( !isObject(data) ) {
             throw new Error("data must be are object");
         }
@@ -282,16 +253,16 @@ export abstract class Model<
         }
     }
 
-    public hasProperty<Key extends keyof TData>(key: Key): boolean {
+    public hasProperty<Key extends keyof this["data"]>(key: Key): boolean {
         return this.data.hasOwnProperty( key );
     }
 
-    public getDescription<Key extends keyof TData>(key: Key) {
+    public getDescription<Key extends keyof this["data"]>(key: Key) {
         const iKey = key as any;
-        return this.structure[ iKey ] || this.structure["*"];
+        return this.properties[ iKey ] || this.properties["*"];
     }
 
-    public hasValue<Key extends keyof TData>(key: Key): boolean {
+    public hasValue<Key extends keyof this["data"]>(key: Key): boolean {
         const value = this.data[ key ];
 
         if ( value == null ) {
@@ -302,7 +273,7 @@ export abstract class Model<
     }
 
     public walk(
-        iteration: (model: Model<any>, walker: Walker) => void, 
+        iteration: (model: Model, walker: Walker) => void, 
         stack?
     ) {
         stack = stack || [];
@@ -353,8 +324,8 @@ export abstract class Model<
     }
 
     public findChild(
-        iteration: (model: Model<any>) => boolean
-    ): Model<any> {
+        iteration: (model: Model) => boolean
+    ): Model {
         let child;
 
         this.walk((model, walker) => {
@@ -370,10 +341,10 @@ export abstract class Model<
     }
 
     public filterChildren(
-        iteration: (model: Model<any>) => boolean
-    ): Array<Model<any>> {
+        iteration: (model: Model) => boolean
+    ): Model[] {
 
-        const children: Array<Model<any>> = [];
+        const children: Model[] = [];
 
         this.walk((model) => {
             const result = iteration( model );
@@ -387,9 +358,9 @@ export abstract class Model<
     }
 
     public findParent(
-        iteration: (model: Model<any>) => boolean, 
+        iteration: (model: Model) => boolean, 
         stack?
-    ): Model<any> {
+    ): Model {
         stack = stack || [];
 
         let parent = this.parent;
@@ -413,10 +384,10 @@ export abstract class Model<
     }
 
     public filterParents(
-        iteration: (model: Model<any>) => boolean
-    ): Array<Model<any>> {
+        iteration: (model: Model) => boolean
+    ): Model[] {
 
-        const parents: Array<Model<any>> = [];
+        const parents: Model[] = [];
         let parent = this.parent;
 
         while ( parent ) {
@@ -432,7 +403,7 @@ export abstract class Model<
         return parents;
     }
 
-    public findParentInstance<TModel extends Model<any>>(
+    public findParentInstance<TModel extends Model>(
         SomeModel: new (...args: any) => TModel
     ): TModel {
         return this.findParent((model) =>
@@ -440,7 +411,7 @@ export abstract class Model<
         ) as TModel;
     }
 
-    public toJSON(): JSONData {
+    public toJSON(): this["json"] {
         const json: any = {};
         
         for (const key in this.data) {
@@ -460,7 +431,7 @@ export abstract class Model<
     }
 
     public clone(): this {
-        const cloneData: Partial<TData> = {};
+        const cloneData: Partial<this["data"]> = {};
 
         for (const key in this.data) {
             const description = this.getDescription( key );
@@ -479,7 +450,7 @@ export abstract class Model<
         return clone;
     }
 
-    public equal(otherModel: Model<any> | object, stack?): boolean {
+    public equal(otherModel: Model | object, stack?): boolean {
         stack = stack || new EqualStack();
 
         for (const key in this.data) {
@@ -517,15 +488,15 @@ export abstract class Model<
         return true;
     }
 
-    public validate(data: InputData): void {
+    public validate(data: this["inputData"]): void {
         // for invalid data throw error here
     }
 
-    public prepare(data: InputData): void {
+    public prepare(data: this["inputData"]): void {
         // any calculations with data by reference
     }
 
-    public prepareJSON(json: JSONData): void {
+    public prepareJSON(json: this["json"]): void {
         // any calculations with json by reference
     }
 
@@ -565,10 +536,10 @@ export abstract class Model<
         // for speedup constructor, saving structure to prototype
         this.constructor.prototype.structure = structure;
     
-        for (const key in this.structure) {
-            const description = this.structure[ key ];
+        for (const key in this.properties) {
+            const description = this.properties[ key ];
     
-            this.structure[ key ] = Type.create( description, key );
+            this.properties[ key ] = Type.create( description, key );
     
             if ( description.primary ) {
                 this.constructor.prototype.primaryKey = key;

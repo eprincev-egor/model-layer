@@ -1,4 +1,4 @@
-
+// tslint:disable: max-classes-per-file
 type TInstanceOrT<T> = (
     T extends new (...args: any) => any ?
         InstanceType<T> :
@@ -298,7 +298,6 @@ type json<T> = (
 );
 
 // type myDataType = convert<typeof myData>;
-// tslint:disable-next-line: max-classes-per-file
 abstract class BaseModel<
     T extends (() => object),
     TStructure = ReturnType<T>, 
@@ -333,7 +332,6 @@ abstract class BaseModel<
 }
 
 
-// tslint:disable-next-line: max-classes-per-file
 abstract class BaseCollection<TModel extends BaseModel<any>> {
     public models: TModel[];
     public Model: (new (...args: any) => TModel);
@@ -381,7 +379,6 @@ const dictionaryData = () => ({
     "bool": Types.Boolean
 });
 
-// tslint:disable-next-line: max-classes-per-file
 class Dictionary extends BaseModel<typeof dictionaryData> {
     public static data = dictionaryData;
 }
@@ -406,12 +403,10 @@ const productData = () => ({
     price: Types.Number
 });
 
-// tslint:disable-next-line: max-classes-per-file
 class Product extends BaseModel<typeof productData> {
     public static data = productData;
 }
 
-// tslint:disable-next-line: max-classes-per-file
 class Cart extends BaseCollection<Product> {
     public static Model = Product;
 }
@@ -455,7 +450,7 @@ const myData = () => ({
     cart: Cart
 });
 
-// tslint:disable-next-line: max-classes-per-file
+
 class MyModel<T extends typeof myData> extends BaseModel<T> {
     public static data = myData;
 
@@ -517,7 +512,7 @@ const childData = () => ({
     })
 });
 
-// tslint:disable-next-line: max-classes-per-file
+
 class ChildModel extends MyModel<typeof childData> {
     public static data = childData;
 }
@@ -528,3 +523,27 @@ const cx = child.get("x");
 
 child.getValue();
 
+
+
+
+class List {
+    public item: ReturnType< this["getType"] >;
+    public items: Array<this["item"]>;
+    
+    public getType(): any {
+        return;
+    }
+
+    public add(item: this["item"]) {
+        this.items.push( item );
+    }
+}
+
+class StringList extends List {
+    public getType() {
+        return "";
+    }
+}
+
+let list = new StringList();
+list.item

@@ -12,9 +12,13 @@ export type TInstanceOrT<T> = (
         T
 );
 
+interface IObjectWithAnyKey {
+    "*": any;
+}
+
 // output
 type outputValue<T extends any> = (
-    TInstanceOrT<T>["output"]
+    TInstanceOrT<T>["data"]
 );
 type outputData<T> = {
     readonly [key in keyof T]?: outputValue< T[key] >;

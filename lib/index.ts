@@ -35,4 +35,28 @@ const Types = {
     Any: returnParamsWithType("*") as IAnyType
 };
 
+// class MyBaseModel extends Model {
+//     public structure() {
+//         return {
+//             id: Types.Number,
+//             name: Types.String
+//         };
+//     }
+// }
+
+// // tslint:disable-next-line: max-classes-per-file
+// class MyModel extends MyBaseModel {
+//     public structure() {
+//         return {
+//             ...super.structure(),
+//             price: Types.Number
+//         }
+//     }
+// }
+
+// let myModel = new MyModel();
+// myModel.set({
+//     id: 1
+// });
+
 export {Model, Collection, Types};
