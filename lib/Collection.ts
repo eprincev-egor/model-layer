@@ -35,12 +35,12 @@ class Collection<TModel extends Model<any>> extends EventEmitter {
     public length: number;
     public Model: new (object) => TModel;
     
-    public input: this | Array< TModel["input"] >;
-    public output: this;
-    public json: Array< TModel["json"] >;
+    public TInput: this | Array< TModel["TInput"] >;
+    public TOutput: this;
+    public TJson: Array< TModel["TJson"] >;
 
 
-    constructor(rows?: Array< TModel["input"] >) {
+    constructor(rows?: Array< TModel["TInput"] >) {
         super();
 
         if ( !this.constructor.prototype.hasOwnProperty( "Model" ) ) {
@@ -78,7 +78,7 @@ class Collection<TModel extends Model<any>> extends EventEmitter {
         }
     }
 
-    public at(index: number, rowOrModel?: TModel["input"]): TModel {
+    public at(index: number, rowOrModel?: TModel["TInput"]): TModel {
         // set
         if ( rowOrModel ) {
             const removedModel = this.models[ index ];
@@ -109,7 +109,7 @@ class Collection<TModel extends Model<any>> extends EventEmitter {
         }
     }
 
-    public prepareRow(row: TModel["input"]): TModel {
+    public prepareRow(row: TModel["TInput"]): TModel {
         const CustomModel = this.Model;
         let model: TModel;
         
@@ -132,7 +132,7 @@ class Collection<TModel extends Model<any>> extends EventEmitter {
         return model;
     }
 
-    public push(...models: Array<TModel["input"]>) {
+    public push(...models: Array<TModel["TInput"]>) {
         if ( !models.length ) {
             return;
         }
@@ -160,7 +160,7 @@ class Collection<TModel extends Model<any>> extends EventEmitter {
         }
     }
 
-    public add(...models: Array<TModel["input"] | Array<TModel["input"]>>) {
+    public add(...models: Array<TModel["TInput"] | Array<TModel["TInput"]>>) {
         if ( !models.length ) {
             return;
         }
@@ -346,7 +346,7 @@ class Collection<TModel extends Model<any>> extends EventEmitter {
         return model;
     }
 
-    public unshift(...models: Array<TModel["input"]>) {
+    public unshift(...models: Array<TModel["TInput"]>) {
         if ( !models.length ) {
             return;
         }
@@ -439,7 +439,7 @@ class Collection<TModel extends Model<any>> extends EventEmitter {
         return this;
     }
 
-    public concat(...values: Array< this["input"] >): this {
+    public concat(...values: Array< this["TInput"] >): this {
         
         const CustomCollection = this.constructor as any;
         let outputModels = this.models;
@@ -452,7 +452,7 @@ class Collection<TModel extends Model<any>> extends EventEmitter {
                 outputModels = outputModels.concat( collection.models );
             } 
             else {
-                const rows = rowsOrCollection as Array<TModel["input"]>;
+                const rows = rowsOrCollection as Array<TModel["TInput"]>;
                 const models = rows.map((row) => this.prepareRow(row));
                 outputModels = outputModels.concat( models );
             }
@@ -466,7 +466,7 @@ class Collection<TModel extends Model<any>> extends EventEmitter {
     }
 
     // https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/fill
-    public fill(row: TModel["input"], start: number, end?: number) {
+    public fill(row: TModel["TInput"], start: number, end?: number) {
         // Step 3-5.
         // tslint:disable-next-line: no-bitwise
         const len = this.length >>> 0;
@@ -517,7 +517,7 @@ class Collection<TModel extends Model<any>> extends EventEmitter {
         return this;
     }
 
-    public splice(start: number, deleteCount: number, ...inputItems: Array<TModel["input"]>) {
+    public splice(start: number, deleteCount: number, ...inputItems: Array<TModel["TInput"]>) {
         let items: TModel[];
 
         if ( inputItems && inputItems.length ) {
@@ -583,7 +583,7 @@ class Collection<TModel extends Model<any>> extends EventEmitter {
         return this.models[ this.models.length - 1 ];
     }
 
-    public create(row: TModel["data"]): TModel {
+    public create(row: TModel["TInputData"]): TModel {
         const model = this.prepareRow(row);
         
         this.models.push( model );
@@ -599,7 +599,7 @@ class Collection<TModel extends Model<any>> extends EventEmitter {
         return model;
     }
 
-    public toJSON(): Array<TModel["json"]> {
+    public toJSON(): Array<TModel["TJson"]> {
         return this.models.map((model) =>
             model.toJSON()
         );

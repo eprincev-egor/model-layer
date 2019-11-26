@@ -7,10 +7,10 @@ export interface IDateTypeParams extends ITypeParams {
 }
 
 export interface IDateType extends IType {
-    (params: IDateTypeParams): ITypeDate;
-    output: Date;
-    input: number | string | Date;
-    json: string;
+    (params: IDateTypeParams): IDateType;
+    TOutput: Date;
+    TInput: number | string | Date;
+    TJson: string;
 }
 
 export class DateType extends Type {

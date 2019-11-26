@@ -10,9 +10,9 @@ export interface IBooleanTypeParams extends ITypeParams {
 
 export interface IBooleanType extends IType {
     (params: IBooleanTypeParams): IBooleanType;
-    outputType: boolean;
-    inputType: boolean | 1 | 0;
-    jsonType: boolean;
+    TOutput: boolean;
+    TInput: boolean | 1 | 0;
+    TJson: boolean;
 }
 
 export class BooleanType extends Type {

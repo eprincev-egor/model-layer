@@ -9,11 +9,11 @@ export interface IAnyTypeParams extends ITypeParams {
 }
 
 export interface IAnyType extends IType {
-    (params: IAnyTypeParams): ITypeAny;
+    (params: IAnyTypeParams): IAnyType;
 
-    output: any;
-    input: any;
-    json: any;
+    TOutput: any;
+    TInput: any;
+    TJson: any;
 }
 
 export class AnyType extends Type {

@@ -13,9 +13,9 @@ export interface INumberTypeParams extends ITypeParams {
 
 export interface INumberType extends IType {
     (params: INumberTypeParams): INumberType;
-    output: number;
-    input: number;
-    json: number;
+    TOutput: number;
+    TInput: number;
+    TJson: number;
 }
 
 export class NumberType extends Type {

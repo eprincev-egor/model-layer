@@ -13,14 +13,14 @@ export interface IArrayTypeParams extends ITypeParams {
 }
 
 export interface IArrayType<T extends IType> {
-    <TElement extends IType | (new (...args: any) => Model<any>)>(
+    <TElement extends IType | (new (...args: any) => Model)>(
         params: IArrayTypeParams & 
         {element: TElement}
     ): IArrayType< TInstanceOrT< TElement > >;
 
-    output: Array< T["output"] >;
-    input: Array< T["input"] >;
-    json: Array< T["json"] >;
+    TOutput: Array< T["TOutput"] >;
+    TInput: Array< T["TInput"] >;
+    TJson: Array< T["TJson"] >;
 }
 export class ArrayType extends Type {
 

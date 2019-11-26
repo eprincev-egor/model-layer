@@ -18,38 +18,16 @@ interface IChangeEvent<TModel extends Model> {
     changes: ReadOnlyPartial<TModel["data"]>;
 }
 
-export abstract class Model extends EventEmitter {
+export abstract class Model<ChildModel extends Model = any> extends EventEmitter {
 
     public static Type = Type;
 
-    public static or(...Models) {
-        if ( !Models.length ) {
-            throw new Error("expected children Models");
-        }
-
-        const BaseModel = this;
-
-        Models.forEach((CustomModel) => {
-            const isValidModel = (
-                typeof CustomModel === "function" &&
-                CustomModel.prototype instanceof BaseModel
-            );
-
-            if ( !isValidModel ) {
-                throw new Error(`${ CustomModel.name } should be inherited from ${ BaseModel.name }`);
-            }
-        });
-        
-        Models.unshift( BaseModel );
-        return new MODELS(
-            Models
-        );
-    }
-
-    public inputData: InputType< ReturnType< this["structure"] > >;
-    public input: this["inputData"] | this;
-    public json: JsonType< ReturnType< this["structure"] > >;
-    public data: ReadOnlyPartial< OutputType< ReturnType< this["structure"] > > >;
+    public TStructure: ReturnType< this["structure"] >;
+    public TInputData: InputType< this["TStructure"] >;
+    public TInput: this["TInputData"] | this;
+    public TOutput: this;
+    public TJson: JsonType< this["TStructure"] >;
+    public data: OutputType< this["TStructure"] >;
     
     // "id"
     public primaryKey: string;
@@ -63,19 +41,23 @@ export abstract class Model extends EventEmitter {
     
     private parent: Model;
 
-    constructor(newData?: any) {
+    constructor(inputData?: ChildModel["TInputData"]) {
         super();
 
         this.prepareStructure();
         
-        const data = {};
+        const data = {} as any;
         this.data = data as any;
 
+        let newData: any = inputData;
+
         if ( !isObject(newData) ) {
-            newData = {} as this["inputData"];
+            newData = {} as any;
         }
         
-        for (const key in this.properties) {
+        for (const propKey in this.properties) {
+            const key = propKey as keyof this["data"];
+
             if ( key === "*" ) {
                 continue;
             }
@@ -104,15 +86,16 @@ export abstract class Model extends EventEmitter {
         Object.freeze(this.data);
     }
 
-    public structure(): any {
-        throw new Error(`static ${ this.constructor.name }.structure() is not declared`);
+    public structure(): {[key: string]: any} {
+        // throw new Error(`${ this.constructor.name }.structure() is not declared`);
+        return {};
     }
 
     public get<TKey extends keyof this["data"]>(key: TKey): this["data"][TKey] {
         return this.data[ key ];
     }
 
-    public set(data: this["inputData"], options?: ISimpleObject) {
+    public set(data: this["TInputData"], options?: ISimpleObject) {
         options = options || {
             onlyValidate: false
         };
@@ -237,7 +220,7 @@ export abstract class Model extends EventEmitter {
         });
     }
 
-    public isValid(data: this["inputData"]): boolean {
+    public isValid(data: this["TInputData"]): boolean {
         if ( !isObject(data) ) {
             throw new Error("data must be are object");
         }
@@ -411,7 +394,7 @@ export abstract class Model extends EventEmitter {
         ) as TModel;
     }
 
-    public toJSON(): this["json"] {
+    public toJSON(): this["TJson"] {
         const json: any = {};
         
         for (const key in this.data) {
@@ -444,8 +427,8 @@ export abstract class Model extends EventEmitter {
             cloneData[ key ] = value;
         }
 
-        const ChildModel = this.constructor as any;
-        const clone: this = new ChildModel( cloneData );
+        const ThisConstructor = this.constructor as any;
+        const clone: this = new ThisConstructor( cloneData );
         
         return clone;
     }
@@ -488,15 +471,15 @@ export abstract class Model extends EventEmitter {
         return true;
     }
 
-    public validate(data: this["inputData"]): void {
+    public validate(data: this["TInputData"]): void {
         // for invalid data throw error here
     }
 
-    public prepare(data: this["inputData"]): void {
+    public prepare(data: this["TInputData"]): void {
         // any calculations with data by reference
     }
 
-    public prepareJSON(json: this["json"]): void {
+    public prepareJSON(json: this["TJson"]): void {
         // any calculations with json by reference
     }
 

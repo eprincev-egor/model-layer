@@ -36,7 +36,7 @@ export type OutputType<T> = (
 
 // input
 type inputValue<T extends any> = (
-    TInstanceOrT<T>["input"]
+    TInstanceOrT<T>["TInput"]
 );
 
 type inputData<T> = {
@@ -55,7 +55,7 @@ export type InputType<T> = (
 
 // json
 type jsonValue<T extends any> = (
-    TInstanceOrT<T>["json"]
+    TInstanceOrT<T>["TJson"]
 );
 
 interface IJsonAnyData<T> {
@@ -73,9 +73,9 @@ export type JsonType<T> = (
 );
 
 export interface IType {
-    output: any;
-    input: any;
-    json: any;
+    TOutput: any;
+    TInput: any;
+    TJson: any;
 }
 
 const Types = {};

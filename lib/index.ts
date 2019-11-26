@@ -1,4 +1,5 @@
-
+// tslint:disable: max-classes-per-file
+// tslint:disable: member-access
 
 import {Model} from "./Model";
 import Collection from "./Collection";
@@ -34,29 +35,5 @@ const Types = {
     // Or: (TypeOr as any) as ITypeOr<IType>,
     Any: returnParamsWithType("*") as IAnyType
 };
-
-// class MyBaseModel extends Model {
-//     public structure() {
-//         return {
-//             id: Types.Number,
-//             name: Types.String
-//         };
-//     }
-// }
-
-// // tslint:disable-next-line: max-classes-per-file
-// class MyModel extends MyBaseModel {
-//     public structure() {
-//         return {
-//             ...super.structure(),
-//             price: Types.Number
-//         }
-//     }
-// }
-
-// let myModel = new MyModel();
-// myModel.set({
-//     id: 1
-// });
 
 export {Model, Collection, Types};

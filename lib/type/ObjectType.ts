@@ -20,9 +20,9 @@ export interface IObjectType<T extends IType> extends IType {
         {element: TElement}
     ): IObjectType< TInstanceOrT<TElement> >;
 
-    output: IObject< T["output"] >;
-    input: IObject< T["input"] >;
-    json: IObject< T["json"] >;
+    TOutput: IObject< T["TOutput"] >;
+    TInput: IObject< T["TInput"] >;
+    TJson: IObject< T["TJson"] >;
 }
 
 export class ObjectType extends Type {
