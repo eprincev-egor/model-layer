@@ -1,22 +1,20 @@
 
-import {Collection, Model} from "../../../lib/index";
+import {Collection, Model, Types} from "../../../lib/index";
 import assert from "assert";
 
 describe("Collection.toJSON", () => {
 
     it("toJSON()", () => {
-        
-        interface IUser {
-            name: string;
-        }
-        class User extends Model<IUser> {}
-
-        class Users extends Collection<User> {
-            public static data() {
+        class User extends Model<User> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
+        }
+        
+        class Users extends Collection<User> {
+            Model = User;
         }
 
         const users = new Users([

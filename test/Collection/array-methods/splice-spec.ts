@@ -1,21 +1,22 @@
 
-import {Collection, Model} from "../../../lib/index";
+import {Collection, Model, Types} from "../../../lib/index";
 import assert from "assert";
+import { Type } from "../../../lib/type/Type";
 
 describe("Collection.splice", () => {
 
     it("splice(start, deleteCount)", () => {
-        interface IUser {
-            name: string;
-        }
-        class User extends Model<IUser> {}
         
-        class Users extends Collection<User> {
-            public static data() {
+        class User extends Model<User> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
+        }
+        
+        class Users extends Collection<User> {
+            Model = User;
         }
 
         const users = new Users([
@@ -42,17 +43,16 @@ describe("Collection.splice", () => {
     });
 
     it("splice(start, deleteCount, row)", () => {
-        interface IUser {
-            name: string;
-        }
-        class User extends Model<IUser> {}
-        
-        class Users extends Collection<User> {
-            public static data() {
+        class User extends Model<User> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
+        }
+        
+        class Users extends Collection<User> {
+            Model = User;
         }
 
         const users = new Users([
@@ -76,17 +76,16 @@ describe("Collection.splice", () => {
 
     it("splice(start, deleteCount, row1, row2)", () => {
         
-        interface IUser {
-            name: string;
-        }
-        class User extends Model<IUser> {}
-
-        class Users extends Collection<User> {
-            public static data() {
+        class User extends Model<User> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
+        }
+        
+        class Users extends Collection<User> {
+            Model = User;
         }
 
         const users = new Users([
@@ -109,22 +108,16 @@ describe("Collection.splice", () => {
     });
 
     it("splice(start, deleteCount, model)", () => {
-        interface IUser {
-            name: string;
-        }
-        
-        class User extends Model<IUser> {
-            public static data() {
+        class User extends Model<User> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
         }
-
+        
         class Users extends Collection<User> {
-            public static data() {
-                return User;
-            }
+            Model = User;
         }
 
         const users = new Users([

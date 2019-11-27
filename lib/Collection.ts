@@ -16,33 +16,18 @@ interface IRemoveEvent<TCollection, TModel> {
     collection: TCollection;
 }
 
-// tslint:disable-next-line:interface-name
-declare interface Collection<ChildCollection extends Collection = any> {
-    // events
-    on(
-        event: "add", 
-        listener: (event: IAddEvent<ChildCollection, ChildCollection["Model"]>) => void
-    ): this;
-
-    on(
-        event: "remove", 
-        listener: (event: IRemoveEvent<ChildCollection, ChildCollection["Model"]>) => void
-    ): this;
-}
-
-class Collection<ChildCollection extends Collection = any> extends EventEmitter {
-    public Model: new (...args: any) => Model;
-    public TModel: InstanceType< this["Model"] >;
-    public TInputModel: this["TModel"] | this["TModel"]["TInputData"];
-    public models: Array< this["TModel"] >;
+class Collection<TModel extends Model> extends EventEmitter {
+    public Model: new (...args: any) => TModel;
+    public TModel: TModel;
+    public models: TModel[];
     public length: number;
     
-    public TInput: this | Array< this["TInputModel"] >;
+    public TInput: this | Array< TModel["TInput"] >;
     public TOutput: this;
-    public TJson: Array< this["TModel"]["TJson"] >;
+    public TJson: Array< TModel["TJson"] >;
 
 
-    constructor(rows?: Array< ChildCollection["TInputModel"] >) {
+    constructor(rows?: Array< TModel["TInput"] >) {
         super();
 
         if ( !this.constructor.prototype.hasOwnProperty( "Model" ) ) {
@@ -80,7 +65,7 @@ class Collection<ChildCollection extends Collection = any> extends EventEmitter 
         }
     }
 
-    public at(index: number, rowOrModel?: this["TInputModel"]): this["TModel"] {
+    public at(index: number, rowOrModel?: TModel["TInput"]): TModel {
         // set
         if ( rowOrModel ) {
             const removedModel = this.models[ index ];
@@ -90,7 +75,7 @@ class Collection<ChildCollection extends Collection = any> extends EventEmitter 
             this.length = this.models.length;
 
             if ( removedModel ) {
-                const removeEvent: IRemoveEvent<this, this["TModel"]> = {
+                const removeEvent: IRemoveEvent<this, TModel> = {
                     type: "remove",
                     collection: this,
                     model: removedModel
@@ -98,7 +83,7 @@ class Collection<ChildCollection extends Collection = any> extends EventEmitter 
                 this.emit("remove", removeEvent);
             }
 
-            const addEvent: IAddEvent<this, this["TModel"]> = {
+            const addEvent: IAddEvent<this, TModel> = {
                 type: "add",
                 model,
                 collection: this
@@ -111,9 +96,9 @@ class Collection<ChildCollection extends Collection = any> extends EventEmitter 
         }
     }
 
-    public prepareRow(row: this["TInputModel"]): this["TModel"] {
-        const CustomModel = this.Model as (new (...args: any) => this["TModel"]);
-        let model: this["TModel"];
+    public prepareRow(row: TModel["TInput"]): TModel {
+        const CustomModel = this.Model as (new (...args: any) => TModel);
+        let model: TModel;
         
         if ( row instanceof CustomModel ) {
             model = row;
@@ -134,7 +119,7 @@ class Collection<ChildCollection extends Collection = any> extends EventEmitter 
         return model;
     }
 
-    public push(...models: Array<this["TInputModel"]>) {
+    public push(...models: Array<TModel["TInput"]>) {
         if ( !models.length ) {
             return;
         }
@@ -153,7 +138,7 @@ class Collection<ChildCollection extends Collection = any> extends EventEmitter 
         for (let i = 0, n = addedModels.length; i < n; i++) {
             const model = addedModels[i];
             
-            const addEvent: IAddEvent<this, this["TModel"]> = {
+            const addEvent: IAddEvent<this, TModel> = {
                 type: "add",
                 model,
                 collection: this
@@ -162,7 +147,7 @@ class Collection<ChildCollection extends Collection = any> extends EventEmitter 
         }
     }
 
-    public add(...models: Array<this["TModel"]["TInput"] | Array<this["TModel"]["TInput"]>>) {
+    public add(...models: Array<TModel["TInput"] | Array<TModel["TInput"]>>) {
         if ( !models.length ) {
             return;
         }
@@ -195,7 +180,7 @@ class Collection<ChildCollection extends Collection = any> extends EventEmitter 
         for (let i = 0, n = addedModels.length; i < n; i++) {
             const model = addedModels[i];
             
-            const addEvent: IAddEvent<this, this["TModel"]> = {
+            const addEvent: IAddEvent<this, TModel> = {
                 type: "add",
                 model,
                 collection: this
@@ -205,49 +190,49 @@ class Collection<ChildCollection extends Collection = any> extends EventEmitter 
     }
 
     public forEach(
-        iteration: (model: this["TModel"], index: number, models: Array<this["TModel"]>) => void, 
+        iteration: (model: TModel, index: number, models: TModel[]) => void, 
         context?
     ): void {
         this.models.forEach(iteration, context || this);
     }
 
     public each(
-        iteration: (model: this["TModel"], index: number, models: Array<this["TModel"]>) => void, 
+        iteration: (model: TModel, index: number, models: TModel[]) => void, 
         context?
     ): void {
         this.models.forEach(iteration, context || this);
     }
 
     public find(
-        iteration: (model: this["TModel"], index: number, models: Array<this["TModel"]>) => boolean, 
+        iteration: (model: TModel, index: number, models: TModel[]) => boolean, 
         context?
-    ): this["TModel"] {
+    ): TModel {
         return this.models.find(iteration, context || this);
     }
 
     public findIndex(
-        iteration: (model: this["TModel"], index: number, models: Array<this["TModel"]>) => boolean, 
+        iteration: (model: TModel, index: number, models: TModel[]) => boolean, 
         context?
     ): number {
         return this.models.findIndex(iteration, context || this);
     }
 
     public filter(
-        iteration: (model: this["TModel"], index: number, models: Array<this["TModel"]>) => boolean, 
+        iteration: (model: TModel, index: number, models: TModel[]) => boolean, 
         context?
-    ): Array<this["TModel"]> {
+    ): TModel[] {
         return this.models.filter(iteration, context || this);
     }
 
     public map<T>(
-        iteration: (model: this["TModel"], index: number, models: Array<this["TModel"]>) => T, 
+        iteration: (model: TModel, index: number, models: TModel[]) => T, 
         context?
     ): T[] {
         return this.models.map(iteration, context || this);
     }
 
     public flatMap<TArr extends any[]>(
-        iteration: (model: this["TModel"], index: number, models: Array<this["TModel"]>) => TArr, 
+        iteration: (model: TModel, index: number, models: TModel[]) => TArr, 
         context?
     ): Array<TArr[0]> {
         const result = this.models.map(iteration, context || this);
@@ -268,46 +253,46 @@ class Collection<ChildCollection extends Collection = any> extends EventEmitter 
     }
 
     public reduce<T>(
-        iteration: (total: T, nextModel: this["TModel"]) => T,
+        iteration: (total: T, nextModel: TModel) => T,
         initialValue?: T
     ): T {
         return this.models.reduce(iteration, initialValue);
     }
 
     public reduceRight<T>(
-        iteration: (total: T, nextModel: this["TModel"]) => T,
+        iteration: (total: T, nextModel: TModel) => T,
         initialValue?: T
     ): T {
         return this.models.reduceRight(iteration, initialValue);
     }
 
     public every(
-        iteration: (model: this["TModel"], index: number, models: Array<this["TModel"]>) => boolean, 
+        iteration: (model: TModel, index: number, models: TModel[]) => boolean, 
         context?
     ): boolean {
         return this.models.every(iteration, context || this);
     }
 
     public some(
-        iteration: (model: this["TModel"], index: number, models: Array<this["TModel"]>) => boolean, 
+        iteration: (model: TModel, index: number, models: TModel[]) => boolean, 
         context?
     ): boolean {
         return this.models.some(iteration, context || this);
     }
 
-    public slice(begin?: number, end?: number): Array<this["TModel"]> {
+    public slice(begin?: number, end?: number): TModel[] {
         return this.models.slice(begin, end);
     }
 
-    public flat(): Array<this["TModel"]> {
+    public flat(): TModel[] {
         return this.models.slice();
     }
 
-    public indexOf(searchElement: this["TModel"], fromIndex?: number): number {
+    public indexOf(searchElement: TModel, fromIndex?: number): number {
         return this.models.indexOf(searchElement, fromIndex);
     }
 
-    public lastIndexOf(searchElement: this["TModel"], fromIndex?: number): number {
+    public lastIndexOf(searchElement: TModel, fromIndex?: number): number {
         if ( arguments.length === 2 ) {
             return this.models.lastIndexOf(searchElement, fromIndex);
         }
@@ -316,15 +301,15 @@ class Collection<ChildCollection extends Collection = any> extends EventEmitter 
         }
     }
 
-    public includes(searchElement: this["TModel"], fromIndex?: number): boolean {
+    public includes(searchElement: TModel, fromIndex?: number): boolean {
         return this.models.includes(searchElement, fromIndex);
     }
 
-    public pop(): this["TModel"] {
+    public pop(): TModel {
         const model = this.models.pop();
         this.length = this.models.length;
         
-        const removeEvent: IRemoveEvent<this, this["TModel"]> = {
+        const removeEvent: IRemoveEvent<this, TModel> = {
             type: "remove",
             collection: this,
             model
@@ -334,11 +319,11 @@ class Collection<ChildCollection extends Collection = any> extends EventEmitter 
         return model;
     }
 
-    public shift(): this["TModel"] {
+    public shift(): TModel {
         const model = this.models.shift();
         this.length = this.models.length;
 
-        const removeEvent: IRemoveEvent<this, this["TModel"]> = {
+        const removeEvent: IRemoveEvent<this, TModel> = {
             type: "remove",
             collection: this,
             model
@@ -348,12 +333,12 @@ class Collection<ChildCollection extends Collection = any> extends EventEmitter 
         return model;
     }
 
-    public unshift(...models: Array<this["TInputModel"]>) {
+    public unshift(...models: Array<TModel["TInput"]>) {
         if ( !models.length ) {
             return;
         }
 
-        const preparedModels: Array<this["TModel"]> = [];
+        const preparedModels: TModel[] = [];
         for (let i = 0, n = models.length; i < n; i++) {
             const row = models[i];
             const model = this.prepareRow( row );
@@ -368,7 +353,7 @@ class Collection<ChildCollection extends Collection = any> extends EventEmitter 
         for (let i = 0, n = preparedModels.length; i < n; i++) {
             const model = preparedModels[i];
             
-            const addEvent: IAddEvent<this, this["TModel"]> = {
+            const addEvent: IAddEvent<this, TModel> = {
                 type: "add",
                 model,
                 collection: this
@@ -379,9 +364,9 @@ class Collection<ChildCollection extends Collection = any> extends EventEmitter 
 
     public sort(
         compareFunctionOrKey?: 
-            keyof this["TModel"]["data"] |
-            ((modelA: this["TModel"], modelB: this["TModel"]) => number), 
-        ...otherKeys: Array<keyof this["TModel"]["data"] & string>
+            keyof TModel["data"] |
+            ((modelA: TModel, modelB: TModel) => number), 
+        ...otherKeys: Array<keyof TModel["data"] & string>
     ) {
 
         if ( typeof compareFunctionOrKey === "string" ) {
@@ -401,7 +386,7 @@ class Collection<ChildCollection extends Collection = any> extends EventEmitter 
 
             // order by key1 asc, key2 asc, ...
             else {
-                const keys = [firstKey].concat( otherKeys ) as Array<keyof this["TModel"]["data"]>;
+                const keys = [firstKey].concat( otherKeys ) as Array<keyof TModel["data"]>;
 
                 this.models.sort((modelA, modelB) => {
 
@@ -468,7 +453,7 @@ class Collection<ChildCollection extends Collection = any> extends EventEmitter 
     }
 
     // https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/fill
-    public fill(row: this["TInputModel"], start: number, end?: number) {
+    public fill(row: TModel["TInput"], start: number, end?: number) {
         // Step 3-5.
         // tslint:disable-next-line: no-bitwise
         const len = this.length >>> 0;
@@ -507,7 +492,7 @@ class Collection<ChildCollection extends Collection = any> extends EventEmitter 
         for (let i = 0, n = addedModels.length; i < n; i++) {
             const model = addedModels[i];
             
-            const addEvent: IAddEvent<this, this["TModel"]> = {
+            const addEvent: IAddEvent<this, TModel> = {
                 type: "add",
                 model,
                 collection: this
@@ -519,8 +504,8 @@ class Collection<ChildCollection extends Collection = any> extends EventEmitter 
         return this;
     }
 
-    public splice(start: number, deleteCount: number, ...inputItems: Array<this["TInputModel"]>) {
-        let items: Array<this["TModel"]>;
+    public splice(start: number, deleteCount: number, ...inputItems: Array<TModel["TInput"]>) {
+        let items: TModel[];
 
         if ( inputItems && inputItems.length ) {
             items = inputItems.map((row) => 
@@ -539,7 +524,7 @@ class Collection<ChildCollection extends Collection = any> extends EventEmitter 
         for (let i = 0, n = removedModels.length; i < n; i++) {
             const model = removedModels[ i ];
 
-            const removeEvent: IRemoveEvent<this, this["TModel"]> = {
+            const removeEvent: IRemoveEvent<this, TModel> = {
                 type: "remove",
                 collection: this,
                 model
@@ -550,7 +535,7 @@ class Collection<ChildCollection extends Collection = any> extends EventEmitter 
         for (let i = 0, n = items.length; i < n; i++) {
             const model = items[i];
             
-            const addEvent: IAddEvent<this, this["TModel"]> = {
+            const addEvent: IAddEvent<this, TModel> = {
                 type: "add",
                 model,
                 collection: this
@@ -568,7 +553,7 @@ class Collection<ChildCollection extends Collection = any> extends EventEmitter 
         for (let i = 0, n = removedModels.length; i < n; i++) {
             const model = removedModels[ i ];
 
-            const removeEvent: IRemoveEvent<this, this["TModel"]> = {
+            const removeEvent: IRemoveEvent<this, TModel> = {
                 type: "remove",
                 collection: this,
                 model
@@ -577,21 +562,21 @@ class Collection<ChildCollection extends Collection = any> extends EventEmitter 
         }
     }
 
-    public first(): this["TModel"] {
+    public first(): TModel {
         return this.models[0];
     }
 
-    public last(): this["TModel"] {
+    public last(): TModel {
         return this.models[ this.models.length - 1 ];
     }
 
-    public create(row: this["TModel"]["TInputData"]): this["TModel"] {
+    public create(row: TModel["TInputData"]): TModel {
         const model = this.prepareRow(row);
         
         this.models.push( model );
         this.length = this.models.length;
         
-        const addEvent: IAddEvent<this, this["TModel"]> = {
+        const addEvent: IAddEvent<this, TModel> = {
             type: "add",
             model,
             collection: this
@@ -601,7 +586,7 @@ class Collection<ChildCollection extends Collection = any> extends EventEmitter 
         return model;
     }
 
-    public toJSON(): Array<this["TModel"]["TJson"]> {
+    public toJSON(): Array<TModel["TJson"]> {
         return this.models.map((model) =>
             model.toJSON()
         );
@@ -618,7 +603,7 @@ class Collection<ChildCollection extends Collection = any> extends EventEmitter 
         return clone;
     }
 
-    public remove(idOrModel: this["TModel"] | number | string): void {
+    public remove(idOrModel: TModel | number | string): void {
         let index = -1;
         let removedModel;
         
@@ -643,7 +628,7 @@ class Collection<ChildCollection extends Collection = any> extends EventEmitter 
         }
 
         if ( removedModel ) {
-            const removeEvent: IRemoveEvent<this, this["TModel"]> = {
+            const removeEvent: IRemoveEvent<this, TModel> = {
                 type: "remove",
                 collection: this,
                 model: removedModel
@@ -653,14 +638,14 @@ class Collection<ChildCollection extends Collection = any> extends EventEmitter 
         }
     }
 
-    public get(id: number | string): this["TModel"] {
+    public get(id: number | string): TModel {
         return this.find((model) => 
             model.primaryValue === id
         );
     }
 
     public equal(
-        otherCollection: Collection | 
+        otherCollection: Collection<any> | 
             Array<Model<any>> | 
             ISimpleObject[], 
         stack?: EqualStack

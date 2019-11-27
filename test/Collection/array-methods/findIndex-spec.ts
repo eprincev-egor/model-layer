@@ -1,23 +1,22 @@
 
 
-import {Collection, Model} from "../../../lib/index";
+import {Collection, Model, Types} from "../../../lib/index";
 import assert from "assert";
 
 describe("Collection.findIndex", () => {
 
     it("findIndex()", () => {
-        interface IColor {
-            name: string;
-            price: number;
-        }
-        class Color extends Model<IColor> {}
-
-        class Colors extends Collection<Color> {
-            public static data() {
+        class Color extends Model<Color> {
+            public structure() {
                 return {
-                    name: "text"
+                    name: Types.String,
+                    price: Types.Number
                 };
             }
+        }
+
+        class Colors extends Collection<Color> {
+            public Model = Color;
         }
 
         const colors = new Colors([
@@ -34,19 +33,17 @@ describe("Collection.findIndex", () => {
     });
     
     it("findIndex(f, context)", () => {
-        interface IProduct {
-            name: string;
-            price: number;
-        }
-        class Product extends Model<IProduct> {}
-
-        class Products extends Collection<Product> {
-            public static data() {
+        class Product extends Model<Product> {
+            public structure() {
                 return {
-                    name: "text",
-                    price: "number"
+                    name: Types.String,
+                    price: Types.Number
                 };
             }
+        }
+
+        class Products extends Collection<Product> {
+            public Model = Product;
         }
 
         const products = new Products([

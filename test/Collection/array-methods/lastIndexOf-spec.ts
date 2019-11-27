@@ -1,24 +1,22 @@
 
-import {Collection, Model} from "../../../lib/index";
+import {Collection, Model, Types} from "../../../lib/index";
 import assert from "assert";
 
-interface IProduct {
-    name: string;
-    price: number;
+class Product extends Model<Product> {
+    public structure() {
+        return {
+            name: Types.String,
+            price: Types.Number
+        };
+    }
 }
-class Product extends Model<IProduct> {}
 
 describe("Collection.lastIndexOf", () => {
 
     it("lastIndexOf(model)", () => {
 
         class Products extends Collection<Product> {
-            public static data() {
-                return {
-                    name: "text",
-                    price: "number"
-                };
-            }
+            public Model = Product;
         }
 
         const products = new Products([
@@ -30,9 +28,11 @@ describe("Collection.lastIndexOf", () => {
         const firstModel = products.at(0);
         const lastModel = products.at(2);
 
-        class SomeModel extends Model<object> {
+        class SomeModel extends Model<SomeModel> {
             public static data() {
-                return {"*": "*"};
+                return {
+                    "*": Types.Any
+                };
             }
         }
         const unknownModel = new SomeModel();
@@ -44,19 +44,14 @@ describe("Collection.lastIndexOf", () => {
         result = products.lastIndexOf( firstModel );
         assert.strictEqual( result, 0 );
 
-        result = products.lastIndexOf( unknownModel );
+        result = products.lastIndexOf( unknownModel as any );
         assert.strictEqual( result, -1 );
     });
     
     it("lastIndexOf(model, fromIndex)", () => {
 
         class Products extends Collection<Product> {
-            public static data() {
-                return {
-                    name: "text",
-                    price: "number"
-                };
-            }
+            public Model = Product;
         }
 
         const products = new Products([

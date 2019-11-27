@@ -1,24 +1,21 @@
 
-import {Collection, Model} from "../../../lib/index";
+import {Collection, Model, Types} from "../../../lib/index";
 import assert from "assert";
-
-interface IProduct {
-    name: string;
-    price: number;
-}
-class Product extends Model<IProduct> {}
 
 describe("Collection.flatMap", () => {
 
     it("flatMap()", () => {
-
-        class Books extends Collection<Product> {
-            public static data() {
+        class Book extends Model<Book> {
+            public structure() {
                 return {
-                    name: "text",
-                    price: "number"
+                    name: Types.String,
+                    price: Types.Number
                 };
             }
+        }
+
+        class Books extends Collection<Book> {
+            public Model = Book;
         }
 
         const books = new Books([
@@ -50,13 +47,17 @@ describe("Collection.flatMap", () => {
     });
     
     it("flatMap(f, context)", () => {
-        class Products extends Collection<Product> {
-            public static data() {
+        class Product extends Model<Product> {
+            public structure() {
                 return {
-                    name: "text",
-                    price: "number"
+                    name: Types.String,
+                    price: Types.Number
                 };
             }
+        }
+
+        class Products extends Collection<Product> {
+            public Model = Product;
         }
 
         const products = new Products([

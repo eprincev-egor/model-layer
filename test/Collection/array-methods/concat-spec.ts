@@ -3,7 +3,7 @@ import {Collection, Model, Types} from "../../../lib/index";
 import assert from "assert";
 
 class Product extends Model<Product> {
-    public structure() {
+    structure() {
         return {
             name: Types.String,
             price: Types.Number
@@ -14,7 +14,7 @@ class Product extends Model<Product> {
 describe("Collection.concat", () => {
 
     it("concat(collection)", () => {
-        class Products extends Collection<Products> {
+        class Products extends Collection<Product> {
             public Model = Product;
         }
 
@@ -37,7 +37,7 @@ describe("Collection.concat", () => {
 
     it("concat(rows)", () => {
         
-        class Products extends Collection<Products> {
+        class Products extends Collection<Product> {
             public static data() {
                 return {
                     name: "text",
@@ -65,7 +65,7 @@ describe("Collection.concat", () => {
 
     it("concat(rows1, rows2)", () => {
         
-        class Products extends Collection<Products> {
+        class Products extends Collection<Product> {
             public Model = Product;
         }
 
@@ -91,7 +91,7 @@ describe("Collection.concat", () => {
 
     it("concat(rows, collection)", () => {
         
-        class Products extends Collection<Products> {
+        class Products extends Collection<Product> {
             public Model = Product;
         }
 
@@ -118,7 +118,7 @@ describe("Collection.concat", () => {
     
     it("concat()", () => {
         
-        class Products extends Collection<Products> {
+        class Products extends Collection<Product> {
             public Model = Product;
         }
 

@@ -1,24 +1,22 @@
 
-import {Collection, Model} from "../../../lib/index";
+import {Collection, Model, Types} from "../../../lib/index";
 import assert from "assert";
 
-interface IProduct {
-    name: string;
-    price: number;
+class Product extends Model<Product> {
+    public structure() {
+        return {
+            name: Types.String,
+            price: Types.Number
+        };
+    }
 }
-class Product extends Model<IProduct> {}
 
 describe("Collection.indexOf", () => {
 
     it("indexOf(model)", () => {
 
         class Products extends Collection<Product> {
-            public static data() {
-                return {
-                    name: "text",
-                    price: "number"
-                };
-            }
+            public Model = Product;
         }
 
         const products = new Products([
@@ -30,9 +28,11 @@ describe("Collection.indexOf", () => {
         const firstModel = products.at(0);
         const lastModel = products.at(2);
 
-        class SomeModel extends Model<object> {
+        class SomeModel extends Model<SomeModel> {
             public static data() {
-                return {"*": "*"};
+                return {
+                    "*": Types.Any
+                };
             }
         }
         const unknownModel = new SomeModel();
@@ -44,7 +44,7 @@ describe("Collection.indexOf", () => {
         result = products.indexOf( firstModel );
         assert.strictEqual( result, 0 );
 
-        result = products.indexOf( unknownModel );
+        result = products.indexOf( unknownModel as any );
         assert.strictEqual( result, -1 );
     });
     

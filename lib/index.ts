@@ -4,7 +4,7 @@
 import {Model} from "./Model";
 import Collection from "./Collection";
 
-import {IType} from "./type/Type";
+import {IType, OutputType} from "./type/Type";
 
 import {IAnyType} from "./type/AnyType";
 import {IArrayType} from "./type/ArrayType";

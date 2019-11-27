@@ -1,22 +1,22 @@
 
-import {Collection, Model} from "../../../lib/index";
+import {Collection, Model, Types} from "../../../lib/index";
 import assert from "assert";
 
-interface IProduct {
-    name: string;
+class Product extends Model<Product> {
+    public structure() {
+        return {
+            name: Types.String,
+            price: Types.Number
+        };
+    }
 }
-class Product extends Model<IProduct> {}
 
 describe("Collection.fill", () => {
 
     it("fill(row, start, end)", () => {
         
         class Products extends Collection<Product> {
-            public static data() {
-                return {
-                    name: "text"
-                };
-            }
+            public Model = Product;
         }
 
         const products = new Products([
@@ -53,11 +53,7 @@ describe("Collection.fill", () => {
     it("fill(row, start)", () => {
         
         class Products extends Collection<Product> {
-            public static data() {
-                return {
-                    name: "text"
-                };
-            }
+            public Model = Product;
         }
 
         const products = new Products([
@@ -91,11 +87,7 @@ describe("Collection.fill", () => {
     it("fill(row, -start)", () => {
         
         class Products extends Collection<Product> {
-            public static data() {
-                return {
-                    name: "text"
-                };
-            }
+            public Model = Product;
         }
 
         const products = new Products([
@@ -121,11 +113,7 @@ describe("Collection.fill", () => {
     it("fill(row, -start, -end)", () => {
         
         class Products extends Collection<Product> {
-            public static data() {
-                return {
-                    name: "text"
-                };
-            }
+            public Model = Product;
         }
 
         const products = new Products([

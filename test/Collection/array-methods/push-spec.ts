@@ -1,21 +1,20 @@
 
-import {Collection, Model} from "../../../lib/index";
+import {Collection, Model, Types} from "../../../lib/index";
 import assert from "assert";
 
 describe("Collection.push", () => {
 
     it("push object", () => {
-        interface IUser {
-            name: string;
-        }
-        class User extends Model<IUser> {}
-        
-        class Users extends Collection<User> {
-            public static data() {
+        class User extends Model<User> {
+            public structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
+        }
+        
+        class Users extends Collection<User> {
+            public Model = User;
         }
 
         const users = new Users([
@@ -36,17 +35,16 @@ describe("Collection.push", () => {
     });
 
     it("push(a, b, ...)", () => {
-        interface IUser {
-            name: string;
-        }
-        class User extends Model<IUser> {}
-
-        class Users extends Collection<User> {
-            public static data() {
+        class User extends Model<User> {
+            public structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
+        }
+
+        class Users extends Collection<User> {
+            public Model = User;
         }
 
         const users = new Users();
@@ -74,22 +72,16 @@ describe("Collection.push", () => {
     });
 
     it("push CustomModel", () => {
-        interface IUser {
-            name: string;
-        }
-        
-        class User extends Model<IUser> {
-            public static data() {
+        class User extends Model<User> {
+            public structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
         }
 
         class Users extends Collection<User> {
-            public static data() {
-                return User;
-            }
+            public Model = User;
         }
 
         const user = new User({
@@ -108,24 +100,16 @@ describe("Collection.push", () => {
     });
 
     it("push SomeModel", () => {
-        interface IUser {
-            name: string;
-        }
-
-        class User extends Model<IUser> {
-            public static data() {
+        class User extends Model<User> {
+            public structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
         }
 
         class Users extends Collection<User> {
-            public static data() {
-                return {
-                    name: "text"
-                };
-            }
+            public Model = User;
         }
 
         const user = new User({
@@ -145,17 +129,16 @@ describe("Collection.push", () => {
     });
 
     it("push()", () => {
-        interface IUser {
-            name: string;
-        }
-        class User extends Model<IUser> {}
-
-        class Users extends Collection<User> {
-            public static data() {
+        class User extends Model<User> {
+            public structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
+        }
+
+        class Users extends Collection<User> {
+            public Model = User;
         }
 
         const users = new Users();
@@ -168,17 +151,16 @@ describe("Collection.push", () => {
     });
 
     it("push(undefined)", () => {
-        interface IUser {
-            name: string;
-        }
-        class User extends Model<IUser> {}
-
-        class Users extends Collection<User> {
-            public static data() {
+        class User extends Model<User> {
+            public structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
+        }
+
+        class Users extends Collection<User> {
+            public Model = User;
         }
 
         const users = new Users();

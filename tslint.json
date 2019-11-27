@@ -10,6 +10,7 @@
         "forin": false,
         "no-consecutive-blank-lines": false,
         "ordered-imports": false,
-        "one-line": false
+        "one-line": false,
+        "member-access": false
     }
 }

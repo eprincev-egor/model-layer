@@ -1,21 +1,20 @@
 
-import {Collection, Model} from "../../../lib/index";
+import {Collection, Model, Types} from "../../../lib/index";
 import assert from "assert";
 
 describe("Collection.unshift", () => {
     
     it("unshift object", () => {
-        interface IUser {
-            name: string;
-        }
-        class User extends Model<IUser> {}
-
-        class Users extends Collection<User> {
-            public static data() {
+        class User extends Model<User> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
+        }
+        
+        class Users extends Collection<User> {
+            Model = User;
         }
 
         const users = new Users([
@@ -36,17 +35,16 @@ describe("Collection.unshift", () => {
     });
 
     it("unshift(a, b, ...)", () => {
-        interface IUser {
-            name: string;
-        }
-        class User extends Model<IUser> {}
-
-        class Users extends Collection<User> {
-            public static data() {
+        class User extends Model<User> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
+        }
+        
+        class Users extends Collection<User> {
+            Model = User;
         }
 
         const users = new Users();
@@ -74,22 +72,16 @@ describe("Collection.unshift", () => {
     });
 
     it("unshift CustomModel", () => {
-        interface IUser {
-            name: string;
-        }
-
-        class User extends Model<IUser> {
-            public static data() {
+        class User extends Model<User> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
         }
-
+        
         class Users extends Collection<User> {
-            public static data() {
-                return User;
-            }
+            Model = User;
         }
 
         const user = new User({
@@ -108,24 +100,16 @@ describe("Collection.unshift", () => {
     });
 
     it("unshift SomeModel", () => {
-        interface IUser {
-            name: string;
-        }
-
-        class User extends Model<IUser> {
-            public static data() {
+        class User extends Model<User> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
         }
-
+        
         class Users extends Collection<User> {
-            public static data() {
-                return {
-                    name: "text"
-                };
-            }
+            Model = User;
         }
 
         const user = new User({
@@ -146,17 +130,16 @@ describe("Collection.unshift", () => {
 
     it("unshift()", () => {
 
-        interface IUser {
-            name: string;
-        }
-        class User extends Model<IUser> {}
-
-        class Users extends Collection<User> {
-            public static data() {
+        class User extends Model<User> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
+        }
+        
+        class Users extends Collection<User> {
+            Model = User;
         }
 
         const users = new Users();
@@ -170,17 +153,16 @@ describe("Collection.unshift", () => {
 
     it("unshift(undefined)", () => {
 
-        interface IUser {
-            name: string;
-        }
-        class User extends Model<IUser> {}
-
-        class Users extends Collection<User> {
-            public static data() {
+        class User extends Model<User> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
+        }
+        
+        class Users extends Collection<User> {
+            Model = User;
         }
 
         const users = new Users();

@@ -1,20 +1,16 @@
 
-import {Collection, Model} from "../../../lib/index";
+import {Collection, Model, Types} from "../../../lib/index";
 import assert from "assert";
 
 describe("Collection.join", () => {
 
     it("join()", () => {
         
-        interface IProduct {
-            name: string;
-            price: number;
-        }
-        class Product extends Model<IProduct> {
-            public static data() {
+        class Product extends Model<Product> {
+            public structure() {
                 return {
-                    name: "text",
-                    price: "number"
+                    name: Types.String,
+                    price: Types.Number
                 };
             }
 

@@ -18,7 +18,7 @@ interface IObjectWithAnyKey {
 
 // output
 type outputValue<T extends any> = (
-    TInstanceOrT<T>["data"]
+    TInstanceOrT<T>["TOutput"]
 );
 type outputData<T> = {
     readonly [key in keyof T]?: outputValue< T[key] >;

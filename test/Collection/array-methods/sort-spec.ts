@@ -1,24 +1,22 @@
 
-import {Collection, Model} from "../../../lib/index";
+import {Collection, Model, Types} from "../../../lib/index";
 import assert from "assert";
 
-interface IProduct {
-    name: string;
-    price: number;
+class Product extends Model<Product> {
+    public structure() {
+        return {
+            name: Types.String,
+            price: Types.Number
+        };
+    }
 }
-class Product extends Model<IProduct> {}
 
 describe("Collection.sort", () => {
 
     it("sort(compareFunction)", () => {
         
         class Products extends Collection<Product> {
-            public static data() {
-                return {
-                    name: "text",
-                    price: "number"
-                };
-            }
+            Model = Product;
         }
 
         const products = new Products([
@@ -43,12 +41,7 @@ describe("Collection.sort", () => {
     it("sort(key)", () => {
         
         class Products extends Collection<Product> {
-            public static data() {
-                return {
-                    name: "text",
-                    price: "number"
-                };
-            }
+            Model = Product;
         }
 
         const products = new Products([
@@ -77,12 +70,7 @@ describe("Collection.sort", () => {
     it("sort(key1, key2)", () => {
         
         class Products extends Collection<Product> {
-            public static data() {
-                return {
-                    name: "text",
-                    price: "number"
-                };
-            }
+            Model = Product;
         }
 
         const products = new Products([
@@ -122,12 +110,7 @@ describe("Collection.sort", () => {
     it("sort(somethingWrong)", () => {
         
         class Products extends Collection<Product> {
-            public static data() {
-                return {
-                    name: "text",
-                    price: "number"
-                };
-            }
+            Model = Product;
         }
 
         const products = new Products([
