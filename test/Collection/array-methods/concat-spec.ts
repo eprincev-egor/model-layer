@@ -1,23 +1,21 @@
 
-import {Collection, Model} from "../../../lib/index";
+import {Collection, Model, Types} from "../../../lib/index";
 import assert from "assert";
 
-interface IProduct {
-    name: string;
-    price: number;
+class Product extends Model<Product> {
+    public structure() {
+        return {
+            name: Types.String,
+            price: Types.Number
+        };
+    }
 }
-class Product extends Model<IProduct> {}
 
 describe("Collection.concat", () => {
 
     it("concat(collection)", () => {
-        class Products extends Collection<Product> {
-            public static data() {
-                return {
-                    name: "text",
-                    price: "number"
-                };
-            }
+        class Products extends Collection<Products> {
+            public Model = Product;
         }
 
         const arr1 = new Products([
@@ -39,7 +37,7 @@ describe("Collection.concat", () => {
 
     it("concat(rows)", () => {
         
-        class Products extends Collection<Product> {
+        class Products extends Collection<Products> {
             public static data() {
                 return {
                     name: "text",
@@ -67,13 +65,8 @@ describe("Collection.concat", () => {
 
     it("concat(rows1, rows2)", () => {
         
-        class Products extends Collection<Product> {
-            public static data() {
-                return {
-                    name: "text",
-                    price: "number"
-                };
-            }
+        class Products extends Collection<Products> {
+            public Model = Product;
         }
 
         const arr1 = new Products([
@@ -98,13 +91,8 @@ describe("Collection.concat", () => {
 
     it("concat(rows, collection)", () => {
         
-        class Products extends Collection<Product> {
-            public static data() {
-                return {
-                    name: "text",
-                    price: "number"
-                };
-            }
+        class Products extends Collection<Products> {
+            public Model = Product;
         }
 
         const arr1 = new Products([
@@ -130,13 +118,8 @@ describe("Collection.concat", () => {
     
     it("concat()", () => {
         
-        class Products extends Collection<Product> {
-            public static data() {
-                return {
-                    name: "text",
-                    price: "number"
-                };
-            }
+        class Products extends Collection<Products> {
+            public Model = Product;
         }
 
         const arr1 = new Products([
