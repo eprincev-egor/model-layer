@@ -13,7 +13,7 @@ describe("TreeMethods, walk by children or parents", () => {
         }
 
         class BinaryTreeModel extends Model<IBinaryTree> {
-            public static data() {
+            static data() {
                 return {
                     left: BinaryTreeModel,
                     right: BinaryTreeModel,
@@ -22,7 +22,7 @@ describe("TreeMethods, walk by children or parents", () => {
                 };
             }
 
-            public findName(id): string {
+            findName(id): string {
                 if ( id === this.get("id") ) {
                     return this.get("name");
                 }
@@ -132,7 +132,7 @@ describe("TreeMethods, walk by children or parents", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     a: SomeModel,
                     b: SomeModel,
@@ -192,7 +192,7 @@ describe("TreeMethods, walk by children or parents", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     child: SomeModel,
                     level: "number"
@@ -233,7 +233,7 @@ describe("TreeMethods, walk by children or parents", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     child: SomeModel,
                     level: "number"
@@ -275,7 +275,7 @@ describe("TreeMethods, walk by children or parents", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     child: SomeModel,
                     level: "number"
@@ -326,7 +326,7 @@ describe("TreeMethods, walk by children or parents", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     child: SomeModel,
                     level: "number"
@@ -370,7 +370,7 @@ describe("TreeMethods, walk by children or parents", () => {
         }
 
         class CModel extends Model<ICData> {
-            public static data() {
+            static data() {
                 return {
                     name: "string"
                 };
@@ -382,7 +382,7 @@ describe("TreeMethods, walk by children or parents", () => {
             child: CModel | Partial<ICData>;
         }
         class BModel extends Model<IBData> {
-            public static data() {
+            static data() {
                 return {
                     name: "string",
                     child: CModel
@@ -396,7 +396,7 @@ describe("TreeMethods, walk by children or parents", () => {
         }
 
         class AModel extends Model<IAData> {
-            public static data() {
+            static data() {
                 return {
                     name: "string",
                     child: BModel
@@ -434,7 +434,7 @@ describe("TreeMethods, walk by children or parents", () => {
         }
 
         class JobModel extends Model<IJob> {
-            public static data() {
+            static data() {
                 return {
                     name: "string"
                 };
@@ -447,7 +447,7 @@ describe("TreeMethods, walk by children or parents", () => {
         }
 
         class UserModel extends Model<IUser> {
-            public static data() {
+            static data() {
                 return {
                     name: "string",
                     job: JobModel
@@ -461,7 +461,7 @@ describe("TreeMethods, walk by children or parents", () => {
         }
 
         class CompanyModel extends Model<ICompany> {
-            public static data() {
+            static data() {
                 return {
                     name: "string",
                     managers: [UserModel]
@@ -475,7 +475,7 @@ describe("TreeMethods, walk by children or parents", () => {
         }
 
         class OrderModel extends Model<IOrder> {
-            public static data() {
+            static data() {
                 return {
                     client: CompanyModel,
                     partner: CompanyModel
@@ -540,7 +540,7 @@ describe("TreeMethods, walk by children or parents", () => {
         }
 
         class TreeModel extends Model<ITree> {
-            public static data() {
+            static data() {
                 return {
                     "*": "*"
                 };
@@ -579,7 +579,7 @@ describe("TreeMethods, walk by children or parents", () => {
         }
 
         class TreeModel extends Model<ITree> {
-            public static data() {
+            static data() {
                 return {
                     name: "string",
                     child: TreeModel
@@ -617,7 +617,7 @@ describe("TreeMethods, walk by children or parents", () => {
         }
 
         class TreeModel extends Model<ITree> {
-            public static data() {
+            static data() {
                 return {
                     name: "string",
                     child: TreeModel

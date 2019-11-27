@@ -11,7 +11,7 @@ interface IProduct {
 }
 
 class Product extends Model<IProduct> {
-    public static data() {
+    static data() {
         return {
             
             name: {
@@ -41,7 +41,7 @@ interface ICart {
 
 // tslint:disable-next-line: max-classes-per-file
 class Cart extends Model<ICart> {
-    public static data() {
+    static data() {
         return {
             // define array of models
             products: [Product],
@@ -52,7 +52,7 @@ class Cart extends Model<ICart> {
     }
 
     // calc total price for cart
-    public prepare(data) {
+    prepare(data) {
         data.total = data.products.reduce((total, product) =>
             total + product.get("price") * product.get("quantity"), 0
         );

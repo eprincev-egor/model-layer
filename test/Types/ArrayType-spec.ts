@@ -13,7 +13,7 @@ describe("ArrayType", () => {
         }
 
         class CompanyModel extends Model<ICompany> {
-            public static data() {
+            static data() {
                 return {
                     name: "string",
                     managersIds: ["number"]
@@ -179,7 +179,7 @@ describe("ArrayType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     colors: {
                         type: ["string"],
@@ -206,7 +206,7 @@ describe("ArrayType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     colors: {
                         type: ["string"],
@@ -233,7 +233,7 @@ describe("ArrayType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     answers: ["boolean"]
                 };
@@ -269,7 +269,7 @@ describe("ArrayType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     pays: ["date"]
                 };
@@ -305,7 +305,7 @@ describe("ArrayType", () => {
         }
 
         class UserModel extends Model<IUser> {
-            public static data() {
+            static data() {
                 return {
                     name: {
                         type: "string",
@@ -320,7 +320,7 @@ describe("ArrayType", () => {
         }
 
         class CompanyModel extends Model<ICompany> {
-            public static data() {
+            static data() {
                 return {
                     managers: [UserModel]
                 };
@@ -357,7 +357,7 @@ describe("ArrayType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     colors: [{
                         type: "string",
@@ -407,7 +407,7 @@ describe("ArrayType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     users: ["object"]
                 };
@@ -441,7 +441,7 @@ describe("ArrayType", () => {
         }
 
         class CompanyModel extends Model<ICompany> {
-            public static data() {
+            static data() {
                 return {
                     managersIds: {
                         type: "array",
@@ -492,7 +492,7 @@ describe("ArrayType", () => {
         }
 
         class UserModel extends Model<IUser> {
-            public static data() {
+            static data() {
                 return {
                     name: "string"
                 };
@@ -504,7 +504,7 @@ describe("ArrayType", () => {
         }
 
         class CompanyModel extends Model<ICompany> {
-            public static data() {
+            static data() {
                 return {
                     managers: {
                         type: "array",
@@ -562,7 +562,7 @@ describe("ArrayType", () => {
         }
 
         class CompanyModel extends Model<ICompany> {
-            public static data() {
+            static data() {
                 return {
                     managersIds: {
                         type: "array",
@@ -587,7 +587,7 @@ describe("ArrayType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     names: {
                         type: "array",
@@ -615,7 +615,7 @@ describe("ArrayType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     matrix: [["number"]]
                 };
@@ -644,7 +644,7 @@ describe("ArrayType", () => {
         }
 
         class TaskModel extends Model<ITask> {
-            public static data() {
+            static data() {
                 return {
                     name: "string"
                 };
@@ -657,7 +657,7 @@ describe("ArrayType", () => {
         }
 
         class UserModel extends Model<IUser> {
-            public static data() {
+            static data() {
                 return {
                     name: "string",
                     tasks: [TaskModel]
@@ -691,7 +691,7 @@ describe("ArrayType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     ids: ["number"]
                 };
@@ -752,7 +752,7 @@ describe("ArrayType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     ids: {
                         type: ["number"],
@@ -781,7 +781,7 @@ describe("ArrayType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     arr: []
                 };
@@ -813,7 +813,7 @@ describe("ArrayType", () => {
 
         pairs.forEach((pair) => {
             class TestModel extends Model<ISomeData> {
-                public static data() {
+                static data() {
                     return {
                         arr: ["number"]
                     };
@@ -871,7 +871,7 @@ describe("ArrayType", () => {
 
         pairs.forEach((pair) => {
             class TestModel extends Model<ISomeData> {
-                public static data() {
+                static data() {
                     return {
                         arr: [[]]
                     };
@@ -908,7 +908,7 @@ describe("ArrayType", () => {
         class FirstLevel extends Model<ISimpleObject> {}
 
         class SecondLevel extends FirstLevel {
-            public static data() {
+            static data() {
                 return {
                     level: {
                         type: "number",
@@ -923,7 +923,7 @@ describe("ArrayType", () => {
         }
 
         class MainModel extends Model<IMain> {
-            public static data() {
+            static data() {
                 return {
                     arr: [FirstLevel]
                 };
@@ -957,7 +957,7 @@ describe("ArrayType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     arr: {
                         type: ["number"],

@@ -97,10 +97,10 @@ export interface ITypeParams {
 }
 
 export class Type {
-    public static Model: any;
+    static Model: any;
 
     // create type by params
-    public static create(description, key: string) {
+    static create(description, key: string) {
         
         const isTypeHelper = (
             typeof description === "function" &&
@@ -174,16 +174,16 @@ export class Type {
     }
 
     // default behavior
-    public static prepareDescription(description, key: string) {
+    static prepareDescription(description, key: string) {
         // redefine me
         return description;
     }
 
-    public primary?: boolean;
-    public required: boolean;
-    public type: string;
-    public const: boolean;
-    public enum?: any[];
+    primary?: boolean;
+    required: boolean;
+    type: string;
+    const: boolean;
+    enum?: any[];
 
     constructor(params: ITypeParams) {
         if ( params.primary ) {
@@ -291,15 +291,15 @@ export class Type {
         }
     }
 
-    public default() {
+    default() {
         return null;
     }
 
-    public validateKey(key: string) {
+    validateKey(key: string) {
         return true;
     }
 
-    public validate(value, key): boolean {
+    validate(value, key): boolean {
         if ( this.enum ) {
             if ( value != null ) {
                 return this.enum.includes( value );
@@ -309,23 +309,23 @@ export class Type {
         return true;
     }
 
-    public prepare(value, key, model): any {
+    prepare(value, key, model): any {
         return value;
     }
 
-    public toJSON(value): any {
+    toJSON(value): any {
         return value;
     }
 
-    public clone(value): any {
+    clone(value): any {
         return this.toJSON( value );
     }
 
-    public typeAsString(): string {
+    typeAsString(): string {
         return this.type;
     }
 
-    public equal(selfValue, otherValue, stack): boolean {
+    equal(selfValue, otherValue, stack): boolean {
         return selfValue === otherValue;
     }
 }

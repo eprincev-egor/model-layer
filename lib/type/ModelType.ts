@@ -10,7 +10,7 @@ export interface IModelTypeParams extends ITypeParams {
 
 export class ModelType extends Type {
 
-    public static prepareDescription(description) {
+    static prepareDescription(description) {
         
         const isCustomModel = (
             typeof description.type === "function" &&
@@ -34,8 +34,8 @@ export class ModelType extends Type {
         }
     }
 
-    public Models: any[];
-    public getConstructorByData: (model: Model<any>) => (new() => Model<any>);
+    Models: any[];
+    getConstructorByData: (model: Model<any>) => (new() => Model<any>);
 
     constructor(params: IModelTypeParams) {
         super(params);
@@ -56,7 +56,7 @@ export class ModelType extends Type {
         }
     }
 
-    public prepare(value, key, model) {
+    prepare(value, key, model) {
         if ( value == null ) {
             return null;
         }
@@ -105,19 +105,19 @@ export class ModelType extends Type {
         return value;
     }
 
-    public typeAsString() {
+    typeAsString() {
         return this.Models[0].name;
     }
 
-    public toJSON(model) {
+    toJSON(model) {
         return model.toJSON();
     }
 
-    public clone(model) {
+    clone(model) {
         return model.clone();
     }
 
-    public equal(selfModel, otherModel, stack) {
+    equal(selfModel, otherModel, stack) {
         if ( selfModel == null ) {
             return otherModel === null;
         }

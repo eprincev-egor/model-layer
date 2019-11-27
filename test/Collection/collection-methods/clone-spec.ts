@@ -11,7 +11,7 @@ describe("Collection.clone", () => {
         class Company extends Model<ICompany> {}
 
         class Companies extends Collection<Company> {
-            public static data() {
+            static data() {
                 return {
                     name: "text"
                 };

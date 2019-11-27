@@ -17,11 +17,11 @@ export interface IAnyType extends IType {
 }
 
 export class AnyType extends Type {
-    public toJSON(value) {
+    toJSON(value) {
         return value2json( value );
     }
 
-    public equal(selfValue, otherValue, stack) {
+    equal(selfValue, otherValue, stack) {
         return equal(selfValue, otherValue, stack);
     }
 }

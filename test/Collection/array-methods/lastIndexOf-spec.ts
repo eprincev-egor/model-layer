@@ -3,7 +3,7 @@ import {Collection, Model, Types} from "../../../lib/index";
 import assert from "assert";
 
 class Product extends Model<Product> {
-    public structure() {
+    structure() {
         return {
             name: Types.String,
             price: Types.Number
@@ -16,7 +16,7 @@ describe("Collection.lastIndexOf", () => {
     it("lastIndexOf(model)", () => {
 
         class Products extends Collection<Product> {
-            public Model = Product;
+            Model = Product;
         }
 
         const products = new Products([
@@ -29,7 +29,7 @@ describe("Collection.lastIndexOf", () => {
         const lastModel = products.at(2);
 
         class SomeModel extends Model<SomeModel> {
-            public static data() {
+            static data() {
                 return {
                     "*": Types.Any
                 };
@@ -51,7 +51,7 @@ describe("Collection.lastIndexOf", () => {
     it("lastIndexOf(model, fromIndex)", () => {
 
         class Products extends Collection<Product> {
-            public Model = Product;
+            Model = Product;
         }
 
         const products = new Products([

@@ -12,7 +12,7 @@ describe("CollectionType", () => {
         class Product extends Model<IProduct> {}
 
         class Products extends Collection<Product> {
-            public static data() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -24,7 +24,7 @@ describe("CollectionType", () => {
         }
 
         class Cart extends Model<ICart> {
-            public static data() {
+            static data() {
                 return {
                     products: Products
                 };
@@ -63,7 +63,7 @@ describe("CollectionType", () => {
         class Product extends Model<IProduct> {}
 
         class Products extends Collection<Product> {
-            public static data() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -75,7 +75,7 @@ describe("CollectionType", () => {
         }
 
         class Cart extends Model<ICart> {
-            public static data() {
+            static data() {
                 return {
                     products: Products
                 };
@@ -102,7 +102,7 @@ describe("CollectionType", () => {
         class Data extends Model<IData> {}
 
         class SomeCollection extends Collection<Data> {
-            public static data() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -114,7 +114,7 @@ describe("CollectionType", () => {
         }
 
         class SomeModel extends Model<ISome> {
-            public static data() {
+            static data() {
                 return {
                     some: SomeCollection
                 };
@@ -142,7 +142,7 @@ describe("CollectionType", () => {
         class Data extends Model<IData> {}
 
         class SomeCollection extends Collection<Data> {
-            public static data() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -154,7 +154,7 @@ describe("CollectionType", () => {
         }
 
         class SomeModel extends Model<ISome> {
-            public static data() {
+            static data() {
                 return {
                     some: SomeCollection
                 };
@@ -181,7 +181,7 @@ describe("CollectionType", () => {
         class Data extends Model<IData> {}
 
         class MyCollection extends Collection<Data> {
-            public static data() {
+            static data() {
                 return {
                     id: {
                         type: "number",
@@ -196,7 +196,7 @@ describe("CollectionType", () => {
         }
 
         class SomeModel extends Model<ISome> {
-            public static data() {
+            static data() {
                 return {
                     arr: [MyCollection]
                 };
@@ -235,7 +235,7 @@ describe("CollectionType", () => {
         class Data extends Model<IData> {}
 
         class CustomCollection extends Collection<Data> {
-            public static data() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -283,7 +283,7 @@ describe("CollectionType", () => {
 
         pairs.forEach((pair) => {
             class TestModel extends Model<ITest> {
-                public static data() {
+                static data() {
                     return {
                         custom: CustomCollection
                     };
@@ -320,7 +320,7 @@ describe("CollectionType", () => {
         class Item extends Model<IItem> {}
 
         class CustomCollection extends Collection<Item> {
-            public static data() {
+            static data() {
                 return {
                     name: "text",
                     child: CustomCollection
@@ -332,7 +332,7 @@ describe("CollectionType", () => {
             collection: CustomCollection;
         }
         class TestModel extends Model<ITest> {
-            public static data() {
+            static data() {
                 return {
                     collection: CustomCollection
                 };
@@ -370,7 +370,7 @@ describe("CollectionType", () => {
         class Product extends Model<IProduct> {}
 
         class Products extends Collection<Product> {
-            public static data() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -382,7 +382,7 @@ describe("CollectionType", () => {
         }
 
         class SomeModel extends Model<ISome> {
-            public static data() {
+            static data() {
                 return {
                     products: {
                         type: Products,

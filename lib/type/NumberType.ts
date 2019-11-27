@@ -19,11 +19,11 @@ export interface INumberType extends IType {
 }
 
 export class NumberType extends Type {
-    public nullAsZero: boolean;
-    public zeroAsNull: boolean;
-    public ceil: number;
-    public round: number;
-    public floor: number;
+    nullAsZero: boolean;
+    zeroAsNull: boolean;
+    ceil: number;
+    round: number;
+    floor: number;
 
     constructor({
         nullAsZero = false,
@@ -81,7 +81,7 @@ export class NumberType extends Type {
         this.floor = floor;
     }
 
-    public prepare(originalValue,  key) {
+    prepare(originalValue,  key) {
         if ( originalValue == null ) {
             if ( this.nullAsZero ) {
                 return 0;

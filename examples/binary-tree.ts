@@ -12,7 +12,7 @@ interface IBinaryTree {
 }
 
 class BinaryTreeModel extends Model<IBinaryTree> {
-    public static data() {
+    static data() {
         return {
             // define model property
             left: BinaryTreeModel,
@@ -23,7 +23,7 @@ class BinaryTreeModel extends Model<IBinaryTree> {
         };
     }
 
-    public findName(id) {
+    findName(id) {
         if ( id === this.get("id") ) {
             return this.get("name");
         }

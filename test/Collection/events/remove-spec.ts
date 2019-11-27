@@ -13,7 +13,7 @@ describe("Collection event add", () => {
         class User extends Model<IUser> {}
 
         class Users extends Collection<User> {
-            public static data() {
+            static data() {
                 return {
                     id: {
                         type: "number",
@@ -61,7 +61,7 @@ describe("Collection event add", () => {
         class User extends Model<IUser> {}
 
         class Users extends Collection<User> {
-            public static data() {
+            static data() {
                 return {
                     id: {
                         type: "number",
@@ -110,7 +110,7 @@ describe("Collection event add", () => {
         class User extends Model<IUser> {}
 
         class Users extends Collection<User> {
-            public static data() {
+            static data() {
                 return {
                     id: {
                         type: "number",
@@ -161,7 +161,7 @@ describe("Collection event add", () => {
         class User extends Model<IUser> {}
 
         class Users extends Collection<User> {
-            public static data() {
+            static data() {
                 return {
                     id: {
                         type: "number",
@@ -209,7 +209,7 @@ describe("Collection event add", () => {
         class User extends Model<IUser> {}
 
         class Users extends Collection<User> {
-            public static data() {
+            static data() {
                 return {
                     id: {
                         type: "number",
@@ -257,7 +257,7 @@ describe("Collection event add", () => {
         class User extends Model<IUser> {}
 
         class Users extends Collection<User> {
-            public static data() {
+            static data() {
                 return {
                     id: {
                         type: "number",

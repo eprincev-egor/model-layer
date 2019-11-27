@@ -10,7 +10,7 @@ interface ITree {
 }
 
 class Tree extends Model<ITree> {
-    public static data() {
+    static data() {
         return {
             name: "string",
             children: [Tree]

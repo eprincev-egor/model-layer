@@ -10,7 +10,7 @@ interface IUser {
 }
 
 class UserModel extends Model<IUser> {
-    public static data() {
+    static data() {
         return {
             
             // simplest define string property

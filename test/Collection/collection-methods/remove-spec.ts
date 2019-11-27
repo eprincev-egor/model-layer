@@ -13,7 +13,7 @@ describe("Collection.remove", () => {
         class Product extends Model<IProduct> {}
 
         class Products extends Collection<Product> {
-            public static data() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -50,7 +50,7 @@ describe("Collection.remove", () => {
         class Company extends Model<ICompany> {}
 
         class Companies extends Collection<Company> {
-            public static data() {
+            static data() {
                 return {
                     id: {
                         type: "number",

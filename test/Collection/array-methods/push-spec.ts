@@ -6,7 +6,7 @@ describe("Collection.push", () => {
 
     it("push object", () => {
         class User extends Model<User> {
-            public structure() {
+            structure() {
                 return {
                     name: Types.String
                 };
@@ -14,7 +14,7 @@ describe("Collection.push", () => {
         }
         
         class Users extends Collection<User> {
-            public Model = User;
+            Model = User;
         }
 
         const users = new Users([
@@ -36,7 +36,7 @@ describe("Collection.push", () => {
 
     it("push(a, b, ...)", () => {
         class User extends Model<User> {
-            public structure() {
+            structure() {
                 return {
                     name: Types.String
                 };
@@ -44,7 +44,7 @@ describe("Collection.push", () => {
         }
 
         class Users extends Collection<User> {
-            public Model = User;
+            Model = User;
         }
 
         const users = new Users();
@@ -73,7 +73,7 @@ describe("Collection.push", () => {
 
     it("push CustomModel", () => {
         class User extends Model<User> {
-            public structure() {
+            structure() {
                 return {
                     name: Types.String
                 };
@@ -81,7 +81,7 @@ describe("Collection.push", () => {
         }
 
         class Users extends Collection<User> {
-            public Model = User;
+            Model = User;
         }
 
         const user = new User({
@@ -101,7 +101,7 @@ describe("Collection.push", () => {
 
     it("push SomeModel", () => {
         class User extends Model<User> {
-            public structure() {
+            structure() {
                 return {
                     name: Types.String
                 };
@@ -109,7 +109,7 @@ describe("Collection.push", () => {
         }
 
         class Users extends Collection<User> {
-            public Model = User;
+            Model = User;
         }
 
         const user = new User({
@@ -130,7 +130,7 @@ describe("Collection.push", () => {
 
     it("push()", () => {
         class User extends Model<User> {
-            public structure() {
+            structure() {
                 return {
                     name: Types.String
                 };
@@ -138,7 +138,7 @@ describe("Collection.push", () => {
         }
 
         class Users extends Collection<User> {
-            public Model = User;
+            Model = User;
         }
 
         const users = new Users();
@@ -152,7 +152,7 @@ describe("Collection.push", () => {
 
     it("push(undefined)", () => {
         class User extends Model<User> {
-            public structure() {
+            structure() {
                 return {
                     name: Types.String
                 };
@@ -160,7 +160,7 @@ describe("Collection.push", () => {
         }
 
         class Users extends Collection<User> {
-            public Model = User;
+            Model = User;
         }
 
         const users = new Users();

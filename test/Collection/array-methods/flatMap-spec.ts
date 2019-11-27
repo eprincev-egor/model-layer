@@ -6,7 +6,7 @@ describe("Collection.flatMap", () => {
 
     it("flatMap()", () => {
         class Book extends Model<Book> {
-            public structure() {
+            structure() {
                 return {
                     name: Types.String,
                     price: Types.Number
@@ -15,7 +15,7 @@ describe("Collection.flatMap", () => {
         }
 
         class Books extends Collection<Book> {
-            public Model = Book;
+            Model = Book;
         }
 
         const books = new Books([
@@ -48,7 +48,7 @@ describe("Collection.flatMap", () => {
     
     it("flatMap(f, context)", () => {
         class Product extends Model<Product> {
-            public structure() {
+            structure() {
                 return {
                     name: Types.String,
                     price: Types.Number
@@ -57,7 +57,7 @@ describe("Collection.flatMap", () => {
         }
 
         class Products extends Collection<Product> {
-            public Model = Product;
+            Model = Product;
         }
 
         const products = new Products([

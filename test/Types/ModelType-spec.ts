@@ -15,7 +15,7 @@ describe("ModelType", () => {
         }
 
         class UserModel extends Model<IUser> {
-            public static data() {
+            static data() {
                 return {
                     name: {
                         type: "string",
@@ -48,7 +48,7 @@ describe("ModelType", () => {
         }
 
         class RegistrationModel extends Model<IRegistration> {
-            public static data() {
+            static data() {
                 return {
                     user: {
                         type: UserModel,
@@ -176,7 +176,7 @@ describe("ModelType", () => {
         }
 
         class CarModel extends Model<ICar> {
-            public static data() {
+            static data() {
                 return {
                     id: "number",
                     color: "string"
@@ -190,7 +190,7 @@ describe("ModelType", () => {
         }
 
         class UserModel extends Model<IUser> {
-            public static data() {
+            static data() {
                 return {
                     name: "string",
                     car: CarModel
@@ -225,7 +225,7 @@ describe("ModelType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     prop: "number"
                 };
@@ -265,7 +265,7 @@ describe("ModelType", () => {
 
         pairs.forEach((pair) => {
             class TestModel extends Model<ITest> {
-                public static data() {
+                static data() {
                     return {
                         model: SomeModel
                     };
@@ -301,7 +301,7 @@ describe("ModelType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     name: "string",
                     self: SomeModel
@@ -332,7 +332,7 @@ describe("ModelType", () => {
 
         pairs.forEach((pair, i) => {
             class TestModel extends Model<ITest> {
-                public static data() {
+                static data() {
                     return {
                         model: SomeModel
                     };
@@ -367,7 +367,7 @@ describe("ModelType", () => {
         }
 
         class BaseModel<T extends IBase = IBase> extends Model<T> {
-            public static data() {
+            static data() {
                 return {
                     modelName: "string"
                 };
@@ -379,7 +379,7 @@ describe("ModelType", () => {
         }
 
         class ChildModel extends BaseModel<IChild> {
-            public static data() {
+            static data() {
                 return {
                     ...super.data(),
                     isChild: {
@@ -395,7 +395,7 @@ describe("ModelType", () => {
         }
 
         class MainModel extends Model<IMain> {
-            public static data() {
+            static data() {
                 return {
                     child: BaseModel.or( ChildModel )
                 };
@@ -466,7 +466,7 @@ describe("ModelType", () => {
         }
 
         class Product<T extends IProduct = IProduct> extends Model<T> {
-            public static data() {
+            static data() {
                 return {
                     type: "string",
                     price: "number"
@@ -479,7 +479,7 @@ describe("ModelType", () => {
         }
 
         class DressProduct extends Product<IDressProduct> {
-            public static data() {
+            static data() {
                 return {
                     ...super.data(),
 
@@ -493,7 +493,7 @@ describe("ModelType", () => {
         }
 
         class FoodProduct extends Product<IFoodProduct> {
-            public static data() {
+            static data() {
                 return {
                     ...super.data(),
 
@@ -511,7 +511,7 @@ describe("ModelType", () => {
         }
 
         class Cart extends Model<ICart> {
-            public static data() {
+            static data() {
                 return {
                     products: {
                         type: "array",
@@ -559,7 +559,7 @@ describe("ModelType", () => {
         }
 
         class BaseModel extends Model<IBase> {
-            public static data() {
+            static data() {
                 return {
                     modelName: "string"
                 };
@@ -573,7 +573,7 @@ describe("ModelType", () => {
         }
 
         class MainModel extends Model<IMain> {
-            public static data() {
+            static data() {
                 return {
                     child: {
                         type: BaseModel.or( ChildModel ),
@@ -611,7 +611,7 @@ describe("ModelType", () => {
         }
 
         class SecondLevel extends FirstLevel<ISecond> {
-            public static data() {
+            static data() {
                 return {
                     level: {
                         type: "number",
@@ -626,7 +626,7 @@ describe("ModelType", () => {
         }
 
         class MainModel extends Model<IMain> {
-            public static data() {
+            static data() {
                 return {
                     some: FirstLevel
                 };
@@ -665,7 +665,7 @@ describe("ModelType", () => {
         }
 
         class First<T extends IFirst = IFirst> extends Model<T> {
-            public static data() {
+            static data() {
                 return {
                     first: "number"
                 };
@@ -673,7 +673,7 @@ describe("ModelType", () => {
         }
 
         class Second<T extends ISecond = ISecond> extends First<T> {
-            public static data() {
+            static data() {
                 return {
                     ...super.data(),
                     second: "number"
@@ -682,7 +682,7 @@ describe("ModelType", () => {
         }
 
         class Third extends Second<IThird> {
-            public static data() {
+            static data() {
                 return {
                     ...super.data(),
                     third: "number"

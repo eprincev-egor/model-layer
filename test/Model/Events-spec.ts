@@ -11,7 +11,7 @@ describe("Model events", () => {
     it("listen changes", () => {
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     prop: "string"
                 };
@@ -42,7 +42,7 @@ describe("Model events", () => {
 
     it("no changes - no event", () => {
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     prop: "string"
                 };
@@ -67,7 +67,7 @@ describe("Model events", () => {
 
     it("listen change:prop", () => {
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     prop: "string"
                 };
@@ -99,7 +99,7 @@ describe("Model events", () => {
 
     it("listen change:unknownProp", () => {
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     prop: "string"
                 };

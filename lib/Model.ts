@@ -20,19 +20,19 @@ interface IChangeEvent<TModel extends Model> {
 
 export abstract class Model<ChildModel extends Model = any> extends EventEmitter {
 
-    public static Type = Type;
+    static Type = Type;
 
-    public TStructure: ReturnType< this["structure"] >;
-    public TInputData: InputType< this["TStructure"] >;
-    public TInput: this["TInputData"] | this;
-    public TOutput: this;
-    public TJson: JsonType< this["TStructure"] >;
-    public data: OutputType< this["TStructure"] >;
+    TStructure: ReturnType< this["structure"] >;
+    TInputData: InputType< this["TStructure"] >;
+    TInput: this["TInputData"] | this;
+    TOutput: this;
+    TJson: JsonType< this["TStructure"] >;
+    data: OutputType< this["TStructure"] >;
     
     // "id"
-    public primaryKey: string;
+    primaryKey: string;
     // value of id
-    public primaryValue: number | string;
+    primaryValue: number | string;
 
     // data properties
     private properties: any;
@@ -86,16 +86,16 @@ export abstract class Model<ChildModel extends Model = any> extends EventEmitter
         Object.freeze(this.data);
     }
 
-    public structure(): {[key: string]: any} {
+    structure(): {[key: string]: any} {
         // throw new Error(`${ this.constructor.name }.structure() is not declared`);
         return {};
     }
 
-    public get<TKey extends keyof this["data"]>(key: TKey): this["data"][TKey] {
+    get<TKey extends keyof this["data"]>(key: TKey): this["data"][TKey] {
         return this.data[ key ];
     }
 
-    public set(data: this["TInputData"], options?: ISimpleObject) {
+    set(data: this["TInputData"], options?: ISimpleObject) {
         options = options || {
             onlyValidate: false
         };
@@ -220,7 +220,7 @@ export abstract class Model<ChildModel extends Model = any> extends EventEmitter
         });
     }
 
-    public isValid(data: this["TInputData"]): boolean {
+    isValid(data: this["TInputData"]): boolean {
         if ( !isObject(data) ) {
             throw new Error("data must be are object");
         }
@@ -236,16 +236,16 @@ export abstract class Model<ChildModel extends Model = any> extends EventEmitter
         }
     }
 
-    public hasProperty<Key extends keyof this["data"]>(key: Key): boolean {
+    hasProperty<Key extends keyof this["data"]>(key: Key): boolean {
         return this.data.hasOwnProperty( key );
     }
 
-    public getDescription<Key extends keyof this["data"]>(key: Key) {
+    getDescription<Key extends keyof this["data"]>(key: Key) {
         const iKey = key as any;
         return this.properties[ iKey ] || this.properties["*"];
     }
 
-    public hasValue<Key extends keyof this["data"]>(key: Key): boolean {
+    hasValue<Key extends keyof this["data"]>(key: Key): boolean {
         const value = this.data[ key ];
 
         if ( value == null ) {
@@ -255,7 +255,7 @@ export abstract class Model<ChildModel extends Model = any> extends EventEmitter
         }
     }
 
-    public walk(
+    walk(
         iteration: (model: Model, walker: Walker) => void, 
         stack?
     ) {
@@ -306,7 +306,7 @@ export abstract class Model<ChildModel extends Model = any> extends EventEmitter
         }
     }
 
-    public findChild(
+    findChild(
         iteration: (model: Model) => boolean
     ): Model {
         let child;
@@ -323,7 +323,7 @@ export abstract class Model<ChildModel extends Model = any> extends EventEmitter
         return child;
     }
 
-    public filterChildren(
+    filterChildren(
         iteration: (model: Model) => boolean
     ): Model[] {
 
@@ -340,7 +340,7 @@ export abstract class Model<ChildModel extends Model = any> extends EventEmitter
         return children;
     }
 
-    public findParent(
+    findParent(
         iteration: (model: Model) => boolean, 
         stack?
     ): Model {
@@ -366,7 +366,7 @@ export abstract class Model<ChildModel extends Model = any> extends EventEmitter
         }
     }
 
-    public filterParents(
+    filterParents(
         iteration: (model: Model) => boolean
     ): Model[] {
 
@@ -386,7 +386,7 @@ export abstract class Model<ChildModel extends Model = any> extends EventEmitter
         return parents;
     }
 
-    public findParentInstance<TModel extends Model>(
+    findParentInstance<TModel extends Model>(
         SomeModel: new (...args: any) => TModel
     ): TModel {
         return this.findParent((model) =>
@@ -394,7 +394,7 @@ export abstract class Model<ChildModel extends Model = any> extends EventEmitter
         ) as TModel;
     }
 
-    public toJSON(): this["TJson"] {
+    toJSON(): this["TJson"] {
         const json: any = {};
         
         for (const key in this.data) {
@@ -413,7 +413,7 @@ export abstract class Model<ChildModel extends Model = any> extends EventEmitter
         return json;
     }
 
-    public clone(): this {
+    clone(): this {
         const cloneData: Partial<this["data"]> = {};
 
         for (const key in this.data) {
@@ -433,7 +433,7 @@ export abstract class Model<ChildModel extends Model = any> extends EventEmitter
         return clone;
     }
 
-    public equal(otherModel: Model | object, stack?): boolean {
+    equal(otherModel: Model | object, stack?): boolean {
         stack = stack || new EqualStack();
 
         for (const key in this.data) {
@@ -471,19 +471,19 @@ export abstract class Model<ChildModel extends Model = any> extends EventEmitter
         return true;
     }
 
-    public validate(data: this["TInputData"]): void {
+    validate(data: this["TInputData"]): void {
         // for invalid data throw error here
     }
 
-    public prepare(data: this["TInputData"]): void {
+    prepare(data: this["TInputData"]): void {
         // any calculations with data by reference
     }
 
-    public prepareJSON(json: this["TJson"]): void {
+    prepareJSON(json: this["TJson"]): void {
         // any calculations with json by reference
     }
 
-    public on(
+    on(
         eventName: "change",
         keyOrListener: (
             string | 

@@ -7,20 +7,20 @@ describe("Collection.join", () => {
     it("join()", () => {
         
         class Product extends Model<Product> {
-            public structure() {
+            structure() {
                 return {
                     name: Types.String,
                     price: Types.Number
                 };
             }
 
-            public toString() {
+            toString() {
                 return `${ this.get("name") } (${ this.get("price") })`;
             }
         }
 
         class Products extends Collection<Product> {
-            public static data() {
+            static data() {
                 return Product;
             }
         }

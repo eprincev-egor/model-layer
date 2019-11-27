@@ -10,7 +10,7 @@ describe("NumberType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     age: {
                         type: "number",
@@ -145,7 +145,7 @@ describe("NumberType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     money: {
                         type: "number",
@@ -169,7 +169,7 @@ describe("NumberType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     money: {
                         type: "number",
@@ -193,7 +193,7 @@ describe("NumberType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     money: {
                         type: "number",
@@ -226,7 +226,7 @@ describe("NumberType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     money: {
                         type: "number",
@@ -254,7 +254,7 @@ describe("NumberType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     money: {
                         type: "number",
@@ -290,7 +290,7 @@ describe("NumberType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     age: "number"
                 };
@@ -316,7 +316,7 @@ describe("NumberType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     money: {
                         type: "number",
@@ -341,7 +341,7 @@ describe("NumberType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     money: {
                         type: "number",
@@ -366,7 +366,7 @@ describe("NumberType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     money: {
                         type: "number",
@@ -401,7 +401,7 @@ describe("NumberType", () => {
 
         pairs.forEach((pair) => {
             class TestModel extends Model<ISomeData> {
-                public static data() {
+                static data() {
                     return {
                         numb: "number"
                     };
@@ -436,7 +436,7 @@ describe("NumberType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     money: {
                         type: "number",
@@ -462,7 +462,7 @@ describe("NumberType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     money: {
                         type: "number",
@@ -488,7 +488,7 @@ describe("NumberType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     money: {
                         type: "number",
@@ -514,7 +514,7 @@ describe("NumberType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     age: {
                         type: "number",

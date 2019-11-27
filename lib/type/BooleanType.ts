@@ -16,8 +16,8 @@ export interface IBooleanType extends IType {
 }
 
 export class BooleanType extends Type {
-    public nullAsFalse: boolean;
-    public falseAsNull: boolean;
+    nullAsFalse: boolean;
+    falseAsNull: boolean;
 
     constructor(params: IBooleanTypeParams) {
         super(params);
@@ -30,7 +30,7 @@ export class BooleanType extends Type {
         }
     }
 
-    public prepare(value, key) {
+    prepare(value, key) {
         if ( value == null ) {
             if ( this.nullAsFalse ) {
                 return false;

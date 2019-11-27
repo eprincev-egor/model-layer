@@ -13,7 +13,7 @@ describe("Collection.get", () => {
     it("get(id)", () => {
         
         class Companies extends Collection<Company> {
-            public static data() {
+            static data() {
                 return {
                     id: {
                         type: "number",

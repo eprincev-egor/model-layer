@@ -16,7 +16,7 @@ describe("DateType", () => {
         const nowDate = new Date( now );
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     bornDate: {
                         type: "date",
@@ -164,7 +164,7 @@ describe("DateType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     bornDate: "date"
                 };
@@ -203,7 +203,7 @@ describe("DateType", () => {
 
         pairs.forEach((pair) => {
             class TestModel extends Model<ISomeData> {
-                public static data() {
+                static data() {
                     return {
                         date: "date"
                     };

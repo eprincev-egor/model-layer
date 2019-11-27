@@ -10,7 +10,7 @@ interface ICustomClassTypeParams extends ITypeParams {
 }
 
 export default class CustomClassType extends Type {
-    public static prepareDescription(description) {
+    static prepareDescription(description) {
         
         const isCustomClass = (
             typeof description.type === "function" &&
@@ -28,9 +28,9 @@ export default class CustomClassType extends Type {
         description.CustomClass = CustomClass;
     }
 
-    public CustomClass: any;
-    public nullAsEmpty: boolean;
-    public emptyAsNull: boolean;
+    CustomClass: any;
+    nullAsEmpty: boolean;
+    emptyAsNull: boolean;
 
     constructor(params: ICustomClassTypeParams) {
         super(params);
@@ -38,7 +38,7 @@ export default class CustomClassType extends Type {
         this.CustomClass = params.CustomClass;
     }
 
-    public prepare(value, key) {
+    prepare(value, key) {
         if ( value == null ) {
             return null;
         }
@@ -55,11 +55,11 @@ export default class CustomClassType extends Type {
         throw new Error(`invalid ${ className } for ${ key }: ${ valueAsString }`);
     }
 
-    public typeAsString() {
+    typeAsString() {
         return this.CustomClass.name;
     }
 
-    public toJSON(value) {
+    toJSON(value) {
         if ( typeof value.toJSON === "function" ) {
             return value.toJSON();
         }
@@ -67,7 +67,7 @@ export default class CustomClassType extends Type {
         return value;
     }
 
-    public clone(value) {
+    clone(value) {
         if ( typeof value.clone === "function" ) {
             return value.clone();
         }

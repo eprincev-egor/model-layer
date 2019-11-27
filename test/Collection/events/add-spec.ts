@@ -12,7 +12,7 @@ describe("Collection event add", () => {
         class User extends Model<IUser> {}
 
         class Users extends Collection<User> {
-            public static data() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -54,7 +54,7 @@ describe("Collection event add", () => {
         class User extends Model<IUser> {}
 
         class Users extends Collection<User> {
-            public static data() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -95,7 +95,7 @@ describe("Collection event add", () => {
         class User extends Model<IUser> {}
 
         class Users extends Collection<User> {
-            public static data() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -136,7 +136,7 @@ describe("Collection event add", () => {
         class User extends Model<IUser> {}
 
         class Users extends Collection<User> {
-            public static data() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -177,7 +177,7 @@ describe("Collection event add", () => {
         class User extends Model<IUser> {}
 
         class Users extends Collection<User> {
-            public static data() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -218,7 +218,7 @@ describe("Collection event add", () => {
         class User extends Model<IUser> {}
 
         class Users extends Collection<User> {
-            public static data() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -259,7 +259,7 @@ describe("Collection event add", () => {
         class User extends Model<IUser> {}
 
         class Users extends Collection<User> {
-            public static data() {
+            static data() {
                 return {
                     name: "text"
                 };

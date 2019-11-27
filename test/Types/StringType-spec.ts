@@ -10,7 +10,7 @@ describe("StringType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     name: {
                         type: "string",
@@ -126,7 +126,7 @@ describe("StringType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     name: {
                         type: "string",
@@ -150,7 +150,7 @@ describe("StringType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     name: {
                         type: "string",
@@ -177,7 +177,7 @@ describe("StringType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     name: {
                         type: "string",
@@ -203,7 +203,7 @@ describe("StringType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     name: {
                         type: "string",
@@ -231,7 +231,7 @@ describe("StringType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     name: {
                         type: "string",
@@ -255,7 +255,7 @@ describe("StringType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     name: {
                         type: "string",
@@ -279,7 +279,7 @@ describe("StringType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     name: {
                         type: "string",
@@ -314,7 +314,7 @@ describe("StringType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     name: "string"
                 };
@@ -350,7 +350,7 @@ describe("StringType", () => {
 
         pairs.forEach((pair) => {
             class TestModel extends Model<ISomeData> {
-                public static data() {
+                static data() {
                     return {
                         str: "string"
                     };
@@ -385,7 +385,7 @@ describe("StringType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     name: {
                         type: "string",
@@ -411,7 +411,7 @@ describe("StringType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     name: {
                         type: "string",

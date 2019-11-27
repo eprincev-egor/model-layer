@@ -14,7 +14,7 @@ export interface IDateType extends IType {
 }
 
 export class DateType extends Type {
-    public prepare(originalValue, key) {
+    prepare(originalValue, key) {
         if ( originalValue == null ) {
             return null;
         }
@@ -46,7 +46,7 @@ export class DateType extends Type {
         return value;
     }
 
-    public equal(selfValue, anotherValue) {
+    equal(selfValue, anotherValue) {
         if ( selfValue == null ) {
             return anotherValue === null;
         }

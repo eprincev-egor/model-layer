@@ -3,7 +3,7 @@ import {Collection, Model, Types} from "../../../lib/index";
 import assert from "assert";
 
 class Product extends Model<Product> {
-    public structure() {
+    structure() {
         return {
             name: Types.String,
             price: Types.Number
@@ -16,7 +16,7 @@ describe("Collection.fill", () => {
     it("fill(row, start, end)", () => {
         
         class Products extends Collection<Product> {
-            public Model = Product;
+            Model = Product;
         }
 
         const products = new Products([
@@ -53,7 +53,7 @@ describe("Collection.fill", () => {
     it("fill(row, start)", () => {
         
         class Products extends Collection<Product> {
-            public Model = Product;
+            Model = Product;
         }
 
         const products = new Products([
@@ -87,7 +87,7 @@ describe("Collection.fill", () => {
     it("fill(row, -start)", () => {
         
         class Products extends Collection<Product> {
-            public Model = Product;
+            Model = Product;
         }
 
         const products = new Products([
@@ -113,7 +113,7 @@ describe("Collection.fill", () => {
     it("fill(row, -start, -end)", () => {
         
         class Products extends Collection<Product> {
-            public Model = Product;
+            Model = Product;
         }
 
         const products = new Products([

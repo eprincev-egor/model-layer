@@ -3,7 +3,7 @@ import {Collection, Model, Types} from "../../../lib/index";
 import assert from "assert";
 
 class Product extends Model<Product> {
-    public structure() {
+    structure() {
         return {
             name: Types.String,
             price: Types.Number

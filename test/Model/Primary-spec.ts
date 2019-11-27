@@ -41,7 +41,7 @@ describe("Model primary field", () => {
         RESERVED_KEYS.forEach((reservedKey) => {
             
             class Company extends Model<IAny> {
-                public static data() {
+                static data() {
                     return {
                         [reservedKey]: {
                             type: "text",
@@ -71,7 +71,7 @@ describe("Model primary field", () => {
         }
 
         class Company extends Model<ICompany> {
-            public static data() {
+            static data() {
                 return {
                     id: {
                         type: "number",
@@ -96,7 +96,7 @@ describe("Model primary field", () => {
         }
 
         class Company extends Model<ICompany> {
-            public static data() {
+            static data() {
                 return {
                     id: {
                         type: "number",
@@ -127,7 +127,7 @@ describe("Model primary field", () => {
         }
 
         class Company extends Model<ICompany> {
-            public static data() {
+            static data() {
                 return {
                     id: {
                         type: "number",
@@ -137,7 +137,7 @@ describe("Model primary field", () => {
                 };
             }
             
-            public id: number;
+            id: number;
         }
 
         const company1 = new Company({
@@ -163,7 +163,7 @@ describe("Model primary field", () => {
         }
 
         class Company extends Model<ICompany> {
-            public static data() {
+            static data() {
                 return {
                     id: {
                         type: "number",

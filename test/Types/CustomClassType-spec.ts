@@ -7,7 +7,7 @@ describe("CustomClassType", () => {
     
     it("custom class (not Model) property", () => {
         class CustomClass {
-            public params: any;
+            params: any;
 
             constructor(params?) {
                 this.params = params;
@@ -19,7 +19,7 @@ describe("CustomClassType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     some: CustomClass
                 };
@@ -59,7 +59,7 @@ describe("CustomClassType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     some: CustomClass
                 };
@@ -84,7 +84,7 @@ describe("CustomClassType", () => {
 
     it("CustomClass.toJSON(), if CustomClass has method toJSON", () => {
         class CustomClass {
-            public toJSON() {
+            toJSON() {
                 return {nice: true};
             }
         }
@@ -94,7 +94,7 @@ describe("CustomClassType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     some: CustomClass
                 };
@@ -124,7 +124,7 @@ describe("CustomClassType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     some: CustomClass
                 };
@@ -143,9 +143,9 @@ describe("CustomClassType", () => {
     
     it("CustomClass.clone(), if CustomClass has method clone", () => {
         class CustomClass {
-            public nice?: boolean;
+            nice?: boolean;
 
-            public clone() {
+            clone() {
                 const cloneCustomClass = new CustomClass();
 
                 cloneCustomClass.nice = true;
@@ -159,7 +159,7 @@ describe("CustomClassType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     some: CustomClass
                 };
@@ -187,7 +187,7 @@ describe("CustomClassType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     arr: [MyClass]
                 };
@@ -226,7 +226,7 @@ describe("CustomClassType", () => {
 
         pairs.forEach((pair) => {
             class TestModel extends Model<ISomeData> {
-                public static data() {
+                static data() {
                     return {
                         custom: CustomClass
                     };

@@ -13,7 +13,7 @@ describe("Collection.equal", () => {
         class Company extends Model<ICompany> {}
 
         class Companies extends Collection<Company> {
-            public static data() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -69,7 +69,7 @@ describe("Collection.equal", () => {
         class Custom extends Model<ICustom> {}
 
         class CustomCollection extends Collection<Custom> {
-            public static data() {
+            static data() {
                 return {
                     name: "text",
                     child: CustomCollection

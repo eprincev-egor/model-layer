@@ -12,7 +12,7 @@ describe("Collection tests", () => {
         class User extends Model<IUser> {}
 
         class Users extends Collection<User> {
-            public static data() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -34,7 +34,7 @@ describe("Collection tests", () => {
         class User extends Model<IUser> {}
 
         class Users extends Collection<User> {
-            public static data() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -61,7 +61,7 @@ describe("Collection tests", () => {
         }
         
         class User extends Model<IUser> {
-            public static data() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -69,7 +69,7 @@ describe("Collection tests", () => {
         }
 
         class Users extends Collection<User> {
-            public static data() {
+            static data() {
                 return User;
             }
         }
@@ -97,7 +97,7 @@ describe("Collection tests", () => {
         class User extends Model<IUser> {}
 
         class Users extends Collection<User> {
-            public static data() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -127,7 +127,7 @@ describe("Collection tests", () => {
         class Product extends Model<IProduct> {}
 
         class Products extends Collection<Product> {
-            public static data() {
+            static data() {
                 calls++;
                 return {
                     name: "text",
@@ -151,7 +151,7 @@ describe("Collection tests", () => {
         }
 
         class Company extends Model<ICompany> {
-            public static data() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -159,7 +159,7 @@ describe("Collection tests", () => {
         }
 
         class Companies extends Collection<Company> {
-            public static data() {
+            static data() {
                 return Company;
             }
         }

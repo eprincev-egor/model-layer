@@ -17,14 +17,14 @@ interface IRemoveEvent<TCollection, TModel> {
 }
 
 class Collection<TModel extends Model> extends EventEmitter {
-    public Model: new (...args: any) => TModel;
-    public TModel: TModel;
-    public models: TModel[];
-    public length: number;
+    Model: new (...args: any) => TModel;
+    TModel: TModel;
+    models: TModel[];
+    length: number;
     
-    public TInput: this | Array< TModel["TInput"] >;
-    public TOutput: this;
-    public TJson: Array< TModel["TJson"] >;
+    TInput: this | Array< TModel["TInput"] >;
+    TOutput: this;
+    TJson: Array< TModel["TJson"] >;
 
 
     constructor(rows?: Array< TModel["TInput"] >) {
@@ -42,7 +42,7 @@ class Collection<TModel extends Model> extends EventEmitter {
             else {
                 // tslint:disable-next-line:max-classes-per-file
                 CustomModel = class extends Model<any> {
-                    public static data() {
+                    static data() {
                         return result;
                     }
                 };
@@ -65,7 +65,7 @@ class Collection<TModel extends Model> extends EventEmitter {
         }
     }
 
-    public at(index: number, rowOrModel?: TModel["TInput"]): TModel {
+    at(index: number, rowOrModel?: TModel["TInput"]): TModel {
         // set
         if ( rowOrModel ) {
             const removedModel = this.models[ index ];
@@ -96,7 +96,7 @@ class Collection<TModel extends Model> extends EventEmitter {
         }
     }
 
-    public prepareRow(row: TModel["TInput"]): TModel {
+    prepareRow(row: TModel["TInput"]): TModel {
         const CustomModel = this.Model as (new (...args: any) => TModel);
         let model: TModel;
         
@@ -119,7 +119,7 @@ class Collection<TModel extends Model> extends EventEmitter {
         return model;
     }
 
-    public push(...models: Array<TModel["TInput"]>) {
+    push(...models: Array<TModel["TInput"]>) {
         if ( !models.length ) {
             return;
         }
@@ -147,7 +147,7 @@ class Collection<TModel extends Model> extends EventEmitter {
         }
     }
 
-    public add(...models: Array<TModel["TInput"] | Array<TModel["TInput"]>>) {
+    add(...models: Array<TModel["TInput"] | Array<TModel["TInput"]>>) {
         if ( !models.length ) {
             return;
         }
@@ -189,49 +189,49 @@ class Collection<TModel extends Model> extends EventEmitter {
         }
     }
 
-    public forEach(
+    forEach(
         iteration: (model: TModel, index: number, models: TModel[]) => void, 
         context?
     ): void {
         this.models.forEach(iteration, context || this);
     }
 
-    public each(
+    each(
         iteration: (model: TModel, index: number, models: TModel[]) => void, 
         context?
     ): void {
         this.models.forEach(iteration, context || this);
     }
 
-    public find(
+    find(
         iteration: (model: TModel, index: number, models: TModel[]) => boolean, 
         context?
     ): TModel {
         return this.models.find(iteration, context || this);
     }
 
-    public findIndex(
+    findIndex(
         iteration: (model: TModel, index: number, models: TModel[]) => boolean, 
         context?
     ): number {
         return this.models.findIndex(iteration, context || this);
     }
 
-    public filter(
+    filter(
         iteration: (model: TModel, index: number, models: TModel[]) => boolean, 
         context?
     ): TModel[] {
         return this.models.filter(iteration, context || this);
     }
 
-    public map<T>(
+    map<T>(
         iteration: (model: TModel, index: number, models: TModel[]) => T, 
         context?
     ): T[] {
         return this.models.map(iteration, context || this);
     }
 
-    public flatMap<TArr extends any[]>(
+    flatMap<TArr extends any[]>(
         iteration: (model: TModel, index: number, models: TModel[]) => TArr, 
         context?
     ): Array<TArr[0]> {
@@ -252,47 +252,47 @@ class Collection<TModel extends Model> extends EventEmitter {
         return output;
     }
 
-    public reduce<T>(
+    reduce<T>(
         iteration: (total: T, nextModel: TModel) => T,
         initialValue?: T
     ): T {
         return this.models.reduce(iteration, initialValue);
     }
 
-    public reduceRight<T>(
+    reduceRight<T>(
         iteration: (total: T, nextModel: TModel) => T,
         initialValue?: T
     ): T {
         return this.models.reduceRight(iteration, initialValue);
     }
 
-    public every(
+    every(
         iteration: (model: TModel, index: number, models: TModel[]) => boolean, 
         context?
     ): boolean {
         return this.models.every(iteration, context || this);
     }
 
-    public some(
+    some(
         iteration: (model: TModel, index: number, models: TModel[]) => boolean, 
         context?
     ): boolean {
         return this.models.some(iteration, context || this);
     }
 
-    public slice(begin?: number, end?: number): TModel[] {
+    slice(begin?: number, end?: number): TModel[] {
         return this.models.slice(begin, end);
     }
 
-    public flat(): TModel[] {
+    flat(): TModel[] {
         return this.models.slice();
     }
 
-    public indexOf(searchElement: TModel, fromIndex?: number): number {
+    indexOf(searchElement: TModel, fromIndex?: number): number {
         return this.models.indexOf(searchElement, fromIndex);
     }
 
-    public lastIndexOf(searchElement: TModel, fromIndex?: number): number {
+    lastIndexOf(searchElement: TModel, fromIndex?: number): number {
         if ( arguments.length === 2 ) {
             return this.models.lastIndexOf(searchElement, fromIndex);
         }
@@ -301,11 +301,11 @@ class Collection<TModel extends Model> extends EventEmitter {
         }
     }
 
-    public includes(searchElement: TModel, fromIndex?: number): boolean {
+    includes(searchElement: TModel, fromIndex?: number): boolean {
         return this.models.includes(searchElement, fromIndex);
     }
 
-    public pop(): TModel {
+    pop(): TModel {
         const model = this.models.pop();
         this.length = this.models.length;
         
@@ -319,7 +319,7 @@ class Collection<TModel extends Model> extends EventEmitter {
         return model;
     }
 
-    public shift(): TModel {
+    shift(): TModel {
         const model = this.models.shift();
         this.length = this.models.length;
 
@@ -333,7 +333,7 @@ class Collection<TModel extends Model> extends EventEmitter {
         return model;
     }
 
-    public unshift(...models: Array<TModel["TInput"]>) {
+    unshift(...models: Array<TModel["TInput"]>) {
         if ( !models.length ) {
             return;
         }
@@ -362,7 +362,7 @@ class Collection<TModel extends Model> extends EventEmitter {
         }
     }
 
-    public sort(
+    sort(
         compareFunctionOrKey?: 
             keyof TModel["data"] |
             ((modelA: TModel, modelB: TModel) => number), 
@@ -421,12 +421,12 @@ class Collection<TModel extends Model> extends EventEmitter {
         }
     }
     
-    public reverse(): this {
+    reverse(): this {
         this.models.reverse();
         return this;
     }
 
-    public concat(...values: Array< this["TInput"] >): this {
+    concat(...values: Array< this["TInput"] >): this {
         
         const CustomCollection = this.constructor as any;
         let outputModels = this.models;
@@ -448,12 +448,12 @@ class Collection<TModel extends Model> extends EventEmitter {
         return new CustomCollection(outputModels);
     }
 
-    public join(separator: string = ","): string {
+    join(separator: string = ","): string {
         return this.models.join(separator);
     }
 
     // https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/fill
-    public fill(row: TModel["TInput"], start: number, end?: number) {
+    fill(row: TModel["TInput"], start: number, end?: number) {
         // Step 3-5.
         // tslint:disable-next-line: no-bitwise
         const len = this.length >>> 0;
@@ -504,7 +504,7 @@ class Collection<TModel extends Model> extends EventEmitter {
         return this;
     }
 
-    public splice(start: number, deleteCount: number, ...inputItems: Array<TModel["TInput"]>) {
+    splice(start: number, deleteCount: number, ...inputItems: Array<TModel["TInput"]>) {
         let items: TModel[];
 
         if ( inputItems && inputItems.length ) {
@@ -544,7 +544,7 @@ class Collection<TModel extends Model> extends EventEmitter {
         }
     }
 
-    public reset() {
+    reset() {
         const removedModels = this.models.slice();
 
         this.models = [];
@@ -562,15 +562,15 @@ class Collection<TModel extends Model> extends EventEmitter {
         }
     }
 
-    public first(): TModel {
+    first(): TModel {
         return this.models[0];
     }
 
-    public last(): TModel {
+    last(): TModel {
         return this.models[ this.models.length - 1 ];
     }
 
-    public create(row: TModel["TInputData"]): TModel {
+    create(row: TModel["TInputData"]): TModel {
         const model = this.prepareRow(row);
         
         this.models.push( model );
@@ -586,13 +586,13 @@ class Collection<TModel extends Model> extends EventEmitter {
         return model;
     }
 
-    public toJSON(): Array<TModel["TJson"]> {
+    toJSON(): Array<TModel["TJson"]> {
         return this.models.map((model) =>
             model.toJSON()
         );
     }
 
-    public clone(): this {
+    clone(): this {
         const models = this.models.map((model) => 
             model.clone()
         );
@@ -603,7 +603,7 @@ class Collection<TModel extends Model> extends EventEmitter {
         return clone;
     }
 
-    public remove(idOrModel: TModel | number | string): void {
+    remove(idOrModel: TModel | number | string): void {
         let index = -1;
         let removedModel;
         
@@ -638,13 +638,13 @@ class Collection<TModel extends Model> extends EventEmitter {
         }
     }
 
-    public get(id: number | string): TModel {
+    get(id: number | string): TModel {
         return this.find((model) => 
             model.primaryValue === id
         );
     }
 
-    public equal(
+    equal(
         otherCollection: Collection<any> | 
             Array<Model<any>> | 
             ISimpleObject[], 

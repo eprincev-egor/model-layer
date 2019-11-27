@@ -12,7 +12,7 @@ describe("Collection.add", () => {
         class User extends Model<IUser> {}
 
         class Users extends Collection<User> {
-            public static data() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -44,7 +44,7 @@ describe("Collection.add", () => {
         class User extends Model<IUser> {}
 
         class Users extends Collection<User> {
-            public static data() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -81,7 +81,7 @@ describe("Collection.add", () => {
         }
 
         class User extends Model<IUser> {
-            public static data() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -89,7 +89,7 @@ describe("Collection.add", () => {
         }
 
         class Users extends Collection<User> {
-            public static data() {
+            static data() {
                 return User;
             }
         }
@@ -115,7 +115,7 @@ describe("Collection.add", () => {
         }
 
         class User extends Model<IUser> {
-            public static data() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -123,7 +123,7 @@ describe("Collection.add", () => {
         }
 
         class Users extends Collection<User> {
-            public static data() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -154,7 +154,7 @@ describe("Collection.add", () => {
         class User extends Model<IUser> {}
 
         class Users extends Collection<User> {
-            public static data() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -178,7 +178,7 @@ describe("Collection.add", () => {
         class User extends Model<IUser> {}
 
         class Users extends Collection<User> {
-            public static data() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -202,7 +202,7 @@ describe("Collection.add", () => {
         class User extends Model<IUser> {}
 
         class Users extends Collection<User> {
-            public static data() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -241,7 +241,7 @@ describe("Collection.add", () => {
         }
 
         class User extends Model<IUser> {
-            public static data() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -249,7 +249,7 @@ describe("Collection.add", () => {
         }
 
         class Users extends Collection<User> {
-            public static data() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -288,7 +288,7 @@ describe("Collection.add", () => {
         }
 
         class User extends Model<IUser> {
-            public static data() {
+            static data() {
                 return {
                     name: "text"
                 };
@@ -296,7 +296,7 @@ describe("Collection.add", () => {
         }
 
         class Users extends Collection<User> {
-            public static data() {
+            static data() {
                 return {
                     name: "text"
                 };

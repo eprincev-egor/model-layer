@@ -13,7 +13,7 @@ describe("Collection.first", () => {
     it("first()", () => {
         
         class Products extends Collection<Product> {
-            public static data() {
+            static data() {
                 return {
                     name: "text",
                     price: "number"

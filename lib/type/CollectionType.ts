@@ -10,7 +10,7 @@ export interface ICollectionTypeParams extends ITypeParams {
 }
 
 export class CollectionType extends Type {
-    public static prepareDescription(description) {
+    static prepareDescription(description) {
         
         const isCollection = (
             typeof description.type === "function" &&
@@ -26,8 +26,8 @@ export class CollectionType extends Type {
         description.Collection = CustomCollection;
     }
 
-    public Collection: any;
-    public nullAsEmpty: boolean;
+    Collection: any;
+    nullAsEmpty: boolean;
 
     constructor(params: ICollectionTypeParams) {
         super(params);
@@ -36,7 +36,7 @@ export class CollectionType extends Type {
         this.Collection = params.Collection;
     }
 
-    public prepare(value, key) {
+    prepare(value, key) {
         if ( value == null ) {
             if ( this.nullAsEmpty ) {
                 value = [];
@@ -62,19 +62,19 @@ export class CollectionType extends Type {
         throw new Error(`invalid collection ${ className } for ${ key }: ${ valueAsString }`);
     }
 
-    public typeAsString() {
+    typeAsString() {
         return "collection " + this.Collection.name;
     }
 
-    public toJSON(collection) {
+    toJSON(collection) {
         return collection.toJSON();
     }
 
-    public clone(collection) {
+    clone(collection) {
         return collection.clone();
     }
 
-    public equal(selfCollection, otherCollection, stack) {
+    equal(selfCollection, otherCollection, stack) {
         if ( selfCollection == null ) {
             return otherCollection === null;
         }

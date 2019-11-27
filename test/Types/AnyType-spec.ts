@@ -11,7 +11,7 @@ describe("AnyType", () => {
         }
         
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     any: "*"
                 };
@@ -40,7 +40,7 @@ describe("AnyType", () => {
         const isoDate = date.toISOString();
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     any: "*"
                 };
@@ -98,7 +98,7 @@ describe("AnyType", () => {
         const obj2 = new CustomClass();
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     "*": "*"
                 };
@@ -248,7 +248,7 @@ describe("AnyType", () => {
 
         pairs.forEach((pair, i) => {
             class TestModel extends Model<ISomeData> {
-                public static data() {
+                static data() {
                     return {
                         any: "*"
                     };

@@ -13,7 +13,7 @@ describe("Collection.create", () => {
     it("create(row)", () => {
         
         class Products extends Collection<Product> {
-            public static data() {
+            static data() {
                 return {
                     name: "text",
                     price: "number"

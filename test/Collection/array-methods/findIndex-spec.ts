@@ -7,7 +7,7 @@ describe("Collection.findIndex", () => {
 
     it("findIndex()", () => {
         class Color extends Model<Color> {
-            public structure() {
+            structure() {
                 return {
                     name: Types.String,
                     price: Types.Number
@@ -16,7 +16,7 @@ describe("Collection.findIndex", () => {
         }
 
         class Colors extends Collection<Color> {
-            public Model = Color;
+            Model = Color;
         }
 
         const colors = new Colors([
@@ -34,7 +34,7 @@ describe("Collection.findIndex", () => {
     
     it("findIndex(f, context)", () => {
         class Product extends Model<Product> {
-            public structure() {
+            structure() {
                 return {
                     name: Types.String,
                     price: Types.Number
@@ -43,7 +43,7 @@ describe("Collection.findIndex", () => {
         }
 
         class Products extends Collection<Product> {
-            public Model = Product;
+            Model = Product;
         }
 
         const products = new Products([

@@ -27,7 +27,7 @@ export interface IObjectType<T extends IType> extends IType {
 
 export class ObjectType extends Type {
 
-    public static prepareDescription(description, key) {
+    static prepareDescription(description, key) {
         const isObjectDescription = (
             description.type &&
             typeof description.type === "object" &&
@@ -48,9 +48,9 @@ export class ObjectType extends Type {
         }
     }
 
-    public nullAsEmpty: boolean;
-    public emptyAsNull: boolean;
-    public element: any;
+    nullAsEmpty: boolean;
+    emptyAsNull: boolean;
+    element: any;
 
     constructor({
         nullAsEmpty = false,
@@ -69,7 +69,7 @@ export class ObjectType extends Type {
         }
     }
 
-    public prepare(originalObject, modelKey) {
+    prepare(originalObject, modelKey) {
         if ( originalObject == null ) {
             if ( this.nullAsEmpty ) {
                 const value = {};
@@ -124,7 +124,7 @@ export class ObjectType extends Type {
         return object;
     }
 
-    public toJSON(value) {
+    toJSON(value) {
         const obj = value;
         const json = {};
 
@@ -136,7 +136,7 @@ export class ObjectType extends Type {
         return json;
     }
 
-    public clone(value) {
+    clone(value) {
         const obj = value;
         const json = {};
 
@@ -148,7 +148,7 @@ export class ObjectType extends Type {
         return json;
     }
 
-    public equal(selfObj, otherObj, stack) {
+    equal(selfObj, otherObj, stack) {
         if ( selfObj == null ) {
             return otherObj === null;
         }

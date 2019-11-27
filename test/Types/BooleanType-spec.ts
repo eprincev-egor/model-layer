@@ -10,7 +10,7 @@ describe("BooleanType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     some: {
                         type: "boolean",
@@ -113,7 +113,7 @@ describe("BooleanType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     some: {
                         type: "boolean",
@@ -146,7 +146,7 @@ describe("BooleanType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     some: {
                         type: "boolean",
@@ -183,7 +183,7 @@ describe("BooleanType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     some: "boolean"
                 };
@@ -219,7 +219,7 @@ describe("BooleanType", () => {
 
         pairs.forEach((pair) => {
             class TestModel extends Model<ISomeData> {
-                public static data() {
+                static data() {
                     return {
                         bool: "boolean"
                     };
@@ -254,7 +254,7 @@ describe("BooleanType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     flag: {
                         type: "boolean",

@@ -11,7 +11,7 @@ describe("Model tests", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     prop: "string"
                 };
@@ -35,7 +35,7 @@ describe("Model tests", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     prop: "string"
                 };
@@ -55,7 +55,7 @@ describe("Model tests", () => {
 
         let model;
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     prop: {
                         type: "string",
@@ -99,7 +99,7 @@ describe("Model tests", () => {
         const now = Date.now();
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     now: {
                         type: "number",
@@ -123,7 +123,7 @@ describe("Model tests", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     name: "string",
                     age: "number"
@@ -189,7 +189,7 @@ describe("Model tests", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     prop: "string"
                 };
@@ -238,7 +238,7 @@ describe("Model tests", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     prop: "string"
                 };
@@ -278,7 +278,7 @@ describe("Model tests", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     prop: "string"
                 };
@@ -306,7 +306,7 @@ describe("Model tests", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     prop: "string"
                 };
@@ -339,7 +339,7 @@ describe("Model tests", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     name: "string",
                     age: "number"
@@ -392,7 +392,7 @@ describe("Model tests", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     name: "string",
                     age: "number"
@@ -431,14 +431,14 @@ describe("Model tests", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     name: "string",
                     age: "number"
                 };
             }
 
-            public prepareJSON(json) {
+            prepareJSON(json) {
                 delete json.age;
             }
         }
@@ -471,7 +471,7 @@ describe("Model tests", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     name: {
                         type: "string",
@@ -503,7 +503,7 @@ describe("Model tests", () => {
         }
 
         class FirstLevel extends Model<IAny> {
-            public static data(): any {
+            static data(): any {
                 return {
                     lvl1: "string"
                 };
@@ -511,7 +511,7 @@ describe("Model tests", () => {
         }
 
         class SecondLevel extends FirstLevel {
-            public static data(): any {
+            static data(): any {
                 return {
                     lvl2: "string"
                 };
@@ -530,7 +530,7 @@ describe("Model tests", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     name: "string",
                     self: {
@@ -563,7 +563,7 @@ describe("Model tests", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     "*": {
                         type: SomeModel,
@@ -593,7 +593,7 @@ describe("Model tests", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     "*": "*"
                 };
@@ -616,7 +616,7 @@ describe("Model tests", () => {
     it("register new type", () => {
         
         class CustomType extends Model.Type {
-            public prepare(value) {
+            prepare(value) {
                 return +value * 2;
             }
         }
@@ -628,7 +628,7 @@ describe("Model tests", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     prop: "custom"
                 };
@@ -649,7 +649,7 @@ describe("Model tests", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     money: {
                         type: "number",
@@ -677,13 +677,13 @@ describe("Model tests", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     name: "text"
                 };
             }
 
-            public prepare(data) {
+            prepare(data) {
                 data.name = 10;
             }
         }
@@ -701,13 +701,13 @@ describe("Model tests", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     "*": "text"
                 };
             }
 
-            public prepare(data) {
+            prepare(data) {
                 data.name = 10;
             }
         }
@@ -726,7 +726,7 @@ describe("Model tests", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     name: {
                         type: "string",
@@ -775,7 +775,7 @@ describe("Model tests", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     firstName: {
                         type: "string",
@@ -799,7 +799,7 @@ describe("Model tests", () => {
                 };
             }
 
-            public prepare(data) {
+            prepare(data) {
                 // data.firstName can be null
                 const firstName = data.firstName || "";
                 // data.lastName can be null
@@ -837,7 +837,7 @@ describe("Model tests", () => {
         }
 
         class FileModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     name: {
                         type: "text",
@@ -847,7 +847,7 @@ describe("Model tests", () => {
                 };
             }
 
-            public prepare(data) {
+            prepare(data) {
                 data.name = data.path.split("/").pop();
             }
         }
@@ -864,7 +864,7 @@ describe("Model tests", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     prop: "string"
                 };
@@ -893,7 +893,7 @@ describe("Model tests", () => {
         }
 
         class Model1 extends Model<IModel1> {
-            public static data() {
+            static data() {
                 return {
                     some: "number"
                 };
@@ -904,7 +904,7 @@ describe("Model tests", () => {
             [key: string]: any;
         }
         class Model2 extends Model<IModel2> {
-            public static data() {
+            static data() {
                 return {
                     "*": "*"
                 };
@@ -935,7 +935,7 @@ describe("Model tests", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     prop: "number"
                 };
@@ -994,7 +994,7 @@ describe("Model tests", () => {
         eol.define( "linux" );
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     arr: ["number"],
                     obj: {element: "number"}
@@ -1036,7 +1036,7 @@ describe("Model tests", () => {
         eol.define( "windows" );
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     arr: ["number"],
                     obj: {element: "number"}

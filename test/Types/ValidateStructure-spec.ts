@@ -20,7 +20,7 @@ describe("validate and prepare model data", () => {
 
     it("unknown type", () => {
         class InvalidModel extends Model<object> {
-            public static data() {
+            static data() {
                 return {
                     prop: "wrong"
                 };
@@ -39,7 +39,7 @@ describe("validate and prepare model data", () => {
         class SomeModel extends Model<object> {}
 
         class ValidModel extends Model<object> {
-            public static data() {
+            static data() {
                 return {
                     any: "*",
 
@@ -77,7 +77,7 @@ describe("validate and prepare model data", () => {
         
         let count = 0;
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 count++;
 
                 return {
@@ -138,7 +138,7 @@ describe("validate and prepare model data", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     arr: ["number"],
                     obj: {element: "number"}
@@ -184,7 +184,7 @@ describe("validate and prepare model data", () => {
         class TestModel extends Model<object> {}
 
         class SomeModel extends Model<IAny> {
-            public static data() {
+            static data() {
                 return {
                     name: "string",
                     text: "text",
@@ -381,7 +381,7 @@ describe("validate and prepare model data", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     prop: {
                         type: "number",
@@ -404,7 +404,7 @@ describe("validate and prepare model data", () => {
     it("invalid validate key", () => {
         
         class SomeModel extends Model<object> {
-            public static data() {
+            static data() {
                 return {
                     "*": {
                         type: "number",

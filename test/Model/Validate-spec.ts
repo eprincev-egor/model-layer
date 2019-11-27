@@ -12,7 +12,7 @@ describe("Model validate", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     name: {
                         type: "string",
@@ -63,7 +63,7 @@ describe("Model validate", () => {
         }
 
         class AgeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     age: {
                         type: "number",
@@ -72,7 +72,7 @@ describe("Model validate", () => {
                 };
             }
 
-            public validate(data) {
+            validate(data) {
                 if ( data.age < 0 ) {
                     throw new Error("invalid age");
                 }
@@ -116,7 +116,7 @@ describe("Model validate", () => {
         }
 
         class AgeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     age: {
                         type: "number",
@@ -125,7 +125,7 @@ describe("Model validate", () => {
                 };
             }
 
-            public validate(data) {
+            validate(data) {
                 data.age = 200;
             }
         }
@@ -145,7 +145,7 @@ describe("Model validate", () => {
         }
 
         class AgeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     age: {
                         type: "number",
@@ -154,7 +154,7 @@ describe("Model validate", () => {
                 };
             }
 
-            public validate(data) {
+            validate(data) {
                 assert.equal( this.data.age, 100 );
                 assert.equal( data.age, 200 );
             }
@@ -171,7 +171,7 @@ describe("Model validate", () => {
         }
 
         class AgeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     age: {
                         type: "number",
@@ -220,7 +220,7 @@ describe("Model validate", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     prop: {
                         type: "string",
@@ -255,7 +255,7 @@ describe("Model validate", () => {
         }
 
         class WordModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     word: {
                         type: "string",
@@ -302,7 +302,7 @@ describe("Model validate", () => {
         }
 
         class EnumModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     color: {
                         type: "string",
@@ -361,7 +361,7 @@ describe("Model validate", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     sale: {
                         type: "number",
@@ -388,7 +388,7 @@ describe("Model validate", () => {
                 };
             }
 
-            public validate(data) {
+            validate(data) {
                 if ( data.buy > data.sale ) {
                     throw new Error("invalid sale");
                 }
@@ -465,7 +465,7 @@ describe("Model validate", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     name: {
                         type: "string",

@@ -14,7 +14,7 @@ describe("ObjectType", () => {
         }
 
         class SomeModel extends Model<ISomeModel> {
-            public static data() {
+            static data() {
                 return {
                     map: "object"
                 };
@@ -169,7 +169,7 @@ describe("ObjectType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     words: {
                         type: "object",
@@ -195,7 +195,7 @@ describe("ObjectType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     words: {
                         type: "object",
@@ -221,7 +221,7 @@ describe("ObjectType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     tree: "object"
                 };
@@ -285,7 +285,7 @@ describe("ObjectType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     names: "object"
                 };
@@ -316,7 +316,7 @@ describe("ObjectType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     tree: "object"
                 };
@@ -370,7 +370,7 @@ describe("ObjectType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     object: {
                         type: "object",
@@ -396,7 +396,7 @@ describe("ObjectType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     object: {}
                 };
@@ -428,7 +428,7 @@ describe("ObjectType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     object: {
                         type: "object",
@@ -469,7 +469,7 @@ describe("ObjectType", () => {
 
         pairs.forEach((pair) => {
             class TestModel extends Model<ISomeData> {
-                public static data() {
+                static data() {
                     return {
                         obj: {element: "number"}
                     };
@@ -524,7 +524,7 @@ describe("ObjectType", () => {
 
         pairs.forEach((pair) => {
             class TestModel extends Model<ISomeData> {
-                public static data() {
+                static data() {
                     return {
                         obj: {
                             element: {
@@ -566,7 +566,7 @@ describe("ObjectType", () => {
         class FirstLevel extends Model<ISimpleObject> {}
 
         class SecondLevel extends FirstLevel {
-            public static data() {
+            static data() {
                 return {
                     level: {
                         type: "number",
@@ -582,7 +582,7 @@ describe("ObjectType", () => {
             };
         }
         class MainModel extends Model<IMain> {
-            public static data() {
+            static data() {
                 return {
                     obj: {element: FirstLevel}
                 };
@@ -615,7 +615,7 @@ describe("ObjectType", () => {
         }
 
         class SomeModel extends Model<ISomeData> {
-            public static data() {
+            static data() {
                 return {
                     obj: {
                         type: "object",

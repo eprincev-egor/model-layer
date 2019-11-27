@@ -24,7 +24,7 @@ export interface IArrayType<T extends IType> {
 }
 export class ArrayType extends Type {
 
-    public static prepareDescription(description, key) {
+    static prepareDescription(description, key) {
         // structure: {prop: []}
         // structure: {prop: ["number"]}
         if ( Array.isArray(description.type) ) {
@@ -41,11 +41,11 @@ export class ArrayType extends Type {
         }
     }
 
-    public sort: boolean;
-    public unique: boolean;
-    public emptyAsNull: boolean;
-    public nullAsEmpty: boolean;
-    public element: any;
+    sort: boolean;
+    unique: boolean;
+    emptyAsNull: boolean;
+    nullAsEmpty: boolean;
+    element: any;
 
     constructor({
         sort = false,
@@ -68,7 +68,7 @@ export class ArrayType extends Type {
         this.element = element;
     }
 
-    public prepare(originalValue, key) {
+    prepare(originalValue, key) {
         if ( originalValue == null ) {
             if ( this.nullAsEmpty ) {
                 const emptyArr = [];
@@ -119,7 +119,7 @@ export class ArrayType extends Type {
         return value;
     }
 
-    public validate(value, key) {
+    validate(value, key) {
         const isValid = super.validate(value, key);
         if ( !isValid ) {
             return false;
@@ -153,19 +153,19 @@ export class ArrayType extends Type {
         return true;
     }
 
-    public toJSON(value) {
+    toJSON(value) {
         return value.map((item) => 
             this.element.toJSON( item )
         );
     }
 
-    public clone(value) {
+    clone(value) {
         return value.map((item) => 
             this.element.clone( item )
         );
     }
 
-    public equal(selfArr, otherArr, stack) {
+    equal(selfArr, otherArr, stack) {
         if ( selfArr == null ) {
             return otherArr === null;
         }

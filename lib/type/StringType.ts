@@ -20,18 +20,18 @@ export interface IStringType extends IType {
 
 export class StringType extends Type {
 
-    public static prepareDescription(description) {
+    static prepareDescription(description) {
         
         if ( description.type === "text" ) {
             description.type = "string";
         }
     }
     
-    public nullAsEmpty: boolean;
-    public emptyAsNull: boolean;
-    public trim: boolean;
-    public lower: boolean;
-    public upper: boolean;
+    nullAsEmpty: boolean;
+    emptyAsNull: boolean;
+    trim: boolean;
+    lower: boolean;
+    upper: boolean;
 
     constructor({
         nullAsEmpty = false,
@@ -58,7 +58,7 @@ export class StringType extends Type {
         }
     }
 
-    public prepare(value, key) {
+    prepare(value, key) {
         if ( value == null ) {
             if ( this.nullAsEmpty ) {
                 return "";
