@@ -1,23 +1,22 @@
 
-import {Collection, Model} from "../../../lib/index";
+import {Collection, Model, Types} from "../../../lib/index";
 import assert from "assert";
 
 describe("Collection.remove", () => {
 
     it("remove(model)", () => {
         
-        interface IProduct {
-            name: string;
-            price: number;
-        }
-        class Product extends Model<IProduct> {}
-
-        class Products extends Collection<Product> {
-            static data() {
+        class Product extends Model<Product> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String,
+                    price: Types.Number
                 };
             }
+        }
+
+        class Products extends Collection<Product> {
+            Model = Product;
         }
 
         const products = new Products([
@@ -43,22 +42,19 @@ describe("Collection.remove", () => {
 
     it("remove(id)", () => {
         
-        interface ICompany {
-            id: number;
-            name: string;
-        }
-        class Company extends Model<ICompany> {}
-
-        class Companies extends Collection<Company> {
-            static data() {
+        class Company extends Model<Company> {
+            structure() {
                 return {
-                    id: {
-                        type: "number",
+                    id: Types.Number({
                         primary: true
-                    },
-                    name: "text"
+                    }),
+                    name: Types.String
                 };
             }
+        }
+
+        class Companies extends Collection<Company> {
+            Model = Company;
         }
 
         const companies = new Companies([

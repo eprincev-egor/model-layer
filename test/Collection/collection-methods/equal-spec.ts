@@ -1,23 +1,21 @@
 
-import {Collection, Model} from "../../../lib/index";
+import {Collection, Model, Types} from "../../../lib/index";
 import assert from "assert";
 
 describe("Collection.equal", () => {
 
     it("equal()", () => {
         
-        interface ICompany {
-            name: string;
-            price: number;
-        }
-        class Company extends Model<ICompany> {}
-
-        class Companies extends Collection<Company> {
-            static data() {
+        class Company extends Model<Company> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
+        }
+
+        class Companies extends Collection<Company> {
+            Model = Company;
         }
 
         const collection1 = new Companies([
@@ -61,20 +59,18 @@ describe("Collection.equal", () => {
 
 
     it("equal Collections, circular recursion", () => {
-        interface ICustom {
-            name: string;
-            child: CustomCollection;
-        }
-
-        class Custom extends Model<ICustom> {}
-
-        class CustomCollection extends Collection<Custom> {
-            static data() {
+        
+        class Custom extends Model<Custom> {
+            structure() {
                 return {
-                    name: "text",
+                    name: Types.String,
                     child: CustomCollection
                 };
             }
+        }
+
+        class CustomCollection extends Collection<Custom> {
+            Model = Custom;
         }
 
         const collection1 = new CustomCollection([

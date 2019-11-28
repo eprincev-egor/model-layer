@@ -81,8 +81,8 @@ export interface IType {
 const Types = {};
 
 export interface ITypeParams {
-    key: ((key: string) => boolean) | RegExp;
-    type: string;
+    key?: ((key: string) => boolean) | RegExp;
+    type?: string;
     required?: boolean;
     primary?: boolean;
     prepare?: (value: any, key: string, model) => any;

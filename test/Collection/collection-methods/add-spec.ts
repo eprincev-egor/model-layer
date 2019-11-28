@@ -1,22 +1,21 @@
 
-import {Collection, Model} from "../../../lib/index";
+import {Collection, Model, Types} from "../../../lib/index";
 import assert from "assert";
 
 describe("Collection.add", () => {
 
     it("add object", () => {
         
-        interface IUser {
-            name: string;
-        }
-        class User extends Model<IUser> {}
-
-        class Users extends Collection<User> {
-            static data() {
+        class User extends Model<User> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
+        }
+
+        class Users extends Collection<User> {
+            Model = User;
         }
 
         const users = new Users([
@@ -38,17 +37,16 @@ describe("Collection.add", () => {
 
     it("add(a, b, ...)", () => {
 
-        interface IUser {
-            name: string;
-        }
-        class User extends Model<IUser> {}
-
-        class Users extends Collection<User> {
-            static data() {
+        class User extends Model<User> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
+        }
+
+        class Users extends Collection<User> {
+            Model = User;
         }
 
         const users = new Users();
@@ -76,22 +74,16 @@ describe("Collection.add", () => {
     });
 
     it("add CustomModel", () => {
-        interface IUser {
-            name: string;
-        }
-
-        class User extends Model<IUser> {
-            static data() {
+        class User extends Model<User> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
         }
 
         class Users extends Collection<User> {
-            static data() {
-                return User;
-            }
+            Model = User;
         }
 
         const user = new User({
@@ -110,24 +102,16 @@ describe("Collection.add", () => {
     });
 
     it("add SomeModel", () => {
-        interface IUser {
-            name: string;
-        }
-
-        class User extends Model<IUser> {
-            static data() {
+        class User extends Model<User> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
         }
 
         class Users extends Collection<User> {
-            static data() {
-                return {
-                    name: "text"
-                };
-            }
+            Model = User;
         }
 
         const user = new User({
@@ -148,17 +132,16 @@ describe("Collection.add", () => {
 
     it("add()", () => {
 
-        interface IUser {
-            name: string;
-        }
-        class User extends Model<IUser> {}
-
-        class Users extends Collection<User> {
-            static data() {
+        class User extends Model<User> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
+        }
+
+        class Users extends Collection<User> {
+            Model = User;
         }
 
         const users = new Users();
@@ -172,17 +155,16 @@ describe("Collection.add", () => {
 
     it("add(undefined)", () => {
 
-        interface IUser {
-            name: string;
-        }
-        class User extends Model<IUser> {}
-
-        class Users extends Collection<User> {
-            static data() {
+        class User extends Model<User> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
+        }
+
+        class Users extends Collection<User> {
+            Model = User;
         }
 
         const users = new Users();
@@ -196,17 +178,16 @@ describe("Collection.add", () => {
     });
 
     it("add([obj, obj])", () => {
-        interface IUser {
-            name: string;
-        }
-        class User extends Model<IUser> {}
-
-        class Users extends Collection<User> {
-            static data() {
+        class User extends Model<User> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
+        }
+
+        class Users extends Collection<User> {
+            Model = User;
         }
 
         const users = new Users();
@@ -236,24 +217,16 @@ describe("Collection.add", () => {
     });
 
     it("add([obj, model])", () => {
-        interface IUser {
-            name: string;
-        }
-
-        class User extends Model<IUser> {
-            static data() {
+        class User extends Model<User> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
         }
 
         class Users extends Collection<User> {
-            static data() {
-                return {
-                    name: "text"
-                };
-            }
+            Model = User;
         }
 
         const users = new Users();
@@ -283,24 +256,16 @@ describe("Collection.add", () => {
     });
 
     it("add([obj], [model])", () => {
-        interface IUser {
-            name: string;
-        }
-
-        class User extends Model<IUser> {
-            static data() {
+        class User extends Model<User> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
         }
 
         class Users extends Collection<User> {
-            static data() {
-                return {
-                    name: "text"
-                };
-            }
+            Model = User;
         }
 
         const users = new Users();

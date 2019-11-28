@@ -1,27 +1,24 @@
 
-import {Collection, Model} from "../../../lib/index";
+import {Collection, Model, Types} from "../../../lib/index";
 import assert from "assert";
 
-interface ICompany {
-    id: number;
-    name: string;
+class Company extends Model<Company> {
+    structure() {
+        return {
+            id: Types.Number({
+                primary: true
+            }),
+            name: Types.String
+        };
+    }
 }
-class Company extends Model<ICompany> {}
 
 describe("Collection.get", () => {
 
     it("get(id)", () => {
         
         class Companies extends Collection<Company> {
-            static data() {
-                return {
-                    id: {
-                        type: "number",
-                        primary: true
-                    },
-                    name: "text"
-                };
-            }
+            Model = Company;
         }
 
         const companies = new Companies([

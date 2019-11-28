@@ -1,21 +1,21 @@
 
-import {Collection, Model} from "../../../lib/index";
+import {Collection, Model, Types} from "../../../lib/index";
 import assert from "assert";
 
 describe("Collection.clone", () => {
 
     it("clone()", () => {
-        interface ICompany {
-            name: string;
-        }
-        class Company extends Model<ICompany> {}
-
-        class Companies extends Collection<Company> {
-            static data() {
+        
+        class Company extends Model<Company> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
+        }
+
+        class Companies extends Collection<Company> {
+            Model = Company;
         }
 
         const companies = new Companies([
