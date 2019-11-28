@@ -1,7 +1,7 @@
 import EventEmitter from "events";
 import EqualStack from "./EqualStack";
-import {Type, InputType, OutputType, JsonType} from "./type/Type";
-import { invalidValuesAsString, isObject, MODELS } from "./utils";
+import {Type, InputType, OutputType, JsonType, IType} from "./type/Type";
+import { invalidValuesAsString, isObject } from "./utils";
 import Walker from "./Walker";
 
 export interface ISimpleObject extends Object {
@@ -18,23 +18,22 @@ interface IChangeEvent<TModel extends Model> {
     changes: ReadOnlyPartial<TModel["data"]>;
 }
 
-interface IModel extends EventEmitter {
-    TInputData: ISimpleObject;
-    data: ISimpleObject;
-
-    prepare(data: this["TInputData"]): void;
-}
-
-export abstract class Model<ChildModel extends Model = any> extends EventEmitter implements IModel {
+export abstract class Model<
+    ChildModel extends Model = any,
+    TStructure = ReturnType< ChildModel["structure"] >,
+    TInputData extends ISimpleObject = InputType< TStructure >,
+    TJson extends ISimpleObject = JsonType< TStructure >,
+    TOutputData extends ISimpleObject = OutputType< TStructure >
+> extends EventEmitter {
 
     static Type = Type;
 
-    TStructure: ReturnType< ChildModel["structure"] >;
-    TInputData: InputType< ChildModel["TStructure"] >;
-    TInput: this["TInputData"] | this;
-    TOutput: this;
-    TJson: JsonType< ChildModel["TStructure"] >;
-    data: OutputType< ChildModel["TStructure"] >;
+    TStructure: TStructure;
+    TInputData: TInputData;
+    TInput: TInputData | ChildModel;
+    TOutput: ChildModel;
+    TJson: TJson;
+    data: TOutputData;
     
     // "id"
     primaryKey: string;
@@ -48,7 +47,7 @@ export abstract class Model<ChildModel extends Model = any> extends EventEmitter
     
     private parent: Model;
 
-    constructor(inputData?: ChildModel["TInputData"]) {
+    constructor(inputData?: TInputData) {
         super();
 
         this.prepareStructure();
@@ -93,16 +92,16 @@ export abstract class Model<ChildModel extends Model = any> extends EventEmitter
         Object.freeze(this.data);
     }
 
-    structure(): {[key: string]: any} {
+    structure(): {[key: string]: IType} {
         // throw new Error(`${ this.constructor.name }.structure() is not declared`);
         return {};
     }
 
-    get<TKey extends keyof ChildModel["data"]>(key: TKey): ChildModel["data"][TKey] {
+    get<TKey extends keyof TOutputData>(key: TKey): TOutputData[TKey] {
         return this.data[ key ];
     }
 
-    set(data: this["TInputData"], options?: ISimpleObject) {
+    set(data: TInputData, options?: ISimpleObject) {
         options = options || {
             onlyValidate: false
         };
@@ -227,7 +226,7 @@ export abstract class Model<ChildModel extends Model = any> extends EventEmitter
         });
     }
 
-    isValid(data: this["TInputData"]): boolean {
+    isValid(data: TInputData): boolean {
         if ( !isObject(data) ) {
             throw new Error("data must be are object");
         }
@@ -243,16 +242,16 @@ export abstract class Model<ChildModel extends Model = any> extends EventEmitter
         }
     }
 
-    hasProperty<Key extends keyof ChildModel["data"]>(key: Key): boolean {
+    hasProperty<Key extends keyof TOutputData>(key: Key): boolean {
         return this.data.hasOwnProperty( key );
     }
 
-    getDescription<Key extends keyof ChildModel["data"]>(key: Key) {
+    getDescription<Key extends keyof TOutputData>(key: Key) {
         const iKey = key as any;
         return this.properties[ iKey ] || this.properties["*"];
     }
 
-    hasValue<Key extends keyof ChildModel["data"]>(key: Key): boolean {
+    hasValue<Key extends keyof TOutputData>(key: Key): boolean {
         const value = this.data[ key ];
 
         if ( value == null ) {
@@ -478,11 +477,11 @@ export abstract class Model<ChildModel extends Model = any> extends EventEmitter
         return true;
     }
 
-    validate(data: this["TInputData"]): void {
+    validate(data: TInputData): void {
         // for invalid data throw error here
     }
 
-    prepare(data: this["TInputData"]): void {
+    prepare(data: TInputData): void {
         // any calculations with data by reference
     }
 
