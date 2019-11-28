@@ -1,53 +1,42 @@
 
 
 // const {Model} = require("model-layer");
-import {Model} from "../lib/index";
+import {Model, Types} from "../lib/index";
 import assert from "assert";
 
-interface IProduct {
-    name: string;
-    price: number;
-    quantity: number;
-}
-
-class Product extends Model<IProduct> {
-    static data() {
+class Product extends Model<Product> {
+    structure() {
         return {
             
-            name: {
-                type: "string",
+            name: Types.String({
                 required: true
-            },
+            }),
 
-            price: {
-                type: "number",
+            price: Types.Number({
                 required: true,
                 // define prepare value, round to cents
                 round: 2
-            },
+            }),
 
-            quantity: {
-                type: "number",
+            quantity: Types.Number({
                 default: 1
-            }
+            })
         };
     }
 }
 
-interface ICart {
-    products: Product[];
-    total: number;
-}
 
 // tslint:disable-next-line: max-classes-per-file
-class Cart extends Model<ICart> {
-    static data() {
+class Cart extends Model<Cart> {
+    structure() {
         return {
             // define array of models
-            products: [Product],
+            products: Types.Array({
+                element: Product
+            }),
 
             // simplest define number
-            total: "number"
+            total: Types.Number
         };
     }
 

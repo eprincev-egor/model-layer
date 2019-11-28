@@ -4,6 +4,13 @@ import {invalidValuesAsString} from "../utils";
 
 // tslint:disable-next-line: no-empty-interface
 export interface IDateTypeParams extends ITypeParams {
+    prepare?: (value: any, key: string, model) => Date;
+    validate?: 
+        ((value: Date, key: string) => boolean) |
+        RegExp
+    ;
+    enum?: Date[];
+    default?: Date | (() => Date);
 }
 
 export interface IDateType extends IType {

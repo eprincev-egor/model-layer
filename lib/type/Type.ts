@@ -92,7 +92,7 @@ export interface ITypeParams {
         RegExp
     ;
     enum?: any[];
-    default?: () => any;
+    default?: any | (() => any);
     const?: boolean;
 }
 

@@ -9,6 +9,13 @@ export interface INumberTypeParams extends ITypeParams {
     ceil?: number;
     round?: number;
     floor?: number;
+    prepare?: (value: any, key: string, model) => number;
+    validate?: 
+        ((value: number, key: string) => boolean) |
+        RegExp
+    ;
+    enum?: number[];
+    default?: number | (() => number);
 }
 
 export interface INumberType extends IType {

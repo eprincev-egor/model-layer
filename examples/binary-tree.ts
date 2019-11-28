@@ -1,29 +1,22 @@
 
 
 // const {Model} = require("model-layer");
-import {Model} from "../lib/index";
+import {Model, Types} from "../lib/index";
 import assert from "assert";
 
-interface IBinaryTree {
-    left: BinaryTreeModel;
-    right: BinaryTreeModel;
-    id: number;
-    name: string;
-}
-
-class BinaryTreeModel extends Model<IBinaryTree> {
-    static data() {
+class BinaryTreeModel extends Model<BinaryTreeModel> {
+    structure() {
         return {
             // define model property
             left: BinaryTreeModel,
             right: BinaryTreeModel,
             
-            id: "number",
-            name: "string"
+            id: Types.Number,
+            name: Types.String
         };
     }
 
-    findName(id) {
+    findName(id): string {
         if ( id === this.get("id") ) {
             return this.get("name");
         }

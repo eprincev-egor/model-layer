@@ -9,6 +9,13 @@ export interface IStringTypeParams extends ITypeParams {
     trim?: boolean;
     lower?: boolean;
     upper?: boolean;
+    prepare?: (value: any, key: string, model) => string;
+    validate?: 
+        ((value: string, key: string) => boolean) |
+        RegExp
+    ;
+    enum?: string[];
+    default?: string | (() => string);
 }
 
 export interface IStringType extends IType {

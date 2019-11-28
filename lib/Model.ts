@@ -18,16 +18,23 @@ interface IChangeEvent<TModel extends Model> {
     changes: ReadOnlyPartial<TModel["data"]>;
 }
 
-export abstract class Model<ChildModel extends Model = any> extends EventEmitter {
+interface IModel extends EventEmitter {
+    TInputData: ISimpleObject;
+    data: ISimpleObject;
+
+    prepare(data: this["TInputData"]): void;
+}
+
+export abstract class Model<ChildModel extends Model = any> extends EventEmitter implements IModel {
 
     static Type = Type;
 
-    TStructure: ReturnType< this["structure"] >;
-    TInputData: InputType< this["TStructure"] >;
+    TStructure: ReturnType< ChildModel["structure"] >;
+    TInputData: InputType< ChildModel["TStructure"] >;
     TInput: this["TInputData"] | this;
     TOutput: this;
-    TJson: JsonType< this["TStructure"] >;
-    data: OutputType< this["TStructure"] >;
+    TJson: JsonType< ChildModel["TStructure"] >;
+    data: OutputType< ChildModel["TStructure"] >;
     
     // "id"
     primaryKey: string;
@@ -91,7 +98,7 @@ export abstract class Model<ChildModel extends Model = any> extends EventEmitter
         return {};
     }
 
-    get<TKey extends keyof this["data"]>(key: TKey): this["data"][TKey] {
+    get<TKey extends keyof ChildModel["data"]>(key: TKey): ChildModel["data"][TKey] {
         return this.data[ key ];
     }
 
@@ -236,16 +243,16 @@ export abstract class Model<ChildModel extends Model = any> extends EventEmitter
         }
     }
 
-    hasProperty<Key extends keyof this["data"]>(key: Key): boolean {
+    hasProperty<Key extends keyof ChildModel["data"]>(key: Key): boolean {
         return this.data.hasOwnProperty( key );
     }
 
-    getDescription<Key extends keyof this["data"]>(key: Key) {
+    getDescription<Key extends keyof ChildModel["data"]>(key: Key) {
         const iKey = key as any;
         return this.properties[ iKey ] || this.properties["*"];
     }
 
-    hasValue<Key extends keyof this["data"]>(key: Key): boolean {
+    hasValue<Key extends keyof ChildModel["data"]>(key: Key): boolean {
         const value = this.data[ key ];
 
         if ( value == null ) {

@@ -8,6 +8,12 @@ export interface IObjectTypeParams extends ITypeParams {
     nullAsEmpty?: boolean;
     emptyAsNull?: boolean;
     element?: any;
+    prepare?: (value: any, key: string, model) => IObject<this["element"]>;
+    validate?: 
+        ((value: IObject<this["element"]>, key: string) => boolean) |
+        RegExp
+    ;
+    default?: IObject<this["element"]> | (() => IObject<this["element"]>);
 }
 
 interface IObject<T> {

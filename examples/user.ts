@@ -1,28 +1,23 @@
 
 
 // const {Model} = require("model-layer");
-import {Model} from "../lib/index";
+import {Model, Types} from "../lib/index";
 import assert from "assert";
 
-interface IUser {
-    name: string;
-    email: string;
-}
-
-class UserModel extends Model<IUser> {
-    static data() {
+class UserModel extends Model<UserModel> {
+    structure() {
         return {
             
             // simplest define string property
-            name: "string",
+            name: Types.String,
 
             // defined required field
             // with validate by RegExp
-            email: {
+            email: Types.String({
                 type: "string",
                 required: true,
                 validate: /.@./
-            }
+            })
         };
     }
 }

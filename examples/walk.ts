@@ -1,19 +1,16 @@
 
 
 // const {Model} = require("model-layer");
-import {Model} from "../lib/index";
+import {Model, Types} from "../lib/index";
 import assert from "assert";
 
-interface ITree {
-    name?: string;
-    children?: Array<Tree | ITree>;
-}
-
-class Tree extends Model<ITree> {
-    static data() {
+class Tree extends Model<Tree> {
+    structure() {
         return {
-            name: "string",
-            children: [Tree]
+            name: Types.String,
+            children: Types.Array({
+                element: Tree
+            })
         };
     }
 }

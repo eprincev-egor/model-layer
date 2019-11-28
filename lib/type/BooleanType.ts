@@ -6,6 +6,13 @@ import {isObject, isNaN, invalidValuesAsString} from "../utils";
 export interface IBooleanTypeParams extends ITypeParams {
     nullAsFalse?: boolean;
     falseAsNull?: boolean;
+    prepare?: (value: any, key: string, model) => boolean;
+    validate?: 
+        ((value: boolean, key: string) => boolean) |
+        RegExp
+    ;
+    enum?: boolean[];
+    default?: boolean | (() => boolean);
 }
 
 export interface IBooleanType extends IType {
