@@ -1,27 +1,24 @@
 
-import {Collection, Model} from "../../../lib/index";
+import {Collection, Model, Types} from "../../../lib/index";
 import assert from "assert";
 
 describe("Collection event add", () => {
 
     it("remove(id)", () => {
         
-        interface IUser {
-            id: number;
-            name: string;
-        }
-        class User extends Model<IUser> {}
-
-        class Users extends Collection<User> {
-            static data() {
+        class User extends Model<User> {
+            structure() {
                 return {
-                    id: {
-                        type: "number",
+                    id: Types.Number({
                         primary: true
-                    },
-                    name: "text"
+                    }),
+                    name: Types.String
                 };
             }
+        }
+
+        class Users extends Collection<User> {
+            Model = User;
         }
 
         const users = new Users();
@@ -54,22 +51,19 @@ describe("Collection event add", () => {
 
     it("reset()", () => {
         
-        interface IUser {
-            id: number;
-            name: string;
-        }
-        class User extends Model<IUser> {}
-
-        class Users extends Collection<User> {
-            static data() {
+        class User extends Model<User> {
+            structure() {
                 return {
-                    id: {
-                        type: "number",
+                    id: Types.Number({
                         primary: true
-                    },
-                    name: "text"
+                    }),
+                    name: Types.String
                 };
             }
+        }
+
+        class Users extends Collection<User> {
+            Model = User;
         }
 
         const users = new Users();
@@ -103,22 +97,19 @@ describe("Collection event add", () => {
 
     it("at(index, row)", () => {
         
-        interface IUser {
-            id: number;
-            name: string;
-        }
-        class User extends Model<IUser> {}
-
-        class Users extends Collection<User> {
-            static data() {
+        class User extends Model<User> {
+            structure() {
                 return {
-                    id: {
-                        type: "number",
+                    id: Types.Number({
                         primary: true
-                    },
-                    name: "text"
+                    }),
+                    name: Types.String
                 };
             }
+        }
+
+        class Users extends Collection<User> {
+            Model = User;
         }
 
         const users = new Users();
@@ -154,22 +145,19 @@ describe("Collection event add", () => {
 
     it("pop()", () => {
         
-        interface IUser {
-            id: number;
-            name: string;
-        }
-        class User extends Model<IUser> {}
-
-        class Users extends Collection<User> {
-            static data() {
+        class User extends Model<User> {
+            structure() {
                 return {
-                    id: {
-                        type: "number",
+                    id: Types.Number({
                         primary: true
-                    },
-                    name: "text"
+                    }),
+                    name: Types.String
                 };
             }
+        }
+
+        class Users extends Collection<User> {
+            Model = User;
         }
 
         const users = new Users();
@@ -202,22 +190,19 @@ describe("Collection event add", () => {
 
     it("shift()", () => {
         
-        interface IUser {
-            id: number;
-            name: string;
-        }
-        class User extends Model<IUser> {}
-
-        class Users extends Collection<User> {
-            static data() {
+        class User extends Model<User> {
+            structure() {
                 return {
-                    id: {
-                        type: "number",
+                    id: Types.Number({
                         primary: true
-                    },
-                    name: "text"
+                    }),
+                    name: Types.String
                 };
             }
+        }
+
+        class Users extends Collection<User> {
+            Model = User;
         }
 
         const users = new Users();
@@ -250,22 +235,19 @@ describe("Collection event add", () => {
 
     it("splice(0, 1)", () => {
         
-        interface IUser {
-            id: number;
-            name: string;
-        }
-        class User extends Model<IUser> {}
-
-        class Users extends Collection<User> {
-            static data() {
+        class User extends Model<User> {
+            structure() {
                 return {
-                    id: {
-                        type: "number",
+                    id: Types.Number({
                         primary: true
-                    },
-                    name: "text"
+                    }),
+                    name: Types.String
                 };
             }
+        }
+
+        class Users extends Collection<User> {
+            Model = User;
         }
 
         const users = new Users();

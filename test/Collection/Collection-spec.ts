@@ -1,22 +1,21 @@
 
-import {Collection, Model} from "../../lib/index";
+import {Collection, Model, Types} from "../../lib/index";
 import assert from "assert";
 
 describe("Collection tests", () => {
 
     it("create empty collection", () => {
 
-        interface IUser {
-            name: string;
-        }
-        class User extends Model<IUser> {}
-
-        class Users extends Collection<User> {
-            static data() {
+        class User extends Model<User> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
+        }
+
+        class Users extends Collection<User> {
+            Model = User;
         }
         
         const users = new Users();
@@ -28,17 +27,16 @@ describe("Collection tests", () => {
     });
 
     it("create collection with rows", () => {
-        interface IUser {
-            name: string;
-        }
-        class User extends Model<IUser> {}
-
-        class Users extends Collection<User> {
-            static data() {
+        class User extends Model<User> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
+        }
+
+        class Users extends Collection<User> {
+            Model = User;
         }
 
         const users = new Users([
@@ -56,23 +54,18 @@ describe("Collection tests", () => {
     });
 
     it("create collection with models", () => {
-        interface IUser {
-            name: string;
-        }
-        
-        class User extends Model<IUser> {
-            static data() {
+        class User extends Model<User> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
         }
 
         class Users extends Collection<User> {
-            static data() {
-                return User;
-            }
+            Model = User;
         }
+
 
         const user = new User({
             name: "Bob"
@@ -91,17 +84,16 @@ describe("Collection tests", () => {
     });
 
     it("set model by index", () => {
-        interface IUser {
-            name: string;
-        }
-        class User extends Model<IUser> {}
-
-        class Users extends Collection<User> {
-            static data() {
+        class User extends Model<User> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
+        }
+
+        class Users extends Collection<User> {
+            Model = User;
         }
 
         const users = new Users();
@@ -120,20 +112,18 @@ describe("Collection tests", () => {
     it("once call data", () => {
         let calls = 0;
 
-        interface IProduct {
-            name: string;
-            price: number;
-        }
-        class Product extends Model<IProduct> {}
-
-        class Products extends Collection<Product> {
-            static data() {
+        class Product extends Model<Product> {
+            structure() {
                 calls++;
                 return {
-                    name: "text",
-                    price: "number"
+                    name: Types.String,
+                    price: Types.Number
                 };
             }
+        }
+
+        class Products extends Collection<Product> {
+            Model = Product;
         }
 
         const products1 = new Products();
@@ -146,22 +136,17 @@ describe("Collection tests", () => {
     });
 
     it("one model inside two collections", () => {
-        interface ICompany {
-            name: string;
-        }
 
-        class Company extends Model<ICompany> {
-            static data() {
+        class Company extends Model<Company> {
+            static structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
         }
 
         class Companies extends Collection<Company> {
-            static data() {
-                return Company;
-            }
+            Model = Company;
         }
 
         const company = new Company({

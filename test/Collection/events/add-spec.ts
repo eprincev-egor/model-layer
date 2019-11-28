@@ -1,22 +1,21 @@
 
-import {Collection, Model} from "../../../lib/index";
+import {Collection, Model, Types} from "../../../lib/index";
 import assert from "assert";
 
 describe("Collection event add", () => {
 
     it("add(row)", () => {
         
-        interface IUser {
-            name: string;
-        }
-        class User extends Model<IUser> {}
-
-        class Users extends Collection<User> {
-            static data() {
+        class User extends Model<User> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
+        }
+
+        class Users extends Collection<User> {
+            Model = User;
         }
 
         const users = new Users();
@@ -48,10 +47,7 @@ describe("Collection event add", () => {
 
     it("create(row)", () => {
         
-        interface IUser {
-            name: string;
-        }
-        class User extends Model<IUser> {}
+        class User extends Model<User> {}
 
         class Users extends Collection<User> {
             static data() {
@@ -89,17 +85,16 @@ describe("Collection event add", () => {
 
     it("push(row)", () => {
         
-        interface IUser {
-            name: string;
-        }
-        class User extends Model<IUser> {}
-
-        class Users extends Collection<User> {
-            static data() {
+        class User extends Model<User> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
+        }
+
+        class Users extends Collection<User> {
+            Model = User;
         }
 
         const users = new Users();
@@ -130,17 +125,16 @@ describe("Collection event add", () => {
 
     it("unshift(row)", () => {
         
-        interface IUser {
-            name: string;
-        }
-        class User extends Model<IUser> {}
-
-        class Users extends Collection<User> {
-            static data() {
+        class User extends Model<User> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
+        }
+
+        class Users extends Collection<User> {
+            Model = User;
         }
 
         const users = new Users();
@@ -171,17 +165,16 @@ describe("Collection event add", () => {
 
     it("splice(0, 0, row)", () => {
         
-        interface IUser {
-            name: string;
-        }
-        class User extends Model<IUser> {}
-
-        class Users extends Collection<User> {
-            static data() {
+        class User extends Model<User> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
+        }
+
+        class Users extends Collection<User> {
+            Model = User;
         }
 
         const users = new Users();
@@ -212,17 +205,16 @@ describe("Collection event add", () => {
 
     it("at(0, row)", () => {
         
-        interface IUser {
-            name: string;
-        }
-        class User extends Model<IUser> {}
-
-        class Users extends Collection<User> {
-            static data() {
+        class User extends Model<User> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
+        }
+
+        class Users extends Collection<User> {
+            Model = User;
         }
 
         const users = new Users();
@@ -253,17 +245,16 @@ describe("Collection event add", () => {
 
     it("fill(row, start, end)", () => {
         
-        interface IUser {
-            name: string;
-        }
-        class User extends Model<IUser> {}
-
-        class Users extends Collection<User> {
-            static data() {
+        class User extends Model<User> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
+        }
+
+        class Users extends Collection<User> {
+            Model = User;
         }
 
         const users = new Users([

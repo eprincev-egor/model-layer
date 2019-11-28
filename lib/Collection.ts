@@ -686,6 +686,12 @@ class Collection<TModel extends Model> extends EventEmitter {
 
         return true;
     }
+
+    on(eventName: "add", handler: ((event: IAddEvent<this, TModel>) => void));
+    on(eventName: "remove", handler: ((event: IRemoveEvent<this, TModel>) => void));
+    on(eventName: "add" | "remove", handler) {
+        super.on(eventName, handler);
+    }
 }
 
 export default Collection;
