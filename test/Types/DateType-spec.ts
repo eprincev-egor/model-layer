@@ -1,27 +1,22 @@
 
-import {Model} from "../../lib/index";
+import {Model, Types} from "../../lib/index";
 import assert from "assert";
 
 describe("DateType", () => {
     
     it("prepare date", () => {
-        interface ISomeData {
-            bornDate: Date | number | string;
-        }
-
         // Date.parse trimming ms
         const now = Date.parse(
             new Date().toString()
         );
         const nowDate = new Date( now );
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    bornDate: {
-                        type: "date",
-                        default: now
-                    }
+                    bornDate: Types.Date({
+                        default: now as any
+                    })
                 };
             }
         }
@@ -148,43 +143,6 @@ describe("DateType", () => {
         assert.ok( model.data.bornDate instanceof Date );
     });
 
-    it("redefine standard prepare date", () => {
-        let callArgs: any = false;
-
-        const DateType = Model.getType("date");
-        const originalPrepare = DateType.prototype.prepare;
-
-        DateType.prototype.prepare = function(value, key, anyModel) {
-            callArgs = [value, key];
-            return originalPrepare.call(this, value, key, anyModel);
-        };
-
-        interface ISomeData {
-            bornDate: Date | number | string;
-        }
-
-        class SomeModel extends Model<ISomeData> {
-            static data() {
-                return {
-                    bornDate: "date"
-                };
-            }
-        }
-
-        const now = Date.now();
-        const model = new SomeModel({
-            bornDate: now
-        });
-
-        assert.strictEqual( +model.data.bornDate, now );
-        assert.ok( model.data.bornDate instanceof Date );
-        assert.deepEqual( callArgs, [
-            now, "bornDate"
-        ]);
-
-        DateType.prototype.prepare = originalPrepare;
-    });
-    
     it("equal Date", () => {
         const now1 = new Date();
         const now2 = new Date( +now1 );
@@ -197,15 +155,11 @@ describe("DateType", () => {
             [now1, now2, true]
         ];
 
-        interface ISomeData {
-            date: Date | number | string;
-        }
-
         pairs.forEach((pair) => {
-            class TestModel extends Model<ISomeData> {
-                static data() {
+            class TestModel extends Model<TestModel> {
+                structure() {
                     return {
-                        date: "date"
+                        date: Types.Date
                     };
                 }
             }
