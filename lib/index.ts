@@ -9,7 +9,6 @@ import {IType} from "./type/Type";
 import {IAnyType} from "./type/AnyType";
 import {IArrayType} from "./type/ArrayType";
 import {IBooleanType} from "./type/BooleanType";
-// import {AnyType} from "./type/CustomClassType";
 import {IDateType} from "./type/DateType";
 import {MakeModelType} from "./type/ModelType";
 import {INumberType} from "./type/NumberType";
