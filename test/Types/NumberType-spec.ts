@@ -1,21 +1,16 @@
 
-import {Model} from "../../lib/index";
+import {Model, Types} from "../../lib/index";
 import assert from "assert";
 
 describe("NumberType", () => {
     
     it("prepare number", () => {
-        interface ISomeData {
-            age: number | string;
-        }
-
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    age: {
-                        type: "number",
-                        default: "0"
-                    }
+                    age: Types.Number({
+                        default: "0" as any
+                    })
                 };
             }
         }
@@ -25,22 +20,22 @@ describe("NumberType", () => {
         assert.strictEqual( model.data.age, 0 );
 
         model = new SomeModel({
-            age: "1"
+            age: "1" as any
         });
         assert.strictEqual( model.data.age, 1 );
         
-        model.set({age: "2"});
+        model.set({age: "2" as any});
         assert.strictEqual( model.data.age, 2 );
 
         model.set({age: null});
         assert.strictEqual( model.data.age, null );
 
-        model.set({age: "-2000.123"});
+        model.set({age: "-2000.123" as any});
         assert.strictEqual( model.data.age, -2000.123 );
 
         assert.throws(
             () => {
-                model.set({age: "wrong"});
+                model.set({age: "wrong" as any});
             },
             (err) =>
                 err.message === "invalid number for age: \"wrong\""
@@ -140,18 +135,14 @@ describe("NumberType", () => {
     });
 
     it("prepare round", () => {
-        interface ISomeData {
-            money: number;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    money: {
-                        type: "number",
+                    money: Types.Number({
                         default: 1.1111,
                         round: 2
-                    }
+                    })
                 };
             }
         }
@@ -164,18 +155,14 @@ describe("NumberType", () => {
     });
 
     it("prepare floor", () => {
-        interface ISomeData {
-            money: number;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    money: {
-                        type: "number",
+                    money: Types.Number({
                         default: 1.1111,
                         floor: 2
-                    }
+                    })
                 };
             }
         }
@@ -188,18 +175,14 @@ describe("NumberType", () => {
     });
 
     it("prepare ceil", () => {
-        interface ISomeData {
-            money: number;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    money: {
-                        type: "number",
+                    money: Types.Number({
                         default: 1.1111,
                         ceil: 2
-                    }
+                    })
                 };
             }
         }
@@ -221,19 +204,15 @@ describe("NumberType", () => {
     });
 
     it("prepare zeroAsNull", () => {
-        interface ISomeData {
-            money: number;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    money: {
-                        type: "number",
+                    money: Types.Number({
                         default: 0,
                         round: 0,
                         zeroAsNull: true
-                    }
+                    })
                 };
             }
         }
@@ -249,17 +228,13 @@ describe("NumberType", () => {
     });
 
     it("prepare nullAsZero", () => {
-        interface ISomeData {
-            money: number;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    money: {
-                        type: "number",
+                    money: Types.Number({
                         nullAsZero: true
-                    }
+                    })
                 };
             }
         }
@@ -274,54 +249,14 @@ describe("NumberType", () => {
         assert.strictEqual( model.data.money, 0 );
     });
 
-    it("redefine standard prepare number", () => {
-        let callArgs: any = false;
-        
-        const NumberType = Model.getType("number");
-        const originalPrepare = NumberType.prototype.prepare;
-
-        NumberType.prototype.prepare = function(value, key, anyModel) {
-            callArgs = [value, key];
-            return originalPrepare.call(this, value, key, anyModel);
-        };
-
-        interface ISomeData {
-            age: number | string;
-        }
-
-        class SomeModel extends Model<ISomeData> {
-            static data() {
-                return {
-                    age: "number"
-                };
-            }
-        }
-
-        const model = new SomeModel({
-            age: "10"
-        });
-
-        assert.strictEqual( model.data.age, 10 );
-        assert.deepEqual( callArgs, [
-            "10",
-            "age"
-        ]);
-
-        NumberType.prototype.prepare = originalPrepare;
-    });
-
     it("invalid ceil in field description", () => {
-        interface ISomeData {
-            money: number;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    money: {
-                        type: "number",
-                        ceil: "wrong"
-                    }
+                    money: Types.Number({
+                        ceil: "wrong" as any
+                    })
                 };
             }
         }
@@ -336,17 +271,13 @@ describe("NumberType", () => {
     });
 
     it("invalid floor in field description", () => {
-        interface ISomeData {
-            money: number;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    money: {
-                        type: "number",
-                        floor: "wrong"
-                    }
+                    money: Types.Number({
+                        floor: "wrong" as any
+                    })
                 };
             }
         }
@@ -361,17 +292,13 @@ describe("NumberType", () => {
     });
 
     it("invalid round in field description", () => {
-        interface ISomeData {
-            money: number;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    money: {
-                        type: "number",
-                        round: "wrong"
-                    }
+                    money: Types.Number({
+                        round: "wrong" as any
+                    })
                 };
             }
         }
@@ -395,15 +322,11 @@ describe("NumberType", () => {
             [10.12, 10.12, true]
         ];
 
-        interface ISomeData {
-            numb: number;
-        }
-
         pairs.forEach((pair) => {
-            class TestModel extends Model<ISomeData> {
-                static data() {
+            class TestModel extends Model<TestModel> {
+                structure() {
                     return {
-                        numb: "number"
+                        numb: Types.Number
                     };
                 }
             }
@@ -431,18 +354,14 @@ describe("NumberType", () => {
     });
     
     it("conflicting parameters: ceil and round", () => {
-        interface ISomeData {
-            money: number;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    money: {
-                        type: "number",
+                    money: Types.Number({
                         ceil: 0,
                         round: 0
-                    }
+                    })
                 };
             }
         }
@@ -457,18 +376,14 @@ describe("NumberType", () => {
     });
 
     it("conflicting parameters: floor and ceil", () => {
-        interface ISomeData {
-            money: number;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    money: {
-                        type: "number",
+                    money: Types.Number({
                         ceil: 0,
                         floor: 0
-                    }
+                    })
                 };
             }
         }
@@ -483,18 +398,14 @@ describe("NumberType", () => {
     });
 
     it("conflicting parameters: floor and round", () => {
-        interface ISomeData {
-            money: number;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    money: {
-                        type: "number",
+                    money: Types.Number({
                         round: 0,
                         floor: 0
-                    }
+                    })
                 };
             }
         }
@@ -509,18 +420,14 @@ describe("NumberType", () => {
     });
 
     it("conflicting parameters: nullAsZero and zeroAsNull", () => {
-        interface ISomeData {
-            age: number;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    age: {
-                        type: "number",
+                    age: Types.Number({
                         nullAsZero: true,
                         zeroAsNull: true
-                    }
+                    })
                 };
             }
         }
