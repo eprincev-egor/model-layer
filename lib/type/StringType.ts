@@ -21,7 +21,7 @@ export interface IStringTypeParams extends ITypeParams {
 export interface IStringType extends IType {
     (params: IStringTypeParams): IStringType;
     TOutput: string;
-    TInput: number | string;
+    TInput: string;
     TJson: string;
 }
 

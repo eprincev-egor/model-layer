@@ -1,11 +1,17 @@
 
 
-import {Type, ITypeParams} from "./Type";
+import {Type, ITypeParams, IType} from "./Type";
 import {Model} from "../Model";
 import {invalidValuesAsString, isNaN, MODELS, eol} from "../utils";
 
-export interface IModelTypeParams extends ITypeParams {
-    Models: any[];
+export function MakeModelType<TModelConstructor>(
+    params: ITypeParams & 
+    {Model: TModelConstructor}
+): TModelConstructor {
+    return {
+        ...params,
+        type: "model"
+    } as any;
 }
 
 export class ModelType extends Type {
@@ -34,13 +40,13 @@ export class ModelType extends Type {
         }
     }
 
-    Models: any[];
-    getConstructorByData: (model: Model<any>) => (new() => Model<any>);
+    Model: new (...args: any) => Model;
+    getConstructorByData: (model: Model) => (new() => Model);
 
-    constructor(params: IModelTypeParams) {
+    constructor(params: ITypeParams & {Model: new (...args: any) => Model}) {
         super(params);
 
-        this.Models = params.Models;
+        this.Model = params.Model;
 
         if ( 
             params.hasOwnProperty("constructor") &&
@@ -51,7 +57,7 @@ export class ModelType extends Type {
             );
         }
         else {
-            const BaseModel = params.Models[0];
+            const BaseModel = params.Model[0];
             this.getConstructorByData = () => BaseModel;
         }
     }
@@ -61,18 +67,15 @@ export class ModelType extends Type {
             return null;
         }
     
-        for (let i = 0, n = this.Models.length; i < n; i++) {
-            const SomeModel = this.Models[ i ];
+        const BaseModel = this.Model;
+        const className = BaseModel.name;
 
-            if ( value instanceof SomeModel ) {
-                value.parent = model;
-                return value;
-            }
+
+        if ( value instanceof BaseModel ) {
+            value.parent = model;
+            return value;
         }
         
-    
-        const BaseModel = this.Models[0];
-        const className = BaseModel.name;
     
         if ( 
             isNaN(value) ||
@@ -106,7 +109,7 @@ export class ModelType extends Type {
     }
 
     typeAsString() {
-        return this.Models[0].name;
+        return this.Model.name;
     }
 
     toJSON(model) {

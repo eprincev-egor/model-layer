@@ -1,19 +1,16 @@
 
-import {Model} from "../../lib/index";
+import {Model, Types} from "../../lib/index";
 import assert from "assert";
 
-interface ISomeData {
-    prop: string;
-}
 
 describe("Model events", () => {
     
     it("listen changes", () => {
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    prop: "string"
+                    prop: Types.String
                 };
             }
         }
@@ -41,10 +38,10 @@ describe("Model events", () => {
     });
 
     it("no changes - no event", () => {
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    prop: "string"
+                    prop: Types.String
                 };
             }
         }
@@ -66,10 +63,10 @@ describe("Model events", () => {
     });
 
     it("listen change:prop", () => {
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    prop: "string"
+                    prop: Types.String
                 };
             }
         }
@@ -98,10 +95,10 @@ describe("Model events", () => {
 
 
     it("listen change:unknownProp", () => {
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    prop: "string"
+                    prop: Types.String
                 };
             }
         }

@@ -4,14 +4,14 @@
 import {Model} from "./Model";
 import Collection from "./Collection";
 
-import {IType, OutputType} from "./type/Type";
+import {IType} from "./type/Type";
 
 import {IAnyType} from "./type/AnyType";
 import {IArrayType} from "./type/ArrayType";
 import {IBooleanType} from "./type/BooleanType";
 // import {AnyType} from "./type/CustomClassType";
 import {IDateType} from "./type/DateType";
-// import {AnyType} from "./type/ModelType";
+import {MakeModelType} from "./type/ModelType";
 import {INumberType} from "./type/NumberType";
 import {IObjectType} from "./type/ObjectType";
 import {IStringType} from "./type/StringType";
@@ -32,6 +32,7 @@ const Types = {
     Date: returnParamsWithType("date") as IDateType,
     Array: returnParamsWithType("array") as IArrayType<IType>,
     Object: returnParamsWithType("object") as IObjectType<IType>,
+    Model: MakeModelType,
     // Or: (TypeOr as any) as ITypeOr<IType>,
     Any: returnParamsWithType("*") as IAnyType
 };

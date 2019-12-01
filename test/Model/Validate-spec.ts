@@ -1,24 +1,19 @@
 
-import {Model} from "../../lib/index";
+import {Model, Types} from "../../lib/index";
 import assert from "assert";
 import { ISimpleObject } from "../../lib/Model";
 
 describe("Model validate", () => {
     
     it("required field", () => {
-        interface ISomeData {
-            name: string;
-            age: number;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    name: {
-                        type: "string",
+                    name: Types.String({
                         required: true
-                    },
-                    age: "number"
+                    }),
+                    age: Types.Number
                 };
             }
         }
@@ -58,17 +53,13 @@ describe("Model validate", () => {
     });
 
     it("validate method", () => {
-        interface ISomeData {
-            age: number;
-        }
 
-        class AgeModel extends Model<ISomeData> {
-            static data() {
+        class AgeModel extends Model<AgeModel> {
+            structure() {
                 return {
-                    age: {
-                        type: "number",
+                    age: Types.Number({
                         default: 0
-                    }
+                    })
                 };
             }
 
@@ -111,17 +102,13 @@ describe("Model validate", () => {
     });
 
     it("cannot change state in validate method", () => {
-        interface ISomeData {
-            age: number;
-        }
 
-        class AgeModel extends Model<ISomeData> {
-            static data() {
+        class AgeModel extends Model<AgeModel> {
+            structure() {
                 return {
-                    age: {
-                        type: "number",
+                    age: Types.Number({
                         default: 0
-                    }
+                    })
                 };
             }
 
@@ -140,17 +127,13 @@ describe("Model validate", () => {
     });
 
     it("this.data in validate is previous state", () => {
-        interface ISomeData {
-            age: number;
-        }
 
-        class AgeModel extends Model<ISomeData> {
-            static data() {
+        class AgeModel extends Model<AgeModel> {
+            structure() {
                 return {
-                    age: {
-                        type: "number",
+                    age: Types.Number({
                         default: 100
-                    }
+                    })
                 };
             }
 
@@ -166,19 +149,15 @@ describe("Model validate", () => {
     });
 
     it("validate field", () => {
-        interface ISomeData {
-            age: number;
-        }
 
-        class AgeModel extends Model<ISomeData> {
-            static data() {
+        class AgeModel extends Model<AgeModel> {
+            structure() {
                 return {
-                    age: {
-                        type: "number",
+                    age: Types.Number({
                         default: 0,
                         validate: (age) =>
                             age >= 0
-                    }
+                    })
                 };
             }
         }
@@ -215,18 +194,14 @@ describe("Model validate", () => {
     });
 
     it("do not validate null value", () => {
-        interface ISomeData {
-            prop: string;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    prop: {
-                        type: "string",
+                    prop: Types.String({
                         validate: (value) => 
                             value === "nice"
-                    }
+                    })
                 };
             }
         }
@@ -250,17 +225,13 @@ describe("Model validate", () => {
 
 
     it("validate field by RegExp", () => {
-        interface ISomeData {
-            word: string;
-        }
 
-        class WordModel extends Model<ISomeData> {
-            static data() {
+        class WordModel extends Model<WordModel> {
+            structure() {
                 return {
-                    word: {
-                        type: "string",
+                    word: Types.String({
                         validate: /^\w+$/
-                    }
+                    })
                 };
             }
         }
@@ -297,17 +268,14 @@ describe("Model validate", () => {
     });
 
     it("enum validate", () => {
-        interface ISomeData {
-            color: string;
-        }
 
-        class EnumModel extends Model<ISomeData> {
-            static data() {
+
+        class EnumModel extends Model<EnumModel> {
+            structure() {
                 return {
-                    color: {
-                        type: "string",
+                    color: Types.String({
                         enum: ["red", "green", "blue"]
-                    }
+                    })
                 };
             }
         }
@@ -351,40 +319,27 @@ describe("Model validate", () => {
     });
 
     it("isValid(data)", () => {
-        interface ISomeData {
-            sale: number;
-            buy: number;
-            color: string;
-            word: string;
-            age: number;
-            prop: string;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    sale: {
-                        type: "number",
+                    sale: Types.Number({
                         required: true
-                    },
-                    buy: {
-                        type: "number",
+                    }),
+                    buy: Types.Number({
                         required: true
-                    },
-                    color: {
-                        type: "string",
+                    }),
+                    color: Types.String({
                         enum: ["red", "green", "blue"]
-                    },
-                    word: {
-                        type: "string",
+                    }),
+                    word: Types.String({
                         validate: /^\w+$/
-                    },
-                    age: {
-                        type: "number",
+                    }),
+                    age: Types.Number({
                         validate: (age) => 
                             age > 0
-                    },
-                    prop: "string"
+                    }),
+                    prop: Types.String
                 };
             }
 
@@ -460,17 +415,13 @@ describe("Model validate", () => {
     });
 
     it("const prop", () => {
-        interface ISomeData {
-            name: string;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    name: {
-                        type: "string",
+                    name: Types.String({
                         const: true
-                    }
+                    })
                 };
             }
         }

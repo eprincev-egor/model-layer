@@ -18,36 +18,33 @@ interface IChangeEvent<TModel extends Model> {
     changes: ReadOnlyPartial<TModel["data"]>;
 }
 
-export abstract class Model<
-    ChildModel extends Model = any,
-    TStructure = ReturnType< ChildModel["structure"] >,
-    TInputData extends ISimpleObject = InputType< TStructure >,
-    TJson extends ISimpleObject = JsonType< TStructure >,
-    TOutputData extends ISimpleObject = OutputType< TStructure >
-> extends EventEmitter {
+interface IStructure {
+    [key: string]: IType | (new (...args: any) => Model);
+}
+
+export class Model<ChildModel extends Model = any> extends EventEmitter {
 
     static Type = Type;
 
-    TStructure: TStructure;
-    TInputData: TInputData;
-    TInput: TInputData | ChildModel;
-    TOutput: ChildModel;
-    TJson: TJson;
-    data: TOutputData;
+    TInputData: InputType< ReturnType< ChildModel["structure"] > >;
+    TInput: InputType< ReturnType< ChildModel["structure"] > > | this;
+    TOutput: this;
+    TJson: JsonType< ReturnType< ChildModel["structure"] > >;
+    data: OutputType< ReturnType< ChildModel["structure"] > >;
     
     // "id"
     primaryKey: string;
     // value of id
     primaryValue: number | string;
+    
+    parent: Model;
 
     // data properties
     private properties: any;
     
     private isInit: boolean;
-    
-    private parent: Model;
 
-    constructor(inputData?: TInputData) {
+    constructor(inputData?: InputType< ReturnType< ChildModel["structure"] > >) {
         super();
 
         this.prepareStructure();
@@ -92,16 +89,16 @@ export abstract class Model<
         Object.freeze(this.data);
     }
 
-    structure(): {[key: string]: IType} {
+    structure(): {[key: string]: IType | (new (...args: any) => Model)} {
         // throw new Error(`${ this.constructor.name }.structure() is not declared`);
         return {};
     }
 
-    get<TKey extends keyof TOutputData>(key: TKey): TOutputData[TKey] {
+    get<TKey extends keyof this["data"]>(key: TKey): this["data"][TKey] {
         return this.data[ key ];
     }
 
-    set(data: TInputData, options?: ISimpleObject) {
+    set(data: this["TInputData"], options?: ISimpleObject) {
         options = options || {
             onlyValidate: false
         };
@@ -226,7 +223,7 @@ export abstract class Model<
         });
     }
 
-    isValid(data: TInputData): boolean {
+    isValid(data: this["TInputData"]): boolean {
         if ( !isObject(data) ) {
             throw new Error("data must be are object");
         }
@@ -242,16 +239,16 @@ export abstract class Model<
         }
     }
 
-    hasProperty<Key extends keyof TOutputData>(key: Key): boolean {
+    hasProperty<Key extends keyof this["data"]>(key: Key): boolean {
         return this.data.hasOwnProperty( key );
     }
 
-    getDescription<Key extends keyof TOutputData>(key: Key) {
+    getDescription<Key extends keyof this["data"]>(key: Key) {
         const iKey = key as any;
         return this.properties[ iKey ] || this.properties["*"];
     }
 
-    hasValue<Key extends keyof TOutputData>(key: Key): boolean {
+    hasValue<Key extends keyof this["data"]>(key: Key): boolean {
         const value = this.data[ key ];
 
         if ( value == null ) {
@@ -477,11 +474,11 @@ export abstract class Model<
         return true;
     }
 
-    validate(data: TInputData): void {
+    validate(data: this["TInputData"]): void {
         // for invalid data throw error here
     }
 
-    prepare(data: TInputData): void {
+    prepare(data: this["TInputData"]): void {
         // any calculations with data by reference
     }
 

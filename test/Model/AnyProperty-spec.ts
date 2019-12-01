@@ -1,19 +1,15 @@
 
 
-import {Model} from "../../lib/index";
+import {Model, Types} from "../../lib/index";
 import assert from "assert";
 
 describe("Model with any property", () => {
 
     it("any key and any value", () => {
-        interface IAnyData {
-            [key: string]: any;
-        }
-
-        class SomeModel extends Model<IAnyData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    "*": "*"
+                    "*": Types.Any
                 };
             }
         }
@@ -46,14 +42,10 @@ describe("Model with any property", () => {
     
     it("any number", () => {
 
-        interface IAnyNumber {
-            [key: string]: any;
-        }
-
-        class SomeModel extends Model<IAnyNumber> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    "*": "number"
+                    "*": Types.Number
                 };
             }
         }
@@ -80,7 +72,7 @@ describe("Model with any property", () => {
 
         assert.throws(
             () => {
-                const someModel = new SomeModel({
+                const someModel = new (SomeModel as any)({
                     x: "wrong"
                 });
             }, 
@@ -125,14 +117,10 @@ describe("Model with any property", () => {
 
     it("listen change event on any property", () => {
         
-        interface IAnyString {
-            [key: string]: string;
-        }
-
-        class SomeModel extends Model<IAnyString> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    "*": "string"
+                    "*": Types.String
                 };
             }
         }
@@ -161,22 +149,14 @@ describe("Model with any property", () => {
 
     
     it("any keys and declared keys", () => {
-        interface IAnyString {
-            [key: string]: string;
-        }
-        interface IAge {
-            age: number;
-        }
-        type IAnyStringAndAge = IAnyString & IAge;
-
-        class SomeModel extends Model<IAnyStringAndAge> {
-            static data() {
+        
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    "age": {
-                        type: "number",
+                    "age": Types.Number({
                         default: 0
-                    },
-                    "*": "string"
+                    }),
+                    "*": Types.String
                 };
             }
         }
@@ -224,18 +204,13 @@ describe("Model with any property", () => {
     });
 
     it("prepare any value", () => {
-        interface IAnyString {
-            [key: string]: string;
-        }
-
-        class SomeModel extends Model<IAnyString> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    "*": {
-                        type: "string",
+                    "*": Types.String({
                         prepare: (value) =>
                             value.toUpperCase().trim()
-                    }
+                    })
                 };
             }
         }
@@ -263,18 +238,14 @@ describe("Model with any property", () => {
     });
 
     it("validate any value", () => {
-        interface IAnyNumber {
-            [key: string]: number;
-        }
-
-        class SomeModel extends Model<IAnyNumber> {
-            static data() {
+        
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    "*": {
-                        type: "number",
+                    "*": Types.Number({
                         validate: (value) =>
                             value >= 10
-                    }
+                    })
                 };
             }
         }
@@ -317,13 +288,12 @@ describe("Model with any property", () => {
             [key: string]: string;
         }
 
-        class SomeModel extends Model<IAnyString> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    "*": {
-                        type: "string",
+                    "*": Types.String({
                         key: /\d+/
-                    }
+                    })
                 };
             }
         }
@@ -364,18 +334,15 @@ describe("Model with any property", () => {
     });
 
     it("validate any key by function", () => {
-        interface IAnyString {
-            [key: string]: string;
-        }
 
-        class SomeModel extends Model<IAnyString> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    "*": {
+                    "*": Types.String({
                         type: "string",
                         key: (key) =>
                             key.startsWith("$")
-                    }
+                    })
                 };
             }
         }
@@ -415,14 +382,13 @@ describe("Model with any property", () => {
     });
 
     it("toJSON() with any key", () => {
-        interface IAnyObject {
-            [key: string]: object;
-        }
 
-        class SomeModel extends Model<IAnyObject> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    "*": "object"
+                    "*": Types.Object({
+                        element: Types.Any
+                    })
                 };
             }
         }
@@ -439,14 +405,13 @@ describe("Model with any property", () => {
     });
 
     it("clone() with any key", () => {
-        interface IAnyObject {
-            [key: string]: object;
-        }
 
-        class SomeModel extends Model<IAnyObject> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    "*": "object"
+                    "*": Types.Object({
+                        element: Types.Any
+                    })
                 };
             }
         }

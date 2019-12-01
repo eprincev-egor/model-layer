@@ -1,24 +1,17 @@
 
-import {Model} from "../../lib/index";
+import {Model, Types} from "../../lib/index";
 import assert from "assert";
 
 describe("TreeMethods, walk by children or parents", () => {
     
     it("BinaryTree", () => {
-        interface IBinaryTree {
-            left: BinaryTreeModel | Partial<IBinaryTree>;
-            right: BinaryTreeModel | Partial<IBinaryTree>;
-            id: number;
-            name: string;
-        }
-
-        class BinaryTreeModel extends Model<IBinaryTree> {
-            static data() {
+        class BinaryTreeModel extends Model<BinaryTreeModel> {
+            structure() {
                 return {
                     left: BinaryTreeModel,
                     right: BinaryTreeModel,
-                    id: "number",
-                    name: "string"
+                    id: Types.Number,
+                    name: Types.String
                 };
             }
 
@@ -124,21 +117,15 @@ describe("TreeMethods, walk by children or parents", () => {
     });
 
     it("walker.skip(), skip one element", () => {
-        interface ISomeData {
-            a: SomeModel | Partial<ISomeData>;
-            b: SomeModel | Partial<ISomeData>;
-            c: SomeModel | Partial<ISomeData>;
-            value: string;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
                     a: SomeModel,
                     b: SomeModel,
                     c: SomeModel,
 
-                    value: "string"
+                    value: Types.String
                 };
             }
         }
@@ -186,16 +173,12 @@ describe("TreeMethods, walk by children or parents", () => {
     });
 
     it("findChild", () => {
-        interface ISomeData {
-            child: SomeModel | Partial<ISomeData>;
-            level: number;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
                     child: SomeModel,
-                    level: "number"
+                    level: Types.Number
                 };
             }
         }
@@ -214,11 +197,11 @@ describe("TreeMethods, walk by children or parents", () => {
         });
 
         let counter = 0;
-        const lvl2model: SomeModel = model.findChild((childModel: SomeModel) => {
+        const lvl2model = model.findChild((childModel: SomeModel) => {
             counter++;
     
             return childModel.get("level") === 2;
-        });
+        }) as SomeModel;
     
         assert.equal( counter, 2 );
         assert.ok( lvl2model );
@@ -227,16 +210,12 @@ describe("TreeMethods, walk by children or parents", () => {
     });
 
     it("filterChildren", () => {
-        interface ISomeData {
-            child: SomeModel | Partial<ISomeData>;
-            level: number;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
                     child: SomeModel,
-                    level: "number"
+                    level: Types.Number
                 };
             }
         }
@@ -257,9 +236,9 @@ describe("TreeMethods, walk by children or parents", () => {
             }
         });
 
-        const models: SomeModel[] = model.filterChildren((childModel: SomeModel) =>
+        const models = model.filterChildren((childModel: SomeModel) =>
             childModel.get("level") % 2  === 0
-        );
+        ) as SomeModel[];
     
         assert.equal( models.length, 2 );
         assert.equal( models[0].get("level"), 2 );
@@ -269,16 +248,12 @@ describe("TreeMethods, walk by children or parents", () => {
 
 
     it("findParent", () => {
-        interface ISomeData {
-            child: SomeModel | Partial<ISomeData>;
-            level: number;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
                     child: SomeModel,
-                    level: "number"
+                    level: Types.Number
                 };
             }
         }
@@ -299,18 +274,18 @@ describe("TreeMethods, walk by children or parents", () => {
             }
         });
 
-        const lastModel: SomeModel = model.findChild((childModel: SomeModel) =>
+        const lastModel = model.findChild((childModel: SomeModel) =>
             childModel.get("level") === 4
-        );
+        ) as SomeModel;
     
         assert.equal( lastModel.get("level"), 4 );
         
         let counter = 0;
-        const lvl1: SomeModel = lastModel.findParent((childModel: SomeModel) => {
+        const lvl1 = lastModel.findParent((childModel: SomeModel) => {
             counter++;
 
             return childModel.get("level") === 1;
-        });
+        }) as SomeModel;
 
         assert.ok( lvl1 );
         assert.equal( lvl1.get("level"), 1 );
@@ -320,16 +295,12 @@ describe("TreeMethods, walk by children or parents", () => {
 
 
     it("filterParents", () => {
-        interface ISomeData {
-            child: SomeModel | Partial<ISomeData>;
-            level: number;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
                     child: SomeModel,
-                    level: "number"
+                    level: Types.Number
                 };
             }
         }
@@ -350,13 +321,13 @@ describe("TreeMethods, walk by children or parents", () => {
             }
         });
 
-        const lastModel: SomeModel = model.findChild((childModel: SomeModel) =>
+        const lastModel = model.findChild((childModel: SomeModel) =>
             childModel.get("level") === 4
-        );
+        ) as SomeModel;
 
-        const models: SomeModel[] = lastModel.filterParents((childModel: SomeModel) =>
+        const models = lastModel.filterParents((childModel: SomeModel) =>
             childModel.get("level") % 2  === 1
-        );
+        ) as SomeModel[];
     
         assert.equal( models.length, 2 );
         assert.equal( models[0].get("level"), 3 );
@@ -365,40 +336,28 @@ describe("TreeMethods, walk by children or parents", () => {
     });
 
     it("findParentInstance", () => {
-        interface ICData {
-            name: string;
-        }
 
-        class CModel extends Model<ICData> {
-            static data() {
+        class CModel extends Model<CModel> {
+            structure() {
                 return {
-                    name: "string"
+                    name: Types.String
                 };
             }
         }
 
-        interface IBData {
-            name: string;
-            child: CModel | Partial<ICData>;
-        }
-        class BModel extends Model<IBData> {
-            static data() {
+        class BModel extends Model<BModel> {
+            structure() {
                 return {
-                    name: "string",
+                    name: Types.String,
                     child: CModel
                 };
             }
         }
 
-        interface IAData {
-            name: string;
-            child: BModel | Partial<IBData>;
-        }
-
-        class AModel extends Model<IAData> {
-            static data() {
+        class AModel extends Model<AModel> {
+            structure() {
                 return {
-                    name: "string",
+                    name: Types.String,
                     child: BModel
                 };
             }
@@ -414,9 +373,9 @@ describe("TreeMethods, walk by children or parents", () => {
             }
         });
 
-        const cModel: CModel = model.findChild((childModel) =>
+        const cModel = model.findChild((childModel) =>
             childModel instanceof CModel
-        );
+        ) as CModel;
 
         const aModel = cModel.findParentInstance(AModel);
         const bModel = cModel.findParentInstance(BModel);
@@ -429,53 +388,36 @@ describe("TreeMethods, walk by children or parents", () => {
 
 
     it("walk by array", () => {
-        interface IJob {
-            name: string;
-        }
-
-        class JobModel extends Model<IJob> {
-            static data() {
+    
+        class JobModel extends Model<JobModel> {
+            structure() {
                 return {
-                    name: "string"
+                    name: Types.String
                 };
             }
         }
-
-        interface IUser {
-            name: string;
-            job: JobModel | Partial<IJob>;
-        }
-
-        class UserModel extends Model<IUser> {
-            static data() {
+        class UserModel extends Model<UserModel> {
+            structure() {
                 return {
-                    name: "string",
+                    name: Types.String,
                     job: JobModel
                 };
             }
         }
 
-        interface ICompany {
-            name: string;
-            managers: Array< UserModel | Partial<IUser> >;
-        }
-
-        class CompanyModel extends Model<ICompany> {
-            static data() {
+        class CompanyModel extends Model<CompanyModel> {
+            structure() {
                 return {
-                    name: "string",
-                    managers: [UserModel]
+                    name: Types.String,
+                    managers: Types.Array({
+                        element: UserModel
+                    })
                 };
             }
         }
 
-        interface IOrder {
-            client: CompanyModel | Partial<ICompany>;
-            partner: CompanyModel | Partial<ICompany>;
-        }
-
-        class OrderModel extends Model<IOrder> {
-            static data() {
+        class OrderModel extends Model<OrderModel> {
+            structure() {
                 return {
                     client: CompanyModel,
                     partner: CompanyModel
@@ -508,10 +450,10 @@ describe("TreeMethods, walk by children or parents", () => {
             partner: partnerCompanyModel
         });
 
-        const jobModel: JobModel = orderModel.findChild((childModel) =>
+        const jobModel = orderModel.findChild((childModel) =>
             childModel instanceof JobModel &&
             childModel.get("name") === "Director"
-        );
+        ) as JobModel;
         assert.equal( jobModel.get("name"), "Director" );
 
         let walkByArray = false;
@@ -535,14 +477,11 @@ describe("TreeMethods, walk by children or parents", () => {
 
 
     it("walk by any key and any value", () => {
-        interface ITree {
-            [key: string]: any;
-        }
 
-        class TreeModel extends Model<ITree> {
-            static data() {
+        class TreeModel extends Model<TreeModel> {
+            structure() {
                 return {
-                    "*": "*"
+                    "*": Types.Any
                 };
             }
         }
@@ -573,15 +512,11 @@ describe("TreeMethods, walk by children or parents", () => {
     });
 
     it("circular walk", () => {
-        interface ITree {
-            name: string;
-            child: TreeModel | Partial<ITree>;
-        }
 
-        class TreeModel extends Model<ITree> {
-            static data() {
+        class TreeModel extends Model<TreeModel> {
+            structure() {
                 return {
-                    name: "string",
+                    name: Types.String,
                     child: TreeModel
                 };
             }
@@ -611,15 +546,11 @@ describe("TreeMethods, walk by children or parents", () => {
     });
 
     it("circular findParent", () => {
-        interface ITree {
-            name: string;
-            child: TreeModel | Partial<ITree>;
-        }
 
-        class TreeModel extends Model<ITree> {
-            static data() {
+        class TreeModel extends Model<TreeModel> {
+            structure() {
                 return {
-                    name: "string",
+                    name: Types.String,
                     child: TreeModel
                 };
             }

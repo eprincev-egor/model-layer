@@ -1,19 +1,16 @@
 
-import {Model} from "../../lib/index";
+import {Model, Types} from "../../lib/index";
 import assert from "assert";
 import {eol} from "../../lib/utils";
 
 describe("Model tests", () => {
 
     it("create model with data", () => {
-        interface ISomeData {
-            prop: string;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    prop: "string"
+                    prop: Types.String
                 };
             }
         }
@@ -30,14 +27,11 @@ describe("Model tests", () => {
     });
 
     it("create model without data", () => {
-        interface ISomeData {
-            prop: string;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    prop: "string"
+                    prop: Types.String
                 };
             }
         }
@@ -49,23 +43,18 @@ describe("Model tests", () => {
     });
 
     it("default value", () => {
-        interface ISomeData {
-            prop: string;
-        }
 
-        let model;
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    prop: {
-                        type: "string",
+                    prop: Types.String({
                         default: "default"
-                    }
+                    })
                 };
             }
         }
 
-        model = new SomeModel();
+        let model = new SomeModel();
         assert.equal( model.get("prop"), "default" );
         assert.equal( model.data.prop, "default" );
 
@@ -92,19 +81,15 @@ describe("Model tests", () => {
     });
 
     it("default() value", () => {
-        interface ISomeData {
-            now: number;
-        }
 
         const now = Date.now();
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    now: {
-                        type: "number",
+                    now: Types.Number({
                         default: () => Date.now()
-                    }
+                    })
                 };
             }
         }
@@ -117,16 +102,12 @@ describe("Model tests", () => {
     });
 
     it("set value", () => {
-        interface ISomeData {
-            name: string;
-            age: number;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    name: "string",
-                    age: "number"
+                    name: Types.String,
+                    age: Types.Number
                 };
             }
         }
@@ -184,14 +165,11 @@ describe("Model tests", () => {
     });
 
     it("error on set unknown property", () => {
-        interface ISomeData {
-            prop: string;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    prop: "string"
+                    prop: Types.String
                 };
             }
         }
@@ -233,14 +211,10 @@ describe("Model tests", () => {
 
 
     it("model.data is freeze object", () => {
-        interface ISomeData {
-            prop: string;
-        }
-
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    prop: "string"
+                    prop: Types.String
                 };
             }
         }
@@ -273,14 +247,10 @@ describe("Model tests", () => {
     });
 
     it("keep data if hasn't changes", () => {
-        interface ISomeData {
-            prop: string;
-        }
-
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    prop: "string"
+                    prop: Types.String
                 };
             }
         }
@@ -301,14 +271,10 @@ describe("Model tests", () => {
     });
 
     it("model.hasProperty", () => {
-        interface ISomeData {
-            prop: string;
-        }
-
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    prop: "string"
+                    prop: Types.String
                 };
             }
         }
@@ -333,16 +299,11 @@ describe("Model tests", () => {
     });
 
     it("model.hasValue", () => {
-        interface ISomeData {
-            name: string;
-            age: number;
-        }
-
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    name: "string",
-                    age: "number"
+                    name: Types.String,
+                    age: Types.Number
                 };
             }
         }
@@ -386,16 +347,11 @@ describe("Model tests", () => {
     });
 
     it("model.toJSON", () => {
-        interface ISomeData {
-            name: string;
-            age: number;
-        }
-
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    name: "string",
-                    age: "number"
+                    name: Types.String,
+                    age: Types.Number
                 };
             }
         }
@@ -425,16 +381,12 @@ describe("Model tests", () => {
     });
 
     it("model.prepareJSON", () => {
-        interface ISomeData {
-            name: string;
-            age: number;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    name: "string",
-                    age: "number"
+                    name: Types.String,
+                    age: Types.Number
                 };
             }
 
@@ -466,17 +418,13 @@ describe("Model tests", () => {
     });
 
     it("model.clone() with required field", () => {
-        interface ISomeData {
-            name: string;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    name: {
-                        type: "string",
+                    name: Types.String({
                         required: true
-                    }
+                    })
                 };
             }
         }
@@ -498,22 +446,20 @@ describe("Model tests", () => {
 
     
     it("extends from another Model with data", () => {
-        interface IAny {
-            [key: string]: any;
-        }
 
-        class FirstLevel extends Model<IAny> {
-            static data(): any {
+        class FirstLevel extends Model<FirstLevel> {
+            structure() {
                 return {
-                    lvl1: "string"
+                    lvl1: Types.String
                 };
             }
         }
 
-        class SecondLevel extends FirstLevel {
-            static data(): any {
+        class SecondLevel extends Model<SecondLevel> {
+            structure() {
                 return {
-                    lvl2: "string"
+                    ...(new FirstLevel().structure()),
+                    lvl2: Types.String
                 };
             }
         }
@@ -524,20 +470,16 @@ describe("Model tests", () => {
     });
 
     it("custom toJSON, for field", () => {
-        interface ISomeData {
-            name: string;
-            self: SomeModel;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    name: "string",
-                    self: {
-                        type: SomeModel,
+                    name: Types.String,
+                    self: Types.Model({
+                        Model: SomeModel,
                         toJSON: (selfModel) =>
                             selfModel.get("name")
-                    }
+                    })
                 };
             }
         }
@@ -558,18 +500,15 @@ describe("Model tests", () => {
     });
 
     it("custom toJSON, for any field", () => {
-        interface ISomeData {
-            [key: string]: SomeModel;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    "*": {
-                        type: SomeModel,
+                    "*": Types.Model({
+                        Model: SomeModel,
                         toJSON: () =>
                             "nice"
-                    }
+                    })
                 };
             }
         }
@@ -588,14 +527,11 @@ describe("Model tests", () => {
     });
 
     it("clone, for any field", () => {
-        interface ISomeData {
-            [key: string]: any;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    "*": "*"
+                    "*": Types.Any
                 };
             }
         }
@@ -613,50 +549,46 @@ describe("Model tests", () => {
         );
     });
 
-    it("register new type", () => {
+    // it("register new type", () => {
         
-        class CustomType extends Model.Type {
-            prepare(value) {
-                return +value * 2;
-            }
-        }
+    //     class CustomType extends Model.Type {
+    //         prepare(value) {
+    //             return +value * 2;
+    //         }
+    //     }
 
-        Model.registerType("custom", CustomType);
+    //     Model.registerType("custom", CustomType);
 
-        interface ISomeData {
-            prop: any;
-        }
+    //     interface ISomeData {
+    //         prop: any;
+    //     }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
-                return {
-                    prop: "custom"
-                };
-            }
-        }
+    //     class SomeModel extends Model<ISomeData> {
+    //         structure() {
+    //             return {
+    //                 prop: "custom"
+    //             };
+    //         }
+    //     }
 
-        const model = new SomeModel({
-            prop: "10"
-        });
+    //     const model = new SomeModel({
+    //         prop: "10"
+    //     });
 
-        assert.strictEqual(model.data.prop, 20);
-    });
+    //     assert.strictEqual(model.data.prop, 20);
+    // });
 
     
     it("custom prepare field", () => {
-        interface ISomeData {
-            money: number;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    money: {
-                        type: "number",
+                    money: Types.Number({
                         default: 1,
                         prepare: (value) =>
                             value * 2
-                    }
+                    })
                 };
             }
         }
@@ -672,14 +604,11 @@ describe("Model tests", () => {
     });
 
     it("check value type after custom prepare", () => {
-        interface ISomeData {
-            name: string | number;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
 
@@ -691,19 +620,16 @@ describe("Model tests", () => {
         const model = new SomeModel();
         assert.strictEqual( model.data.name, "10" );
 
-        model.set({name: 12});
+        model.set({name: (12 as any)});
         assert.strictEqual( model.data.name, "10" );
     });
 
     it("check value type after custom prepare (any key)", () => {
-        interface ISomeData {
-            [key: string]: string | number;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    "*": "text"
+                    "*": Types.String
                 };
             }
 
@@ -715,7 +641,7 @@ describe("Model tests", () => {
         const model = new SomeModel();
         assert.strictEqual( model.data.name, "10" );
 
-        model.set({name: 12});
+        model.set({name: (12 as any)});
         assert.strictEqual( model.data.name, "10" );
     });
 
@@ -725,25 +651,23 @@ describe("Model tests", () => {
             age: number;
         }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    name: {
-                        type: "string",
+                    name: Types.String({
                         default: "  ",
                         trim: true,
                         emptyAsNull: true,
                         prepare: (value) =>
                             value[0].toUpperCase() + 
                                 value.slice(1).toLowerCase()
-                    },
-                    age: {
-                        type: "number",
+                    }),
+                    age: Types.Number({
                         default: 0,
                         zeroAsNull: true,
                         prepare: (value) =>
                             +(value).toFixed(0)
-                    }
+                    })
                 };
             }
         }
@@ -774,28 +698,23 @@ describe("Model tests", () => {
             );
         }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    firstName: {
-                        type: "string",
+                    firstName: Types.String({
                         trim: true,
                         emptyAsNull: true,
-                        prepare: (name) =>
-                            upFirstLetter( name )
-                    },
-                    lastName: {
-                        type: "string",
+                        prepare: upFirstLetter
+                    }),
+                    lastName: Types.String({
                         trim: true,
                         emptyAsNull: true,
-                        prepare: (name) =>
-                            upFirstLetter( name )
-                    },
-                    fullName: {
-                        type: "string",
+                        prepare: upFirstLetter
+                    }),
+                    fullName: Types.String({
                         trim: true,
                         emptyAsNull: true
-                    }
+                    })
                 };
             }
 
@@ -831,19 +750,14 @@ describe("Model tests", () => {
 
     
     it("custom required field", () => {
-        interface ISomeData {
-            name: string;
-            path: string;
-        }
 
-        class FileModel extends Model<ISomeData> {
-            static data() {
+        class FileModel extends Model<FileModel> {
+            structure() {
                 return {
-                    name: {
-                        type: "text",
+                    name: Types.String({
                         required: true
-                    },
-                    path: "text"
+                    }),
+                    path: Types.String
                 };
             }
 
@@ -859,14 +773,11 @@ describe("Model tests", () => {
     });
 
     it("equal with same class model", () => {
-        interface ISomeData {
-            prop: string;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    prop: "string"
+                    prop: Types.String
                 };
             }
         }
@@ -888,25 +799,19 @@ describe("Model tests", () => {
     });
 
     it("equal model with another data", () => {
-        interface IModel1 {
-            some: number;
-        }
 
-        class Model1 extends Model<IModel1> {
-            static data() {
+        class Model1 extends Model<Model1> {
+            structure() {
                 return {
-                    some: "number"
+                    some: Types.Number
                 };
             }
         }
 
-        interface IModel2 {
-            [key: string]: any;
-        }
-        class Model2 extends Model<IModel2> {
-            static data() {
+        class Model2 extends Model<Model2> {
+            structure() {
                 return {
-                    "*": "*"
+                    "*": Types.Any
                 };
             }
         }
@@ -930,14 +835,11 @@ describe("Model tests", () => {
 
 
     it("max error length on prepare", () => {
-        interface ISomeData {
-            prop: string;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    prop: "number"
+                    prop: Types.Number
                 };
             }
         }
@@ -945,7 +847,7 @@ describe("Model tests", () => {
         assert.throws(
             () => {
                 const model = new SomeModel({
-                    prop: "X1234568790123456879012345687901234568790123456879"
+                    prop: ("X1234568790123456879012345687901234568790123456879" as any)
                 });
             }, (err) =>
                 err.message === "invalid number for prop: \"X1234568790123456879012345687901234568790123456879\""
@@ -954,7 +856,7 @@ describe("Model tests", () => {
         assert.throws(
             () => {
                 const model = new SomeModel({
-                    prop: "X1234568790123456879012345687901234568790123456879y"
+                    prop: ("X1234568790123456879012345687901234568790123456879y" as any)
                 });
             }, (err) =>
                 err.message === "invalid number for prop: \"X1234568790123456879012345687901234568790123456879...\""
@@ -982,22 +884,18 @@ describe("Model tests", () => {
     });
 
     it("test eol on linux", () => {
-        interface ISomeObject {
-            [key: string]: number;
-        }
-
-        interface ISomeData {
-            arr: number[];
-            obj: ISomeObject;
-        }
 
         eol.define( "linux" );
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    arr: ["number"],
-                    obj: {element: "number"}
+                    arr: Types.Array({
+                        element: Types.Number
+                    }),
+                    obj: Types.Object({
+                        element: Types.Number
+                    })
                 };
             }
         }
@@ -1024,22 +922,18 @@ describe("Model tests", () => {
     });
 
     it("test eol on windows", () => {
-        interface ISomeObject {
-            [key: string]: number;
-        }
-
-        interface ISomeData {
-            arr: number[];
-            obj: ISomeObject;
-        }
 
         eol.define( "windows" );
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    arr: ["number"],
-                    obj: {element: "number"}
+                    arr: Types.Array({
+                        element: Types.Number
+                    }),
+                    obj: Types.Object({
+                        element: Types.Number
+                    })
                 };
             }
         }

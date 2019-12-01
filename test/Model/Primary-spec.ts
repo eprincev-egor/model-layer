@@ -1,5 +1,5 @@
 
-import {Model} from "../../lib/index";
+import {Model, Types} from "../../lib/index";
 import assert from "assert";
 
 describe("Model primary field", () => {
@@ -34,26 +34,22 @@ describe("Model primary field", () => {
             "emit"
         ];
 
-        interface IAny {
-            [key: string]: any;
-        }
 
         RESERVED_KEYS.forEach((reservedKey) => {
             
-            class Company extends Model<IAny> {
-                static data() {
+            class Company extends Model<Company> {
+                structure() {
                     return {
-                        [reservedKey]: {
-                            type: "text",
+                        [reservedKey]: Types.String({
                             primary: true
-                        }
+                        })
                     };
                 }
             }
     
             assert.throws(
                 () => {
-                    const company = new Company({
+                    const company = new (Company as any)({
                         [reservedKey]: 1
                     });
                 },
@@ -65,19 +61,14 @@ describe("Model primary field", () => {
     });
 
     it("check property model.primaryKey", () => {
-        interface ICompany {
-            id: number;
-            name: string;
-        }
 
-        class Company extends Model<ICompany> {
-            static data() {
+        class Company extends Model<Company> {
+            structure() {
                 return {
-                    id: {
-                        type: "number",
+                    id: Types.Number({
                         primary: true
-                    },
-                    name: "text"
+                    }),
+                    name: Types.String
                 };
             }
         }
@@ -90,19 +81,14 @@ describe("Model primary field", () => {
     });
 
     it("check property model.primaryValue", () => {
-        interface ICompany {
-            id: number;
-            name: string;
-        }
 
-        class Company extends Model<ICompany> {
-            static data() {
+        class Company extends Model<Company> {
+            structure() {
                 return {
-                    id: {
-                        type: "number",
+                    id: Types.Number({
                         primary: true
-                    },
-                    name: "text"
+                    }),
+                    name: Types.String
                 };
             }
         }
@@ -121,23 +107,17 @@ describe("Model primary field", () => {
     });
 
     it("model.id, if exists static field 'id' in data", () => {
-        interface ICompany {
-            id: number;
-            name: string;
-        }
-
-        class Company extends Model<ICompany> {
-            static data() {
-                return {
-                    id: {
-                        type: "number",
-                        primary: true
-                    },
-                    name: "text"
-                };
-            }
+        class Company extends Model<Company> {
             
             id: number;
+            structure() {
+                return {
+                    id: Types.Number({
+                        primary: true
+                    }),
+                    name: Types.String
+                };
+            }
         }
 
         const company1 = new Company({
@@ -158,17 +138,12 @@ describe("Model primary field", () => {
     });
  
     it("primaryKey is required field", () => {
-        interface ICompany {
-            id: number;
-        }
-
-        class Company extends Model<ICompany> {
-            static data() {
+        class Company extends Model<Company> {
+            structure() {
                 return {
-                    id: {
-                        type: "number",
+                    id: Types.Number({
                         primary: true
-                    }
+                    })
                 };
             }
         }
