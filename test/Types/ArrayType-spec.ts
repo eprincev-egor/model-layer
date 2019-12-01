@@ -1,22 +1,21 @@
 
-import {Model} from "../../lib/index";
+import {Model, Types} from "../../lib/index";
 import assert from "assert";
 import {eol} from "../../lib/utils";
 import { ISimpleObject } from "../../lib/Model";
+import { Type } from "../../lib/type/Type";
 
 describe("ArrayType", () => {
     
     it("array of numbers", () => {
-        interface ICompany {
-            name: string;
-            managersIds: number[];
-        }
 
-        class CompanyModel extends Model<ICompany> {
-            static data() {
+        class CompanyModel extends Model<CompanyModel> {
+            structure() {
                 return {
-                    name: "string",
-                    managersIds: ["number"]
+                    name: Types.String,
+                    managersIds: Types.Array({
+                        element: Types.Number
+                    })
                 };
             }
         }
@@ -174,18 +173,15 @@ describe("ArrayType", () => {
 
     
     it("emptyAsNull", () => {
-        interface ISomeData {
-            colors: string[];
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    colors: {
-                        type: ["string"],
+                    colors: Types.Array({
+                        element: Types.String,
                         default: [],
                         emptyAsNull: true
-                    }
+                    })
                 };
             }
         }
@@ -201,17 +197,14 @@ describe("ArrayType", () => {
     });
 
     it("nullAsEmpty", () => {
-        interface ISomeData {
-            colors: string[];
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    colors: {
-                        type: ["string"],
+                    colors: Types.Array({
+                        element: Types.String,
                         nullAsEmpty: true
-                    }
+                    })
                 };
             }
         }
@@ -228,14 +221,13 @@ describe("ArrayType", () => {
 
 
     it("array[boolean]", () => {
-        interface ISomeData {
-            answers: boolean[];
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    answers: ["boolean"]
+                    answers: Types.Array({
+                        element: Types.Boolean
+                    })
                 };
             }
         }
@@ -264,14 +256,13 @@ describe("ArrayType", () => {
     });
 
     it("array[date]", () => {
-        interface ISomeData {
-            pays: Date[] | number[];
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    pays: ["date"]
+                    pays: Types.Array({
+                        element: Types.Date
+                    })
                 };
             }
         }
@@ -300,29 +291,23 @@ describe("ArrayType", () => {
     });
 
     it("array[ChildModel]", () => {
-        interface IUser {
-            name: string;
-        }
 
-        class UserModel extends Model<IUser> {
-            static data() {
+        class UserModel extends Model<UserModel> {
+            structure() {
                 return {
-                    name: {
-                        type: "string",
+                    name: Types.String({
                         trim: true
-                    }
+                    })
                 };
             }
         }
 
-        interface ICompany {
-            managers: Array<UserModel | IUser>;
-        }
-
-        class CompanyModel extends Model<ICompany> {
-            static data() {
+        class CompanyModel extends Model<CompanyModel> {
+            structure() {
                 return {
-                    managers: [UserModel]
+                    managers: Types.Array({
+                        element: UserModel
+                    })
                 };
             }
         }
@@ -351,25 +336,20 @@ describe("ArrayType", () => {
     });
 
     it("array[string]", () => {
-        interface ISomeData {
-            colors: string[];
-            names: string[];
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    colors: [{
-                        type: "string",
-                        upper: true
-                    }],
-                    names: {
-                        type: "array",
-                        element: {
-                            type: "string",
+                    colors: Types.Array({
+                        element: Types.String({
+                            upper: true
+                        })
+                    }),
+                    names: Types.Array({
+                        element: Types.String({
                             trim: true
-                        }
-                    }
+                        })
+                    })
                 };
             }
         }
@@ -398,18 +378,14 @@ describe("ArrayType", () => {
     });
 
     it("array[object]", () => {
-        interface IAnyObject {
-            [key: string]: any;
-        }
-
-        interface ISomeData {
-            users: IAnyObject[];
-        }
-
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    users: ["object"]
+                    users: Types.Array({
+                        element: Types.Object({
+                            element: Types.Any
+                        })
+                    })
                 };
             }
         }
@@ -436,18 +412,14 @@ describe("ArrayType", () => {
 
     it("unique primitive", () => {
         
-        interface ICompany {
-            managersIds: number[];
-        }
 
-        class CompanyModel extends Model<ICompany> {
-            static data() {
+        class CompanyModel extends Model<CompanyModel> {
+            structure() {
                 return {
-                    managersIds: {
-                        type: "array",
-                        element: "number",
+                    managersIds: Types.Array({
+                        element: Types.Number,
                         unique: true
-                    }
+                    })
                 };
             }
         }
@@ -487,30 +459,22 @@ describe("ArrayType", () => {
     });
 
     it("unique ChildModel", () => {
-        interface IUser {
-            name: string;
-        }
 
-        class UserModel extends Model<IUser> {
-            static data() {
+        class UserModel extends Model<UserModel> {
+            structure() {
                 return {
-                    name: "string"
+                    name: Types.String
                 };
             }
         }
 
-        interface ICompany {
-            managers: UserModel[];
-        }
-
-        class CompanyModel extends Model<ICompany> {
-            static data() {
+        class CompanyModel extends Model<CompanyModel> {
+            structure() {
                 return {
-                    managers: {
-                        type: "array",
+                    managers: Types.Array({
                         element: UserModel,
                         unique: true
-                    }
+                    })
                 };
             }
         }
@@ -557,24 +521,20 @@ describe("ArrayType", () => {
     });
 
     it("sort", () => {
-        interface ICompany {
-            managersIds: Array<number | string>;
-        }
 
-        class CompanyModel extends Model<ICompany> {
-            static data() {
+        class CompanyModel extends Model<CompanyModel> {
+            structure() {
                 return {
-                    managersIds: {
-                        type: "array",
-                        element: "number",
+                    managersIds: Types.Array({
+                        element: Types.Number,
                         sort: true
-                    }
+                    })
                 };
             }
         }
 
         const companyModel = new CompanyModel({
-            managersIds: ["30", 2, -10]
+            managersIds: ["30" as any, 2, -10]
         });
 
         assert.deepEqual(companyModel.data.managersIds, [-10, 2, 30]);
@@ -586,18 +546,17 @@ describe("ArrayType", () => {
             names: string[];
         }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    names: {
-                        type: "array",
-                        element: "string",
+                    names: Types.Array({
+                        element: Types.String,
                         // sort by second letter
                         sort: (a, b) =>
                             +a[1] > +b[1] ?
                                 1 :
                                 -1
-                    }
+                    })
                 };
             }
         }
@@ -610,14 +569,15 @@ describe("ArrayType", () => {
     });
 
     it("matrix", () => {
-        interface ISomeData {
-            matrix: number[][];
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    matrix: [["number"]]
+                    matrix: Types.Array({
+                        element: Types.Array({
+                            element: Types.Number
+                        })
+                    })
                 };
             }
         }
@@ -639,28 +599,23 @@ describe("ArrayType", () => {
 
     
     it("model.toJSON with array of models", () => {
-        interface ITask {
-            name: string;
-        }
 
-        class TaskModel extends Model<ITask> {
-            static data() {
+        class TaskModel extends Model<TaskModel> {
+            structure() {
                 return {
-                    name: "string"
+                    name: Types.String
                 };
             }
         }
 
-        interface IUser {
-            name: string;
-            tasks: Array<TaskModel | ITask>;
-        }
 
-        class UserModel extends Model<IUser> {
-            static data() {
+        class UserModel extends Model<UserModel> {
+            structure() {
                 return {
-                    name: "string",
-                    tasks: [TaskModel]
+                    name: Types.String,
+                    tasks: Types.Array({
+                        element: TaskModel
+                    })
                 };
             }
         }
@@ -686,14 +641,13 @@ describe("ArrayType", () => {
     });
 
     it("model.clone with array", () => {
-        interface ISomeData {
-            ids: number[];
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    ids: ["number"]
+                    ids: Types.Array({
+                        element: Types.Number
+                    })
                 };
             }
         }
@@ -747,18 +701,15 @@ describe("ArrayType", () => {
         const testArr1 = [1];
         const testArr2 = [2];
 
-        interface ISomeData {
-            ids: number[];
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    ids: {
-                        type: ["number"],
+                    ids: Types.Array({
+                        element: Types.Number,
                         unique: true,
                         enum: [testArr1, testArr2]
-                    }
+                    })
                 };
             }
         }
@@ -776,14 +727,11 @@ describe("ArrayType", () => {
     });
 
     it("test array of any values", () => {
-        interface ISomeData {
-            arr: any[];
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    arr: []
+                    arr: Types.Array
                 };
             }
         }
@@ -807,15 +755,13 @@ describe("ArrayType", () => {
             [[1], [1, 2], false]
         ];
 
-        interface ISomeData {
-            arr: number[];
-        }
-
         pairs.forEach((pair) => {
-            class TestModel extends Model<ISomeData> {
-                static data() {
+            class TestModel extends Model<TestModel> {
+                structure() {
                     return {
-                        arr: ["number"]
+                        arr: Types.Array({
+                            element: Types.Number
+                        })
                     };
                 }
             }
@@ -865,15 +811,14 @@ describe("ArrayType", () => {
             [circular4, circular4, true]
         ];
 
-        interface ISomeData {
-            arr: any[][];
-        }
 
         pairs.forEach((pair) => {
-            class TestModel extends Model<ISomeData> {
-                static data() {
+            class TestModel extends Model<TestModel> {
+                structure() {
                     return {
-                        arr: [[]]
+                        arr: Types.Array({
+                            element: Types.Array
+                        })
                     };
                 }
             }
@@ -905,27 +850,25 @@ describe("ArrayType", () => {
     // then clone should be instance of ChildModel
     it("clone array of models, should return array of instance of Child", () => {
 
-        class FirstLevel extends Model<ISimpleObject> {}
+        class FirstLevel extends Model<FirstLevel> {}
 
         class SecondLevel extends FirstLevel {
-            static data() {
+            structure() {
                 return {
-                    level: {
-                        type: "number",
+                    level: Types.Number({
                         default: 2
-                    }
+                    })
                 };
             }
         }
 
-        interface IMain {
-            arr: FirstLevel[];
-        }
 
-        class MainModel extends Model<IMain> {
-            static data() {
+        class MainModel extends Model<MainModel> {
+            structure() {
                 return {
-                    arr: [FirstLevel]
+                    arr: Types.Array({
+                        element: FirstLevel
+                    })
                 };
             }
         }
@@ -952,18 +895,15 @@ describe("ArrayType", () => {
 
 
     it("conflicting parameters: nullAsZero and zeroAsNull", () => {
-        interface ISomeData {
-            arr: number[];
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    arr: {
-                        type: ["number"],
+                    arr: Types.Array({
+                        element: Types.Number,
                         emptyAsNull: true,
                         nullAsEmpty: true
-                    }
+                    })
                 };
             }
         }

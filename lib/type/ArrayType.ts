@@ -5,7 +5,7 @@ import {Model} from "../Model";
 import {invalidValuesAsString, eol} from "../utils";
 
 export interface IArrayTypeParams extends ITypeParams {
-    sort?: boolean;
+    sort?: boolean | ((a, b) => number);
     unique?: boolean;
     emptyAsNull?: boolean;
     nullAsEmpty?: boolean;
