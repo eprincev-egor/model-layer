@@ -14,7 +14,6 @@ class UserModel extends Model<UserModel> {
             // defined required field
             // with validate by RegExp
             email: Types.String({
-                type: "string",
                 required: true,
                 validate: /.@./
             })
