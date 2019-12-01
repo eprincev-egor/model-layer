@@ -1,19 +1,16 @@
 
-import {Model} from "../../lib/index";
+import {Model, Types} from "../../lib/index";
 import assert from "assert";
 import {invalidValuesAsString} from "../../lib/utils";
 
 describe("AnyType", () => {
 
     it("any value", () => {
-        interface ISomeData {
-            any: any;
-        }
         
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    any: "*"
+                    any: Types.Any
                 };
             }
         }
@@ -32,17 +29,14 @@ describe("AnyType", () => {
     });
 
     it("any value toJSON()", () => {
-        interface ISomeData {
-            any: any;
-        }
 
         const date = new Date();
         const isoDate = date.toISOString();
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    any: "*"
+                    any: Types.Any
                 };
             }
         }
@@ -85,9 +79,6 @@ describe("AnyType", () => {
     });
 
     it("equal any values", () => {
-        interface ISomeData {
-            [key: string]: any;
-        }
 
         const now1 = new Date();
         const now2 = new Date( +now1 );
@@ -97,10 +88,10 @@ describe("AnyType", () => {
         const obj1 = new CustomClass();
         const obj2 = new CustomClass();
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    "*": "*"
+                    "*": Types.Any
                 };
             }
         }
@@ -247,10 +238,10 @@ describe("AnyType", () => {
         ];
 
         pairs.forEach((pair, i) => {
-            class TestModel extends Model<ISomeData> {
-                static data() {
+            class TestModel extends Model<TestModel> {
+                structure() {
                     return {
-                        any: "*"
+                        any: Types.Any
                     };
                 }
             }

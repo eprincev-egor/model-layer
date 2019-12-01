@@ -1,21 +1,17 @@
 
-import {Model} from "../../lib/index";
+import {Model, Types} from "../../lib/index";
 import assert from "assert";
 
 describe("StringType", () => {
     
     it("prepare string", () => {
-        interface ISomeData {
-            name: string | number;
-        }
 
-        class SomeModel extends Model<ISomeData> {
+        class SomeModel extends Model<SomeModel> {
             static data() {
                 return {
-                    name: {
-                        type: "string",
-                        default: 10
-                    }
+                    name: Types.String({
+                        default: 10 as any
+                    })
                 };
             }
         }
@@ -121,18 +117,14 @@ describe("StringType", () => {
     });
 
     it("prepare trim", () => {
-        interface ISomeData {
-            name: string;
-        }
 
-        class SomeModel extends Model<ISomeData> {
+        class SomeModel extends Model<SomeModel> {
             static data() {
                 return {
-                    name: {
-                        type: "string",
+                    name: Types.String({
                         default: " bob ",
                         trim: true
-                    }
+                    })
                 };
             }
         }
@@ -145,18 +137,14 @@ describe("StringType", () => {
     });
 
     it("prepare emptyAsNull", () => {
-        interface ISomeData {
-            name: string;
-        }
 
-        class SomeModel extends Model<ISomeData> {
+        class SomeModel extends Model<SomeModel> {
             static data() {
                 return {
-                    name: {
-                        type: "string",
+                    name: Types.String({
                         default: "",
                         emptyAsNull: true
-                    }
+                    })
                 };
             }
         }
@@ -172,17 +160,13 @@ describe("StringType", () => {
     });
 
     it("prepare nullAsEmpty", () => {
-        interface ISomeData {
-            name: string;
-        }
 
-        class SomeModel extends Model<ISomeData> {
+        class SomeModel extends Model<SomeModel> {
             static data() {
                 return {
-                    name: {
-                        type: "string",
+                    name: Types.String({
                         nullAsEmpty: true
-                    }
+                    })
                 };
             }
         }
@@ -198,19 +182,15 @@ describe("StringType", () => {
     });
 
     it("prepare trim and emptyAsNull", () => {
-        interface ISomeData {
-            name: string;
-        }
 
-        class SomeModel extends Model<ISomeData> {
+        class SomeModel extends Model<SomeModel> {
             static data() {
                 return {
-                    name: {
-                        type: "string",
+                    name: Types.String({
                         default: " ",
                         trim: true,
                         emptyAsNull: true
-                    }
+                    })
                 };
             }
         }
@@ -226,18 +206,14 @@ describe("StringType", () => {
     });
 
     it("prepare lower", () => {
-        interface ISomeData {
-            name: string;
-        }
 
-        class SomeModel extends Model<ISomeData> {
+        class SomeModel extends Model<SomeModel> {
             static data() {
                 return {
-                    name: {
-                        type: "string",
+                    name: Types.String({
                         default: "BOB",
                         lower: true
-                    }
+                    })
                 };
             }
         }
@@ -250,18 +226,14 @@ describe("StringType", () => {
     });
 
     it("prepare upper", () => {
-        interface ISomeData {
-            name: string;
-        }
 
-        class SomeModel extends Model<ISomeData> {
+        class SomeModel extends Model<SomeModel> {
             static data() {
                 return {
-                    name: {
-                        type: "string",
+                    name: Types.String({
                         default: "bob",
                         upper: true
-                    }
+                    })
                 };
             }
         }
@@ -274,19 +246,15 @@ describe("StringType", () => {
     });
 
     it("prepare lower and trim", () => {
-        interface ISomeData {
-            name: string;
-        }
 
-        class SomeModel extends Model<ISomeData> {
+        class SomeModel extends Model<SomeModel> {
             static data() {
                 return {
-                    name: {
-                        type: "string",
+                    name: Types.String({
                         default: " Bob ",
                         lower: true,
                         trim: true
-                    }
+                    })
                 };
             }
         }
@@ -296,41 +264,6 @@ describe("StringType", () => {
 
         model.set({name: "WORD "});
         assert.strictEqual( model.data.name, "word" );
-    });
-
-    it("redefine standard prepare string", () => {
-        let callArgs: any = false;
-
-        const StringType = Model.getType("string");
-        const originalPrepare = StringType.prototype.prepare;
-
-        StringType.prototype.prepare = function(value, key, anyModel) {
-            callArgs = [value, key];
-            return originalPrepare.call(this, value, key, anyModel);
-        };
-
-        interface ISomeData {
-            name: string | number;
-        }
-
-        class SomeModel extends Model<ISomeData> {
-            static data() {
-                return {
-                    name: "string"
-                };
-            }
-        }
-
-        const model = new SomeModel({
-            name: 0
-        });
-
-        assert.strictEqual( model.data.name, "0" );
-        assert.deepEqual( callArgs, [
-            0, "name"
-        ]);
-
-        StringType.prototype.prepare = originalPrepare;
     });
 
     it("equal strings", () => {
@@ -344,15 +277,11 @@ describe("StringType", () => {
             ["nice", "Nice", false]
         ];
 
-        interface ISomeData {
-            str: string;
-        }
-
         pairs.forEach((pair) => {
-            class TestModel extends Model<ISomeData> {
+            class TestModel extends Model<TestModel> {
                 static data() {
                     return {
-                        str: "string"
+                        str: Types.String
                     };
                 }
             }
@@ -380,18 +309,14 @@ describe("StringType", () => {
     });
 
     it("conflicting parameters: nullAsEmpty and emptyAsNull", () => {
-        interface ISomeData {
-            name: string;
-        }
 
-        class SomeModel extends Model<ISomeData> {
+        class SomeModel extends Model<SomeModel> {
             static data() {
                 return {
-                    name: {
-                        type: "string",
+                    name: Types.String({
                         nullAsEmpty: true,
                         emptyAsNull: true
-                    }
+                    })
                 };
             }
         }
@@ -406,18 +331,14 @@ describe("StringType", () => {
     });
 
     it("conflicting parameters: lower and upper", () => {
-        interface ISomeData {
-            name: string;
-        }
 
-        class SomeModel extends Model<ISomeData> {
+        class SomeModel extends Model<SomeModel> {
             static data() {
                 return {
-                    name: {
-                        type: "string",
+                    name: Types.String({
                         lower: true,
                         upper: true
-                    }
+                    })
                 };
             }
         }

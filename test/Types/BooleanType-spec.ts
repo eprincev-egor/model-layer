@@ -1,21 +1,17 @@
 
-import {Model} from "../../lib/index";
+import {Model, Types} from "../../lib/index";
 import assert from "assert";
 
 describe("BooleanType", () => {
     
     it("prepare boolean", () => {
-        interface ISomeData {
-            some: boolean | 0 | 1;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    some: {
-                        type: "boolean",
-                        default: 0
-                    }
+                    some: Types.Boolean({
+                        default: 0 as any
+                    })
                 };
             }
         }
@@ -108,18 +104,14 @@ describe("BooleanType", () => {
 
 
     it("prepare falseAsNull", () => {
-        interface ISomeData {
-            some: boolean | 0 | 1;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    some: {
-                        type: "boolean",
+                    some: Types.Boolean({
                         default: false,
                         falseAsNull: true
-                    }
+                    })
                 };
             }
         }
@@ -141,17 +133,13 @@ describe("BooleanType", () => {
     });
 
     it("prepare nullAsFalse", () => {
-        interface ISomeData {
-            some: boolean | 0 | 1;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    some: {
-                        type: "boolean",
+                    some: Types.Boolean({
                         nullAsFalse: true
-                    }
+                    })
                 };
             }
         }
@@ -167,42 +155,6 @@ describe("BooleanType", () => {
     });
 
 
-    it("redefine standard prepare boolean", () => {
-        let callArgs: any = false;
-
-        const BooleanType = Model.getType("boolean");
-        const originalPrepare = BooleanType.prototype.prepare;
-
-        BooleanType.prototype.prepare = function(value, key, anyModel) {
-            callArgs = [value, key];
-            return originalPrepare.call(this, value, key, anyModel);
-        };
-
-        interface ISomeData {
-            some: boolean | 0 | 1;
-        }
-
-        class SomeModel extends Model<ISomeData> {
-            static data() {
-                return {
-                    some: "boolean"
-                };
-            }
-        }
-
-        const model = new SomeModel({
-            some: 0
-        });
-
-        assert.strictEqual( model.data.some, false );
-        assert.deepEqual( callArgs, [
-            0, "some"
-        ]);
-
-        BooleanType.prototype.prepare = originalPrepare;
-    });
-
-
     it("equal booleans", () => {
         const pairs: Array<Array<boolean | 0 | 1>> = [
             [null, false, false],
@@ -212,16 +164,12 @@ describe("BooleanType", () => {
             [true, true, true],
             [1, true, true]
         ];
-
-        interface ISomeData {
-            bool: boolean | 0 | 1;
-        }
-
+        
         pairs.forEach((pair) => {
-            class TestModel extends Model<ISomeData> {
-                static data() {
+            class TestModel extends Model<TestModel> {
+                structure() {
                     return {
-                        bool: "boolean"
+                        bool: Types.Boolean
                     };
                 }
             }
@@ -249,18 +197,14 @@ describe("BooleanType", () => {
     });
 
     it("conflicting parameters: nullAsFalse and falseAsNull", () => {
-        interface ISomeData {
-            flag: boolean;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    flag: {
-                        type: "boolean",
+                    flag: Types.Boolean({
                         nullAsFalse: true,
                         falseAsNull: true
-                    }
+                    })
                 };
             }
         }
