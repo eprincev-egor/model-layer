@@ -1,22 +1,18 @@
 
-import {Model, Collection} from "../../lib/index";
+import {Model, Collection, Types} from "../../lib/index";
 import assert from "assert";
 import {eol} from "../../lib/utils";
 import { ISimpleObject } from "../../lib/Model";
+import { types } from "util";
 
 describe("ObjectType", () => {
     
     it("object", () => {
-        interface ISomeModel {
-            map: {
-                [key: string]: any;
-            };
-        }
 
-        class SomeModel extends Model<ISomeModel> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    map: "object"
+                    map: Types.Object
                 };
             }
         }
@@ -164,17 +160,13 @@ describe("ObjectType", () => {
     
     
     it("emptyAsNull", () => {
-        interface ISomeData {
-            words: object;
-        }
-
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    words: {
-                        type: "object",
+                    words: Types.Object({
+                        element: Types.Any,
                         emptyAsNull: true
-                    }
+                    })
                 };
             }
         }
@@ -190,17 +182,14 @@ describe("ObjectType", () => {
     });
 
     it("nullAsEmpty", () => {
-        interface ISomeData {
-            words: object;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    words: {
-                        type: "object",
+                    words: Types.Object({
+                        element: Types.Any,
                         nullAsEmpty: true
-                    }
+                    })
                 };
             }
         }
@@ -216,14 +205,10 @@ describe("ObjectType", () => {
     });
 
     it("recursive clone object", () => {
-        interface ISomeData {
-            tree: any;
-        }
-
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    tree: "object"
+                    tree: Types.Object
                 };
             }
         }
@@ -278,16 +263,13 @@ describe("ObjectType", () => {
     });
     
     it("model.toJSON with object property", () => {
-        interface ISomeData {
-            names: {
-                [key: string]: boolean;
-            };
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    names: "object"
+                    names: Types.Object({
+                        element: Types.Boolean
+                    })
                 };
             }
         }
@@ -311,14 +293,11 @@ describe("ObjectType", () => {
     });
 
     it("recursive convert object to json", () => {
-        interface ISomeData {
-            tree: any;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    tree: "object"
+                    tree: Types.Object
                 };
             }
         }
@@ -363,27 +342,21 @@ describe("ObjectType", () => {
     });
 
     it("prepare object value", () => {
-        interface ISomeData {
-            object: {
-                [key: string]: number | string;
-            };
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    object: {
-                        type: "object",
-                        element: "number"
-                    }
+                    object: Types.Object({
+                        element: Types.Number
+                    })
                 };
             }
         }
 
         const model = new SomeModel({
             object: {
-                a: "10",
-                b: "20"
+                a: "10" as any,
+                b: "20" as any
             }
         });
         assert.strictEqual( model.data.object.a, 10 );
@@ -391,14 +364,11 @@ describe("ObjectType", () => {
     });
 
     it("object of any values", () => {
-        interface ISomeData {
-            object: object;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    object: {}
+                    object: Types.Object
                 };
             }
         }
@@ -421,19 +391,13 @@ describe("ObjectType", () => {
     });
 
     it("validate element", () => {
-        interface ISomeData {
-            object: {
-                [key: string]: number | string;
-            };
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    object: {
-                        type: "object",
-                        element: "number"
-                    }
+                    object: Types.Object({
+                        element: Types.Number
+                    })
                 };
             }
         }
@@ -443,7 +407,7 @@ describe("ObjectType", () => {
                 const model = new SomeModel({
                     object: {
                         a: 10,
-                        b: "nice"
+                        b: "nice" as any
                     }
                 });
             }, 
@@ -461,17 +425,13 @@ describe("ObjectType", () => {
             [{x: 1}, {x: 1, y: 2}, false]
         ];
 
-        interface ISomeData {
-            obj: {
-                [key: string]: number | string;
-            };
-        }
-
         pairs.forEach((pair) => {
-            class TestModel extends Model<ISomeData> {
-                static data() {
+            class TestModel extends Model<TestModel> {
+                structure() {
                     return {
-                        obj: {element: "number"}
+                        obj: Types.Object({
+                            element: Types.Number
+                        })
                     };
                 }
             }
@@ -518,20 +478,16 @@ describe("ObjectType", () => {
             [circular2, circular3, false]
         ];
 
-        interface ISomeData {
-            obj: any;
-        }
 
         pairs.forEach((pair) => {
-            class TestModel extends Model<ISomeData> {
-                static data() {
+            class TestModel extends Model<TestModel> {
+                structure() {
                     return {
-                        obj: {
-                            element: {
-                                type: "object",
-                                element: "object"
-                            }
-                        }
+                        obj: Types.Object({
+                            element: Types.Object({
+                                element: Types.Object
+                            })
+                        })
                     };
                 }
             }
@@ -563,28 +519,24 @@ describe("ObjectType", () => {
     // then clone should be instance of ChildModel
     it("clone object of models, should return object of instance of Child", () => {
         
-        class FirstLevel extends Model<ISimpleObject> {}
+        class FirstLevel extends Model<FirstLevel> {}
 
         class SecondLevel extends FirstLevel {
-            static data() {
+            structure() {
                 return {
-                    level: {
-                        type: "number",
+                    level: Types.Number({
                         default: 2
-                    }
+                    })
                 };
             }
         }
 
-        interface IMain {
-            obj: {
-                [key: string]: FirstLevel
-            };
-        }
-        class MainModel extends Model<IMain> {
-            static data() {
+        class MainModel extends Model<MainModel> {
+            structure() {
                 return {
-                    obj: {element: FirstLevel}
+                    obj: Types.Object({
+                        element: FirstLevel
+                    })
                 };
             }
         }
@@ -610,18 +562,15 @@ describe("ObjectType", () => {
     });
 
     it("conflicting parameters: nullAsEmpty and emptyAsNull", () => {
-        interface ISomeData {
-            obj: object;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    obj: {
-                        type: "object",
+                    obj: Types.Object({
+                        element: Types.Any,
                         nullAsEmpty: true,
                         emptyAsNull: true
-                    }
+                    })
                 };
             }
         }
