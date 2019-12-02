@@ -16,7 +16,7 @@ interface IRemoveEvent<TCollection, TModel> {
     collection: TCollection;
 }
 
-class Collection<TModel extends Model> extends EventEmitter {
+export class Collection<TModel extends Model> extends EventEmitter {
     Model: new (...args: any) => TModel;
     TModel: TModel;
     models: TModel[];

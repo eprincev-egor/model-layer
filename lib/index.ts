@@ -11,6 +11,7 @@ import {IArrayType} from "./type/ArrayType";
 import {IBooleanType} from "./type/BooleanType";
 import {IDateType} from "./type/DateType";
 import {MakeModelType} from "./type/ModelType";
+import {MakeCollectionType} from "./type/CollectionType";
 import {INumberType} from "./type/NumberType";
 import {IObjectType} from "./type/ObjectType";
 import {IStringType} from "./type/StringType";
@@ -32,6 +33,7 @@ const Types = {
     Array: returnParamsWithType("array") as IArrayType<IType>,
     Object: returnParamsWithType("object") as IObjectType<IType>,
     Model: MakeModelType,
+    Collection: MakeCollectionType,
     // Or: (TypeOr as any) as ITypeOr<IType>,
     Any: returnParamsWithType("*") as IAnyType
 };

@@ -1,30 +1,26 @@
 
-import {Model, Collection} from "../../lib/index";
+import {Model, Collection, Types} from "../../lib/index";
 import assert from "assert";
 import {eol} from "../../lib/utils";
+import { Type } from "../../lib/type/Type";
 
 describe("CollectionType", () => {
 
     it("Collection property", () => {
-        interface IProduct {
-            name: string;
-        }
-        class Product extends Model<IProduct> {}
-
-        class Products extends Collection<Product> {
-            static data() {
+        class Product extends Model<Product> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
         }
 
-        interface ICart {
-            products: Products;
+        class Products extends Collection<Product> {
+            Model = Product;
         }
 
-        class Cart extends Model<ICart> {
-            static data() {
+        class Cart extends Model<Cart> {
+            structure() {
                 return {
                     products: Products
                 };
@@ -57,25 +53,20 @@ describe("CollectionType", () => {
     });
 
     it("create Collection by array", () => {
-        interface IProduct {
-            name: string;
-        }
-        class Product extends Model<IProduct> {}
-
-        class Products extends Collection<Product> {
-            static data() {
+        class Product extends Model<Product> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
         }
 
-        interface ICart {
-            products: Products;
+        class Products extends Collection<Product> {
+            Model = Product;
         }
 
-        class Cart extends Model<ICart> {
-            static data() {
+        class Cart extends Model<Cart> {
+            structure() {
                 return {
                     products: Products
                 };
@@ -96,25 +87,22 @@ describe("CollectionType", () => {
     });
 
     it("Collection.toJSON()", () => {
-        interface IData {
-            name: string;
-        }
-        class Data extends Model<IData> {}
-
-        class SomeCollection extends Collection<Data> {
-            static data() {
+        
+        class Data extends Model<Data> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
         }
 
-        interface ISome {
-            some: SomeCollection;
+        class SomeCollection extends Collection<Data> {
+            Model = Data;
         }
 
-        class SomeModel extends Model<ISome> {
-            static data() {
+
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
                     some: SomeCollection
                 };
@@ -136,25 +124,21 @@ describe("CollectionType", () => {
 
 
     it("Collection.clone()", () => {
-        interface IData {
-            name: string;
-        }
-        class Data extends Model<IData> {}
-
-        class SomeCollection extends Collection<Data> {
-            static data() {
+        class Data extends Model<Data> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
         }
 
-        interface ISome {
-            some: SomeCollection;
+        class SomeCollection extends Collection<Data> {
+            Model = Data;
         }
 
-        class SomeModel extends Model<ISome> {
-            static data() {
+
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
                     some: SomeCollection
                 };
@@ -175,30 +159,28 @@ describe("CollectionType", () => {
 
     
     it("array of Collection", () => {
-        interface IData {
-            id: number;
-        }
-        class Data extends Model<IData> {}
-
-        class MyCollection extends Collection<Data> {
-            static data() {
+        
+        class Data extends Model<Data> {
+            structure() {
                 return {
-                    id: {
-                        type: "number",
+                    id: Types.Number({
                         primary: true
-                    }
+                    })
                 };
             }
         }
 
-        interface ISome {
-            arr: Array<MyCollection | IData[]>;
+        class MyCollection extends Collection<Data> {
+            Model = Data;
         }
 
-        class SomeModel extends Model<ISome> {
-            static data() {
+
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    arr: [MyCollection]
+                    arr: Types.Array({
+                        element: MyCollection
+                    })
                 };
             }
         }
@@ -229,17 +211,17 @@ describe("CollectionType", () => {
 
     
     it("equal Collections", () => {
-        interface IData {
-            name: string;
-        }
-        class Data extends Model<IData> {}
-
-        class CustomCollection extends Collection<Data> {
-            static data() {
+        
+        class Data extends Model<Data> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
+        }
+
+        class CustomCollection extends Collection<Data> {
+            Model = Data;
         }
 
         const collection1 = new CustomCollection([
@@ -282,8 +264,8 @@ describe("CollectionType", () => {
         }
 
         pairs.forEach((pair) => {
-            class TestModel extends Model<ITest> {
-                static data() {
+            class TestModel extends Model<TestModel> {
+                structure() {
                     return {
                         custom: CustomCollection
                     };
@@ -313,26 +295,22 @@ describe("CollectionType", () => {
     });
 
     it("equal Collections, circular recursion", () => {
-        interface IItem {
-            name: string;
-            child: CustomCollection;
-        }
-        class Item extends Model<IItem> {}
-
-        class CustomCollection extends Collection<Item> {
-            static data() {
+        
+        class Item extends Model<Item> {
+            structure() {
                 return {
-                    name: "text",
+                    name: Types.String,
                     child: CustomCollection
                 };
             }
         }
 
-        interface ITest {
-            collection: CustomCollection;
+        class CustomCollection extends Collection<Item> {
+            Model = Item;
         }
-        class TestModel extends Model<ITest> {
-            static data() {
+
+        class TestModel extends Model<TestModel> {
+            structure() {
                 return {
                     collection: CustomCollection
                 };
@@ -364,30 +342,25 @@ describe("CollectionType", () => {
    
 
     it("nullAsEmpty", () => {
-        interface IProduct {
-            name: string;
-        }
-        class Product extends Model<IProduct> {}
-
-        class Products extends Collection<Product> {
-            static data() {
+        class Product extends Model<Product> {
+            structure() {
                 return {
-                    name: "text"
+                    name: Types.String
                 };
             }
         }
 
-        interface ISome {
-            products: Products;
+        class Products extends Collection<Product> {
+            Model = Product;
         }
 
-        class SomeModel extends Model<ISome> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    products: {
-                        type: Products,
+                    products: Types.Collection({
+                        Collection: Products,
                         nullAsEmpty: true
-                    }
+                    })
                 };
             }
         }

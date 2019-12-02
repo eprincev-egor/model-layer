@@ -18,10 +18,6 @@ interface IChangeEvent<TModel extends Model> {
     changes: ReadOnlyPartial<TModel["data"]>;
 }
 
-interface IStructure {
-    [key: string]: IType | (new (...args: any) => Model);
-}
-
 export class Model<ChildModel extends Model = any> extends EventEmitter {
 
     static Type = Type;
@@ -89,7 +85,7 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
         Object.freeze(this.data);
     }
 
-    structure(): {[key: string]: IType | (new (...args: any) => Model)} {
+    structure(): {[key: string]: IType | (new (...args: any) => IType)} {
         // throw new Error(`${ this.constructor.name }.structure() is not declared`);
         return {};
     }

@@ -9,6 +9,16 @@ export interface ICollectionTypeParams extends ITypeParams {
     nullAsEmpty?: boolean;
 }
 
+export function MakeCollectionType<TCollectionConstructor>(
+    params: ICollectionTypeParams & 
+    {Collection: TCollectionConstructor}
+): TCollectionConstructor {
+    return {
+        ...params,
+        type: "collection"
+    } as any;
+}
+
 export class CollectionType extends Type {
     static prepareDescription(description) {
         

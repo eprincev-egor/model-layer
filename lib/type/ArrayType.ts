@@ -2,6 +2,7 @@
 
 import {Type, IType, ITypeParams, TInstanceOrT} from "./Type";
 import {Model} from "../Model";
+import {Collection} from "../Collection";
 import {invalidValuesAsString, eol} from "../utils";
 
 export interface IArrayTypeParams extends ITypeParams {
@@ -13,7 +14,7 @@ export interface IArrayTypeParams extends ITypeParams {
 }
 
 export interface IArrayType<T extends IType> {
-    <TElement extends IType | (new (...args: any) => Model)>(
+    <TElement extends IType | (new (...args: any) => IType)>(
         params: IArrayTypeParams & 
         {element: TElement}
     ): IArrayType< TInstanceOrT< TElement > >;
@@ -41,7 +42,7 @@ export class ArrayType extends Type {
         }
     }
 
-    sort: boolean;
+    sort: boolean | ((a, b) => number);
     unique: boolean;
     emptyAsNull: boolean;
     nullAsEmpty: boolean;

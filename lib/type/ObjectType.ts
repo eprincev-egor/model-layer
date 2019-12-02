@@ -2,6 +2,7 @@
 
 import {Type, IType, ITypeParams, TInstanceOrT} from "./Type";
 import {Model} from "../Model";
+import {Collection} from "../Collection";
 import {invalidValuesAsString, isObject, eol} from "../utils";
 
 export interface IObjectTypeParams extends ITypeParams {
@@ -21,7 +22,7 @@ interface IObject<T> {
 }
 
 export interface IObjectType<T extends IType> extends IType {
-    <TElement extends IType | (new (...args: any) => Model<any>)>(
+    <TElement extends IType | (new (...args: any) => IType)>(
         params: IObjectTypeParams & 
         {element: TElement}
     ): IObjectType< TInstanceOrT<TElement> >;
