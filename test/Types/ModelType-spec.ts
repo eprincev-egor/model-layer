@@ -1,63 +1,47 @@
 
-import {Model} from "../../lib/index";
+import {Model, Types} from "../../lib/index";
 import assert from "assert";
 import {invalidValuesAsString, eol} from "../../lib/utils";
 import { ISimpleObject } from "../../lib/Model";
+import { types } from "util";
 
 describe("ModelType", () => {
     
     it("child model", () => {
-        interface IUser {
-            name: string;
-            phone: string;
-            email: string;
-            age: number | string;
-        }
-
-        class UserModel extends Model<IUser> {
-            static data() {
+        class UserModel extends Model<UserModel> {
+            structure() {
                 return {
-                    name: {
-                        type: "string",
+                    name: Types.String({
                         trim: true,
                         emptyAsNull: true,
                         required: true
-                    },
-                    phone: {
-                        type: "string",
+                    }),
+                    phone: Types.String({
                         validate: /^\+7 \(\d\d\d\) \d\d\d-\d\d-\d\d$/
-                    },
-                    email: {
-                        type: "string",
+                    }),
+                    email: Types.String({
                         required: true,
                         validate: /^[\w.-]+@[\w.-]+\.\w+$/i
-                    },
-                    age: {
-                        type: "number",
+                    }),
+                    age: Types.Number({
                         required: true,
                         validate: (age) =>
                             age > 0
-                    }
+                    })
                 };
             }
         }
 
-        interface IRegistration {
-            user: UserModel;
-            date: Date | number;
-        }
-
-        class RegistrationModel extends Model<IRegistration> {
-            static data() {
+        class RegistrationModel extends Model<RegistrationModel> {
+            structure() {
                 return {
-                    user: {
-                        type: UserModel,
+                    user: Types.Model({
+                        Model: UserModel,
                         required: true
-                    },
-                    date: {
-                        type: "date",
+                    }),
+                    date: Types.Date({
                         required: true
-                    }
+                    })
                 };
             }
         }
@@ -153,7 +137,7 @@ describe("ModelType", () => {
             date: now,
             user: {
                 name: "Bob ",
-                age: "99",
+                age: "99" as any,
                 email: "x@x.x"
             }
         });
@@ -170,29 +154,20 @@ describe("ModelType", () => {
 
     
     it("model.toJSON with custom models", () => {
-        interface ICar {
-            id: number | string;
-            color: string;
-        }
 
-        class CarModel extends Model<ICar> {
-            static data() {
+        class CarModel extends Model<CarModel> {
+            structure() {
                 return {
-                    id: "number",
-                    color: "string"
+                    id: Types.Number,
+                    color: Types.String
                 };
             }
         }
 
-        interface IUser {
-            name: string;
-            car: CarModel;
-        }
-
-        class UserModel extends Model<IUser> {
-            static data() {
+        class UserModel extends Model<UserModel> {
+            structure() {
                 return {
-                    name: "string",
+                    name: Types.String,
                     car: CarModel
                 };
             }
@@ -201,7 +176,7 @@ describe("ModelType", () => {
         const userModel = new UserModel({
             name: "Jack",
             car: {
-                id: "1",
+                id: "1" as any,
                 color: "red"
             }
         });
@@ -220,14 +195,11 @@ describe("ModelType", () => {
     
 
     it("equal models", () => {
-        interface ISomeData {
-            prop: number;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    prop: "number"
+                    prop: Types.Number
                 };
             }
         }
@@ -259,13 +231,10 @@ describe("ModelType", () => {
             [model3, obj2, true]
         ];
 
-        interface ITest {
-            model: SomeModel;
-        }
 
         pairs.forEach((pair) => {
-            class TestModel extends Model<ITest> {
-                static data() {
+            class TestModel extends Model<TestModel> {
+                structure() {
                     return {
                         model: SomeModel
                     };
@@ -295,15 +264,11 @@ describe("ModelType", () => {
     });
 
     it("equal circular models", () => {
-        interface ISomeData {
-            name: string;
-            self: SomeModel;
-        }
 
-        class SomeModel extends Model<ISomeData> {
-            static data() {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
                 return {
-                    name: "string",
+                    name: Types.String,
                     self: SomeModel
                 };
             }
@@ -326,13 +291,10 @@ describe("ModelType", () => {
             [circular2, circular3, false]
         ];
 
-        interface ITest {
-            model: SomeModel;
-        }
 
         pairs.forEach((pair, i) => {
-            class TestModel extends Model<ITest> {
-                static data() {
+            class TestModel extends Model<TestModel> {
+                structure() {
                     return {
                         model: SomeModel
                     };
@@ -361,272 +323,24 @@ describe("ModelType", () => {
         });
     });
 
-    it("BaseModel.or(ChildModel1), default constructor is BaseModel", () => {
-        interface IBase {
-            modelName: string;
-        }
-
-        class BaseModel<T extends IBase = IBase> extends Model<T> {
-            static data() {
-                return {
-                    modelName: "string"
-                };
-            }
-        }
-
-        interface IChild extends IBase {
-            isChild: boolean;
-        }
-
-        class ChildModel extends BaseModel<IChild> {
-            static data() {
-                return {
-                    ...super.data(),
-                    isChild: {
-                        type: "boolean",
-                        default: true
-                    }
-                };
-            }
-        }
-
-        interface IMain {
-            child: BaseModel | ChildModel;
-        }
-
-        class MainModel extends Model<IMain> {
-            static data() {
-                return {
-                    child: BaseModel.or( ChildModel )
-                };
-            }
-        }
-
-        const main = new MainModel({
-            child: {
-                modelName: "base"
-            }
-        });
-
-        assert.deepEqual(
-            main.toJSON(),
-            {
-                child: {
-                    modelName: "base"
-                }
-            }
-        );
-
-        main.set({child: new ChildModel()});
-
-        assert.deepEqual(
-            main.toJSON(),
-            {
-                child: {
-                    modelName: null,
-                    isChild: true
-                }
-            }
-        );
-    });
-
-    it("BaseModel.or(ChildModel) ChildModel should be inherited from BaseModel", () => {
-        
-        class BaseModel extends Model<ISimpleObject> {}
-        class ChildModel extends Model<ISimpleObject> {}
-
-        assert.throws(
-            () => {
-                BaseModel.or( ChildModel );
-            }, 
-            (err) =>
-                err.message === "ChildModel should be inherited from BaseModel"
-        );
-        
-    });
-
-    it("BaseModel.or() expected children Models", () => {
-        class BaseModel extends Model<ISimpleObject> {}
-
-        assert.throws(
-            () => {
-                BaseModel.or();
-            }, 
-            (err) =>
-                err.message === "expected children Models"
-        );
-        
-    });
-
-
-    it("BaseModel.or(ChildModel1, ChildModel2, ...) get constructor by data", () => {
-        interface IProduct {
-            type: string;
-            price: number;
-        }
-
-        class Product<T extends IProduct = IProduct> extends Model<T> {
-            static data() {
-                return {
-                    type: "string",
-                    price: "number"
-                };
-            }
-        }
-
-        interface IDressProduct extends IProduct {
-            size: number;
-        }
-
-        class DressProduct extends Product<IDressProduct> {
-            static data() {
-                return {
-                    ...super.data(),
-
-                    size: "number"
-                };
-            }
-        }
-
-        interface IFoodProduct extends IProduct {
-            color: string;
-        }
-
-        class FoodProduct extends Product<IFoodProduct> {
-            static data() {
-                return {
-                    ...super.data(),
-
-                    color: "string"
-                };
-            }
-        }
-
-        interface ICart {
-            products: Array<
-                IProduct | Product | 
-                IDressProduct | DressProduct | 
-                IFoodProduct | FoodProduct
-            >;
-        }
-
-        class Cart extends Model<ICart> {
-            static data() {
-                return {
-                    products: {
-                        type: "array",
-                        element: {
-                            type: Product.or( DressProduct, FoodProduct ),
-                            constructor: (data) => {
-                                if ( data.type === "dress" ) {
-                                    return DressProduct;
-                                }
-
-                                if ( data.type === "car" ) {
-                                    return FoodProduct;
-                                }
-                            }
-                        }
-                    }
-                };
-            }
-        }
-
-        const cart = new Cart({
-            products: [
-                {type: "car", price: 10000, color: "red"},
-                {type: "dress", price: 100, size: 34},
-                {type: "product", price: 50}
-            ]
-        });
-
-        assert.deepEqual(
-            cart.toJSON(),
-            {
-                products: [
-                    {type: "car", price: 10000, color: "red"},
-                    {type: "dress", price: 100, size: 34},
-                    {type: "product", price: 50}
-                ]
-            }
-        );
-    });
-
-    
-    it("BaseModel.or(...), if custom getConstructor returns undefined, we using BaseModel", () => {
-        interface IBase {
-            modelName: string;
-        }
-
-        class BaseModel extends Model<IBase> {
-            static data() {
-                return {
-                    modelName: "string"
-                };
-            }
-        }
-
-        class ChildModel extends BaseModel {}
-
-        interface IMain {
-            child: BaseModel | ChildModel;
-        }
-
-        class MainModel extends Model<IMain> {
-            static data() {
-                return {
-                    child: {
-                        type: BaseModel.or( ChildModel ),
-                        constructor: () => null
-                    }
-                };
-            }
-        }
-
-        const main = new MainModel({
-            child: {
-                modelName: "base"
-            }
-        });
-
-        assert.deepEqual(
-            main.toJSON(),
-            {
-                child: {
-                    modelName: "base"
-                }
-            }
-        );
-
-    });
-
     // when in type defined BaseModel, and in data we have ChildModel (extends BaseModel), 
     // then clone should be instance of ChildModel
     it("clone model, should return instance of Child", () => {
 
-        class FirstLevel<T = ISimpleObject> extends Model<T> {}
+        class FirstLevel<T extends Model> extends Model<T> {}
 
-        interface ISecond {
-            level: number;
-        }
-
-        class SecondLevel extends FirstLevel<ISecond> {
-            static data() {
+        class SecondLevel extends FirstLevel<SecondLevel> {
+            structure() {
                 return {
-                    level: {
-                        type: "number",
+                    level: Types.Number({
                         default: 2
-                    }
+                    })
                 };
             }
         }
 
-        interface IMain {
-            some: FirstLevel;
-        }
-
-        class MainModel extends Model<IMain> {
-            static data() {
+        class MainModel extends Model<MainModel> {
+            structure() {
                 return {
                     some: FirstLevel
                 };
@@ -654,50 +368,40 @@ describe("ModelType", () => {
     });
 
     it("triple extending", () => {
-        interface IFirst {
-            first: number;
-        }
-        interface ISecond extends IFirst {
-            second: number;
-        }
-        interface IThird extends ISecond {
-            third: number;
-        }
-
-        class First<T extends IFirst = IFirst> extends Model<T> {
-            static data() {
+        class First<T extends First = any> extends Model<T> {
+            structure() {
                 return {
-                    first: "number"
+                    first: Types.Number
                 };
             }
         }
 
-        class Second<T extends ISecond = ISecond> extends First<T> {
-            static data() {
+        class Second<T extends Second = any> extends First<T> {
+            structure() {
                 return {
-                    ...super.data(),
-                    second: "number"
+                    ...super.structure(),
+                    second: Types.Number
                 };
             }
         }
 
-        class Third extends Second<IThird> {
-            static data() {
+        class Third<T extends Third = any> extends Second<T> {
+            structure() {
                 return {
-                    ...super.data(),
-                    third: "number"
+                    ...super.structure(),
+                    third: Types.Number
                 };
             }
         }
 
-        const first = new First({
+        const first = new First<First>({
             first: 1
         });
-        const second = new Second({
+        const second = new Second<Second>({
             first: 1,
             second: 2
         });
-        const third = new Third({
+        const third = new Third<Third>({
             first: 1,
             second: 2,
             third: 3
