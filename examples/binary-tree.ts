@@ -71,3 +71,6 @@ assert.strictEqual( tree.findName(5), "Harry" );
 assert.strictEqual( tree.findName(6), null );
 assert.strictEqual( tree.findName(7), "Oliver" );
 assert.strictEqual( tree.findName(8), null );
+assert.strictEqual( tree.findName(9), null );
+assert.strictEqual( tree.findName(1.1), null );
+assert.strictEqual( tree.findName(0.9), null );

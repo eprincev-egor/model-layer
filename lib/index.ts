@@ -49,7 +49,6 @@ Type.registerType("collection", CollectionType);
 Type.registerType("number", NumberType);
 Type.registerType("object", ObjectType);
 Type.registerType("string", StringType);
-Type.registerType("text", StringType);
 
 
 export {Model, Collection, Types};

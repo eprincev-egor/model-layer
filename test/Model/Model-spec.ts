@@ -958,4 +958,77 @@ describe("Model tests", () => {
                 err.message === "invalid object[number] for obj: {\"prop\":\"wrong\"},\r\n invalid number for prop: \"wrong\""
         );
     });
+
+    it("unknown type", () => {
+        class AnyModel extends Model {
+            structure() {
+                return {
+                    x: {
+                        type: "test"
+                    } as any
+                };
+            }
+        }
+
+        assert.throws(
+            () => {
+                const model = new AnyModel();
+            }, (err) =>
+                err.message === "x: unknown type: test"
+        );
+    });
+
+    it("wrong validate", () => {
+        class AnyModel extends Model {
+            structure() {
+                return {
+                    x: {
+                        type: "string",
+                        validate: NaN
+                    } as any
+                };
+            }
+        }
+
+        assert.throws(
+            () => {
+                const model = new AnyModel();
+            }, (err) =>
+                err.message === "x: validate should be function or RegExp: NaN"
+        );
+    });
+
+    it("wrong validate key", () => {
+        class AnyModel extends Model {
+            structure() {
+                return {
+                    "*": {
+                        type: "string",
+                        key: NaN
+                    } as any
+                };
+            }
+        }
+
+        assert.throws(
+            () => {
+                const model = new AnyModel();
+            }, (err) =>
+                err.message === "*: validate key should be function or RegExp: NaN"
+        );
+    });
+
+    it("Model without structure method", () => {
+
+        class Company extends Model<Company> {
+        }
+
+        assert.throws(
+            () => {
+                const model = new Company();
+            }, (err) =>
+                err.message === "Company.structure() is not declared"
+        );
+    });
+
 });

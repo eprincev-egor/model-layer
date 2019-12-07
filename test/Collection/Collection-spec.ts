@@ -174,4 +174,17 @@ describe("Collection tests", () => {
         assert.ok( collection1.first() === collection2.first() );
     });
 
+    it("Collection without Model method", () => {
+
+        class Companies extends Collection<Model> {
+        }
+
+        assert.throws(
+            () => {
+                const collection = new Companies();
+            }, (err) =>
+                err.message === "Companies.Model() is not declared"
+        );
+    });
+
 });

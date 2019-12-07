@@ -35,20 +35,6 @@ export interface IObjectType<T extends IType> extends IType {
 export class ObjectType extends Type {
 
     static prepareDescription(description, key) {
-        const isObjectDescription = (
-            description.type &&
-            typeof description.type === "object" &&
-            description.type.constructor === Object
-        );
-
-        if ( isObjectDescription ) {
-            const elementType = description.type.element;
-            
-            description.type = "object";
-            description.element = elementType;
-        }
-
-
         if ( description.type === "object" ) {
             // prepare element description
             description.element = Type.create( description.element || "any", key );

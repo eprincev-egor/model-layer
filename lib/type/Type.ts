@@ -232,7 +232,7 @@ export class Type {
 
 
         // custom validate by RegExp or function
-        if ( params.validate ) {
+        if ( "validate" in params ) {
             // validate by required, enum, "unique" (ArrayType)
             const validateByType = this.validate.bind(this);
 
@@ -271,7 +271,7 @@ export class Type {
 
 
         // validate key for models with "*"
-        if ( params.key ) {
+        if ( "key" in params ) {
             const customValidateKey = params.key;
 
             if ( customValidateKey instanceof RegExp ) {

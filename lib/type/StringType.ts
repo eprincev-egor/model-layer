@@ -27,13 +27,6 @@ export interface IStringType extends IType {
 
 export class StringType extends Type {
 
-    static prepareDescription(description) {
-        
-        if ( description.type === "text" ) {
-            description.type = "string";
-        }
-    }
-    
     nullAsEmpty: boolean;
     emptyAsNull: boolean;
     trim: boolean;

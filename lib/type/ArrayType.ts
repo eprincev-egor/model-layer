@@ -26,16 +26,6 @@ export interface IArrayType<T extends IType> {
 export class ArrayType extends Type {
 
     static prepareDescription(description, key) {
-        // structure: {prop: []}
-        // structure: {prop: ["number"]}
-        if ( Array.isArray(description.type) ) {
-            const elementType = description.type[0];
-
-            description.type = "array";
-            description.element = elementType;
-        }
-
-
         if ( description.type === "array" ) {
             // prepare element description
             description.element = Type.create( description.element || "any", key );

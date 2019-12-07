@@ -34,6 +34,10 @@ export class Collection<TModel extends Model> extends EventEmitter {
 
         if ( !this.constructor.prototype.hasOwnProperty("ModelConstructor") ) {
             this.constructor.prototype.ModelConstructor = this.Model();
+            
+            // prepare model structure without calling constructor
+            const model = Object.create(this.ModelConstructor.prototype);
+            model.prepareStructure();
         }
 
         this.models = [];
