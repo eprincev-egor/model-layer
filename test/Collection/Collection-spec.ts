@@ -15,7 +15,9 @@ describe("Collection tests", () => {
         }
 
         class Users extends Collection<User> {
-            Model = User;
+            Model() {
+                return User;
+            }
         }
         
         const users = new Users();
@@ -36,7 +38,9 @@ describe("Collection tests", () => {
         }
 
         class Users extends Collection<User> {
-            Model = User;
+            Model() {
+                return User;
+            }
         }
 
         const users = new Users([
@@ -63,7 +67,9 @@ describe("Collection tests", () => {
         }
 
         class Users extends Collection<User> {
-            Model = User;
+            Model() {
+                return User;
+            }
         }
 
 
@@ -93,7 +99,9 @@ describe("Collection tests", () => {
         }
 
         class Users extends Collection<User> {
-            Model = User;
+            Model() {
+                return User;
+            }
         }
 
         const users = new Users();
@@ -123,7 +131,9 @@ describe("Collection tests", () => {
         }
 
         class Products extends Collection<Product> {
-            Model = Product;
+            Model() {
+                return Product;
+            }
         }
 
         const products1 = new Products();
@@ -138,7 +148,7 @@ describe("Collection tests", () => {
     it("one model inside two collections", () => {
 
         class Company extends Model<Company> {
-            static structure() {
+            structure() {
                 return {
                     name: Types.String
                 };
@@ -146,7 +156,9 @@ describe("Collection tests", () => {
         }
 
         class Companies extends Collection<Company> {
-            Model = Company;
+            Model() {
+                return Company;
+            }
         }
 
         const company = new Company({

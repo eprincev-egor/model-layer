@@ -38,7 +38,7 @@ export class ArrayType extends Type {
 
         if ( description.type === "array" ) {
             // prepare element description
-            description.element = Type.create( description.element || "*", key );
+            description.element = Type.create( description.element || "any", key );
         }
     }
 

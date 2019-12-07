@@ -16,7 +16,9 @@ describe("Collection.flat", () => {
     it("flat()", () => {
 
         class Products extends Collection<Product> {
-            Model = Product;
+            Model() {
+                return Product;
+            }
         }
 
         const products = new Products([

@@ -16,7 +16,9 @@ describe("Collection.forEach", () => {
     it("forEach", () => {
 
         class Products extends Collection<Product> {
-            Model = Product;
+            Model() {
+                return Product;
+            }
         }
 
         const products = new Products([
@@ -48,7 +50,9 @@ describe("Collection.forEach", () => {
     it("forEach(f, context)", () => {
 
         class Products extends Collection<Product> {
-            Model = Product;
+            Model() {
+                return Product;
+            }
         }
 
         const products = new Products([

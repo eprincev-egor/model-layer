@@ -15,7 +15,9 @@ describe("Collection.clone", () => {
         }
 
         class Companies extends Collection<Company> {
-            Model = Company;
+            Model() {
+                return Company;
+            }
         }
 
         const companies = new Companies([

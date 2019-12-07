@@ -16,7 +16,9 @@ describe("Collection.indexOf", () => {
     it("indexOf(model)", () => {
 
         class Products extends Collection<Product> {
-            Model = Product;
+            Model() {
+                return Product;
+            }
         }
 
         const products = new Products([
@@ -29,7 +31,7 @@ describe("Collection.indexOf", () => {
         const lastModel = products.at(2);
 
         class SomeModel extends Model<SomeModel> {
-            static data() {
+            structure() {
                 return {
                     "*": Types.Any
                 };
@@ -51,11 +53,8 @@ describe("Collection.indexOf", () => {
     it("indexOf(model, fromIndex)", () => {
 
         class Products extends Collection<Product> {
-            static data() {
-                return {
-                    name: "text",
-                    price: "number"
-                };
+            Model() {
+                return Product;
             }
         }
 

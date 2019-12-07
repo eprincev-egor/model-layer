@@ -17,7 +17,6 @@ interface IRemoveEvent<TCollection, TModel> {
 }
 
 export class Collection<TModel extends Model> extends EventEmitter {
-    Model: new (...args: any) => TModel;
     TModel: TModel;
     models: TModel[];
     length: number;
@@ -26,36 +25,22 @@ export class Collection<TModel extends Model> extends EventEmitter {
     TOutput: this;
     TJson: Array< TModel["TJson"] >;
 
+    // this.Model();
+    private ModelConstructor: new (...args: any) => TModel;
+
 
     constructor(rows?: Array< TModel["TInput"] >) {
         super();
 
-        if ( !this.constructor.prototype.hasOwnProperty( "Model" ) ) {
-            const constructor = this.constructor as any;
-            const structure = constructor.data;
-            let CustomModel;
-
-            const result = structure();
-            if ( result && result.prototype instanceof Model ) {
-                CustomModel = result;
-            }
-            else {
-                // tslint:disable-next-line:max-classes-per-file
-                CustomModel = class extends Model<any> {
-                    static data() {
-                        return result;
-                    }
-                };
-            }
-
-            this.constructor.prototype.Model = CustomModel;
+        if ( !this.constructor.prototype.hasOwnProperty("ModelConstructor") ) {
+            this.constructor.prototype.ModelConstructor = this.Model();
         }
 
         this.models = [];
 
         if ( rows instanceof Array ) {
             rows.forEach((row) => {
-                const model = this.prepareRow( row as any );
+                const model = this.prepareRow( row );
                 this.models.push( model );
             });
 
@@ -63,6 +48,10 @@ export class Collection<TModel extends Model> extends EventEmitter {
         } else {
             this.length = 0;
         }
+    }
+    
+    Model(): new (...args: any) => TModel {
+        throw new Error(`${ this.constructor.name }.Model() is not declared`);
     }
 
     at(index: number, rowOrModel?: TModel["TInput"]): TModel {
@@ -97,20 +86,19 @@ export class Collection<TModel extends Model> extends EventEmitter {
     }
 
     prepareRow(row: TModel["TInput"]): TModel {
-        const CustomModel = this.Model as (new (...args: any) => TModel);
         let model: TModel;
         
-        if ( row instanceof CustomModel ) {
+        if ( row instanceof this.ModelConstructor ) {
             model = row;
             return model;
         }
 
         if ( row instanceof Model ) {
-            row = row.data;
+            throw new Error( `invalid model constructor: ${ row.constructor.name }` );
         }
         
         if ( isPlainObject(row) ) {
-            model = new CustomModel( row );
+            model = new this.ModelConstructor( row );
         }
         else {
             throw new Error( `invalid model: ${ invalidValuesAsString( row ) }` );

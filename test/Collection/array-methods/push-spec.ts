@@ -14,7 +14,9 @@ describe("Collection.push", () => {
         }
         
         class Users extends Collection<User> {
-            Model = User;
+            Model() {
+                return User;
+            }
         }
 
         const users = new Users([
@@ -44,7 +46,9 @@ describe("Collection.push", () => {
         }
 
         class Users extends Collection<User> {
-            Model = User;
+            Model() {
+                return User;
+            }
         }
 
         const users = new Users();
@@ -81,7 +85,9 @@ describe("Collection.push", () => {
         }
 
         class Users extends Collection<User> {
-            Model = User;
+            Model() {
+                return User;
+            }
         }
 
         const user = new User({
@@ -107,25 +113,35 @@ describe("Collection.push", () => {
                 };
             }
         }
-
-        class Users extends Collection<User> {
-            Model = User;
+        
+        class AnotherModel extends Model<AnotherModel> {
+            structure() {
+                return {
+                    name: Types.String
+                };
+            }
         }
 
-        const user = new User({
-            name: "Bob"
-        });
+
+        class Users extends Collection<User> {
+            Model() {
+                return User;
+            }
+        }
+
+        const someModel = new AnotherModel();
         const users = new Users();
         
         assert.strictEqual( users.length, 0 );
 
-        users.push( user );
+        assert.throws(
+            () => {
+                users.push(someModel);
+            }, (err) =>
+                err.message === "invalid model constructor: AnotherModel"
+        );
 
-        assert.strictEqual( users.length, 1 );
-
-        const pushedUser = users.at(0);
-        assert.ok( pushedUser instanceof Model );
-        assert.ok( pushedUser !== user );
+        assert.strictEqual( users.length, 0 );
     });
 
     it("push()", () => {
@@ -138,7 +154,9 @@ describe("Collection.push", () => {
         }
 
         class Users extends Collection<User> {
-            Model = User;
+            Model() {
+                return User;
+            }
         }
 
         const users = new Users();
@@ -160,7 +178,9 @@ describe("Collection.push", () => {
         }
 
         class Users extends Collection<User> {
-            Model = User;
+            Model() {
+                return User;
+            }
         }
 
         const users = new Users();

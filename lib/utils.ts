@@ -61,11 +61,6 @@ export function invalidValuesAsString(value: any): string {
     return valueAsString;
 }
 
-export function MODELS(Models) {
-    this.Models = Models;
-}
-
-
 
 export const eol = {
     eol: null,

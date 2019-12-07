@@ -16,7 +16,9 @@ describe("Collection.find", () => {
         
 
         class Colors extends Collection<Color> {
-            Model = Color;
+            Model() {
+                return Color;
+            }
         }
 
         const colors = new Colors([
@@ -43,7 +45,9 @@ describe("Collection.find", () => {
         }
         
         class Products extends Collection<Product> {
-            Model = Product;
+            Model() {
+                return Product;
+            }
         }
 
         const products = new Products([

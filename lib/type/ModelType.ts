@@ -1,8 +1,8 @@
 
 
-import {Type, ITypeParams, IType} from "./Type";
+import {Type, ITypeParams} from "./Type";
 import {Model} from "../Model";
-import {invalidValuesAsString, isNaN, MODELS, eol} from "../utils";
+import {invalidValuesAsString, isNaN, eol} from "../utils";
 
 export function MakeModelType<TModelConstructor>(
     params: ITypeParams & 
@@ -13,6 +13,7 @@ export function MakeModelType<TModelConstructor>(
         type: "model"
     } as any;
 }
+MakeModelType.isTypeHelper = true;
 
 export class ModelType extends Type {
 
@@ -26,40 +27,16 @@ export class ModelType extends Type {
         if ( isCustomModel ) {
             const CustomModel = description.type;
             description.type = "model";
-            description.Models = [CustomModel];
-        }
-
-
-        const isManyModels = (
-            description.type instanceof MODELS
-        );
-        if ( isManyModels ) {
-            const Models = description.type.Models;
-            description.type = "model";
-            description.Models = Models;
+            description.Model = CustomModel;
         }
     }
 
     Model: new (...args: any) => Model;
-    getConstructorByData: (model: Model) => (new() => Model);
 
     constructor(params: ITypeParams & {Model: new (...args: any) => Model}) {
         super(params);
 
         this.Model = params.Model;
-
-        if ( 
-            params.hasOwnProperty("constructor") &&
-            typeof params.constructor === "function" 
-        ) {
-            this.getConstructorByData = (
-                params.constructor as (model: Model<any>) => (new() => Model<any>)
-            );
-        }
-        else {
-            const BaseModel = params.Model[0];
-            this.getConstructorByData = () => BaseModel;
-        }
     }
 
     prepare(value, key, model) {
@@ -67,11 +44,11 @@ export class ModelType extends Type {
             return null;
         }
     
-        const BaseModel = this.Model;
-        const className = BaseModel.name;
+        const CustomModel = this.Model;
+        const className = CustomModel.name;
 
 
-        if ( value instanceof BaseModel ) {
+        if ( value instanceof CustomModel ) {
             value.parent = model;
             return value;
         }
@@ -91,8 +68,6 @@ export class ModelType extends Type {
             throw new Error(`invalid ${ className } for ${key}: ${valueAsString}`);
         }
 
-        
-        const CustomModel = this.getConstructorByData( value ) || BaseModel;
         
         try {
             value = new CustomModel( value );

@@ -16,7 +16,9 @@ describe("Collection.slice", () => {
     it("slice()", () => {
 
         class Products extends Collection<Product> {
-            Model = Product;
+            Model() {
+                return Product;
+            }
         }
 
         const products = new Products([
@@ -36,7 +38,9 @@ describe("Collection.slice", () => {
     it("slice(begin)", () => {
 
         class Products extends Collection<Product> {
-            Model = Product;
+            Model() {
+                return Product;
+            }
         }
 
         const products = new Products([
@@ -61,7 +65,9 @@ describe("Collection.slice", () => {
     it("slice(begin, end)", () => {
 
         class Products extends Collection<Product> {
-            Model = Product;
+            Model() {
+                return Product;
+            }
         }
 
         const products = new Products([

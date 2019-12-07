@@ -15,7 +15,9 @@ describe("Collection.concat", () => {
 
     it("concat(collection)", () => {
         class Products extends Collection<Product> {
-            Model = Product;
+            Model() {
+                return Product;
+            }
         }
 
         const arr1 = new Products([
@@ -38,11 +40,8 @@ describe("Collection.concat", () => {
     it("concat(rows)", () => {
         
         class Products extends Collection<Product> {
-            static data() {
-                return {
-                    name: "text",
-                    price: "number"
-                };
+            Model() {
+                return Product;
             }
         }
 
@@ -66,7 +65,9 @@ describe("Collection.concat", () => {
     it("concat(rows1, rows2)", () => {
         
         class Products extends Collection<Product> {
-            Model = Product;
+            Model() {
+                return Product;
+            }
         }
 
         const arr1 = new Products([
@@ -92,7 +93,9 @@ describe("Collection.concat", () => {
     it("concat(rows, collection)", () => {
         
         class Products extends Collection<Product> {
-            Model = Product;
+            Model() {
+                return Product;
+            }
         }
 
         const arr1 = new Products([
@@ -119,7 +122,9 @@ describe("Collection.concat", () => {
     it("concat()", () => {
         
         class Products extends Collection<Product> {
-            Model = Product;
+            Model() {
+                return Product;
+            }
         }
 
         const arr1 = new Products([

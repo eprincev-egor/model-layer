@@ -86,8 +86,7 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
     }
 
     structure(): {[key: string]: IType | (new (...args: any) => IType)} {
-        // throw new Error(`${ this.constructor.name }.structure() is not declared`);
-        return {};
+        throw new Error(`${ this.constructor.name }.structure() is not declared`);
     }
 
     get<TKey extends keyof this["data"]>(key: TKey): this["data"][TKey] {
@@ -509,14 +508,14 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
     }
 
     private prepareStructure(): void {
-        if ( this.constructor.prototype.hasOwnProperty( "structure" ) ) {
+        if ( this.constructor.prototype.hasOwnProperty( "properties" ) ) {
             return;
         }
         const constructor = this.constructor as any;
-        const structure = constructor.data();
+        const properties = constructor.prototype.structure();
     
         // for speedup constructor, saving structure to prototype
-        this.constructor.prototype.structure = structure;
+        this.constructor.prototype.properties = properties;
     
         for (const key in this.properties) {
             const description = this.properties[ key ];
@@ -529,7 +528,7 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
         }
         
         // structure must be static... really static
-        Object.freeze( structure );
+        Object.freeze( properties );
     }
     
 }

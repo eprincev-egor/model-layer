@@ -14,7 +14,9 @@ describe("Collection.unshift", () => {
         }
         
         class Users extends Collection<User> {
-            Model = User;
+            Model() {
+                return User;
+            }
         }
 
         const users = new Users([
@@ -44,7 +46,9 @@ describe("Collection.unshift", () => {
         }
         
         class Users extends Collection<User> {
-            Model = User;
+            Model() {
+                return User;
+            }
         }
 
         const users = new Users();
@@ -81,7 +85,9 @@ describe("Collection.unshift", () => {
         }
         
         class Users extends Collection<User> {
-            Model = User;
+            Model() {
+                return User;
+            }
         }
 
         const user = new User({
@@ -99,8 +105,16 @@ describe("Collection.unshift", () => {
         assert.ok( firstUser === user );
     });
 
-    it("unshift SomeModel", () => {
+    it("unshift AnotherModel", () => {
         class User extends Model<User> {
+            structure() {
+                return {
+                    name: Types.String
+                };
+            }
+        }
+
+        class AnotherModel extends Model<AnotherModel> {
             structure() {
                 return {
                     name: Types.String
@@ -109,23 +123,24 @@ describe("Collection.unshift", () => {
         }
         
         class Users extends Collection<User> {
-            Model = User;
+            Model() {
+                return User;
+            }
         }
 
-        const user = new User({
-            name: "Bob"
-        });
+        const someModel = new AnotherModel();
         const users = new Users();
         
         assert.strictEqual( users.length, 0 );
 
-        users.unshift( user );
+        assert.throws(
+            () => {
+                users.unshift(someModel);
+            }, (err) =>
+                err.message === "invalid model constructor: AnotherModel"
+        );
 
-        assert.strictEqual( users.length, 1 );
-
-        const firstUser = users.at(0);
-        assert.ok( firstUser instanceof Model );
-        assert.ok( firstUser !== user );
+        assert.strictEqual( users.length, 0 );
     });
 
     it("unshift()", () => {
@@ -139,7 +154,9 @@ describe("Collection.unshift", () => {
         }
         
         class Users extends Collection<User> {
-            Model = User;
+            Model() {
+                return User;
+            }
         }
 
         const users = new Users();
@@ -162,7 +179,9 @@ describe("Collection.unshift", () => {
         }
         
         class Users extends Collection<User> {
-            Model = User;
+            Model() {
+                return User;
+            }
         }
 
         const users = new Users();

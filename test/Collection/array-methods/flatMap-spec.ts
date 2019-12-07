@@ -15,7 +15,9 @@ describe("Collection.flatMap", () => {
         }
 
         class Books extends Collection<Book> {
-            Model = Book;
+            Model() {
+                return Book;
+            }
         }
 
         const books = new Books([
@@ -57,7 +59,9 @@ describe("Collection.flatMap", () => {
         }
 
         class Products extends Collection<Product> {
-            Model = Product;
+            Model() {
+                return Product;
+            }
         }
 
         const products = new Products([

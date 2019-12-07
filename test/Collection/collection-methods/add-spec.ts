@@ -15,7 +15,9 @@ describe("Collection.add", () => {
         }
 
         class Users extends Collection<User> {
-            Model = User;
+            Model() {
+                return User;
+            }
         }
 
         const users = new Users([
@@ -46,7 +48,9 @@ describe("Collection.add", () => {
         }
 
         class Users extends Collection<User> {
-            Model = User;
+            Model() {
+                return User;
+            }
         }
 
         const users = new Users();
@@ -83,7 +87,9 @@ describe("Collection.add", () => {
         }
 
         class Users extends Collection<User> {
-            Model = User;
+            Model() {
+                return User;
+            }
         }
 
         const user = new User({
@@ -101,7 +107,7 @@ describe("Collection.add", () => {
         assert.ok( addedUser === user );
     });
 
-    it("add SomeModel", () => {
+    it("add AnotherModel", () => {
         class User extends Model<User> {
             structure() {
                 return {
@@ -110,24 +116,33 @@ describe("Collection.add", () => {
             }
         }
 
-        class Users extends Collection<User> {
-            Model = User;
+        class AnotherModel extends Model<AnotherModel> {
+            structure() {
+                return {
+                    name: Types.String
+                };
+            }
         }
 
-        const user = new User({
-            name: "Bob"
-        });
+        class Users extends Collection<User> {
+            Model() {
+                return User;
+            }
+        }
+
+        const someModel = new AnotherModel();
         const users = new Users();
         
         assert.strictEqual( users.length, 0 );
 
-        users.add( user );
+        assert.throws(
+            () => {
+                users.add(someModel);
+            }, (err) =>
+                err.message === "invalid model constructor: AnotherModel"
+        );
 
-        assert.strictEqual( users.length, 1 );
-
-        const addedUser = users.at(0);
-        assert.ok( addedUser instanceof Model );
-        assert.ok( addedUser !== user );
+        assert.strictEqual( users.length, 0 );
     });
 
     it("add()", () => {
@@ -141,7 +156,9 @@ describe("Collection.add", () => {
         }
 
         class Users extends Collection<User> {
-            Model = User;
+            Model() {
+                return User;
+            }
         }
 
         const users = new Users();
@@ -164,7 +181,9 @@ describe("Collection.add", () => {
         }
 
         class Users extends Collection<User> {
-            Model = User;
+            Model() {
+                return User;
+            }
         }
 
         const users = new Users();
@@ -187,7 +206,9 @@ describe("Collection.add", () => {
         }
 
         class Users extends Collection<User> {
-            Model = User;
+            Model() {
+                return User;
+            }
         }
 
         const users = new Users();
@@ -226,7 +247,9 @@ describe("Collection.add", () => {
         }
 
         class Users extends Collection<User> {
-            Model = User;
+            Model() {
+                return User;
+            }
         }
 
         const users = new Users();
@@ -265,7 +288,9 @@ describe("Collection.add", () => {
         }
 
         class Users extends Collection<User> {
-            Model = User;
+            Model() {
+                return User;
+            }
         }
 
         const users = new Users();

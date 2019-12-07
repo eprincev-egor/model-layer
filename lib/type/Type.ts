@@ -99,6 +99,10 @@ export interface ITypeParams {
 export class Type {
     static Model: any;
 
+    static registerType(name: string, SomeType: (new (...args: any) => Type)) {
+        Types[name] = SomeType;
+    }
+
     // create type by params
     static create(description, key: string) {
         

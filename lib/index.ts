@@ -4,26 +4,27 @@
 import {Model} from "./Model";
 import Collection from "./Collection";
 
-import {IType} from "./type/Type";
+import {IType, Type} from "./type/Type";
 
-import {IAnyType} from "./type/AnyType";
-import {IArrayType} from "./type/ArrayType";
-import {IBooleanType} from "./type/BooleanType";
-import {IDateType} from "./type/DateType";
-import {MakeModelType} from "./type/ModelType";
-import {MakeCollectionType} from "./type/CollectionType";
-import {INumberType} from "./type/NumberType";
-import {IObjectType} from "./type/ObjectType";
-import {IStringType} from "./type/StringType";
-// import {AnyType} from "./type/CollectionType";
+import {IAnyType, AnyType} from "./type/AnyType";
+import {IArrayType, ArrayType} from "./type/ArrayType";
+import {IBooleanType, BooleanType} from "./type/BooleanType";
+import {IDateType, DateType} from "./type/DateType";
+import {MakeModelType, ModelType} from "./type/ModelType";
+import {MakeCollectionType, CollectionType} from "./type/CollectionType";
+import {INumberType, NumberType} from "./type/NumberType";
+import {IObjectType, ObjectType} from "./type/ObjectType";
+import {IStringType, StringType} from "./type/StringType";
 
 const returnParamsWithType: any = (type) => {
-    return (params) => ({
+    const func = (params) => ({
         ...params,
         type
     });
+    func.isTypeHelper = true;
+    
+    return func;
 };
-returnParamsWithType.isTypeHelper = true;
 
 const Types = {
     Number: returnParamsWithType("number") as INumberType,
@@ -35,7 +36,20 @@ const Types = {
     Model: MakeModelType,
     Collection: MakeCollectionType,
     // Or: (TypeOr as any) as ITypeOr<IType>,
-    Any: returnParamsWithType("*") as IAnyType
+    Any: returnParamsWithType("any") as IAnyType
 };
+
+Type.registerType("*", AnyType);
+Type.registerType("any", AnyType);
+Type.registerType("array", ArrayType);
+Type.registerType("boolean", BooleanType);
+Type.registerType("date", DateType);
+Type.registerType("model", ModelType);
+Type.registerType("collection", CollectionType);
+Type.registerType("number", NumberType);
+Type.registerType("object", ObjectType);
+Type.registerType("string", StringType);
+Type.registerType("text", StringType);
+
 
 export {Model, Collection, Types};

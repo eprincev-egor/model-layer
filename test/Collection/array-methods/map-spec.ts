@@ -16,7 +16,9 @@ describe("Collection.map", () => {
     it("map()", () => {
 
         class Products extends Collection<Product> {
-            Model = Product;
+            Model() {
+                return Product;
+            }
         }
 
         const products = new Products([
@@ -34,7 +36,9 @@ describe("Collection.map", () => {
     
     it("map(f, context)", () => {
         class Products extends Collection<Product> {
-            Model = Product;
+            Model() {
+                return Product;
+            }
         }
 
         const products = new Products([

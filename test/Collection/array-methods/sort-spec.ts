@@ -16,7 +16,9 @@ describe("Collection.sort", () => {
     it("sort(compareFunction)", () => {
         
         class Products extends Collection<Product> {
-            Model = Product;
+            Model() {
+                return Product;
+            }
         }
 
         const products = new Products([
@@ -41,7 +43,9 @@ describe("Collection.sort", () => {
     it("sort(key)", () => {
         
         class Products extends Collection<Product> {
-            Model = Product;
+            Model() {
+                return Product;
+            }
         }
 
         const products = new Products([
@@ -70,7 +74,9 @@ describe("Collection.sort", () => {
     it("sort(key1, key2)", () => {
         
         class Products extends Collection<Product> {
-            Model = Product;
+            Model() {
+                return Product;
+            }
         }
 
         const products = new Products([
@@ -110,7 +116,9 @@ describe("Collection.sort", () => {
     it("sort(somethingWrong)", () => {
         
         class Products extends Collection<Product> {
-            Model = Product;
+            Model() {
+                return Product;
+            }
         }
 
         const products = new Products([

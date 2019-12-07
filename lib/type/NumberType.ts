@@ -164,5 +164,3 @@ export class NumberType extends Type {
         return value;
     }
 }
-
-module.exports = NumberType;

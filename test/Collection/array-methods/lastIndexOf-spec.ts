@@ -16,7 +16,9 @@ describe("Collection.lastIndexOf", () => {
     it("lastIndexOf(model)", () => {
 
         class Products extends Collection<Product> {
-            Model = Product;
+            Model() {
+                return Product;
+            }
         }
 
         const products = new Products([
@@ -29,7 +31,7 @@ describe("Collection.lastIndexOf", () => {
         const lastModel = products.at(2);
 
         class SomeModel extends Model<SomeModel> {
-            static data() {
+            structure() {
                 return {
                     "*": Types.Any
                 };
@@ -51,7 +53,9 @@ describe("Collection.lastIndexOf", () => {
     it("lastIndexOf(model, fromIndex)", () => {
 
         class Products extends Collection<Product> {
-            Model = Product;
+            Model() {
+                return Product;
+            }
         }
 
         const products = new Products([

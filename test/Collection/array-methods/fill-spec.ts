@@ -16,7 +16,9 @@ describe("Collection.fill", () => {
     it("fill(row, start, end)", () => {
         
         class Products extends Collection<Product> {
-            Model = Product;
+            Model() {
+                return Product;
+            }
         }
 
         const products = new Products([
@@ -53,7 +55,9 @@ describe("Collection.fill", () => {
     it("fill(row, start)", () => {
         
         class Products extends Collection<Product> {
-            Model = Product;
+            Model() {
+                return Product;
+            }
         }
 
         const products = new Products([
@@ -87,7 +91,9 @@ describe("Collection.fill", () => {
     it("fill(row, -start)", () => {
         
         class Products extends Collection<Product> {
-            Model = Product;
+            Model() {
+                return Product;
+            }
         }
 
         const products = new Products([
@@ -113,7 +119,9 @@ describe("Collection.fill", () => {
     it("fill(row, -start, -end)", () => {
         
         class Products extends Collection<Product> {
-            Model = Product;
+            Model() {
+                return Product;
+            }
         }
 
         const products = new Products([

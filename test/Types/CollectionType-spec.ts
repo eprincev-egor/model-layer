@@ -16,7 +16,9 @@ describe("CollectionType", () => {
         }
 
         class Products extends Collection<Product> {
-            Model = Product;
+            Model() {
+                return Product;
+            }
         }
 
         class Cart extends Model<Cart> {
@@ -62,7 +64,9 @@ describe("CollectionType", () => {
         }
 
         class Products extends Collection<Product> {
-            Model = Product;
+            Model() {
+                return Product;
+            }
         }
 
         class Cart extends Model<Cart> {
@@ -97,7 +101,9 @@ describe("CollectionType", () => {
         }
 
         class SomeCollection extends Collection<Data> {
-            Model = Data;
+            Model() {
+                return Data;
+            }
         }
 
 
@@ -133,7 +139,9 @@ describe("CollectionType", () => {
         }
 
         class SomeCollection extends Collection<Data> {
-            Model = Data;
+            Model() {
+                return Data;
+            }
         }
 
 
@@ -171,7 +179,9 @@ describe("CollectionType", () => {
         }
 
         class MyCollection extends Collection<Data> {
-            Model = Data;
+            Model() {
+                return Data;
+            }
         }
 
 
@@ -221,7 +231,9 @@ describe("CollectionType", () => {
         }
 
         class CustomCollection extends Collection<Data> {
-            Model = Data;
+            Model() {
+                return Data;
+            }
         }
 
         const collection1 = new CustomCollection([
@@ -306,7 +318,9 @@ describe("CollectionType", () => {
         }
 
         class CustomCollection extends Collection<Item> {
-            Model = Item;
+            Model() {
+                return Item;
+            }
         }
 
         class TestModel extends Model<TestModel> {
@@ -351,7 +365,9 @@ describe("CollectionType", () => {
         }
 
         class Products extends Collection<Product> {
-            Model = Product;
+            Model() {
+                return Product;
+            }
         }
 
         class SomeModel extends Model<SomeModel> {

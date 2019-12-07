@@ -7,7 +7,7 @@ describe("StringType", () => {
     it("prepare string", () => {
 
         class SomeModel extends Model<SomeModel> {
-            static data() {
+            structure() {
                 return {
                     name: Types.String({
                         default: 10 as any
@@ -21,11 +21,11 @@ describe("StringType", () => {
         assert.strictEqual( model.data.name, "10" );
 
         model = new SomeModel({
-            name: -20
+            name: -20 as any
         });
         assert.strictEqual( model.data.name, "-20" );
         
-        model.set({name: 1.1});
+        model.set({name: 1.1 as any});
         assert.strictEqual( model.data.name, "1.1" );
 
         model.set({name: null});
@@ -73,7 +73,7 @@ describe("StringType", () => {
 
         assert.throws(
             () => {
-                model.set({name: -1 / 0});
+                model.set({name: -1 / 0 as any});
             },
             (err) =>
                 err.message === "invalid string for name: -Infinity"
@@ -81,7 +81,7 @@ describe("StringType", () => {
 
         assert.throws(
             () => {
-                model.set({name: 1 / 0});
+                model.set({name: 1 / 0 as any});
             },
             (err) =>
                 err.message === "invalid string for name: Infinity"
@@ -89,7 +89,7 @@ describe("StringType", () => {
 
         assert.throws(
             () => {
-                model.set({name: NaN});
+                model.set({name: NaN as any});
             },
             (err) =>
                 err.message === "invalid string for name: NaN"
@@ -119,7 +119,7 @@ describe("StringType", () => {
     it("prepare trim", () => {
 
         class SomeModel extends Model<SomeModel> {
-            static data() {
+            structure() {
                 return {
                     name: Types.String({
                         default: " bob ",
@@ -139,7 +139,7 @@ describe("StringType", () => {
     it("prepare emptyAsNull", () => {
 
         class SomeModel extends Model<SomeModel> {
-            static data() {
+            structure() {
                 return {
                     name: Types.String({
                         default: "",
@@ -162,7 +162,7 @@ describe("StringType", () => {
     it("prepare nullAsEmpty", () => {
 
         class SomeModel extends Model<SomeModel> {
-            static data() {
+            structure() {
                 return {
                     name: Types.String({
                         nullAsEmpty: true
@@ -184,7 +184,7 @@ describe("StringType", () => {
     it("prepare trim and emptyAsNull", () => {
 
         class SomeModel extends Model<SomeModel> {
-            static data() {
+            structure() {
                 return {
                     name: Types.String({
                         default: " ",
@@ -208,7 +208,7 @@ describe("StringType", () => {
     it("prepare lower", () => {
 
         class SomeModel extends Model<SomeModel> {
-            static data() {
+            structure() {
                 return {
                     name: Types.String({
                         default: "BOB",
@@ -228,7 +228,7 @@ describe("StringType", () => {
     it("prepare upper", () => {
 
         class SomeModel extends Model<SomeModel> {
-            static data() {
+            structure() {
                 return {
                     name: Types.String({
                         default: "bob",
@@ -248,7 +248,7 @@ describe("StringType", () => {
     it("prepare lower and trim", () => {
 
         class SomeModel extends Model<SomeModel> {
-            static data() {
+            structure() {
                 return {
                     name: Types.String({
                         default: " Bob ",
@@ -279,7 +279,7 @@ describe("StringType", () => {
 
         pairs.forEach((pair) => {
             class TestModel extends Model<TestModel> {
-                static data() {
+                structure() {
                     return {
                         str: Types.String
                     };
@@ -311,7 +311,7 @@ describe("StringType", () => {
     it("conflicting parameters: nullAsEmpty and emptyAsNull", () => {
 
         class SomeModel extends Model<SomeModel> {
-            static data() {
+            structure() {
                 return {
                     name: Types.String({
                         nullAsEmpty: true,
@@ -333,7 +333,7 @@ describe("StringType", () => {
     it("conflicting parameters: lower and upper", () => {
 
         class SomeModel extends Model<SomeModel> {
-            static data() {
+            structure() {
                 return {
                     name: Types.String({
                         lower: true,

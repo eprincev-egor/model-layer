@@ -16,7 +16,9 @@ describe("Collection.reverse", () => {
     it("reverse()", () => {
         
         class Products extends Collection<Product> {
-            Model = Product;
+            Model() {
+                return Product;
+            }
         }
 
         const products = new Products([

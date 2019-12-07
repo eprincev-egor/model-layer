@@ -16,7 +16,9 @@ describe("Collection.some", () => {
     it("some()", () => {
 
         class Products extends Collection<Product> {
-            Model = Product;
+            Model() {
+                return Product;
+            }
         }
 
         const products = new Products([
@@ -39,7 +41,9 @@ describe("Collection.some", () => {
     
     it("some(f, context)", () => {
         class Products extends Collection<Product> {
-            Model = Product;
+            Model() {
+                return Product;
+            }
         }
 
         const products = new Products([

@@ -16,7 +16,9 @@ describe("Collection.includes", () => {
     it("includes(model)", () => {
 
         class Products extends Collection<Product> {
-            Model = Product;
+            Model() {
+                return Product;
+            }
         }
 
         const products = new Products([
@@ -51,7 +53,9 @@ describe("Collection.includes", () => {
     it("includes(model, fromIndex)", () => {
 
         class Products extends Collection<Product> {
-            Model = Product;
+            Model() {
+                return Product;
+            }
         }
 
         const products = new Products([

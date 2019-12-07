@@ -51,7 +51,7 @@ export class ObjectType extends Type {
 
         if ( description.type === "object" ) {
             // prepare element description
-            description.element = Type.create( description.element || "*", key );
+            description.element = Type.create( description.element || "any", key );
         }
     }
 
@@ -187,5 +187,3 @@ export class ObjectType extends Type {
         return true;
     }
 }
-
-module.exports = ObjectType;

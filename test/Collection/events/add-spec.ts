@@ -15,7 +15,9 @@ describe("Collection event add", () => {
         }
 
         class Users extends Collection<User> {
-            Model = User;
+            Model() {
+                return User;
+            }
         }
 
         const users = new Users();
@@ -47,13 +49,17 @@ describe("Collection event add", () => {
 
     it("create(row)", () => {
         
-        class User extends Model<User> {}
+        class User extends Model<User> {
+            structure() {
+                return {
+                    name: Types.String
+                };
+            }
+        }
 
         class Users extends Collection<User> {
-            static data() {
-                return {
-                    name: "text"
-                };
+            Model() {
+                return User;
             }
         }
 
@@ -94,7 +100,9 @@ describe("Collection event add", () => {
         }
 
         class Users extends Collection<User> {
-            Model = User;
+            Model() {
+                return User;
+            }
         }
 
         const users = new Users();
@@ -134,7 +142,9 @@ describe("Collection event add", () => {
         }
 
         class Users extends Collection<User> {
-            Model = User;
+            Model() {
+                return User;
+            }
         }
 
         const users = new Users();
@@ -174,7 +184,9 @@ describe("Collection event add", () => {
         }
 
         class Users extends Collection<User> {
-            Model = User;
+            Model() {
+                return User;
+            }
         }
 
         const users = new Users();
@@ -214,7 +226,9 @@ describe("Collection event add", () => {
         }
 
         class Users extends Collection<User> {
-            Model = User;
+            Model() {
+                return User;
+            }
         }
 
         const users = new Users();
@@ -254,7 +268,9 @@ describe("Collection event add", () => {
         }
 
         class Users extends Collection<User> {
-            Model = User;
+            Model() {
+                return User;
+            }
         }
 
         const users = new Users([

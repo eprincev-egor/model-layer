@@ -9,14 +9,15 @@ describe("Collection.remove", () => {
         class Product extends Model<Product> {
             structure() {
                 return {
-                    name: Types.String,
-                    price: Types.Number
+                    name: Types.String
                 };
             }
         }
 
         class Products extends Collection<Product> {
-            Model = Product;
+            Model() {
+                return Product;
+            }
         }
 
         const products = new Products([
@@ -54,7 +55,9 @@ describe("Collection.remove", () => {
         }
 
         class Companies extends Collection<Company> {
-            Model = Company;
+            Model() {
+                return Company;
+            }
         }
 
         const companies = new Companies([

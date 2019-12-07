@@ -18,6 +18,7 @@ export function MakeCollectionType<TCollectionConstructor>(
         type: "collection"
     } as any;
 }
+MakeCollectionType.isTypeHelper = true;
 
 export class CollectionType extends Type {
     static prepareDescription(description) {
@@ -32,7 +33,7 @@ export class CollectionType extends Type {
         }
 
         const CustomCollection = description.type;
-        description.type = "Collection";
+        description.type = "collection";
         description.Collection = CustomCollection;
     }
 
