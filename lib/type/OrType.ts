@@ -1,7 +1,6 @@
-
-
 import {Type, IType, ITypeParams} from "./Type";
-import {invalidValuesAsString} from "../utils";
+import {Model} from "../Model";
+import {invalidValuesAsString, isObject} from "../utils";
 
 type ElementType < T extends any[] > = (
     // tslint:disable-next-line: no-shadowed-variable
@@ -10,12 +9,19 @@ type ElementType < T extends any[] > = (
         never
 );
 
+type TypesOrModelsOrCollections = (
+    Array<
+        IType | 
+        (new(...args: any) => Model)
+    >
+);
+
 export interface IOrTypeParams extends ITypeParams {
-    or: IType[];
+    or: TypesOrModelsOrCollections;
 }
 
 export interface IOrType<T extends IType> extends IType {
-    <TOrTypes extends IType[]>(
+    <TOrTypes extends TypesOrModelsOrCollections>(
         params: IOrTypeParams &
         {or: TOrTypes}
     ): ElementType< TOrTypes >;
@@ -34,7 +40,7 @@ export class OrType extends Type {
                 description.or = description.or.map((childDescription) =>
                     Type.create( childDescription, key )
                 );
-            } catch(err) {
+            } catch (err) {
                 return;
             }
         }
@@ -100,4 +106,38 @@ export class OrType extends Type {
 
         return value;
     }
+
+    toJSON(value) {
+        return value2json( value );
+    }
+}
+
+function value2json(value) {
+    if ( value instanceof Date ) {
+        return value.toISOString();
+    }
+
+    if ( value && typeof value.toJSON === "function" ) {
+        return value.toJSON();
+    }
+
+    if ( Array.isArray(value) ) {
+        return value.map((item) =>
+            value2json( item )
+        );
+    }
+
+    if ( isObject(value) ) {
+        const json = {};
+
+        for (const key in value) {
+            const item = value[ key ];
+
+            json[ key ] = value2json( item );
+        }
+
+        return json;
+    }
+
+    return value;
 }
