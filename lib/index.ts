@@ -15,6 +15,7 @@ import {MakeCollectionType, CollectionType} from "./type/CollectionType";
 import {INumberType, NumberType} from "./type/NumberType";
 import {IObjectType, ObjectType} from "./type/ObjectType";
 import {IStringType, StringType} from "./type/StringType";
+import {IOrType, OrType} from "./type/OrType";
 
 const returnParamsWithType: any = (type) => {
     const func = (params) => ({
@@ -35,7 +36,7 @@ const Types = {
     Object: returnParamsWithType("object") as IObjectType<IType>,
     Model: MakeModelType,
     Collection: MakeCollectionType,
-    // Or: (TypeOr as any) as ITypeOr<IType>,
+    Or: returnParamsWithType("or") as IOrType<IType>,
     Any: returnParamsWithType("any") as IAnyType
 };
 
@@ -49,6 +50,7 @@ Type.registerType("collection", CollectionType);
 Type.registerType("number", NumberType);
 Type.registerType("object", ObjectType);
 Type.registerType("string", StringType);
+Type.registerType("or", OrType);
 
 
 export {Model, Collection, Types};
