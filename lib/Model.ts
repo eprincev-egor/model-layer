@@ -209,13 +209,13 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
             this.emit("change:" + key, {
                 prev: oldData,
                 changes
-            });
+            }, options);
         }
 
         this.emit("change", {
             prev: oldData,
             changes
-        });
+        }, options);
     }
 
     isValid(data: this["TInputData"]): boolean {
@@ -484,15 +484,15 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
     on(
         eventName: "change",
         keyOrListener: (
-            string | 
-            ((event: IChangeEvent<this>) => void)
+            string & keyof this["data"] | 
+            ((event: IChangeEvent<this>, options: ISimpleObject) => void)
         ),
-        listener?: (event: IChangeEvent<this>) => void
+        listener?: (event: IChangeEvent<this>, options: ISimpleObject) => void
     ): this {
         if ( typeof keyOrListener === "string" ) {
             const key = keyOrListener;
             
-            const description = this.getDescription(key as any);
+            const description = this.getDescription(key);
             if ( !description ) {
                 throw new Error(`unknown property: ${ key }`);
             }
@@ -500,7 +500,7 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
             super.on(eventName + ":" + key, listener);
         }
         else {
-            listener = keyOrListener;
+            listener = keyOrListener as any;
             super.on(eventName, listener);
         }
 

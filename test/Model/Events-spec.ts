@@ -109,11 +109,101 @@ describe("Model events", () => {
 
         assert.throws(
             () => {
-                model.on("change", "unknownProp", handler);
+                model.on("change", "unknownProp" as any, handler);
             }, (err) =>
                 err.message === "unknown property: unknownProp"
         );
 
+    });
+
+    it("custom options for stop recursion, listen 'change'", () => {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
+                return {
+                    prop: Types.String
+                };
+            }
+        }
+
+        const model1 = new SomeModel();
+        const model2 = new SomeModel();
+
+        model1.on("change", (event, options) => {
+            if ( options.stopSync ) {
+                return;
+            }
+
+            model2.set(event.changes, {
+                stopSync: true
+            });
+        });
+
+        model2.on("change", (event, options) => {
+            if ( options.stopSync ) {
+                return;
+            }
+
+            model1.set(event.changes, {
+                stopSync: true
+            });
+        });
+
+        model1.set({
+            prop: "nice"
+        });
+        assert.strictEqual(model1.data.prop, "nice");
+        assert.strictEqual(model2.data.prop, "nice");
+
+        model2.set({
+            prop: "good"
+        });
+        assert.strictEqual(model1.data.prop, "good");
+        assert.strictEqual(model2.data.prop, "good");
+    });
+
+    it("custom options for stop recursion, listen ('change', prop)", () => {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
+                return {
+                    prop: Types.String
+                };
+            }
+        }
+
+        const model1 = new SomeModel();
+        const model2 = new SomeModel();
+
+        model1.on("change", "prop", (event, options) => {
+            if ( options.stopSync ) {
+                return;
+            }
+
+            model2.set(event.changes, {
+                stopSync: true
+            });
+        });
+
+        model2.on("change", "prop", (event, options) => {
+            if ( options.stopSync ) {
+                return;
+            }
+
+            model1.set(event.changes, {
+                stopSync: true
+            });
+        });
+
+        model1.set({
+            prop: "nice"
+        });
+        assert.strictEqual(model1.data.prop, "nice");
+        assert.strictEqual(model2.data.prop, "nice");
+
+        model2.set({
+            prop: "good"
+        });
+        assert.strictEqual(model1.data.prop, "good");
+        assert.strictEqual(model2.data.prop, "good");
     });
 
 });
