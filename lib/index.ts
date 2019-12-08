@@ -1,6 +1,8 @@
 // tslint:disable: max-classes-per-file
 // tslint:disable: member-access
 
+import {setLang} from "./errors";
+
 import {Model} from "./Model";
 import Collection from "./Collection";
 
@@ -53,4 +55,4 @@ Type.registerType("string", StringType);
 Type.registerType("or", OrType);
 
 
-export {Model, Collection, Types};
+export {Model, Collection, Types, setLang};

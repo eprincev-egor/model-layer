@@ -3,6 +3,15 @@ import EqualStack from "./EqualStack";
 import {Type, InputType, OutputType, JsonType, IType} from "./type/Type";
 import { invalidValuesAsString, isObject } from "./utils";
 import Walker from "./Walker";
+import {
+    UnknownPropertyError,
+    ModelWithoutStructureError,
+    InvalidKeyError,
+    InvalidValueError,
+    RequiredError,
+    ConstValueError,
+    DataShouldBeObjectError
+} from "./errors";
 
 export interface ISimpleObject extends Object {
     [propName: string]: any;
@@ -86,7 +95,9 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
     }
 
     structure(): {[key: string]: IType | (new (...args: any) => IType)} {
-        throw new Error(`${ this.constructor.name }.structure() is not declared`);
+        throw new ModelWithoutStructureError({
+            className: this.constructor.name
+        });
     }
 
     get<TKey extends keyof this["data"]>(key: TKey): this["data"][TKey] {
@@ -118,10 +129,14 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
                     const isValidKey = description.validateKey( key );
                     
                     if ( !isValidKey ) {
-                        throw new Error(`invalid key: ${ key }`);
+                        throw new InvalidKeyError({ 
+                            key 
+                        });
                     }
                 } else {
-                    throw new Error(`unknown property: ${ key }`);
+                    throw new UnknownPropertyError({
+                        propertyName: key
+                    });
                 }
             }
 
@@ -135,7 +150,10 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
             if ( !isValid ) {
                 const valueAsString = invalidValuesAsString( value );
 
-                throw new Error(`invalid ${ key }: ${ valueAsString }`);
+                throw new InvalidValueError({
+                    key,
+                    value: valueAsString
+                });
             }
 
             newData[ key ] = value;
@@ -165,13 +183,17 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
             if ( oldValue !== newValue ) {
                 if ( description.const ) {
                     if ( !this.isInit ) {
-                        throw new Error(`cannot assign to read only property: ${ key }`);
+                        throw new ConstValueError({
+                            key
+                        });
                     }
                 }
             }
             if ( description.required ) {
                 if ( newValue == null ) {
-                    throw new Error(`required ${ key }`);
+                    throw new RequiredError({
+                        key
+                    });
                 }
             }
 
@@ -220,7 +242,7 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
 
     isValid(data: this["TInputData"]): boolean {
         if ( !isObject(data) ) {
-            throw new Error("data must be are object");
+            throw new DataShouldBeObjectError({});
         }
 
         try {
@@ -494,7 +516,9 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
             
             const description = this.getDescription(key);
             if ( !description ) {
-                throw new Error(`unknown property: ${ key }`);
+                throw new UnknownPropertyError({
+                    propertyName: key
+                });
             }
 
             super.on(eventName + ":" + key, listener);
