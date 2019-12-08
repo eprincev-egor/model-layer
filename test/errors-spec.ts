@@ -1,6 +1,7 @@
 
 import assert from "assert";
 import {setLang, Model, Types} from "../lib/index";
+import { UnknownPropertyError } from "../lib/errors";
 
 describe("Errors", () => {
 
@@ -22,7 +23,8 @@ describe("Errors", () => {
                 } as any);
             },
             (err) =>
-                err.message === "неизвестное свойство: x"
+                err.message === "неизвестное свойство: x" &&
+                err instanceof UnknownPropertyError
         );
 
         setLang("en");
@@ -33,7 +35,8 @@ describe("Errors", () => {
                 } as any);
             },
             (err) =>
-                err.message === "unknown property: x"
+                err.message === "unknown property: x" &&
+                err instanceof UnknownPropertyError
         );
     });
 
