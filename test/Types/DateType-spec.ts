@@ -185,4 +185,26 @@ describe("DateType", () => {
             );
         });
     });
+
+    it("date value toJSON()", () => {
+
+        const date = new Date();
+        const isoDate = date.toISOString();
+
+        class SomeModel extends Model<SomeModel> {
+            structure() {
+                return {
+                    date: Types.Date
+                };
+            }
+        }
+
+        const model = new SomeModel({
+            date
+        });
+        
+        assert.deepStrictEqual(model.toJSON(), {
+            date: isoDate
+        });
+    });
 });

@@ -64,4 +64,8 @@ export class DateType extends Type {
 
         return +selfValue === +anotherValue;
     }
+
+    toJSON(date) {
+        return date.toISOString();
+    }
 }
