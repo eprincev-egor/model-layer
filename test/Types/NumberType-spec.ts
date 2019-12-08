@@ -86,6 +86,17 @@ describe("NumberType", () => {
                 err.message === "invalid number for age: /x/"
         );
 
+        const date = new Date();
+        const isoDate = date.toISOString();
+        assert.throws(
+            () => {
+                const anyModel = model as any;
+                anyModel.set({age: date});
+            },
+            (err) =>
+                err.message === "invalid number for age: \"" + isoDate + "\""
+        );
+
         assert.throws(
             () => {
                 model.set({age: -1 / 0});

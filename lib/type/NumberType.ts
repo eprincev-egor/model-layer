@@ -103,6 +103,7 @@ export class NumberType extends Type {
             isNaN(value) ||
             typeof originalValue === "boolean" ||
             originalValue instanceof RegExp ||
+            originalValue instanceof Date ||
             Array.isArray(originalValue) ||
             // infinity
             value === 1 / 0 ||
