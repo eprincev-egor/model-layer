@@ -83,4 +83,64 @@ describe("OrType", () => {
         
     });
 
+    it("expected 'or' array of type descriptions", () => {
+        assert.throws(
+            () => {
+                class WrongModel extends Model<WrongModel> {
+                    structure() {
+                        return {
+                            id: Types.Or({
+                                
+                            } as any)
+                        };
+                    }
+                }
+
+                const model = new WrongModel();
+            },
+            (err) =>
+                err.message === "id: expected 'or' array of type descriptions"
+        );
+    });
+
+    it("invalid type description", () => {
+        assert.throws(
+            () => {
+                class WrongModel extends Model<WrongModel> {
+                    structure() {
+                        return {
+                            id: Types.Or({
+                                or: [{wrong: true}]
+                            } as any)
+                        };
+                    }
+                }
+
+                const model = new WrongModel();
+            },
+            (err) =>
+                err.message === "id: invalid type description or[0]: {\"wrong\":true}"
+        );
+    });
+
+    it("empty array of type description", () => {
+        assert.throws(
+            () => {
+                class WrongModel extends Model<WrongModel> {
+                    structure() {
+                        return {
+                            id: Types.Or({
+                                or: []
+                            } as any)
+                        };
+                    }
+                }
+
+                const model = new WrongModel();
+            },
+            (err) =>
+                err.message === "id: empty 'or' array of type descriptions"
+        );
+    });
+
 });

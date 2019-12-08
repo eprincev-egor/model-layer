@@ -30,9 +30,13 @@ export class OrType extends Type {
     static prepareDescription(description, key) {
         if ( description.type === "or" ) {
             // prepare OR description
-            description.or = description.or.map((childDescription) =>
-                Type.create( childDescription, key )
-            );
+            try {
+                description.or = description.or.map((childDescription) =>
+                    Type.create( childDescription, key )
+                );
+            } catch(err) {
+                return;
+            }
         }
     }
 
@@ -40,10 +44,26 @@ export class OrType extends Type {
     or: Type[];
 
     constructor({
-        or = [],
+        or,
         ...otherParams
     }: IOrTypeParams) {
         super(otherParams);
+
+        if ( !Array.isArray(or) ) {
+            throw new Error("expected 'or' array of type descriptions");
+        }
+        if ( !or.length ) {
+            throw new Error("empty 'or' array of type descriptions");
+        }
+
+        for (let i = 0, n = or.length; i < n; i++) {
+            const elem = or[i];
+
+            if ( elem instanceof Type ) {
+                continue;
+            }
+            throw new Error(`invalid type description or[${ i }]: ${ invalidValuesAsString(elem) }`);
+        }
 
         this.or = or as any;
     }
