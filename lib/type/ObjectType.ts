@@ -2,7 +2,6 @@
 
 import {Type, IType, ITypeParams, TInstanceOrT} from "./Type";
 import {invalidValuesAsString, isObject, eol} from "../utils";
-import {CircularStructureToJSONError} from "../errors";
 
 export interface IObjectTypeParams extends ITypeParams {
     nullAsEmpty?: boolean;
@@ -116,12 +115,7 @@ export class ObjectType extends Type {
         return object;
     }
 
-    toJSON(value, stack = []) {
-        if ( stack.includes(value) ) {
-            throw new CircularStructureToJSONError({});
-        }
-        stack.push(value);
-
+    toJSON(value, stack) {
         const obj = value;
         const json = {};
 

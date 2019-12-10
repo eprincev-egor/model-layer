@@ -2,7 +2,6 @@
 
 import {Type, IType, ITypeParams, TInstanceOrT} from "./Type";
 import {invalidValuesAsString, eol} from "../utils";
-import {CircularStructureToJSONError} from "../errors";
 
 export interface IArrayTypeParams extends ITypeParams {
     sort?: boolean | ((a, b) => number);
@@ -144,11 +143,6 @@ export class ArrayType extends Type {
     }
 
     toJSON(value, stack = []) {
-        if ( stack.includes(value) ) {
-            throw new CircularStructureToJSONError({});
-        }
-        stack.push(value);
-
         return value.map((item) => 
             this.element.toJSON( item )
         );
