@@ -27,7 +27,7 @@ export class AnyType extends Type {
     }
 }
 
-function equal(selfValue, otherValue, stack) {
+export function equal(selfValue, otherValue, stack) {
     if ( selfValue instanceof Date && otherValue instanceof Date ) {
         return +selfValue === +otherValue;
     }
