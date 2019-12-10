@@ -414,7 +414,7 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
         ) as TModel;
     }
 
-    toJSON(): this["TJson"] {
+    toJSON(stack = []): this["TJson"] {
         const json: any = {};
         
         for (const key in this.data) {
@@ -422,7 +422,7 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
             let value = this.data[ key ];
 
             if ( value != null ) {
-                value = description.toJSON( value ); 
+                value = description.toJSON( value, stack ); 
             }
 
             json[ key ] = value;

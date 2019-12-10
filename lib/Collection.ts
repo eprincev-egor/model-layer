@@ -578,9 +578,9 @@ export class Collection<TModel extends Model> extends EventEmitter {
         return model;
     }
 
-    toJSON(): Array<TModel["TJson"]> {
+    toJSON(stack = []): Array<TModel["TJson"]> {
         return this.models.map((model) =>
-            model.toJSON()
+            model.toJSON(stack)
         );
     }
 

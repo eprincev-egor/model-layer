@@ -403,4 +403,34 @@ describe("CollectionType", () => {
         });
     });
 
+    it("circular structure to json", () => {
+        
+        class MyModel extends Model<MyModel> {
+            structure() {
+                return {
+                    collection: MyCollection
+                };
+            }
+        }
+        class MyCollection extends Collection<MyModel> {
+            Model() {
+                return MyModel;
+            }
+        }
+
+        const collection = new MyCollection();
+        const model = new MyModel({
+            collection
+        });
+        collection.add(model);
+
+        assert.throws(
+            () => {
+                model.toJSON();
+            },
+            (err) =>
+                err.message === "Cannot converting circular structure to JSON"
+        );
+    });
+
 });

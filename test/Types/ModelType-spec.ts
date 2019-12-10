@@ -425,4 +425,26 @@ describe("ModelType", () => {
         assert.strictEqual( third.get("third"), 3 );
     });
 
+    it("circular structure to json", () => {
+        
+        class MyModel extends Model<MyModel> {
+            structure() {
+                return {
+                    model: MyModel
+                };
+            }
+        }
+
+        const model = new MyModel();
+        model.set({model});
+
+        assert.throws(
+            () => {
+                model.toJSON();
+            },
+            (err) =>
+                err.message === "Cannot converting circular structure to JSON"
+        );
+    });
+
 });

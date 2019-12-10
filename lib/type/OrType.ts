@@ -1,6 +1,7 @@
 import {Type, IType, ITypeParams} from "./Type";
 import {Model} from "../Model";
 import {invalidValuesAsString, isObject} from "../utils";
+import {value2json} from "./AnyType";
 
 type ElementType < T extends any[] > = (
     // tslint:disable-next-line: no-shadowed-variable
@@ -107,37 +108,7 @@ export class OrType extends Type {
         return value;
     }
 
-    toJSON(value) {
-        return value2json( value );
+    toJSON(value, stack = []) {
+        return value2json( value, stack );
     }
-}
-
-function value2json(value) {
-    if ( value instanceof Date ) {
-        return value.toISOString();
-    }
-
-    if ( value && typeof value.toJSON === "function" ) {
-        return value.toJSON();
-    }
-
-    if ( Array.isArray(value) ) {
-        return value.map((item) =>
-            value2json( item )
-        );
-    }
-
-    if ( isObject(value) ) {
-        const json = {};
-
-        for (const key in value) {
-            const item = value[ key ];
-
-            json[ key ] = value2json( item );
-        }
-
-        return json;
-    }
-
-    return value;
 }

@@ -317,7 +317,7 @@ export class Type {
         return value;
     }
 
-    toJSON(value): any {
+    toJSON(value, stack = []): any {
         return value;
     }
 

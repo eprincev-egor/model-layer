@@ -3,6 +3,7 @@
 import {Type, IType, ITypeParams} from "./Type";
 import {Model} from "../Model";
 import {isObject, isPlainObject, isNaN} from "../utils";
+import {CircularStructureToJSONError} from "../errors";
 
 // tslint:disable-next-line: no-empty-interface
 export interface IAnyTypeParams extends ITypeParams {
@@ -17,8 +18,8 @@ export interface IAnyType extends IType {
 }
 
 export class AnyType extends Type {
-    toJSON(value) {
-        return value2json( value );
+    toJSON(value, stack = []) {
+        return value2json( value, stack );
     }
 
     equal(selfValue, otherValue, stack) {
@@ -113,28 +114,44 @@ function equal(selfValue, otherValue, stack) {
     return selfValue === otherValue;
 }
 
-function value2json(value) {
+export function value2json(value, stack) {
     if ( value instanceof Date ) {
         return value.toISOString();
     }
 
     if ( value && typeof value.toJSON === "function" ) {
-        return value.toJSON();
+        if ( stack.includes(value) ) {
+            throw new CircularStructureToJSONError({});
+        }
+        stack.push(value);
+    
+        return value.toJSON(stack);
     }
 
     if ( Array.isArray(value) ) {
+        if ( stack.includes(value) ) {
+            throw new CircularStructureToJSONError({});
+        }
+        stack.push(value);
+    
         return value.map((item) =>
-            value2json( item )
+            value2json( item, stack )
         );
     }
 
     if ( isObject(value) ) {
+        if ( stack.includes(value) ) {
+            throw new CircularStructureToJSONError({});
+        }
+        stack.push(value);
+
+        
         const json = {};
 
         for (const key in value) {
             const item = value[ key ];
 
-            json[ key ] = value2json( item );
+            json[ key ] = value2json( item, stack );
         }
 
         return json;

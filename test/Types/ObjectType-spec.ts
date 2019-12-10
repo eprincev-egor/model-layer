@@ -584,4 +584,34 @@ describe("ObjectType", () => {
         );
     });
 
+    it("circular structure to json", () => {
+        
+        class MyModel extends Model<MyModel> {
+            structure() {
+                return {
+                    obj: Types.Object({
+                        element: Types.Object({
+                            element: Types.Object
+                        })
+                    })
+                };
+            }
+        }
+
+        const obj: any = {};
+        obj.obj = obj;
+
+        const model = new MyModel({
+            obj
+        });
+
+        assert.throws(
+            () => {
+                model.toJSON();
+            },
+            (err) =>
+                err.message === "Cannot converting circular structure to JSON"
+        );
+    });
+
 });

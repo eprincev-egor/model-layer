@@ -267,4 +267,99 @@ describe("AnyType", () => {
             );
         });
     });
+
+    it("circular structure to json", () => {
+        
+        class MyModel extends Model<MyModel> {
+            structure() {
+                return {
+                    value: Types.Any
+                };
+            }
+        }
+
+        
+        const model = new MyModel();
+
+        // circular arr
+        const arr = [];
+        arr[0] = arr;
+        model.set({
+            value: arr
+        });
+        assert.throws(
+            () => {
+                model.toJSON();
+            },
+            (err) =>
+                err.message === "Cannot converting circular structure to JSON"
+        );
+
+        // circular obj
+        const obj: any = {};
+        obj.obj = obj;
+        model.set({
+            value: obj
+        });
+        assert.throws(
+            () => {
+                model.toJSON();
+            },
+            (err) =>
+                err.message === "Cannot converting circular structure to JSON"
+        );
+
+        // circular model
+        const childModel = new MyModel();
+        childModel.set({
+            value: model
+        })
+        model.set({
+            value: childModel
+        });
+        assert.throws(
+            () => {
+                model.toJSON();
+            },
+            (err) =>
+                err.message === "Cannot converting circular structure to JSON"
+        );
+
+        // but we can convert primitives to json 
+        model.set({
+            value: [{
+                x: "",
+                a: 1,
+                b: true,
+                c: {
+                    x: "",
+                    a: 1,
+                    b: true,
+                    c: {
+                        x: "",
+                        a: 1,
+                        b: true
+                    }
+                }
+            }]
+        });
+        assert.deepStrictEqual(model.toJSON(), {
+            value: [{
+                x: "",
+                a: 1,
+                b: true,
+                c: {
+                    x: "",
+                    a: 1,
+                    b: true,
+                    c: {
+                        x: "",
+                        a: 1,
+                        b: true
+                    }
+                }
+            }]
+        });
+    });
+
 });

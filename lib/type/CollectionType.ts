@@ -3,6 +3,7 @@
 import {Type, ITypeParams} from "./Type";
 import Collection from "../Collection";
 import {invalidValuesAsString} from "../utils";
+import {CircularStructureToJSONError} from "../errors";
 
 export interface ICollectionTypeParams extends ITypeParams {
     Collection: any;
@@ -77,8 +78,13 @@ export class CollectionType extends Type {
         return "collection " + this.Collection.name;
     }
 
-    toJSON(collection) {
-        return collection.toJSON();
+    toJSON(collection, stack = []) {
+        if ( stack.includes(collection) ) {
+            throw new CircularStructureToJSONError({});
+        }
+        stack.push(collection);
+
+        return collection.toJSON(stack);
     }
 
     clone(collection) {

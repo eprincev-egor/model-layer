@@ -386,4 +386,161 @@ describe("OrType", () => {
         assert.ok(json.value[0] !== model.data.value[0]);
     });
 
+    it("circular structure to json, or: [Model]", () => {
+
+        class MyModel extends Model<MyModel> {
+            structure() {
+                return {
+                    model: Types.Or({
+                        or: [MyModel]
+                    })
+                };
+            }
+        }
+
+        const model = new MyModel({
+            model: {}
+        });
+        model.set({model});
+
+        assert.throws(
+            () => {
+                model.toJSON();
+            },
+            (err) =>
+                err.message === "Cannot converting circular structure to JSON"
+        );
+    });
+
+    it("circular structure to json, or: [Array]", () => {
+
+        class MyModel extends Model<MyModel> {
+            structure() {
+                return {
+                    value: Types.Or({
+                        or: [
+                            Types.Array,
+                            Types.Object
+                        ]
+                    })
+                };
+            }
+        }
+
+        const model = new MyModel();
+
+        // self model inside array
+        model.set({
+            value: [
+                model
+            ]
+        });
+
+        assert.throws(
+            () => {
+                model.toJSON();
+            },
+            (err) =>
+                err.message === "Cannot converting circular structure to JSON"
+        );
+
+        // circular array
+        const arr = [];
+        arr[0] = arr;
+        model.set({
+            value: arr
+        });
+
+        assert.throws(
+            () => {
+                model.toJSON();
+            },
+            (err) =>
+                err.message === "Cannot converting circular structure to JSON"
+        );
+    });
+
+    it("circular structure to json, or: [Object]", () => {
+
+        class MyModel extends Model<MyModel> {
+            structure() {
+                return {
+                    value: Types.Or({
+                        or: [
+                            Types.Array,
+                            Types.Object
+                        ]
+                    })
+                };
+            }
+        }
+
+        const model = new MyModel();
+
+        // self model inside array
+        model.set({
+            value: {model}
+        });
+
+        assert.throws(
+            () => {
+                model.toJSON();
+            },
+            (err) =>
+                err.message === "Cannot converting circular structure to JSON"
+        );
+
+        // circular object
+        const obj: any = {};
+        obj.obj = obj;
+
+        model.set({
+            value: obj
+        });
+
+        assert.throws(
+            () => {
+                model.toJSON();
+            },
+            (err) =>
+                err.message === "Cannot converting circular structure to JSON"
+        );
+        
+        // but we can convert primitives to json 
+        model.set({
+            value: [{
+                x: "",
+                a: 1,
+                b: true,
+                c: {
+                    x: "",
+                    a: 1,
+                    b: true,
+                    c: {
+                        x: "",
+                        a: 1,
+                        b: true
+                    }
+                }
+            }]
+        });
+        assert.deepStrictEqual(model.toJSON(), {
+            value: [{
+                x: "",
+                a: 1,
+                b: true,
+                c: {
+                    x: "",
+                    a: 1,
+                    b: true,
+                    c: {
+                        x: "",
+                        a: 1,
+                        b: true
+                    }
+                }
+            }]
+        });
+    });
+
 });

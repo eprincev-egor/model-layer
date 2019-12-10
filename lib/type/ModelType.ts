@@ -3,6 +3,7 @@
 import {Type, ITypeParams} from "./Type";
 import {Model} from "../Model";
 import {invalidValuesAsString, isNaN, eol} from "../utils";
+import {CircularStructureToJSONError} from "../errors";
 
 export function MakeModelType<TModelConstructor>(
     params: ITypeParams & 
@@ -87,8 +88,14 @@ export class ModelType extends Type {
         return this.Model.name;
     }
 
-    toJSON(model) {
-        return model.toJSON();
+    toJSON(model, stack = []) {
+
+        if ( stack.includes(model) ) {
+            throw new CircularStructureToJSONError({});
+        }
+        stack.push(model);
+    
+        return model.toJSON(stack);
     }
 
     clone(model) {

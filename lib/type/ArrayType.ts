@@ -1,9 +1,8 @@
 
 
 import {Type, IType, ITypeParams, TInstanceOrT} from "./Type";
-import {Model} from "../Model";
-import {Collection} from "../Collection";
 import {invalidValuesAsString, eol} from "../utils";
+import {CircularStructureToJSONError} from "../errors";
 
 export interface IArrayTypeParams extends ITypeParams {
     sort?: boolean | ((a, b) => number);
@@ -144,7 +143,12 @@ export class ArrayType extends Type {
         return true;
     }
 
-    toJSON(value) {
+    toJSON(value, stack = []) {
+        if ( stack.includes(value) ) {
+            throw new CircularStructureToJSONError({});
+        }
+        stack.push(value);
+
         return value.map((item) => 
             this.element.toJSON( item )
         );
