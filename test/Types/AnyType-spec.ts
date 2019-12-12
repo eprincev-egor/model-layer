@@ -313,7 +313,7 @@ describe("AnyType", () => {
         const childModel = new MyModel();
         childModel.set({
             value: model
-        })
+        });
         model.set({
             value: childModel
         });
