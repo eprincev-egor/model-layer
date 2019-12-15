@@ -1,10 +1,12 @@
 {
   "name": "model-layer",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "model layer",
   "main": "dist/index.js",
+  "types": "lib/index.ts",
   "directories": {
-    "dist": "dist"
+    "dist": "dist",
+    "lib": "lib"
   },
   "scripts": {
     "build": "tsc",
