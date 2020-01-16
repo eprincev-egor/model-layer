@@ -739,4 +739,57 @@ describe("OrType", () => {
         });
     });
 
+    it("model.clone()", () => {
+        class User extends Model<User> {
+            structure() {
+                return {
+                    id: Types.Number,
+                    name: Types.String
+                };
+            }
+        }
+
+        class MyModel extends Model<MyModel> {
+            structure() {
+                return {
+                    user: Types.Or({
+                        or: [Types.Number, User]
+                    })
+                };
+            }
+        }
+
+        const model = new MyModel({
+            user: {
+                id: 1,
+                name: "Bob"
+            }
+        });
+
+        assert.ok(model.data.user instanceof User);
+
+        const clone = model.clone();
+
+        assert.deepStrictEqual(clone.toJSON(), {
+            user: {
+                id: 1,
+                name: "Bob"
+            }
+        });
+
+
+
+        model.set({
+            user: 2
+        });
+
+        assert.strictEqual(model.data.user, 2);
+        assert.deepStrictEqual(clone.toJSON(), {
+            user: {
+                id: 1,
+                name: "Bob"
+            }
+        });
+    });
+
 });

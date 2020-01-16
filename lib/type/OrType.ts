@@ -112,7 +112,7 @@ export class OrType extends Type {
         return equal(selfValue, otherValue, stack);
     }
 
-    toJSON(value, stack) {
+    toJSON(value, stack = []) {
         return value2json( value, stack );
     }
 }
