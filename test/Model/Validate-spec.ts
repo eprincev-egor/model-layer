@@ -1,7 +1,6 @@
 
 import {Model, Types} from "../../lib/index";
 import assert from "assert";
-import { ISimpleObject } from "../../lib/Model";
 
 describe("Model validate", () => {
     

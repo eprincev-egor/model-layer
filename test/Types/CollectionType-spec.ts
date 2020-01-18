@@ -2,7 +2,6 @@
 import {Model, Collection, Types} from "../../lib/index";
 import assert from "assert";
 import {eol} from "../../lib/utils";
-import { Type } from "../../lib/type/Type";
 
 describe("CollectionType", () => {
 

@@ -1,9 +1,7 @@
 
-import {Model, Collection, Types} from "../../lib/index";
+import {Model, Types} from "../../lib/index";
 import assert from "assert";
 import {eol} from "../../lib/utils";
-import { ISimpleObject } from "../../lib/Model";
-import { types } from "util";
 
 describe("ObjectType", () => {
     

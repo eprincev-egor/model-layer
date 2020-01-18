@@ -2,8 +2,6 @@
 import {Model, Types} from "../../lib/index";
 import assert from "assert";
 import {eol} from "../../lib/utils";
-import { ISimpleObject } from "../../lib/Model";
-import { Type } from "../../lib/type/Type";
 
 describe("ArrayType", () => {
     
