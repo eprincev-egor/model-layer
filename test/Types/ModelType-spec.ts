@@ -2,8 +2,6 @@
 import {Model, Types} from "../../lib/index";
 import assert from "assert";
 import {invalidValuesAsString, eol} from "../../lib/utils";
-import { ISimpleObject } from "../../lib/Model";
-import { types } from "util";
 
 describe("ModelType", () => {
     
