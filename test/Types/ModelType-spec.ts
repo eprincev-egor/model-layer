@@ -445,4 +445,37 @@ describe("ModelType", () => {
         );
     });
 
+    it("same model as value in two fields", () => {
+        
+        class User extends Model<User> {
+            structure() {
+                return {
+                    name: Types.String
+                };
+            }
+        }
+
+        class TestModel extends Model<TestModel> {
+            structure() {
+                return {
+                    a: User,
+                    b: User
+                };
+            }
+        }
+
+        const user = new User({
+            name: "Jack"
+        });
+        const test = new TestModel({
+            a: user,
+            b: user
+        });
+
+        assert.deepStrictEqual(test.toJSON(), {
+            a: {name: "Jack"},
+            b: {name: "Jack"}
+        });
+    });
+
 });

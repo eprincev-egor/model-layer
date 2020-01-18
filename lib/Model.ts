@@ -422,7 +422,7 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
             let value = this.data[ key ];
 
             if ( value != null ) {
-                value = description.toJSON( value, stack ); 
+                value = description.toJSON( value, [...stack] ); 
             }
 
             json[ key ] = value;
