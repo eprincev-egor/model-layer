@@ -121,7 +121,7 @@ export class ObjectType extends Type {
 
         for (const key in obj) {
             const objValue = obj[ key ];
-            json[ key ] = this.element.toJSON( objValue, stack );
+            json[ key ] = this.element.toJSON( objValue, [...stack] );
         }
 
         return json;

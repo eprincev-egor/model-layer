@@ -642,4 +642,32 @@ describe("ObjectType", () => {
         );
     });
 
+    it("same model as value in two fields", () => {
+        
+        class MyModel extends Model<MyModel> {
+            structure() {
+                return {
+                    obj: Types.Object({
+                        element: MyModel
+                    })
+                };
+            }
+        }
+
+        const child = new MyModel();
+        const model = new MyModel({
+            obj: {
+                a: child,
+                b: child
+            }
+        });
+
+        assert.deepStrictEqual(model.toJSON(), {
+            obj: {
+                a: {obj: null},
+                b: {obj: null}
+            }
+        });
+    });
+
 });

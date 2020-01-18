@@ -999,6 +999,28 @@ describe("ArrayType", () => {
         });
     });
 
+    it("same model as value in two elements of array", () => {
+        
+        class TestModel extends Model<TestModel> {
+            structure() {
+                return {
+                    arr: Types.Array({
+                        element: TestModel
+                    })
+                };
+            }
+        }
+
+        const child = new TestModel();
+        const test = new TestModel({
+            arr: [child, child]
+        });
+
+        assert.deepStrictEqual(test.toJSON(), {
+            arr: [{arr: null}, {arr: null}]
+        });
+    });
+
     it("circular structure to json", () => {
         
         class TestModel extends Model<TestModel> {
