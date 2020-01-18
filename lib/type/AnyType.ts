@@ -125,7 +125,7 @@ export function value2json(value, stack) {
         }
         stack.push(value);
     
-        return value.toJSON(stack);
+        return value.toJSON([...stack]);
     }
 
     if ( Array.isArray(value) ) {
@@ -135,7 +135,7 @@ export function value2json(value, stack) {
         stack.push(value);
     
         return value.map((item) =>
-            value2json( item, stack )
+            value2json( item, [...stack] )
         );
     }
 
@@ -151,7 +151,7 @@ export function value2json(value, stack) {
         for (const key in value) {
             const item = value[ key ];
 
-            json[ key ] = value2json( item, stack );
+            json[ key ] = value2json( item, [...stack] );
         }
 
         return json;

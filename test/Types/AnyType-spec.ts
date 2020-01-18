@@ -362,4 +362,50 @@ describe("AnyType", () => {
         });
     });
 
+    it("same model as value in two fields inside object", () => {
+        
+        class MyModel extends Model<MyModel> {
+            structure() {
+                return {
+                    any: Types.Any
+                };
+            }
+        }
+
+        const child = new MyModel();
+        const model = new MyModel({
+            any: {
+                a: child,
+                b: child
+            }
+        });
+
+        assert.deepStrictEqual(model.toJSON(), {
+            any: {
+                a: {any: null},
+                b: {any: null}
+            }
+        });
+    });
+
+    it("same model as value in two fields inside array", () => {
+        
+        class MyModel extends Model<MyModel> {
+            structure() {
+                return {
+                    any: Types.Any
+                };
+            }
+        }
+
+        const child = new MyModel();
+        const model = new MyModel({
+            any: [child, child]
+        });
+
+        assert.deepStrictEqual(model.toJSON(), {
+            any: [{any: null}, {any: null}]
+        });
+    });
+
 });
