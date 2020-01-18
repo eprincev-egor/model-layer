@@ -947,4 +947,82 @@ describe("ArrayType", () => {
         );
     });
 
+    it("same array as value in two fields", () => {
+        
+        class TestModel extends Model<TestModel> {
+            structure() {
+                return {
+                    a: Types.Array({
+                        element: Types.String
+                    }),
+                    b: Types.Array({
+                        element: Types.String
+                    })
+                };
+            }
+        }
+
+        const arr = ["test"];
+        const test = new TestModel({
+            a: arr,
+            b: arr
+        });
+
+        assert.deepStrictEqual(test.toJSON(), {
+            a: ["test"],
+            b: ["test"]
+        });
+    });
+
+    it("same array as value in two elements of array", () => {
+        
+        class TestModel extends Model<TestModel> {
+            structure() {
+                return {
+                    a: Types.Array({
+                        element: Types.Array({
+                            element: Types.String
+                        })
+                    })
+                };
+            }
+        }
+
+        const arrFirst = ["test"];
+        const arr = [arrFirst, arrFirst];
+        const test = new TestModel({
+            a: arr
+        });
+
+        assert.deepStrictEqual(test.toJSON(), {
+            a: [["test"], ["test"]]
+        });
+    });
+
+    it("circular structure to json", () => {
+        
+        class TestModel extends Model<TestModel> {
+            structure() {
+                return {
+                    arr: Types.Array({
+                        element: TestModel
+                    })
+                };
+            }
+        }
+
+        const model = new TestModel();
+        model.set({
+            arr: [model]
+        });
+
+        assert.throws(
+            () => {
+                model.toJSON();
+            },
+            (err) =>
+                err.message === "Cannot converting circular structure to JSON"
+        );
+    });
+
 });
