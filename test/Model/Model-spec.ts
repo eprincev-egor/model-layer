@@ -834,6 +834,40 @@ describe("Model tests", () => {
     });
 
 
+    it("equal models with same models in two fields", () => {
+
+        class User extends Model<User> {
+            structure() {
+                return {
+                    name: Types.String
+                };
+            }
+        }
+        class TestModel extends Model<TestModel> {
+            structure() {
+                return {
+                    a: User,
+                    b: User
+                };
+            }
+        }
+
+        const user = new User({
+            name: "Jack"
+        });
+        const firstModel = new TestModel({
+            a: user,
+            b: user
+        });
+        const secondModel = new TestModel({
+            a: user,
+            b: user
+        });
+
+        assert.ok( firstModel.equal( secondModel ) );
+        assert.ok( secondModel.equal( firstModel ) );
+    });
+
     it("max error length on prepare", () => {
 
         class SomeModel extends Model<SomeModel> {
