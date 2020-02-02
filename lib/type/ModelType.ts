@@ -88,7 +88,7 @@ export class ModelType extends Type {
         return this.Model.name;
     }
 
-    toJSON(model, stack = []) {
+    toJSON(model, stack) {
 
         if ( stack.includes(model) ) {
             throw new CircularStructureToJSONError({});

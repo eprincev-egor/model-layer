@@ -78,7 +78,7 @@ export class CollectionType extends Type {
         return "collection " + this.Collection.name;
     }
 
-    toJSON(collection, stack = []) {
+    toJSON(collection, stack) {
         if ( stack.includes(collection) ) {
             throw new CircularStructureToJSONError({});
         }

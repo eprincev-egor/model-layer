@@ -142,7 +142,7 @@ export class ArrayType extends Type {
         return true;
     }
 
-    toJSON(value, stack = []) {
+    toJSON(value, stack) {
         return value.map((item) => 
             this.element.toJSON( item, [...stack] )
         );

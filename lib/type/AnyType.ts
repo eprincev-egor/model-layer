@@ -18,7 +18,7 @@ export interface IAnyType extends IType {
 }
 
 export class AnyType extends Type {
-    toJSON(value, stack = []) {
+    toJSON(value, stack) {
         return value2json( value, stack );
     }
 
