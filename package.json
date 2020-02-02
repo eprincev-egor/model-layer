@@ -1,6 +1,6 @@
 {
   "name": "model-layer",
-  "version": "2.0.8",
+  "version": "2.0.9",
   "description": "model layer",
   "main": "dist/index.js",
   "types": "lib/index.ts",

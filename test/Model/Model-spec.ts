@@ -2,6 +2,7 @@
 import {Model, Types} from "../../lib/index";
 import assert from "assert";
 import {eol} from "../../lib/utils";
+import { Type } from "../../lib/type/Type";
 
 describe("Model tests", () => {
 
@@ -549,35 +550,6 @@ describe("Model tests", () => {
         );
     });
 
-    // it("register new type", () => {
-        
-    //     class CustomType extends Model.Type {
-    //         prepare(value) {
-    //             return +value * 2;
-    //         }
-    //     }
-
-    //     Model.registerType("custom", CustomType);
-
-    //     interface ISomeData {
-    //         prop: any;
-    //     }
-
-    //     class SomeModel extends Model<ISomeData> {
-    //         structure() {
-    //             return {
-    //                 prop: "custom"
-    //             };
-    //         }
-    //     }
-
-    //     const model = new SomeModel({
-    //         prop: "10"
-    //     });
-
-    //     assert.strictEqual(model.data.prop, 20);
-    // });
-
     
     it("custom prepare field", () => {
 
@@ -1065,4 +1037,233 @@ describe("Model tests", () => {
         );
     });
 
+    it("model.clone() with Or type, model value should be same instance like are original", () => {
+
+        class Manager extends Model<Manager> {
+            structure() {
+                return {
+                    name: Types.String,
+                    phone: Types.String
+                };
+            }
+        }
+
+        class Client extends Model<Client> {
+            structure() {
+                return {
+                    name: Types.String,
+                    phone: Types.String
+                };
+            }
+        }
+
+        class SomeModel extends Model<SomeModel> {
+            structure() {
+                return {
+                    user: Types.Or({
+                        or: [Manager, Client]
+                    })
+                };
+            }
+        }
+
+        const client = new Client({
+            name: "Client",
+            phone: "1"
+        });
+        const manager = new Manager({
+            name: "Manager",
+            phone: "1"
+        });
+
+        const model = new SomeModel({
+            user: client
+        });
+
+        const clone1 = model.clone();
+        assert.ok( clone1.get("user") instanceof Client );
+        assert.ok( clone1.get("user") !== model.get("user") );
+        assert.deepStrictEqual(model.toJSON(), clone1.toJSON());
+
+
+        model.set({
+            user: manager
+        });
+
+        const clone2 = model.clone();
+        assert.ok( clone2.get("user") instanceof Manager );
+        assert.ok( clone2.get("user") !== model.get("user") );
+        assert.deepStrictEqual(model.toJSON(), clone2.toJSON());
+    });
+
+    it("model.clone() with Any type, model value should be same instance like are original", () => {
+
+        class Manager extends Model<Manager> {
+            structure() {
+                return {
+                    name: Types.String,
+                    phone: Types.String
+                };
+            }
+        }
+
+        class Client extends Model<Client> {
+            structure() {
+                return {
+                    name: Types.String,
+                    phone: Types.String
+                };
+            }
+        }
+
+        class SomeModel extends Model<SomeModel> {
+            structure() {
+                return {
+                    user: Types.Any
+                };
+            }
+        }
+
+        const client = new Client({
+            name: "Client",
+            phone: "1"
+        });
+        const manager = new Manager({
+            name: "Manager",
+            phone: "1"
+        });
+
+        const model = new SomeModel({
+            user: client
+        });
+
+        const clone1 = model.clone();
+        assert.ok( clone1.get("user") instanceof Client );
+        assert.ok( clone1.get("user") !== model.get("user") );
+        assert.deepStrictEqual(model.toJSON(), clone1.toJSON());
+
+
+        model.set({
+            user: manager
+        });
+
+        const clone2 = model.clone();
+        assert.ok( clone2.get("user") instanceof Manager );
+        assert.ok( clone2.get("user") !== model.get("user") );
+        assert.deepStrictEqual(model.toJSON(), clone2.toJSON());
+    });
+
+    it("model.clone() with Any type, model value inside array should be same instance like are original", () => {
+
+        class Manager extends Model<Manager> {
+            structure() {
+                return {
+                    name: Types.String,
+                    phone: Types.String
+                };
+            }
+        }
+
+        class Client extends Model<Client> {
+            structure() {
+                return {
+                    name: Types.String,
+                    phone: Types.String
+                };
+            }
+        }
+
+        class SomeModel extends Model<SomeModel> {
+            structure() {
+                return {
+                    users: Types.Any
+                };
+            }
+        }
+
+        const client = new Client({
+            name: "Client",
+            phone: "1"
+        });
+        const manager = new Manager({
+            name: "Manager",
+            phone: "1"
+        });
+
+        const model = new SomeModel({
+            users: [[client]]
+        });
+
+        const clone1 = model.clone();
+        assert.ok( clone1.get("users")[0][0] instanceof Client );
+        assert.ok( clone1.get("users")[0][0] !== model.get("users")[0][0] );
+        assert.deepStrictEqual(model.toJSON(), clone1.toJSON());
+
+
+        model.set({
+            users: [[manager]]
+        });
+
+        const clone2 = model.clone();
+        assert.ok( clone2.get("users")[0][0] instanceof Manager );
+        assert.ok( clone2.get("users")[0][0] !== model.get("users")[0][0] );
+        assert.deepStrictEqual(model.toJSON(), clone2.toJSON());
+    });
+
+    it("model.clone() with Any type, model value inside object should be same instance like are original", () => {
+
+        class Manager extends Model<Manager> {
+            structure() {
+                return {
+                    name: Types.String,
+                    phone: Types.String
+                };
+            }
+        }
+
+        class Client extends Model<Client> {
+            structure() {
+                return {
+                    name: Types.String,
+                    phone: Types.String
+                };
+            }
+        }
+
+        class SomeModel extends Model<SomeModel> {
+            structure() {
+                return {
+                    users: Types.Any
+                };
+            }
+        }
+
+        const client = new Client({
+            name: "Client",
+            phone: "1"
+        });
+        const manager = new Manager({
+            name: "Manager",
+            phone: "1"
+        });
+
+        const model = new SomeModel({
+            users: {user: client}
+        });
+
+        const clone1 = model.clone();
+        assert.ok( clone1.get("users").user instanceof Client );
+        assert.ok( clone1.get("users").user !== model.get("users").user );
+        assert.deepStrictEqual(model.toJSON(), clone1.toJSON());
+
+
+        model.set({
+            users: {user: manager}
+        });
+
+        const clone2 = model.clone();
+        assert.ok( clone2.get("users").user instanceof Manager );
+        assert.ok( clone2.get("users").user !== model.get("users").user );
+        assert.deepStrictEqual(model.toJSON(), clone2.toJSON());
+    });
 });

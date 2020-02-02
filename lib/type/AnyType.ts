@@ -22,6 +22,10 @@ export class AnyType extends Type {
         return value2json( value, stack );
     }
 
+    clone(value) {
+        return clone(value);
+    }
+
     equal(selfValue, otherValue, stack) {
         return equal(selfValue, otherValue, stack);
     }
@@ -155,6 +159,36 @@ export function value2json(value, stack) {
         }
 
         return json;
+    }
+
+    return value;
+}
+
+export function clone(value) {
+    if ( value instanceof Date ) {
+        return new Date( +value );
+    }
+
+    if ( value instanceof Model ) {
+        return value.clone();
+    }
+
+    if ( Array.isArray(value) ) {
+        return value.map((item) =>
+            clone( item )
+        );
+    }
+
+    if ( isObject(value) ) {
+        const cloneObj = {};
+
+        for (const key in value) {
+            const item = value[ key ];
+
+            cloneObj[ key ] = clone( item );
+        }
+
+        return cloneObj;
     }
 
     return value;

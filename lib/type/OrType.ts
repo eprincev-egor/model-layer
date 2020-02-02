@@ -1,7 +1,7 @@
 import {Type, IType, ITypeParams} from "./Type";
 import {Model} from "../Model";
 import {invalidValuesAsString} from "../utils";
-import {value2json, equal} from "./AnyType";
+import {value2json, equal, clone} from "./AnyType";
 
 type ElementType < T extends any[] > = (
     // tslint:disable-next-line: no-shadowed-variable
@@ -106,6 +106,10 @@ export class OrType extends Type {
         }
 
         return value;
+    }
+
+    clone(value) {
+        return clone(value);
     }
 
     equal(selfValue, otherValue, stack) {
