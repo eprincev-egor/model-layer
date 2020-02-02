@@ -87,8 +87,8 @@ export class CollectionType extends Type {
         return collection.toJSON(stack);
     }
 
-    clone(collection) {
-        return collection.clone();
+    clone(collection, stack) {
+        return collection.clone(stack);
     }
 
     equal(selfCollection, otherCollection, stack) {

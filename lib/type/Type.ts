@@ -1,4 +1,6 @@
 
+import EqualStack from "../EqualStack";
+
 import {invalidValuesAsString} from "../utils";
 const FORBIDDEN_PRIMARY_KEYS = [
     "data",
@@ -317,12 +319,12 @@ export class Type {
         return value;
     }
 
-    toJSON(value, stack = []): any {
+    toJSON(value, stack): any {
         return value;
     }
 
-    clone(value): any {
-        return this.toJSON( value );
+    clone(value, stack?: EqualStack): any {
+        return this.toJSON( value, stack );
     }
 
     typeAsString(): string {

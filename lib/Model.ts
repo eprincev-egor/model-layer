@@ -433,7 +433,18 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
         return json;
     }
 
-    clone(): this {
+    clone(stack?: EqualStack): this {
+        stack = stack || new EqualStack();
+
+        // circular reference
+        const existsClone = stack.get(this);
+        if ( existsClone ) {
+            return existsClone;
+        }
+
+        const clone: this = Object.create( this.constructor.prototype );
+        stack.add(this, clone);
+
         const cloneData: Partial<this["data"]> = {};
 
         for (const key in this.data) {
@@ -441,15 +452,14 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
             let value = this.data[ key ];
 
             if ( value != null ) {
-                value = description.clone( value ); 
+                value = description.clone( value, stack ); 
             }
 
             cloneData[ key ] = value;
         }
 
-        const ThisConstructor = this.constructor as any;
-        const clone: this = new ThisConstructor( cloneData );
-        
+        (clone as any).data = Object.freeze(cloneData);
+
         return clone;
     }
 

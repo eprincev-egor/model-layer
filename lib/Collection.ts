@@ -3,6 +3,7 @@ import EventEmitter from "events";
 import {Model, ISimpleObject} from "./Model";
 import EqualStack from "./EqualStack";
 import {invalidValuesAsString, isPlainObject} from "./utils";
+import { strictEqual } from "assert";
 
 interface IAddEvent<TCollection, TModel> {
     type: "add";
@@ -584,13 +585,22 @@ export class Collection<TModel extends Model> extends EventEmitter {
         );
     }
 
-    clone(): this {
-        const models = this.models.map((model) => 
-            model.clone()
-        );
+    clone(stack?: EqualStack): this {
+        stack = stack || new EqualStack();
 
-        const ChildCollection = this.constructor as any;
-        const clone = new ChildCollection( models );
+        const existsClone = stack.get(this);
+        if ( existsClone ) {
+            return existsClone;
+        }
+
+        const clone = Object.create( this.constructor.prototype );
+        stack.add(this, clone);
+
+        const models = this.models.map((model) => 
+            model.clone(stack)
+        );
+        clone.models = models;
+        clone.length = models.length;
         
         return clone;
     }

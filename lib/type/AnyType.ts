@@ -4,6 +4,7 @@ import {Type, IType, ITypeParams} from "./Type";
 import {Model} from "../Model";
 import {isObject, isPlainObject, isNaN} from "../utils";
 import {CircularStructureToJSONError} from "../errors";
+import EqualStack from "../EqualStack";
 
 // tslint:disable-next-line: no-empty-interface
 export interface IAnyTypeParams extends ITypeParams {
@@ -22,16 +23,16 @@ export class AnyType extends Type {
         return value2json( value, stack );
     }
 
-    clone(value) {
-        return clone(value);
+    clone(value, stack: EqualStack) {
+        return clone(value, stack);
     }
 
-    equal(selfValue, otherValue, stack) {
+    equal(selfValue, otherValue, stack: EqualStack) {
         return equal(selfValue, otherValue, stack);
     }
 }
 
-export function equal(selfValue, otherValue, stack) {
+export function equal(selfValue, otherValue, stack: EqualStack) {
     if ( selfValue instanceof Date && otherValue instanceof Date ) {
         return +selfValue === +otherValue;
     }
@@ -164,18 +165,18 @@ export function value2json(value, stack) {
     return value;
 }
 
-export function clone(value) {
+export function clone(value, stack: EqualStack) {
     if ( value instanceof Date ) {
         return new Date( +value );
     }
 
     if ( value instanceof Model ) {
-        return value.clone();
+        return value.clone(stack);
     }
 
     if ( Array.isArray(value) ) {
         return value.map((item) =>
-            clone( item )
+            clone( item, stack )
         );
     }
 
@@ -185,7 +186,7 @@ export function clone(value) {
         for (const key in value) {
             const item = value[ key ];
 
-            cloneObj[ key ] = clone( item );
+            cloneObj[ key ] = clone( item, stack );
         }
 
         return cloneObj;

@@ -98,8 +98,8 @@ export class ModelType extends Type {
         return model.toJSON(stack);
     }
 
-    clone(model) {
-        return model.clone();
+    clone(model, stack) {
+        return model.clone(stack);
     }
 
     equal(selfModel, otherModel, stack) {

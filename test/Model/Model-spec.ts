@@ -1,8 +1,7 @@
 
-import {Model, Types} from "../../lib/index";
+import {Model, Collection, Types} from "../../lib/index";
 import assert from "assert";
 import {eol} from "../../lib/utils";
-import { Type } from "../../lib/type/Type";
 
 describe("Model tests", () => {
 
@@ -1265,5 +1264,204 @@ describe("Model tests", () => {
         assert.ok( clone2.get("users").user instanceof Manager );
         assert.ok( clone2.get("users").user !== model.get("users").user );
         assert.deepStrictEqual(model.toJSON(), clone2.toJSON());
+    });
+
+    it("model.clone() with circular reference (array type)", () => {
+        class Human extends Model<Human> {
+            structure() {
+                return {
+                    name: Types.String,
+                    dad: Human,
+                    mom: Human,
+                    children: Types.Array({
+                        element: Human
+                    })
+                };
+            }
+        }
+
+        const dad = new Human({
+            name: "dad"
+        });
+        const mom = new Human({
+            name: "mom"
+        });
+        const child = new Human({
+            name: "bob",
+            mom,
+            dad
+        });
+
+        mom.set({
+            children: [child]
+        });
+        dad.set({
+            children: [child]
+        });
+
+        const clone = mom.clone();
+        assert.ok( clone instanceof Human );
+        assert.strictEqual( clone.get("name"), "mom" );
+        
+        const cloneChild = clone.get("children")[0];
+        assert.ok( cloneChild instanceof Human );
+        assert.ok( cloneChild !== child );
+        assert.strictEqual( cloneChild.get("name"), "bob" );
+
+    });
+
+    
+    it("model.clone() with circular reference (object type)", () => {
+        class Human extends Model<Human> {
+            structure() {
+                return {
+                    name: Types.String,
+                    friend: Types.Object({
+                        element: Human
+                    })
+                };
+            }
+        }
+
+        const bob = new Human({
+            name: "bob"
+        });
+        const jack = new Human({
+            name: "jack",
+            friend: {first: bob}
+        });
+
+        bob.set({
+            friend: {first: jack}
+        });
+
+        const clone = bob.clone();
+        assert.ok( clone instanceof Human );
+        assert.strictEqual( clone.get("name"), "bob" );
+        
+        const cloneFriend = clone.get("friend");
+        assert.ok( cloneFriend.first instanceof Human, "instance Human" );
+        assert.ok( cloneFriend.first !== bob.get("friend").first, "is another Model" );
+        assert.strictEqual( cloneFriend.first.get("name"), "jack" );
+
+    });
+
+    
+    it("model.clone() with circular reference (model type)", () => {
+        class Human extends Model<Human> {
+            structure() {
+                return {
+                    name: Types.String,
+                    friend: Human
+                };
+            }
+        }
+
+        const bob = new Human({
+            name: "bob"
+        });
+        const jack = new Human({
+            name: "jack",
+            friend: bob
+        });
+
+        bob.set({
+            friend: jack
+        });
+
+        const clone = bob.clone();
+        assert.ok( clone instanceof Human );
+        assert.strictEqual( clone.get("name"), "bob" );
+        
+        const cloneFriend = clone.get("friend");
+        assert.ok( cloneFriend instanceof Human );
+        assert.ok( cloneFriend !== bob.get("friend") );
+        assert.strictEqual( cloneFriend.get("name"), "jack" );
+
+    });
+
+    it("model.clone() with circular reference (collection type)", () => {
+        class File extends Model<File> {
+            structure() {
+                return {
+                    name: Types.String,
+                    files: Files
+                };
+            }
+        }
+
+        class Files extends Collection<File> {
+            Model() {
+                return File;
+            }
+        }
+
+        const mainFile = new File({
+            name: "main"
+        });
+        const file1 = new File({
+            name: "file 1"
+        });
+        const file2 = new File({
+            name: "file 2"
+        });
+
+        const files = new Files([
+            file1,
+            file2,
+            // circular reference
+            mainFile
+        ]);
+
+        mainFile.set({files});
+
+        const clone = mainFile.clone();
+        assert.ok( clone instanceof File );
+        assert.ok( clone !== mainFile );
+        assert.strictEqual( mainFile.get("name"), clone.get("name") );
+
+        assert.ok( clone.get("files") instanceof Files );
+        assert.ok( clone.get("files") !== mainFile.get("files") );
+
+        assert.strictEqual( mainFile.get("files").at(1).get("name"), "file 2" );
+
+
+        const filesClone = files.clone();
+        assert.ok( filesClone instanceof Files );
+        assert.ok( filesClone !== files );
+
+        assert.strictEqual( filesClone.at(1).get("name"), "file 2" );
+    });
+
+    
+    it("model.clone() with circular reference (any type)", () => {
+        class SomeModel extends Model<SomeModel> {
+            structure() {
+                return {
+                    any: Types.Any
+                };
+            }
+        }
+
+        const model1 = new SomeModel();
+        const model2 = new SomeModel({
+            any: model1
+        });
+        model1.set({any: model2}); 
+        
+        const model3 = new SomeModel({
+            any: [{any: model1}]
+        });
+
+        const clone = model3.clone();
+        const cloneModel1 = clone.get("any")[0].any;
+
+        assert.ok( clone instanceof SomeModel );
+        assert.ok( cloneModel1 instanceof SomeModel );
+        assert.ok( cloneModel1 !== model1 );
+
+        assert.ok( 
+            cloneModel1 === cloneModel1.get("any").get("any")
+        );
     });
 });

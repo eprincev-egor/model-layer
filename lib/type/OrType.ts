@@ -108,8 +108,8 @@ export class OrType extends Type {
         return value;
     }
 
-    clone(value) {
-        return clone(value);
+    clone(value, stack) {
+        return clone(value, stack);
     }
 
     equal(selfValue, otherValue, stack) {

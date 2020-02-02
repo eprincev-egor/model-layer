@@ -148,9 +148,9 @@ export class ArrayType extends Type {
         );
     }
 
-    clone(value) {
+    clone(value, stack) {
         return value.map((item) => 
-            this.element.clone( item )
+            this.element.clone( item, stack )
         );
     }
 
