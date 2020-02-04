@@ -2,67 +2,104 @@
 import {BaseError} from "./BaseError";
 
 // Model errors
-export class UnknownPropertyError extends BaseError.create<{
+export class UnknownPropertyError extends BaseError<{
     propertyName: string
-}>({
-    messages: {
-        ru: ({propertyName}) => `неизвестное свойство: ${propertyName}`,
-        en: ({propertyName}) => `unknown property: ${propertyName}`,
+}> {
+    getMessage({propertyName}) {
+        return {
+            ru: `неизвестное свойство: ${propertyName}`,
+            en: `unknown property: ${propertyName}`,
+        };
     }
-}) {}
+}
 
 
-export class ModelWithoutStructureError extends BaseError.create<{
+export class ModelWithoutStructureError extends BaseError<{
     className: string
-}>({
-    messages: {
-        ru: ({className}) => `не объявлен метод ${ className }.structure()`,
-        en: ({className}) => `${ className }.structure() is not declared`,
+}> {
+    getMessage({className}) {
+        return {
+            ru: `не объявлен метод ${ className }.structure()`,
+            en: `${ className }.structure() is not declared`
+        };
     }
-}) {}
+}
 
-export class InvalidKeyError extends BaseError.create<{
-    key: string
-}>({
-    messages: {
-        ru: ({key}) => `некорректный ключ: ${ key }`,
-        en: ({key}) => `invalid key: ${ key }`,
+export class InvalidKeyError extends BaseError<{key: string}> {
+    getMessage({key}) {
+        return {
+            ru: `некорректный ключ: ${ key }`,
+            en: `invalid key: ${ key }`
+        };
     }
-}) {}
+}
 
-export class InvalidValueError extends BaseError.create<{
+export class InvalidValueError extends BaseError<{
     key: string,
     value: string
-}>({
-    messages: {
-        ru: ({key, value}) => `некорректное значение: ${ key }: ${ value }`,
-        en: ({key, value}) => `invalid ${ key }: ${ value }`,
+}> {
+    getMessage({key, value}) {
+        return {
+            ru: `некорректное значение: ${ key }: ${ value }`,
+            en: `invalid ${ key }: ${ value }`
+        };
     }
-}) {}
+}
 
-export class RequiredError extends BaseError.create<{
+export class RequiredError extends BaseError<{
     key: string
-}>({
-    messages: {
-        ru: ({key}) => `пропущено обязательное поле: ${ key }`,
-        en: ({key}) => `required ${ key }`,
+}> {
+    getMessage({key}) {
+        return {
+            ru: `пропущено обязательное поле: ${ key }`,
+            en: `required ${ key }`
+        };
     }
-}) {}
+}
 
-export class ConstValueError extends BaseError.create<{
+export class ConstValueError extends BaseError<{
     key: string
-}>({
-    messages: {
-        ru: ({key}) => `невозможно изменить поле только для чтения: ${ key }`,
-        en: ({key}) => `cannot assign to read only property: ${ key }`,
+}> {
+    getMessage({key}) {
+        return {
+            ru: `невозможно изменить поле только для чтения: ${ key }`,
+            en: `cannot assign to read only property: ${ key }`
+        };
     }
-}) {}
+}
 
-export class DataShouldBeObjectError extends BaseError.create<{
-    
-}>({
-    messages: {
-        ru: ({}) => `ожидается объект row`,
-        en: ({}) => `row must be are object`,
+export class DataShouldBeObjectError extends BaseError {
+    getMessage() {
+        return {
+            ru: `ожидается объект row`,
+            en: `row must be are object`
+        };
     }
-}) {}
+}
+
+export class NoToJSONMethodError extends BaseError {
+    getMessage({className}) {
+        return {
+            ru: `невозможно преобразовать [object: ${className}] в json, объявите метод toJSON для этого поля`,
+            en: `cannot convert [object: ${className}] to json, need toJSON method for this field`
+        };
+    }
+}
+
+export class NoCloneMethodError extends BaseError {
+    getMessage({className}) {
+        return {
+            ru: `невозможно преобразовать [object: ${className}] в json, объявите метод toJSON для этого поля`,
+            en: `cannot convert [object: ${className}] to json, need toJSON method for this field`
+        };
+    }
+}
+
+export class NoEqualMethodError extends BaseError<{className: string}> {
+    getMessage({className}) {
+        return {
+            ru: `невозможно преобразовать [object: ${className}] в json, объявите метод toJSON для этого поля`,
+            en: `cannot convert [object: ${className}] to json, need toJSON method for this field`
+        };
+    }
+}

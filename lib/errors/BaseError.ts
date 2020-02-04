@@ -1,11 +1,7 @@
-// tslint:disable: max-classes-per-file
 
-type TMessageTemplate = (
-    (...args: any) => string
-);
 interface IMessages {
-    ru: TMessageTemplate;
-    en: TMessageTemplate;
+    ru: string;
+    en: string;
 }
 
 let lang: keyof IMessages = "en";
@@ -13,33 +9,17 @@ export function setLang(newLang: keyof IMessages) {
     lang = newLang;
 }
 
-export class BaseError extends Error {
-    static create<TData>(params: {messages: IMessages}) {
-        class ChildError extends BaseError {
-            
-            row: TData;
+export class BaseError<TData extends {[key: string]: any} = {}> extends Error {
 
-            constructor(row: TData)  {
-
-                const template = params.messages[lang];
-                const message = template(row);
-
-                super(message);
-
-                this.row = row;
-            }
-        }
-
-        // for coverage
-        try {
-            setLang("ru");
-            const ruError = new ChildError({} as any);
-
-            setLang("en");
-            const enError = new ChildError({} as any);
-        // tslint:disable-next-line: no-empty
-        } catch (err) {}
-        
-        return ChildError;
+    constructor(templateData: TData) {
+        super();
+        this.message = this.getMessage(templateData)[ lang ];
+    }
+    
+    getMessage(templateData: TData): IMessages {
+        return {
+            ru: "",
+            en: ""
+        };
     }
 }
