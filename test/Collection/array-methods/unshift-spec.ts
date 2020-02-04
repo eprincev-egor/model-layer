@@ -137,7 +137,7 @@ describe("Collection.unshift", () => {
             () => {
                 users.unshift(someModel);
             }, (err) =>
-                err.message === "invalid model constructor: AnotherModel"
+                err.message === "Users: expected model constructor User, but have AnotherModel"
         );
 
         assert.strictEqual( users.length, 0 );
@@ -190,7 +190,7 @@ describe("Collection.unshift", () => {
             () => {
                 users.unshift(undefined);
             }, (err) =>
-                err.message === "invalid model: undefined"
+                err.message === "invalid row undefined for model User"
         );
     });
 

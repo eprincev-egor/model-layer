@@ -3,7 +3,12 @@ import EventEmitter from "events";
 import {Model, ISimpleObject} from "./Model";
 import EqualStack from "./EqualStack";
 import {invalidValuesAsString, isPlainObject} from "./utils";
-import { strictEqual } from "assert";
+import {
+    CollectionShouldHaveModelError,
+    WrongModelConstructorError,
+    InvalidModelRowError,
+    InvalidSortParamsError
+} from "./errors";
 
 interface IAddEvent<TCollection, TModel> {
     type: "add";
@@ -56,7 +61,9 @@ export class Collection<TModel extends Model> extends EventEmitter {
     }
     
     Model(): new (...args: any) => TModel {
-        throw new Error(`${ this.constructor.name }.Model() is not declared`);
+        throw new CollectionShouldHaveModelError({
+            className: this.constructor.name
+        });
     }
 
     at(index: number, rowOrModel?: TModel["TInput"]): TModel {
@@ -99,14 +106,21 @@ export class Collection<TModel extends Model> extends EventEmitter {
         }
 
         if ( row instanceof Model ) {
-            throw new Error( `invalid model constructor: ${ row.constructor.name }` );
+            throw new WrongModelConstructorError({
+                invalid: row.constructor.name,
+                expected: this.ModelConstructor.name,
+                collection: this.constructor.name
+            });
         }
         
         if ( isPlainObject(row) ) {
             model = new this.ModelConstructor( row );
         }
         else {
-            throw new Error( `invalid model: ${ invalidValuesAsString( row ) }` );
+            throw new InvalidModelRowError({
+                model: this.ModelConstructor.name,
+                invalidValue: invalidValuesAsString( row )
+            });
         }
 
         return model;
@@ -410,7 +424,9 @@ export class Collection<TModel extends Model> extends EventEmitter {
 
         else {
             const invalidValue = invalidValuesAsString( compareFunctionOrKey );
-            throw new Error(`invalid compareFunction or key: ${ invalidValue }`);
+            throw new InvalidSortParamsError({
+                invalidValue
+            });
         }
     }
     

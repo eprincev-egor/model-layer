@@ -138,7 +138,7 @@ describe("Collection.push", () => {
             () => {
                 users.push(someModel);
             }, (err) =>
-                err.message === "invalid model constructor: AnotherModel"
+                err.message === "Users: expected model constructor User, but have AnotherModel"
         );
 
         assert.strictEqual( users.length, 0 );
@@ -189,7 +189,7 @@ describe("Collection.push", () => {
             () => {
                 users.push(undefined);
             }, (err) =>
-                err.message === "invalid model: undefined"
+                err.message === "invalid row undefined for model User"
         );
     });
 
