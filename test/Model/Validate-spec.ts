@@ -30,11 +30,11 @@ describe("Model validate", () => {
             name: "Andrew"
         });
         assert.equal( model.get("name"), "Andrew" );
-        assert.equal( model.data.name, "Andrew" );
+        assert.equal( model.row.name, "Andrew" );
 
         model.set({age: 40});
         assert.strictEqual( model.get("age"), 40 );
-        assert.strictEqual( model.data.age, 40 );
+        assert.strictEqual( model.row.age, 40 );
 
         assert.throws(
             () => {
@@ -46,9 +46,9 @@ describe("Model validate", () => {
 
 
         assert.equal( model.get("name"), "Andrew" );
-        assert.equal( model.data.name, "Andrew" );
+        assert.equal( model.row.name, "Andrew" );
         assert.strictEqual( model.get("age"), 40 );
-        assert.strictEqual( model.data.age, 40 );
+        assert.strictEqual( model.row.age, 40 );
     });
 
     it("validate method", () => {
@@ -62,8 +62,8 @@ describe("Model validate", () => {
                 };
             }
 
-            validate(data) {
-                if ( data.age < 0 ) {
+            validate(row) {
+                if ( row.age < 0 ) {
                     throw new Error("invalid age");
                 }
             }
@@ -97,7 +97,7 @@ describe("Model validate", () => {
         );
 
         // error in validate, returns previous state
-        assert.equal( model.data.age, 100 );
+        assert.equal( model.row.age, 100 );
     });
 
     it("cannot change state in validate method", () => {
@@ -111,8 +111,8 @@ describe("Model validate", () => {
                 };
             }
 
-            validate(data) {
-                data.age = 200;
+            validate(row) {
+                row.age = 200;
             }
         }
 
@@ -125,7 +125,7 @@ describe("Model validate", () => {
         );
     });
 
-    it("this.data in validate is previous state", () => {
+    it("this.row in validate is previous state", () => {
 
         class AgeModel extends Model<AgeModel> {
             structure() {
@@ -136,9 +136,9 @@ describe("Model validate", () => {
                 };
             }
 
-            validate(data) {
-                assert.equal( this.data.age, 100 );
-                assert.equal( data.age, 200 );
+            validate(row) {
+                assert.equal( this.row.age, 100 );
+                assert.equal( row.age, 200 );
             }
         }
         
@@ -189,7 +189,7 @@ describe("Model validate", () => {
         );
 
         // error in validate, returns previous state
-        assert.equal( model.data.age, 100 );
+        assert.equal( model.row.age, 100 );
     });
 
     it("do not validate null value", () => {
@@ -215,11 +215,11 @@ describe("Model validate", () => {
             prop: "nice"
         });
 
-        assert.strictEqual(model.data.prop, "nice");
+        assert.strictEqual(model.row.prop, "nice");
 
 
         model.set({prop: null});
-        assert.strictEqual(model.data.prop, null);
+        assert.strictEqual(model.row.prop, null);
     });
 
 
@@ -263,7 +263,7 @@ describe("Model validate", () => {
         );
 
         // error in validate, returns previous state
-        assert.equal( model.data.word, "test" );
+        assert.equal( model.row.word, "test" );
     });
 
     it("enum validate", () => {
@@ -280,7 +280,7 @@ describe("Model validate", () => {
         }
 
         const model = new EnumModel();
-        assert.strictEqual( model.data.color, null );
+        assert.strictEqual( model.row.color, null );
 
         // validate in set
         assert.throws(
@@ -294,7 +294,7 @@ describe("Model validate", () => {
         );
 
         // error in validate, returns previous state
-        assert.strictEqual( model.data.color, null );
+        assert.strictEqual( model.row.color, null );
 
 
         // validate in constructor
@@ -317,7 +317,7 @@ describe("Model validate", () => {
         assert.equal(model.get("color"), null);
     });
 
-    it("isValid(data)", () => {
+    it("isValid(row)", () => {
 
         class SomeModel extends Model<SomeModel> {
             structure() {
@@ -342,8 +342,8 @@ describe("Model validate", () => {
                 };
             }
 
-            validate(data) {
-                if ( data.buy > data.sale ) {
+            validate(row) {
+                if ( row.buy > row.sale ) {
                     throw new Error("invalid sale");
                 }
             }
@@ -398,7 +398,7 @@ describe("Model validate", () => {
             xx: true
         }), false);
 
-        // custom validate data
+        // custom validate row
         assert.strictEqual(model.isValid({
             buy: 100,
             sale: 20
@@ -409,7 +409,7 @@ describe("Model validate", () => {
                 anyModel.isValid();
             },
             (err) =>
-                err.message === "data must be are object"
+                err.message === "row must be are object"
         );
     });
 
@@ -427,7 +427,7 @@ describe("Model validate", () => {
 
         let model = new SomeModel();
 
-        assert.strictEqual( model.data.name, null );
+        assert.strictEqual( model.row.name, null );
 
         assert.throws(
             () => {
@@ -441,7 +441,7 @@ describe("Model validate", () => {
         model = new SomeModel({
             name: "Bob"
         });
-        assert.equal( model.data.name, "Bob" );
+        assert.equal( model.row.name, "Bob" );
 
         assert.throws(
             () => {

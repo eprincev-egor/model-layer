@@ -185,13 +185,13 @@ describe("ArrayType", () => {
         }
 
         const model = new SomeModel();
-        assert.strictEqual( model.data.colors, null );
+        assert.strictEqual( model.row.colors, null );
 
         model.set({colors: ["red"]});
-        assert.deepEqual( model.data.colors, ["red"] );
+        assert.deepEqual( model.row.colors, ["red"] );
 
         model.set({colors: []});
-        assert.strictEqual( model.data.colors, null );
+        assert.strictEqual( model.row.colors, null );
     });
 
     it("nullAsEmpty", () => {
@@ -208,13 +208,13 @@ describe("ArrayType", () => {
         }
 
         const model = new SomeModel();
-        assert.deepEqual( model.data.colors, [] );
+        assert.deepEqual( model.row.colors, [] );
 
         model.set({colors: ["red"]});
-        assert.deepEqual( model.data.colors, ["red"] );
+        assert.deepEqual( model.row.colors, ["red"] );
 
         model.set({colors: null});
-        assert.deepEqual( model.data.colors, [] );
+        assert.deepEqual( model.row.colors, [] );
     });
 
 
@@ -246,7 +246,7 @@ describe("ArrayType", () => {
             answers: someAnswers
         });
 
-        const answers = model.data.answers;
+        const answers = model.row.answers;
         assert.deepEqual( answers, [true, true] );
 
         assert.strictEqual( answers[0], true );
@@ -282,7 +282,7 @@ describe("ArrayType", () => {
             pays: [now]
         });
 
-        const pays = model.data.pays;
+        const pays = model.row.pays;
 
         assert.strictEqual( +pays[0], now );
         assert.ok( pays[0] instanceof Date );
@@ -328,7 +328,7 @@ describe("ArrayType", () => {
             }]
         });
 
-        const managers = companyModel.data.managers as UserModel[];
+        const managers = companyModel.row.managers as UserModel[];
         assert.ok( managers[0] instanceof UserModel );
         assert.equal( managers[0].get("name"), "Bob" );
     });
@@ -369,7 +369,7 @@ describe("ArrayType", () => {
             names: [" Bob "]
         });
 
-        assert.deepEqual(model.data, {
+        assert.deepEqual(model.row, {
             colors: ["RED"],
             names: ["Bob"]
         });
@@ -404,7 +404,7 @@ describe("ArrayType", () => {
             users: [{id: 1}]
         });
 
-        const users = model.data.users;
+        const users = model.row.users;
         assert.deepEqual( users, [{id: 1}] );
     });
 
@@ -449,11 +449,11 @@ describe("ArrayType", () => {
         );
         
 
-        assert.deepEqual(companyModel.data.managersIds, [1, 2]);
+        assert.deepEqual(companyModel.row.managersIds, [1, 2]);
         
         // in unique validation   null != null
         companyModel.set({managersIds: [null, undefined, null]});
-        assert.deepEqual(companyModel.data.managersIds, [null, null, null]);
+        assert.deepEqual(companyModel.row.managersIds, [null, null, null]);
     });
 
     it("unique ChildModel", () => {
@@ -500,7 +500,7 @@ describe("ArrayType", () => {
             managers: [userModel1, userModel2]
         });
 
-        let managers = companyModel.data.managers;
+        let managers = companyModel.row.managers;
         assert.ok( managers[0] === userModel1 );
         assert.ok( managers[1] === userModel2 );
 
@@ -513,7 +513,7 @@ describe("ArrayType", () => {
         );
         
 
-        managers = companyModel.data.managers;
+        managers = companyModel.row.managers;
         assert.ok( managers[0] === userModel1 );
         assert.ok( managers[1] === userModel2 );
     });
@@ -535,7 +535,7 @@ describe("ArrayType", () => {
             managersIds: ["30" as any, 2, -10]
         });
 
-        assert.deepEqual(companyModel.data.managersIds, [-10, 2, 30]);
+        assert.deepEqual(companyModel.row.managersIds, [-10, 2, 30]);
     });
 
     it("sort by custom comparator", () => {
@@ -563,7 +563,7 @@ describe("ArrayType", () => {
             names: ["a3", "d4", "b2", "c1"]
         });
 
-        assert.deepEqual(model.data.names, ["c1", "b2", "a3", "d4"]);
+        assert.deepEqual(model.row.names, ["c1", "b2", "a3", "d4"]);
     });
 
     it("matrix", () => {
@@ -588,7 +588,7 @@ describe("ArrayType", () => {
             ]
         });
 
-        assert.deepEqual(model.data.matrix, [
+        assert.deepEqual(model.row.matrix, [
             [1, 2, 3],
             [4, 5, 6],
             [7, 8, 9]
@@ -654,7 +654,7 @@ describe("ArrayType", () => {
             ids: [1, 2, 3]
         });
 
-        assert.deepEqual(model.data, {
+        assert.deepEqual(model.row, {
             ids: [1, 2, 3]
         });
 
@@ -662,9 +662,9 @@ describe("ArrayType", () => {
 
         assert.ok( clone instanceof SomeModel );
         assert.ok( clone !== model );
-        assert.ok( clone.data.ids !== model.data.ids );
+        assert.ok( clone.row.ids !== model.row.ids );
 
-        assert.deepEqual(clone.data, {
+        assert.deepEqual(clone.row, {
             ids: [1, 2, 3]
         });
 
@@ -673,11 +673,11 @@ describe("ArrayType", () => {
             ids: [3, 4]
         });
 
-        assert.deepEqual(model.data, {
+        assert.deepEqual(model.row, {
             ids: [1, 2, 3]
         });
 
-        assert.deepEqual(clone.data, {
+        assert.deepEqual(clone.row, {
             ids: [3, 4]
         });
 
@@ -686,11 +686,11 @@ describe("ArrayType", () => {
             ids: [8]
         });
 
-        assert.deepEqual(model.data, {
+        assert.deepEqual(model.row, {
             ids: [8]
         });
 
-        assert.deepEqual(clone.data, {
+        assert.deepEqual(clone.row, {
             ids: [3, 4]
         });
     });
@@ -738,7 +738,7 @@ describe("ArrayType", () => {
             arr: [1, "nice"]
         });
 
-        assert.deepEqual(model.data, {
+        assert.deepEqual(model.row, {
             arr: [1, "nice"]
         });
     });
@@ -844,7 +844,7 @@ describe("ArrayType", () => {
     });
 
     
-    // when in type defined BaseModel, and in data we have ChildModel (extends BaseModel), 
+    // when in type defined BaseModel, and in row we have ChildModel (extends BaseModel), 
     // then clone should be instance of ChildModel
     it("clone array of models, should return array of instance of Child", () => {
 

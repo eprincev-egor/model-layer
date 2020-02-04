@@ -15,16 +15,16 @@ describe("Model with any property", () => {
         }
 
         const model = new SomeModel();
-        assert.deepEqual(model.data, {});
+        assert.deepEqual(model.row, {});
 
         model.set({x: 10});
-        assert.strictEqual(model.data.x, 10);
+        assert.strictEqual(model.row.x, 10);
         
         model.set({y: "text"});
-        assert.strictEqual(model.data.y, "text");
+        assert.strictEqual(model.row.y, "text");
 
         model.set({z: true});
-        assert.strictEqual(model.data.z, true);
+        assert.strictEqual(model.row.z, true);
 
 
         model.set({
@@ -33,7 +33,7 @@ describe("Model with any property", () => {
             z: false
         });
 
-        assert.deepEqual(model.data, {
+        assert.deepEqual(model.row, {
             x: false,
             y: false,
             z: false
@@ -55,7 +55,7 @@ describe("Model with any property", () => {
             value: 2
         });
 
-        assert.deepEqual(model.data, {
+        assert.deepEqual(model.row, {
             test: 1,
             value: 2
         });
@@ -89,17 +89,17 @@ describe("Model with any property", () => {
         );
 
 
-        assert.deepEqual(model.data, {
+        assert.deepEqual(model.row, {
             test: 1,
             value: 2,
             y: 3
         });
 
-        // model.data should be frozen
+        // model.row should be frozen
         assert.throws(
             () => {
                 const anyModel = model as any;
-                anyModel.data.y = 10;
+                anyModel.row.y = 10;
             },
             (err) =>
                 /Cannot assign to read only property/.test(err.message)
@@ -108,7 +108,7 @@ describe("Model with any property", () => {
         assert.throws(
             () => {
                 const anyModel = model as any;
-                anyModel.data.prop = 10;
+                anyModel.row.prop = 10;
             },
             (err) =>
                 /Cannot add property prop/.test(err.message)
@@ -127,7 +127,7 @@ describe("Model with any property", () => {
 
         const model = new SomeModel();
 
-        assert.deepEqual(model.data, {});
+        assert.deepEqual(model.row, {});
 
         let event;
         let counter = 0;
@@ -163,7 +163,7 @@ describe("Model with any property", () => {
 
         const model = new SomeModel();
 
-        assert.deepEqual(model.data, {
+        assert.deepEqual(model.row, {
             age: 0
         });
 
@@ -186,7 +186,7 @@ describe("Model with any property", () => {
         );
 
 
-        assert.deepEqual(model.data, {
+        assert.deepEqual(model.row, {
             age: 0
         });
 
@@ -196,7 +196,7 @@ describe("Model with any property", () => {
             key: "xxx"
         });
 
-        assert.deepEqual(model.data, {
+        assert.deepEqual(model.row, {
             age: 0,
             name: "Bob",
             key: "xxx"
@@ -220,7 +220,7 @@ describe("Model with any property", () => {
             b: "Good "
         });
 
-        assert.deepEqual(model.data, {
+        assert.deepEqual(model.row, {
             a: "SUPER",
             b: "GOOD"
         });
@@ -230,7 +230,7 @@ describe("Model with any property", () => {
             c: "water"
         });
 
-        assert.deepEqual(model.data, {
+        assert.deepEqual(model.row, {
             a: "SUPER",
             b: "B",
             c: "WATER"
@@ -264,7 +264,7 @@ describe("Model with any property", () => {
             nice: 22
         });
 
-        assert.deepEqual(model.data, {
+        assert.deepEqual(model.row, {
             nice: 22
         });
 
@@ -278,7 +278,7 @@ describe("Model with any property", () => {
                 err.message === "invalid nice: 1"
         );
 
-        assert.deepEqual(model.data, {
+        assert.deepEqual(model.row, {
             nice: 22
         });
     });
@@ -312,7 +312,7 @@ describe("Model with any property", () => {
             1: "nice"
         });
 
-        assert.deepEqual(model.data, {
+        assert.deepEqual(model.row, {
             1: "nice"
         });
 
@@ -328,7 +328,7 @@ describe("Model with any property", () => {
         );
 
         
-        assert.deepEqual(model.data, {
+        assert.deepEqual(model.row, {
             1: "nice"
         });
     });
@@ -361,7 +361,7 @@ describe("Model with any property", () => {
             $name: "nice"
         });
 
-        assert.deepEqual(model.data, {
+        assert.deepEqual(model.row, {
             $name: "nice"
         });
 
@@ -375,7 +375,7 @@ describe("Model with any property", () => {
                 err.message === "invalid key: wrong"
         );
         
-        assert.deepEqual(model.data, {
+        assert.deepEqual(model.row, {
             $name: "nice"
         });
 

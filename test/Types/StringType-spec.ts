@@ -18,21 +18,21 @@ describe("StringType", () => {
         let model: SomeModel;
 
         model = new SomeModel();
-        assert.strictEqual( model.data.name, "10" );
+        assert.strictEqual( model.row.name, "10" );
 
         model = new SomeModel({
             name: -20 as any
         });
-        assert.strictEqual( model.data.name, "-20" );
+        assert.strictEqual( model.row.name, "-20" );
         
         model.set({name: 1.1 as any});
-        assert.strictEqual( model.data.name, "1.1" );
+        assert.strictEqual( model.row.name, "1.1" );
 
         model.set({name: null});
-        assert.strictEqual( model.data.name, null );
+        assert.strictEqual( model.row.name, null );
 
         model.set({name: "nice"});
-        assert.strictEqual( model.data.name, "nice" );
+        assert.strictEqual( model.row.name, "nice" );
 
         
         assert.throws(
@@ -113,7 +113,7 @@ describe("StringType", () => {
                 err.message === "invalid string for name: [0]"
         );
 
-        assert.strictEqual( model.data.name, "nice" );
+        assert.strictEqual( model.row.name, "nice" );
     });
 
     it("prepare trim", () => {
@@ -130,10 +130,10 @@ describe("StringType", () => {
         }
 
         const model = new SomeModel();
-        assert.strictEqual( model.data.name, "bob" );
+        assert.strictEqual( model.row.name, "bob" );
 
         model.set({name: " word "});
-        assert.strictEqual( model.data.name, "word" );
+        assert.strictEqual( model.row.name, "word" );
     });
 
     it("prepare emptyAsNull", () => {
@@ -150,13 +150,13 @@ describe("StringType", () => {
         }
 
         const model = new SomeModel();
-        assert.strictEqual( model.data.name, null );
+        assert.strictEqual( model.row.name, null );
 
         model.set({name: "word"});
-        assert.strictEqual( model.data.name, "word" );
+        assert.strictEqual( model.row.name, "word" );
 
         model.set({name: ""});
-        assert.strictEqual( model.data.name, null );
+        assert.strictEqual( model.row.name, null );
     });
 
     it("prepare nullAsEmpty", () => {
@@ -172,13 +172,13 @@ describe("StringType", () => {
         }
 
         const model = new SomeModel();
-        assert.strictEqual( model.data.name, "" );
+        assert.strictEqual( model.row.name, "" );
 
         model.set({name: "word"});
-        assert.strictEqual( model.data.name, "word" );
+        assert.strictEqual( model.row.name, "word" );
 
         model.set({name: null});
-        assert.strictEqual( model.data.name, "" );
+        assert.strictEqual( model.row.name, "" );
     });
 
     it("prepare trim and emptyAsNull", () => {
@@ -196,13 +196,13 @@ describe("StringType", () => {
         }
 
         const model = new SomeModel();
-        assert.strictEqual( model.data.name, null );
+        assert.strictEqual( model.row.name, null );
 
         model.set({name: " word "});
-        assert.strictEqual( model.data.name, "word" );
+        assert.strictEqual( model.row.name, "word" );
 
         model.set({name: "   "});
-        assert.strictEqual( model.data.name, null );
+        assert.strictEqual( model.row.name, null );
     });
 
     it("prepare lower", () => {
@@ -219,10 +219,10 @@ describe("StringType", () => {
         }
 
         const model = new SomeModel();
-        assert.strictEqual( model.data.name, "bob" );
+        assert.strictEqual( model.row.name, "bob" );
 
         model.set({name: "WORD"});
-        assert.strictEqual( model.data.name, "word" );
+        assert.strictEqual( model.row.name, "word" );
     });
 
     it("prepare upper", () => {
@@ -239,10 +239,10 @@ describe("StringType", () => {
         }
 
         const model = new SomeModel();
-        assert.strictEqual( model.data.name, "BOB" );
+        assert.strictEqual( model.row.name, "BOB" );
 
         model.set({name: "word"});
-        assert.strictEqual( model.data.name, "WORD" );
+        assert.strictEqual( model.row.name, "WORD" );
     });
 
     it("prepare lower and trim", () => {
@@ -260,10 +260,10 @@ describe("StringType", () => {
         }
 
         const model = new SomeModel();
-        assert.strictEqual( model.data.name, "bob" );
+        assert.strictEqual( model.row.name, "bob" );
 
         model.set({name: "WORD "});
-        assert.strictEqual( model.data.name, "word" );
+        assert.strictEqual( model.row.name, "word" );
     });
 
     it("equal strings", () => {

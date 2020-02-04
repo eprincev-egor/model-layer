@@ -5,7 +5,7 @@ import {eol} from "../../lib/utils";
 
 describe("Model tests", () => {
 
-    it("create model with data", () => {
+    it("create model with row", () => {
 
         class SomeModel extends Model<SomeModel> {
             structure() {
@@ -15,18 +15,18 @@ describe("Model tests", () => {
             }
         }
 
-        const data = {
+        const row = {
             prop: "nice"
         };
-        const model = new SomeModel(data);
+        const model = new SomeModel(row);
 
         assert.strictEqual( model.get("prop"), "nice" );
-        assert.strictEqual( model.data.prop, "nice" );
+        assert.strictEqual( model.row.prop, "nice" );
 
-        assert.ok( model.data !== data );
+        assert.ok( model.row !== row );
     });
 
-    it("create model without data", () => {
+    it("create model without row", () => {
 
         class SomeModel extends Model<SomeModel> {
             structure() {
@@ -39,7 +39,7 @@ describe("Model tests", () => {
         const model = new SomeModel();
 
         assert.strictEqual( model.get("prop"), null );
-        assert.strictEqual( model.data.prop, null );
+        assert.strictEqual( model.row.prop, null );
     });
 
     it("default value", () => {
@@ -56,28 +56,28 @@ describe("Model tests", () => {
 
         let model = new SomeModel();
         assert.equal( model.get("prop"), "default" );
-        assert.equal( model.data.prop, "default" );
+        assert.equal( model.row.prop, "default" );
 
         model = new SomeModel({});
         assert.equal( model.get("prop"), "default" );
-        assert.equal( model.data.prop, "default" );
+        assert.equal( model.row.prop, "default" );
 
         model = new SomeModel({});
         assert.equal( model.get("prop"), "default" );
-        assert.equal( model.data.prop, "default" );
+        assert.equal( model.row.prop, "default" );
 
         model = new SomeModel({
             prop: null
         });
         assert.strictEqual( model.get("prop"), null );
-        assert.strictEqual( model.data.prop, null );
+        assert.strictEqual( model.row.prop, null );
 
 
         model = new SomeModel({
             prop: undefined
         });
         assert.strictEqual( model.get("prop"), null );
-        assert.strictEqual( model.data.prop, null );
+        assert.strictEqual( model.row.prop, null );
     });
 
     it("default() value", () => {
@@ -97,7 +97,7 @@ describe("Model tests", () => {
         const model = new SomeModel();
 
         assert.ok(
-            model.data.now >= now
+            model.row.now >= now
         );
     });
 
@@ -113,45 +113,45 @@ describe("Model tests", () => {
         }
 
         const model = new SomeModel();
-        let data = model.data;
+        let row = model.row;
 
         assert.strictEqual( model.get("name"), null );
-        assert.strictEqual( model.data.name, null );
+        assert.strictEqual( model.row.name, null );
         assert.strictEqual( model.get("age"), null );
-        assert.strictEqual( model.data.age, null );
+        assert.strictEqual( model.row.age, null );
         
         model.set({name: "nice"});
         assert.equal( model.get("name"), "nice" );
-        assert.equal( model.data.name, "nice" );
+        assert.equal( model.row.name, "nice" );
         assert.strictEqual( model.get("age"), null );
-        assert.strictEqual( model.data.age, null );
+        assert.strictEqual( model.row.age, null );
         
-        assert.ok( data !== model.data );
-        data = model.data;
+        assert.ok( row !== model.row );
+        row = model.row;
 
         model.set({name: null});
         assert.strictEqual( model.get("name"), null );
-        assert.strictEqual( model.data.name, null );
+        assert.strictEqual( model.row.name, null );
         assert.strictEqual( model.get("age"), null );
-        assert.strictEqual( model.data.age, null );
+        assert.strictEqual( model.row.age, null );
 
-        assert.ok( data !== model.data );
-        data = model.data;
+        assert.ok( row !== model.row );
+        row = model.row;
 
         model.set({name: "test"});
         assert.equal( model.get("name"), "test" );
-        assert.equal( model.data.name, "test" );
+        assert.equal( model.row.name, "test" );
         assert.strictEqual( model.get("age"), null );
-        assert.strictEqual( model.data.age, null );
+        assert.strictEqual( model.row.age, null );
 
-        assert.ok( data !== model.data );
-        data = model.data;
+        assert.ok( row !== model.row );
+        row = model.row;
 
         model.set({age: 101});
         assert.equal( model.get("name"), "test" );
-        assert.equal( model.data.name, "test" );
+        assert.equal( model.row.name, "test" );
         assert.strictEqual( model.get("age"), 101 );
-        assert.strictEqual( model.data.age, 101 );
+        assert.strictEqual( model.row.age, 101 );
 
 
         model.set({
@@ -159,9 +159,9 @@ describe("Model tests", () => {
             age: 99
         });
         assert.equal( model.get("name"), "Good" );
-        assert.equal( model.data.name, "Good" );
+        assert.equal( model.row.name, "Good" );
         assert.strictEqual( model.get("age"), 99 );
-        assert.strictEqual( model.data.age, 99 );
+        assert.strictEqual( model.row.age, 99 );
     });
 
     it("error on set unknown property", () => {
@@ -178,9 +178,9 @@ describe("Model tests", () => {
 
         model.set({prop: "x"});
         assert.equal( model.get("prop"), "x" );
-        assert.equal( model.data.prop, "x" );
+        assert.equal( model.row.prop, "x" );
         
-        const data = model.data;
+        const row = model.row;
 
         assert.throws(
             () => {
@@ -192,9 +192,9 @@ describe("Model tests", () => {
 
         // invalid action cannot change object
         assert.equal( model.get("prop"), "x" );
-        assert.equal( model.data.prop, "x" );
+        assert.equal( model.row.prop, "x" );
 
-        assert.ok( model.data === data );
+        assert.ok( model.row === row );
 
 
         assert.throws(
@@ -210,7 +210,7 @@ describe("Model tests", () => {
     });
 
 
-    it("model.data is freeze object", () => {
+    it("model.row is freeze object", () => {
         class SomeModel extends Model<SomeModel> {
             structure() {
                 return {
@@ -224,7 +224,7 @@ describe("Model tests", () => {
         assert.throws(
             () => {
                 const anyModel = model as any;
-                anyModel.data.prop = "a";
+                anyModel.row.prop = "a";
             }, 
             (err) =>
                 /Cannot assign to read only property/.test(err.message)
@@ -232,21 +232,21 @@ describe("Model tests", () => {
 
         model.set({prop: "x"});
         assert.equal( model.get("prop"), "x" );
-        assert.equal( model.data.prop, "x" );
+        assert.equal( model.row.prop, "x" );
 
         assert.throws(
             () => {
                 const anyModel = model as any;
-                anyModel.data.prop = "y";
+                anyModel.row.prop = "y";
             }, (err) =>
                 /Cannot assign to read only property/.test(err.message)
         );
 
         assert.equal( model.get("prop"), "x" );
-        assert.equal( model.data.prop, "x" );
+        assert.equal( model.row.prop, "x" );
     });
 
-    it("keep data if hasn't changes", () => {
+    it("keep row if hasn't changes", () => {
         class SomeModel extends Model<SomeModel> {
             structure() {
                 return {
@@ -259,15 +259,15 @@ describe("Model tests", () => {
             prop: "value"
         });
 
-        const data = model.data;
+        const row = model.row;
 
         model.set({prop: "value"});
-        assert.ok( model.data === data );
+        assert.ok( model.row === row );
 
         model.set({
             prop: "value"
         });
-        assert.ok( model.data === data );
+        assert.ok( model.row === row );
     });
 
     it("model.hasProperty", () => {
@@ -433,19 +433,19 @@ describe("Model tests", () => {
             name: "test"
         });
 
-        assert.deepEqual(model.data, {
+        assert.deepEqual(model.row, {
             name: "test"
         });
 
         const clone = model.clone();
 
-        assert.deepEqual(clone.data, {
+        assert.deepEqual(clone.row, {
             name: "test"
         });
     });
 
     
-    it("extends from another Model with data", () => {
+    it("extends from another Model with row", () => {
 
         class FirstLevel extends Model<FirstLevel> {
             structure() {
@@ -541,7 +541,7 @@ describe("Model tests", () => {
         model.set({empty: null});
 
         assert.deepEqual(
-            model.clone().data,
+            model.clone().row,
             {
                 some: 12,
                 empty: null
@@ -565,13 +565,13 @@ describe("Model tests", () => {
         }
 
         const model = new SomeModel();
-        assert.strictEqual( model.data.money, 2 );
+        assert.strictEqual( model.row.money, 2 );
 
         model.set({money: 12});
-        assert.strictEqual( model.data.money, 24 );
+        assert.strictEqual( model.row.money, 24 );
 
         model.set({money: null});
-        assert.strictEqual( model.data.money, null );
+        assert.strictEqual( model.row.money, null );
     });
 
     it("check value type after custom prepare", () => {
@@ -583,16 +583,16 @@ describe("Model tests", () => {
                 };
             }
 
-            prepare(data) {
-                data.name = 10;
+            prepare(row) {
+                row.name = 10;
             }
         }
 
         const model = new SomeModel();
-        assert.strictEqual( model.data.name, "10" );
+        assert.strictEqual( model.row.name, "10" );
 
         model.set({name: (12 as any)});
-        assert.strictEqual( model.data.name, "10" );
+        assert.strictEqual( model.row.name, "10" );
     });
 
     it("check value type after custom prepare (any key)", () => {
@@ -604,16 +604,16 @@ describe("Model tests", () => {
                 };
             }
 
-            prepare(data) {
-                data.name = 10;
+            prepare(row) {
+                row.name = 10;
             }
         }
 
         const model = new SomeModel();
-        assert.strictEqual( model.data.name, "10" );
+        assert.strictEqual( model.row.name, "10" );
 
         model.set({name: (12 as any)});
-        assert.strictEqual( model.data.name, "10" );
+        assert.strictEqual( model.row.name, "10" );
     });
 
     it("custom prepare field and standard prepares (round, trim, emptyAsNull)", () => {
@@ -644,18 +644,18 @@ describe("Model tests", () => {
         }
 
         let model = new SomeModel();
-        assert.strictEqual( model.data.name, null );
-        assert.strictEqual( model.data.age, null );
+        assert.strictEqual( model.row.name, null );
+        assert.strictEqual( model.row.age, null );
 
         model = new SomeModel({
             name: " wOrd ",
             age: 1.1111
         });
-        assert.strictEqual( model.data.name, "Word" );
-        assert.strictEqual( model.data.age, 1 );
+        assert.strictEqual( model.row.name, "Word" );
+        assert.strictEqual( model.row.age, 1 );
     });
 
-    it("custom prepare data", () => {
+    it("custom prepare row", () => {
         interface ISomeData {
             firstName: string;
             lastName: string;
@@ -689,34 +689,34 @@ describe("Model tests", () => {
                 };
             }
 
-            prepare(data) {
-                // data.firstName can be null
-                const firstName = data.firstName || "";
-                // data.lastName can be null
-                const lastName = data.lastName || "";
+            prepare(row) {
+                // row.firstName can be null
+                const firstName = row.firstName || "";
+                // row.lastName can be null
+                const lastName = row.lastName || "";
 
-                data.fullName = `${ firstName } ${lastName}`;
+                row.fullName = `${ firstName } ${lastName}`;
             }
         }
 
         let model = new SomeModel();
-        assert.strictEqual( model.data.firstName, null );
-        assert.strictEqual( model.data.lastName, null );
-        assert.strictEqual( model.data.fullName, null );
+        assert.strictEqual( model.row.firstName, null );
+        assert.strictEqual( model.row.lastName, null );
+        assert.strictEqual( model.row.fullName, null );
 
         model = new SomeModel({
             firstName: "bob"
         });
-        assert.strictEqual( model.data.firstName, "Bob" );
-        assert.strictEqual( model.data.lastName, null );
-        assert.strictEqual( model.data.fullName, "Bob" );
+        assert.strictEqual( model.row.firstName, "Bob" );
+        assert.strictEqual( model.row.lastName, null );
+        assert.strictEqual( model.row.fullName, "Bob" );
         
         model.set({
             lastName: "  taylor"
         });
-        assert.strictEqual( model.data.firstName, "Bob" );
-        assert.strictEqual( model.data.lastName, "Taylor" );
-        assert.strictEqual( model.data.fullName, "Bob Taylor" );
+        assert.strictEqual( model.row.firstName, "Bob" );
+        assert.strictEqual( model.row.lastName, "Taylor" );
+        assert.strictEqual( model.row.fullName, "Bob Taylor" );
     });
 
     
@@ -732,15 +732,15 @@ describe("Model tests", () => {
                 };
             }
 
-            prepare(data) {
-                data.name = data.path.split("/").pop();
+            prepare(row) {
+                row.name = row.path.split("/").pop();
             }
         }
 
         const file = new FileModel({
             path: "test/name.txt"
         });
-        assert.strictEqual( file.data.name, "name.txt" );
+        assert.strictEqual( file.row.name, "name.txt" );
     });
 
     it("equal with same class model", () => {
@@ -769,7 +769,7 @@ describe("Model tests", () => {
         assert.ok( secondModel.equal( firstModel ) );
     });
 
-    it("equal model with another data", () => {
+    it("equal model with another row", () => {
 
         class Model1 extends Model<Model1> {
             structure() {

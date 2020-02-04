@@ -357,9 +357,9 @@ export class Collection<TModel extends Model> extends EventEmitter {
 
     sort(
         compareFunctionOrKey?: 
-            keyof TModel["data"] |
+            keyof TModel["row"] |
             ((modelA: TModel, modelB: TModel) => number), 
-        ...otherKeys: Array<keyof TModel["data"] & string>
+        ...otherKeys: Array<keyof TModel["row"] & string>
     ) {
 
         if ( typeof compareFunctionOrKey === "string" ) {
@@ -379,7 +379,7 @@ export class Collection<TModel extends Model> extends EventEmitter {
 
             // order by key1 asc, key2 asc, ...
             else {
-                const keys = [firstKey].concat( otherKeys ) as Array<keyof TModel["data"]>;
+                const keys = [firstKey].concat( otherKeys ) as Array<keyof TModel["row"]>;
 
                 this.models.sort((modelA, modelB) => {
 

@@ -151,14 +151,14 @@ describe("Model events", () => {
         model1.set({
             prop: "nice"
         });
-        assert.strictEqual(model1.data.prop, "nice");
-        assert.strictEqual(model2.data.prop, "nice");
+        assert.strictEqual(model1.row.prop, "nice");
+        assert.strictEqual(model2.row.prop, "nice");
 
         model2.set({
             prop: "good"
         });
-        assert.strictEqual(model1.data.prop, "good");
-        assert.strictEqual(model2.data.prop, "good");
+        assert.strictEqual(model1.row.prop, "good");
+        assert.strictEqual(model2.row.prop, "good");
     });
 
     it("custom options for stop recursion, listen ('change', prop)", () => {
@@ -196,14 +196,14 @@ describe("Model events", () => {
         model1.set({
             prop: "nice"
         });
-        assert.strictEqual(model1.data.prop, "nice");
-        assert.strictEqual(model2.data.prop, "nice");
+        assert.strictEqual(model1.row.prop, "nice");
+        assert.strictEqual(model2.row.prop, "nice");
 
         model2.set({
             prop: "good"
         });
-        assert.strictEqual(model1.data.prop, "good");
-        assert.strictEqual(model2.data.prop, "good");
+        assert.strictEqual(model1.row.prop, "good");
+        assert.strictEqual(model2.row.prop, "good");
     });
 
 });

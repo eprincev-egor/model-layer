@@ -140,14 +140,14 @@ describe("ModelType", () => {
             }
         });
 
-        assert.strictEqual( +registrationModel.data.date, now );
-        assert.ok( registrationModel.data.date instanceof Date );
+        assert.strictEqual( +registrationModel.row.date, now );
+        assert.ok( registrationModel.row.date instanceof Date );
 
-        const user = registrationModel.data.user;
-        assert.strictEqual( user.data.name, "Bob" );
-        assert.strictEqual( user.data.age, 99 );
-        assert.strictEqual( user.data.email, "x@x.x" );
-        assert.strictEqual( user.data.phone, null );
+        const user = registrationModel.row.user;
+        assert.strictEqual( user.row.name, "Bob" );
+        assert.strictEqual( user.row.age, 99 );
+        assert.strictEqual( user.row.email, "x@x.x" );
+        assert.strictEqual( user.row.phone, null );
     });
 
     
@@ -321,7 +321,7 @@ describe("ModelType", () => {
         });
     });
 
-    // when in type defined BaseModel, and in data we have ChildModel (extends BaseModel), 
+    // when in type defined BaseModel, and in row we have ChildModel (extends BaseModel), 
     // then clone should be instance of ChildModel
     it("clone model, should return instance of Child", () => {
 

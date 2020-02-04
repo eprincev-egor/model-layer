@@ -8,7 +8,7 @@ describe("Model primary field", () => {
         
         const RESERVED_KEYS = [
             // reserved Model properties
-            "data",
+            "row",
             "primaryKey",
             "primaryValue",
 
@@ -106,7 +106,7 @@ describe("Model primary field", () => {
         assert.strictEqual( company1.primaryValue, 2 );
     });
 
-    it("model.id, if exists static field 'id' in data", () => {
+    it("model.id, if exists static field 'id' in row", () => {
         class Company extends Model<Company> {
             
             id: number;

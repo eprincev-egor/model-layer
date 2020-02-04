@@ -117,7 +117,7 @@ describe("Collection tests", () => {
         assert.strictEqual( user.get("name"), "Bob" );
     });
 
-    it("once call data", () => {
+    it("once call row", () => {
         let calls = 0;
 
         class Product extends Model<Product> {

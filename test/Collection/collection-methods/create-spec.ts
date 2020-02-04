@@ -35,7 +35,7 @@ describe("Collection.create", () => {
         });
 
         assert.strictEqual( products.length, 2 );
-        assert.deepStrictEqual(model.data, {
+        assert.deepStrictEqual(model.row, {
             name: "Eggs",
             price: 20
         });

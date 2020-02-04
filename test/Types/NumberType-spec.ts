@@ -17,21 +17,21 @@ describe("NumberType", () => {
         let model: SomeModel;
 
         model = new SomeModel();
-        assert.strictEqual( model.data.age, 0 );
+        assert.strictEqual( model.row.age, 0 );
 
         model = new SomeModel({
             age: "1" as any
         });
-        assert.strictEqual( model.data.age, 1 );
+        assert.strictEqual( model.row.age, 1 );
         
         model.set({age: "2" as any});
-        assert.strictEqual( model.data.age, 2 );
+        assert.strictEqual( model.row.age, 2 );
 
         model.set({age: null});
-        assert.strictEqual( model.data.age, null );
+        assert.strictEqual( model.row.age, null );
 
         model.set({age: "-2000.123" as any});
-        assert.strictEqual( model.data.age, -2000.123 );
+        assert.strictEqual( model.row.age, -2000.123 );
 
         assert.throws(
             () => {
@@ -142,7 +142,7 @@ describe("NumberType", () => {
         );
 
 
-        assert.strictEqual( model.data.age, -2000.123 );
+        assert.strictEqual( model.row.age, -2000.123 );
     });
 
     it("prepare round", () => {
@@ -159,10 +159,10 @@ describe("NumberType", () => {
         }
 
         const model = new SomeModel();
-        assert.strictEqual( model.data.money, 1.11 );
+        assert.strictEqual( model.row.money, 1.11 );
 
         model.set({money: 1.999});
-        assert.strictEqual( model.data.money, 2 );
+        assert.strictEqual( model.row.money, 2 );
     });
 
     it("prepare floor", () => {
@@ -179,10 +179,10 @@ describe("NumberType", () => {
         }
 
         const model = new SomeModel();
-        assert.strictEqual( model.data.money, 1.11 );
+        assert.strictEqual( model.row.money, 1.11 );
 
         model.set({money: 1.999});
-        assert.strictEqual( model.data.money, 1.99 );
+        assert.strictEqual( model.row.money, 1.99 );
     });
 
     it("prepare ceil", () => {
@@ -199,19 +199,19 @@ describe("NumberType", () => {
         }
 
         const model = new SomeModel();
-        assert.strictEqual( model.data.money, 1.12 );
+        assert.strictEqual( model.row.money, 1.12 );
 
         model.set({money: 1.599});
-        assert.strictEqual( model.data.money, 1.6 );
+        assert.strictEqual( model.row.money, 1.6 );
 
         model.set({money: 1.12});
-        assert.strictEqual( model.data.money, 1.12 );
+        assert.strictEqual( model.row.money, 1.12 );
 
         model.set({money: 1.13});
-        assert.strictEqual( model.data.money, 1.13 );
+        assert.strictEqual( model.row.money, 1.13 );
 
         model.set({money: 18014398509481984});
-        assert.strictEqual( model.data.money, 18014398509481984 );
+        assert.strictEqual( model.row.money, 18014398509481984 );
     });
 
     it("prepare zeroAsNull", () => {
@@ -229,13 +229,13 @@ describe("NumberType", () => {
         }
 
         const model = new SomeModel();
-        assert.strictEqual( model.data.money, null );
+        assert.strictEqual( model.row.money, null );
 
         model.set({money: 1.1111});
-        assert.strictEqual( model.data.money, 1 );
+        assert.strictEqual( model.row.money, 1 );
 
         model.set({money: 0.0001});
-        assert.strictEqual( model.data.money, null );
+        assert.strictEqual( model.row.money, null );
     });
 
     it("prepare nullAsZero", () => {
@@ -251,13 +251,13 @@ describe("NumberType", () => {
         }
 
         const model = new SomeModel();
-        assert.strictEqual( model.data.money, 0 );
+        assert.strictEqual( model.row.money, 0 );
 
         model.set({money: 1});
-        assert.strictEqual( model.data.money, 1 );
+        assert.strictEqual( model.row.money, 1 );
 
         model.set({money: null});
-        assert.strictEqual( model.data.money, 0 );
+        assert.strictEqual( model.row.money, 0 );
     });
 
     it("invalid ceil in field description", () => {

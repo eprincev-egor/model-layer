@@ -62,7 +62,7 @@ export class DataShouldBeObjectError extends BaseError.create<{
     
 }>({
     messages: {
-        ru: ({}) => `ожидается объект data`,
-        en: ({}) => `data must be are object`,
+        ru: ({}) => `ожидается объект row`,
+        en: ({}) => `row must be are object`,
     }
 }) {}

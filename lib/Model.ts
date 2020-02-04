@@ -23,8 +23,8 @@ type ReadOnlyPartial<TData> = {
 
 
 interface IChangeEvent<TModel extends Model> {
-    prev: TModel["data"];
-    changes: ReadOnlyPartial<TModel["data"]>;
+    prev: TModel["row"];
+    changes: ReadOnlyPartial<TModel["row"]>;
 }
 
 export class Model<ChildModel extends Model = any> extends EventEmitter {
@@ -35,7 +35,7 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
     TInput: InputType< ReturnType< ChildModel["structure"] > > | this;
     TOutput: this;
     TJson: JsonType< ReturnType< ChildModel["structure"] > >;
-    data: OutputType< ReturnType< ChildModel["structure"] > >;
+    row: OutputType< ReturnType< ChildModel["structure"] > >;
     
     // "id"
     primaryKey: string;
@@ -44,7 +44,7 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
     
     parent: Model;
 
-    // data properties
+    // row properties
     private properties: any;
     
     private isInit: boolean;
@@ -54,8 +54,8 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
 
         this.prepareStructure();
         
-        const data = {} as any;
-        this.data = data as any;
+        const row = {} as any;
+        this.row = row as any;
 
         let newData: any = inputData;
 
@@ -64,7 +64,7 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
         }
         
         for (const propKey in this.properties) {
-            const key = propKey as keyof this["data"];
+            const key = propKey as keyof this["row"];
 
             if ( key === "*" ) {
                 continue;
@@ -77,7 +77,7 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
             // default can be invalid
             value = description.prepare(value, key, this);
 
-            data[ key ] = value;
+            row[ key ] = value;
 
             // throw required error in method .set
             if ( description.required ) {
@@ -91,7 +91,7 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
         this.set(newData);
         delete this.isInit;
 
-        Object.freeze(this.data);
+        Object.freeze(this.row);
     }
 
     structure(): {[key: string]: IType | (new (...args: any) => IType)} {
@@ -100,17 +100,17 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
         });
     }
 
-    get<TKey extends keyof this["data"]>(key: TKey): this["data"][TKey] {
-        return this.data[ key ];
+    get<TKey extends keyof this["row"]>(key: TKey): this["row"][TKey] {
+        return this.row[ key ];
     }
 
-    set(data: this["TInputData"], options?: ISimpleObject) {
+    set(row: this["TInputData"], options?: ISimpleObject) {
         options = options || {
             onlyValidate: false
         };
         
         const newData: any = {};
-        const oldData = this.data;
+        const oldData = this.row;
 
         // clone old values in oldData
         for (const key in oldData) {
@@ -119,7 +119,7 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
 
         const anyKeyDescription = this.properties["*"];
 
-        for (const key in data) {
+        for (const key in row) {
             let description = this.properties[ key ];
 
             if ( !description ) {
@@ -140,7 +140,7 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
                 }
             }
 
-            let value = data[ key ];
+            let value = row[ key ];
 
             // cast input value to expected format
             value = description.prepare(value, key, this);
@@ -208,7 +208,7 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
             return;
         }
 
-        // juniors love use model.data for set
+        // juniors love use model.row for set
         // stick on his hands
         Object.freeze(newData);
 
@@ -219,10 +219,10 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
             return;
         }
 
-        this.data = newData;
+        this.row = newData;
         
         if ( this.primaryKey ) {
-            const primaryValue = this.data[ this.primaryKey ];
+            const primaryValue = this.row[ this.primaryKey ];
             this[ this.primaryKey ] = primaryValue;
             this.primaryValue = primaryValue;
         }
@@ -240,13 +240,13 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
         }, options);
     }
 
-    isValid(data: this["TInputData"]): boolean {
-        if ( !isObject(data) ) {
+    isValid(row: this["TInputData"]): boolean {
+        if ( !isObject(row) ) {
             throw new DataShouldBeObjectError({});
         }
 
         try {
-            this.set(data, {
+            this.set(row, {
                 onlyValidate: true
             });
 
@@ -256,17 +256,17 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
         }
     }
 
-    hasProperty<Key extends keyof this["data"]>(key: Key): boolean {
-        return this.data.hasOwnProperty( key );
+    hasProperty<Key extends keyof this["row"]>(key: Key): boolean {
+        return this.row.hasOwnProperty( key );
     }
 
-    getDescription<Key extends keyof this["data"]>(key: Key) {
+    getDescription<Key extends keyof this["row"]>(key: Key) {
         const iKey = key as any;
         return this.properties[ iKey ] || this.properties["*"];
     }
 
-    hasValue<Key extends keyof this["data"]>(key: Key): boolean {
-        const value = this.data[ key ];
+    hasValue<Key extends keyof this["row"]>(key: Key): boolean {
+        const value = this.row[ key ];
 
         if ( value == null ) {
             return false;
@@ -281,8 +281,8 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
     ) {
         stack = stack || [];
 
-        for (const key in this.data) {
-            const value = this.data[ key ];
+        for (const key in this.row) {
+            const value = this.row[ key ];
 
             let elements = [value];
 
@@ -417,9 +417,9 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
     toJSON(stack = []): this["TJson"] {
         const json: any = {};
         
-        for (const key in this.data) {
+        for (const key in this.row) {
             const description = this.getDescription( key );
-            let value = this.data[ key ];
+            let value = this.row[ key ];
 
             if ( value != null ) {
                 value = description.toJSON( value, [...stack] ); 
@@ -445,11 +445,11 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
         const clone: this = Object.create( this.constructor.prototype );
         stack.add(this, clone);
 
-        const cloneData: Partial<this["data"]> = {};
+        const cloneData: Partial<this["row"]> = {};
 
-        for (const key in this.data) {
+        for (const key in this.row) {
             const description = this.getDescription( key );
-            let value = this.data[ key ];
+            let value = this.row[ key ];
 
             if ( value != null ) {
                 value = description.clone( value, stack ); 
@@ -458,7 +458,7 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
             cloneData[ key ] = value;
         }
 
-        (clone as any).data = Object.freeze(cloneData);
+        (clone as any).row = Object.freeze(cloneData);
 
         return clone;
     }
@@ -466,13 +466,13 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
     equal(otherModel: Model | object, stack?): boolean {
         stack = stack || new EqualStack();
 
-        for (const key in this.data) {
+        for (const key in this.row) {
             const anyKey = key as any;
             const description = this.getDescription( key );
-            const selfValue = this.data[ anyKey ];
+            const selfValue = this.row[ anyKey ];
             const otherValue = (
                 otherModel instanceof Model ?
-                    otherModel.data[ anyKey ] :
+                    otherModel.row[ anyKey ] :
                     otherModel[ anyKey ]
             );
 
@@ -486,11 +486,11 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
         // check additional keys from other model
         const otherData = (
             otherModel instanceof Model ?
-                otherModel.data :
+                otherModel.row :
                 otherModel
         );
         for (const key in otherData) {
-            if ( key in this.data ) {
+            if ( key in this.row ) {
                 continue;
             }
             
@@ -501,12 +501,12 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
         return true;
     }
 
-    validate(data: this["TInputData"]): void {
-        // for invalid data throw error here
+    validate(row: this["TInputData"]): void {
+        // for invalid row throw error here
     }
 
-    prepare(data: this["TInputData"]): void {
-        // any calculations with data by reference
+    prepare(row: this["TInputData"]): void {
+        // any calculations with row by reference
     }
 
     prepareJSON(json: this["TJson"]): void {
@@ -516,7 +516,7 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
     on(
         eventName: "change",
         keyOrListener: (
-            string & keyof this["data"] | 
+            string & keyof this["row"] | 
             ((event: IChangeEvent<this>, options: ISimpleObject) => void)
         ),
         listener?: (event: IChangeEvent<this>, options: ISimpleObject) => void

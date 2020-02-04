@@ -17,16 +17,16 @@ export class BaseError extends Error {
     static create<TData>(params: {messages: IMessages}) {
         class ChildError extends BaseError {
             
-            data: TData;
+            row: TData;
 
-            constructor(data: TData)  {
+            constructor(row: TData)  {
 
                 const template = params.messages[lang];
-                const message = template(data);
+                const message = template(row);
 
                 super(message);
 
-                this.data = data;
+                this.row = row;
             }
         }
 

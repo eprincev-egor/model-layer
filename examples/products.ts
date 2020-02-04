@@ -41,8 +41,8 @@ class Cart extends Model<Cart> {
     }
 
     // calc total price for cart
-    prepare(data) {
-        data.total = data.products.reduce((total, product) =>
+    prepare(row) {
+        row.total = row.products.reduce((total, product) =>
             total + product.get("price") * product.get("quantity"), 0
         );
     }

@@ -3,7 +3,7 @@ import EqualStack from "../EqualStack";
 
 import {invalidValuesAsString} from "../utils";
 const FORBIDDEN_PRIMARY_KEYS = [
-    "data",
+    "row",
     "primaryKey",
     "primaryValue"
 ];

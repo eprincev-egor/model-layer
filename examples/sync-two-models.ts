@@ -48,12 +48,12 @@ topPages.set({
     current: 1
 });
 
-assert.deepStrictEqual(topPages.data, {
+assert.deepStrictEqual(topPages.row, {
     pages: [1, 2, 3, 4],
     current: 1
 });
 // and changed second model
-assert.deepStrictEqual(bottomPages.data, {
+assert.deepStrictEqual(bottomPages.row, {
     pages: [1, 2, 3, 4],
     current: 1
 });
@@ -65,12 +65,12 @@ bottomPages.set({
     current: 2
 });
 
-assert.deepStrictEqual(bottomPages.data, {
+assert.deepStrictEqual(bottomPages.row, {
     pages: [1, 2, 3, 4],
     current: 2
 });
 // and changed first model
-assert.deepStrictEqual(topPages.data, {
+assert.deepStrictEqual(topPages.row, {
     pages: [1, 2, 3, 4],
     current: 2
 });

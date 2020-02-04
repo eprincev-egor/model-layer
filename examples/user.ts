@@ -26,9 +26,9 @@ const user = new UserModel({
     email: "bob@mail.com"
 });
 
-// any model has property .data
+// any model has property .row
 assert.deepEqual(
-    user.data,
+    user.row,
     {
         name: "Bob",
         email: "bob@mail.com"

@@ -16,16 +16,16 @@ describe("AnyType", () => {
         }
 
         const model = new SomeModel();
-        assert.strictEqual(model.data.any, null);
+        assert.strictEqual(model.row.any, null);
 
         model.set({any: 10});
-        assert.strictEqual(model.data.any, 10);
+        assert.strictEqual(model.row.any, 10);
         
         model.set({any: "text"});
-        assert.strictEqual(model.data.any, "text");
+        assert.strictEqual(model.row.any, "text");
 
         model.set({any: true});
-        assert.strictEqual(model.data.any, true);
+        assert.strictEqual(model.row.any, true);
     });
 
     it("any value toJSON()", () => {

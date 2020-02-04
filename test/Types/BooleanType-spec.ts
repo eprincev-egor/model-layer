@@ -18,21 +18,21 @@ describe("BooleanType", () => {
         let model;
 
         model = new SomeModel();
-        assert.strictEqual( model.data.some, false );
+        assert.strictEqual( model.row.some, false );
 
         model = new SomeModel({
             some: 1
         });
-        assert.strictEqual( model.data.some, true );
+        assert.strictEqual( model.row.some, true );
         
         model.set({some: false});
-        assert.strictEqual( model.data.some, false );
+        assert.strictEqual( model.row.some, false );
 
         model.set({some: null});
-        assert.strictEqual( model.data.some, null );
+        assert.strictEqual( model.row.some, null );
 
         model.set({some: true});
-        assert.strictEqual( model.data.some, true );
+        assert.strictEqual( model.row.some, true );
 
         
         assert.throws(
@@ -99,7 +99,7 @@ describe("BooleanType", () => {
                 err.message === "invalid boolean for some: [0]"
         );
 
-        assert.strictEqual( model.data.some, true );
+        assert.strictEqual( model.row.some, true );
     });
 
 
@@ -117,19 +117,19 @@ describe("BooleanType", () => {
         }
 
         const model = new SomeModel();
-        assert.strictEqual( model.data.some, null );
+        assert.strictEqual( model.row.some, null );
 
         model.set({some: false});
-        assert.strictEqual( model.data.some, null );
+        assert.strictEqual( model.row.some, null );
 
         model.set({some: true});
-        assert.strictEqual( model.data.some, true );
+        assert.strictEqual( model.row.some, true );
 
         model.set({some: 0});
-        assert.strictEqual( model.data.some, null );
+        assert.strictEqual( model.row.some, null );
 
         model.set({some: 1});
-        assert.strictEqual( model.data.some, true );
+        assert.strictEqual( model.row.some, true );
     });
 
     it("prepare nullAsFalse", () => {
@@ -145,13 +145,13 @@ describe("BooleanType", () => {
         }
 
         const model = new SomeModel();
-        assert.strictEqual( model.data.some, false );
+        assert.strictEqual( model.row.some, false );
 
         model.set({some: true});
-        assert.strictEqual( model.data.some, true );
+        assert.strictEqual( model.row.some, true );
 
         model.set({some: null});
-        assert.strictEqual( model.data.some, false );
+        assert.strictEqual( model.row.some, false );
     });
 
 

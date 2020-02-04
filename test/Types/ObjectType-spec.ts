@@ -170,13 +170,13 @@ describe("ObjectType", () => {
         }
 
         const model = new SomeModel();
-        assert.strictEqual( model.data.words, null );
+        assert.strictEqual( model.row.words, null );
 
         model.set({words: {red: true}});
-        assert.deepEqual( model.data.words, {red: true} );
+        assert.deepEqual( model.row.words, {red: true} );
 
         model.set({words: {}});
-        assert.strictEqual( model.data.words, null );
+        assert.strictEqual( model.row.words, null );
     });
 
     it("nullAsEmpty", () => {
@@ -193,13 +193,13 @@ describe("ObjectType", () => {
         }
 
         const model = new SomeModel();
-        assert.deepEqual( model.data.words, [] );
+        assert.deepEqual( model.row.words, [] );
 
         model.set({words: {water: true}});
-        assert.deepEqual( model.data.words, {water: true} );
+        assert.deepEqual( model.row.words, {water: true} );
 
         model.set({words: null});
-        assert.deepEqual( model.data.words, {} );
+        assert.deepEqual( model.row.words, {} );
     });
 
     it("recursive clone object", () => {
@@ -221,7 +221,7 @@ describe("ObjectType", () => {
             }
         });
 
-        assert.deepEqual( model.data, {
+        assert.deepEqual( model.row, {
             tree: {
                 name: "test",
                 tree: {
@@ -233,7 +233,7 @@ describe("ObjectType", () => {
 
         const clone = model.clone();
 
-        assert.deepEqual( clone.data, {
+        assert.deepEqual( clone.row, {
             tree: {
                 name: "test",
                 tree: {
@@ -244,19 +244,19 @@ describe("ObjectType", () => {
         });
 
         assert.ok(
-            clone.data.tree !== model.data.tree
+            clone.row.tree !== model.row.tree
         );
 
         assert.ok(
-            clone.data.tree.tree !== model.data.tree.tree
+            clone.row.tree.tree !== model.row.tree.tree
         );
 
         assert.ok(
-            clone.data.tree.tree.arr !== model.data.tree.tree.arr
+            clone.row.tree.tree.arr !== model.row.tree.tree.arr
         );
 
         assert.ok(
-            clone.data.tree.tree.arr[0] !== model.data.tree.tree.arr[0]
+            clone.row.tree.tree.arr[0] !== model.row.tree.tree.arr[0]
         );
     });
     
@@ -323,19 +323,19 @@ describe("ObjectType", () => {
         });
 
         assert.ok(
-            json.tree !== model.data.tree
+            json.tree !== model.row.tree
         );
 
         assert.ok(
-            json.tree.tree !== model.data.tree.tree
+            json.tree.tree !== model.row.tree.tree
         );
 
         assert.ok(
-            json.tree.tree.arr !== model.data.tree.tree.arr
+            json.tree.tree.arr !== model.row.tree.tree.arr
         );
 
         assert.ok(
-            json.tree.tree.arr[0] !== model.data.tree.tree.arr[0]
+            json.tree.tree.arr[0] !== model.row.tree.tree.arr[0]
         );
     });
 
@@ -357,8 +357,8 @@ describe("ObjectType", () => {
                 b: "20" as any
             }
         });
-        assert.strictEqual( model.data.object.a, 10 );
-        assert.strictEqual( model.data.object.b, 20 );
+        assert.strictEqual( model.row.object.a, 10 );
+        assert.strictEqual( model.row.object.b, 20 );
     });
 
     it("object of any values", () => {
@@ -379,7 +379,7 @@ describe("ObjectType", () => {
             }
         });
 
-        assert.deepStrictEqual( model.data, {
+        assert.deepStrictEqual( model.row, {
             object: {
                 a: 10,
                 b: true,
@@ -513,7 +513,7 @@ describe("ObjectType", () => {
     });
 
     
-    // when in type defined BaseModel, and in data we have ChildModel (extends BaseModel), 
+    // when in type defined BaseModel, and in row we have ChildModel (extends BaseModel), 
     // then clone should be instance of ChildModel
     it("clone object of models, should return object of instance of Child", () => {
         

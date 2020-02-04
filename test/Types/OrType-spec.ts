@@ -25,8 +25,8 @@ describe("OrType", () => {
             id: "b"
         });
 
-        assert.strictEqual(model1.data.id, 1);
-        assert.strictEqual(model2.data.id, "b");
+        assert.strictEqual(model1.row.id, 1);
+        assert.strictEqual(model2.row.id, "b");
         
     });
 
@@ -45,8 +45,8 @@ describe("OrType", () => {
         const model1 = new SomeModel();
         const model2 = new SomeModel();
 
-        assert.strictEqual(model1.data.id, null);
-        assert.strictEqual(model2.data.id, null);
+        assert.strictEqual(model1.row.id, null);
+        assert.strictEqual(model2.row.id, null);
 
         model1.set({
             id: 1
@@ -55,8 +55,8 @@ describe("OrType", () => {
             id: "b"
         });
 
-        assert.strictEqual(model1.data.id, 1);
-        assert.strictEqual(model2.data.id, "b");
+        assert.strictEqual(model1.row.id, 1);
+        assert.strictEqual(model2.row.id, "b");
         
     });
 
@@ -172,8 +172,8 @@ describe("OrType", () => {
             value: "1"
         });
 
-        assert.strictEqual(stringModel.data.value, "1");
-        assert.strictEqual(numberModel.data.value, 1);
+        assert.strictEqual(stringModel.row.value, "1");
+        assert.strictEqual(numberModel.row.value, 1);
     });
 
     it("model to json", () => {
@@ -203,7 +203,7 @@ describe("OrType", () => {
             }
         });
 
-        assert.ok(model.data.user instanceof User);
+        assert.ok(model.row.user instanceof User);
 
         assert.deepStrictEqual(model.toJSON(), {
             user: {
@@ -218,7 +218,7 @@ describe("OrType", () => {
             user: 2
         });
 
-        assert.strictEqual(model.data.user, 2);
+        assert.strictEqual(model.row.user, 2);
         assert.deepStrictEqual(model.toJSON(), {
             user: 2
         });
@@ -241,13 +241,13 @@ describe("OrType", () => {
             value: [1, 2]
         });
 
-        assert.deepStrictEqual(model.data.value, [1, 2]);
+        assert.deepStrictEqual(model.row.value, [1, 2]);
 
         const json = model.toJSON();
         assert.deepStrictEqual(json, {
             value: [1, 2]
         });
-        assert.ok(json.value !== model.data.value);
+        assert.ok(json.value !== model.row.value);
 
 
 
@@ -255,7 +255,7 @@ describe("OrType", () => {
             value: 3
         });
 
-        assert.strictEqual(model.data.value, 3);
+        assert.strictEqual(model.row.value, 3);
         assert.deepStrictEqual(model.toJSON(), {
             value: 3
         });
@@ -280,8 +280,8 @@ describe("OrType", () => {
             value: date
         });
 
-        assert.ok(model.data.value instanceof Date);
-        assert.strictEqual(+model.data.value, +date);
+        assert.ok(model.row.value instanceof Date);
+        assert.strictEqual(+model.row.value, +date);
 
         
         assert.deepStrictEqual(model.toJSON(), {
@@ -294,7 +294,7 @@ describe("OrType", () => {
             value: 1
         });
 
-        assert.strictEqual(model.data.value, 1);
+        assert.strictEqual(model.row.value, 1);
         assert.deepStrictEqual(model.toJSON(), {
             value: 1
         });
@@ -317,13 +317,13 @@ describe("OrType", () => {
             value: {a: 1, b: 2}
         });
 
-        assert.deepStrictEqual(model.data.value, {a: 1, b: 2});
+        assert.deepStrictEqual(model.row.value, {a: 1, b: 2});
 
         const json = model.toJSON();
         assert.deepStrictEqual(json, {
             value: {a: 1, b: 2}
         });
-        assert.ok(json.value !== model.data.value);
+        assert.ok(json.value !== model.row.value);
 
 
 
@@ -331,7 +331,7 @@ describe("OrType", () => {
             value: 3
         });
 
-        assert.strictEqual(model.data.value, 3);
+        assert.strictEqual(model.row.value, 3);
         assert.deepStrictEqual(model.toJSON(), {
             value: 3
         });
@@ -383,8 +383,8 @@ describe("OrType", () => {
                 }
             }]
         });
-        assert.ok(json.value !== model.data.value);
-        assert.ok(json.value[0] !== model.data.value[0]);
+        assert.ok(json.value !== model.row.value);
+        assert.ok(json.value[0] !== model.row.value[0]);
     });
 
     it("circular structure to json, or: [Model]", () => {
@@ -766,7 +766,7 @@ describe("OrType", () => {
             }
         });
 
-        assert.ok(model.data.user instanceof User);
+        assert.ok(model.row.user instanceof User);
 
         const clone = model.clone();
 
@@ -783,7 +783,7 @@ describe("OrType", () => {
             user: 2
         });
 
-        assert.strictEqual(model.data.user, 2);
+        assert.strictEqual(model.row.user, 2);
         assert.deepStrictEqual(clone.toJSON(), {
             user: {
                 id: 1,
