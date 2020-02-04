@@ -9,6 +9,12 @@ export interface IArrayTypeParams extends ITypeParams {
     emptyAsNull?: boolean;
     nullAsEmpty?: boolean;
     element?: any;
+    prepare?: (value: any, key: string, model) => Array<this["element"]>;
+    validate?: 
+        ((value: Array<this["element"]>, key: string) => boolean) |
+        RegExp
+    ;
+    default?: Array<this["element"]> | (() => Array<this["element"]>);
 }
 
 export interface IArrayType<T extends IType> {
