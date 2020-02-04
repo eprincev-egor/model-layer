@@ -18,6 +18,7 @@ import {INumberType, NumberType} from "./type/NumberType";
 import {IObjectType, ObjectType} from "./type/ObjectType";
 import {IStringType, StringType} from "./type/StringType";
 import {IOrType, OrType} from "./type/OrType";
+import {ICustomClassType, CustomClassType} from "./type/CustomClassType";
 
 const returnParamsWithType: any = (type) => {
     const func = (params) => ({
@@ -39,7 +40,8 @@ const Types = {
     Model: MakeModelType,
     Collection: MakeCollectionType,
     Or: returnParamsWithType("or") as IOrType<IType>,
-    Any: returnParamsWithType("any") as IAnyType
+    Any: returnParamsWithType("any") as IAnyType,
+    CustomClass: returnParamsWithType("CustomClass") as ICustomClassType<any>
 };
 
 Type.registerType("*", AnyType);
@@ -53,6 +55,7 @@ Type.registerType("number", NumberType);
 Type.registerType("object", ObjectType);
 Type.registerType("string", StringType);
 Type.registerType("or", OrType);
+Type.registerType("CustomClass", CustomClassType);
 
 
 export {Model, Collection, Types, setLang};

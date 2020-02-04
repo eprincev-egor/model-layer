@@ -89,6 +89,8 @@ export interface ITypeParams {
     primary?: boolean;
     prepare?: (value: any, key: string, model) => any;
     toJSON?: (value: any) => any;
+    clone?: (value: any) => any;
+    equal?: (anotherValue: any) => boolean;
     validate?: 
         ((value: any, key: string) => boolean) |
         RegExp
@@ -294,6 +296,14 @@ export class Type {
         // don't change value
         if ( params.const ) {
             this.const = true;
+        }
+
+        if ( params.clone ) {
+            this.clone = params.clone;
+        }
+
+        if ( params.equal ) {
+            this.equal = params.equal;
         }
     }
 
