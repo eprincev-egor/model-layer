@@ -10,7 +10,7 @@ describe("BooleanType", () => {
             structure() {
                 return {
                     some: Types.Boolean({
-                        default: 0 as any
+                        default: false
                     })
                 };
             }
@@ -20,11 +20,6 @@ describe("BooleanType", () => {
         model = new SomeModel();
         assert.strictEqual( model.row.some, false );
 
-        model = new SomeModel({
-            some: 1
-        });
-        assert.strictEqual( model.row.some, true );
-        
         model.set({some: false});
         assert.strictEqual( model.row.some, false );
 
@@ -35,6 +30,16 @@ describe("BooleanType", () => {
         assert.strictEqual( model.row.some, true );
 
         
+        assert.throws(
+            () => {
+                model = new SomeModel({
+                    some: 1 as any
+                });
+            },
+            (err) =>
+                err.message === "invalid boolean for some: 1"
+        );
+
         assert.throws(
             () => {
                 model.set({some: {}});
@@ -125,11 +130,6 @@ describe("BooleanType", () => {
         model.set({some: true});
         assert.strictEqual( model.row.some, true );
 
-        model.set({some: 0});
-        assert.strictEqual( model.row.some, null );
-
-        model.set({some: 1});
-        assert.strictEqual( model.row.some, true );
     });
 
     it("prepare nullAsFalse", () => {
@@ -156,13 +156,12 @@ describe("BooleanType", () => {
 
 
     it("equal booleans", () => {
-        const pairs: Array<Array<boolean | 0 | 1>> = [
+        const pairs: boolean[][] = [
             [null, false, false],
             [null, true, false],
             [false, false, true],
             [false, true, false],
-            [true, true, true],
-            [1, true, true]
+            [true, true, true]
         ];
         
         pairs.forEach((pair) => {

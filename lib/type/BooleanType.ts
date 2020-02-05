@@ -1,7 +1,6 @@
 
-
 import {Type, IType, ITypeParams} from "./Type";
-import {isObject, isNaN, invalidValuesAsString} from "../utils";
+import {invalidValuesAsString} from "../utils";
 
 export interface IBooleanTypeParams extends ITypeParams {
     nullAsFalse?: boolean;
@@ -18,7 +17,7 @@ export interface IBooleanTypeParams extends ITypeParams {
 export interface IBooleanType extends IType {
     (params: IBooleanTypeParams): IBooleanType;
     TOutput: boolean;
-    TInput: boolean | 1 | 0;
+    TInput: boolean;
     TJson: boolean;
 }
 
@@ -47,27 +46,12 @@ export class BooleanType extends Type {
         }
     
     
-        if ( 
-            isNaN( +value ) ||
-            value instanceof RegExp ||
-            isObject(value) ||
-            Array.isArray(value) ||
-            // infinity
-            value === 1 / 0 ||
-            value === -1 / 0
-        ) {
+        if ( typeof value !== "boolean" ) {
             const valueAsString = invalidValuesAsString( value );
     
             throw new Error(`invalid boolean for ${key}: ${valueAsString}`);
         }
-    
-        // convert to boolean
-        value = (
-            value ? 
-                true : 
-                false
-        );
-    
+
         if ( this.falseAsNull ) {
             if ( !value ) {
                 value = null;

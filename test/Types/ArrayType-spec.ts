@@ -234,22 +234,22 @@ describe("ArrayType", () => {
         assert.throws(
             () => {
                 const anyModel = new AnyModel({
-                    answers: [1, 0, false, true, "wrong"]
+                    answers: [null, false, true, "wrong"]
                 });
             }, 
             (err) => 
-                err.message === `invalid array[boolean] for answers: [1,0,false,true,"wrong"],${eol} invalid boolean for 4: "wrong"`
+                err.message === `invalid array[boolean] for answers: [null,false,true,"wrong"],${eol} invalid boolean for 3: "wrong"`
         );
         
-        const someAnswers = [1, true] as boolean[];
+        const someAnswers = [false, true] as boolean[];
         const model = new SomeModel({
             answers: someAnswers
         });
 
         const answers = model.row.answers;
-        assert.deepEqual( answers, [true, true] );
+        assert.deepEqual( answers, [false, true] );
 
-        assert.strictEqual( answers[0], true );
+        assert.strictEqual( answers[0], false );
         assert.strictEqual( answers[1], true );
     });
 
