@@ -88,9 +88,9 @@ export interface ITypeParams {
     required?: boolean;
     primary?: boolean;
     prepare?: (value: any, key: string, model) => any;
-    toJSON?: (value: any) => any;
-    clone?: (value: any) => any;
-    equal?: (anotherValue: any) => boolean;
+    toJSON?: (value: any, stack) => any;
+    clone?: (value: any, stack) => any;
+    equal?: (selfValue: any, anotherValue: any, stack) => boolean;
     validate?: 
         ((value: any, key: string) => boolean) |
         RegExp

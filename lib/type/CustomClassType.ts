@@ -6,12 +6,19 @@ import {NoToJSONMethodError, NoCloneMethodError, NoEqualMethodError} from "../er
 
 export interface ICustomClassTypeParams extends ITypeParams {
     constructor: new (...args: any[]) => any;
-    prepare?: (value: any, key: string, model) => InstanceType<this["constructor"]>;
+    prepare?: (value: any, key: string, model: Model) => InstanceType<this["constructor"]>;
     validate?: 
         ((value: InstanceType<this["constructor"]>, key: string) => boolean) |
         RegExp
     ;
     default?: (() => InstanceType<this["constructor"]>);
+    equal?: (
+        selfValue: InstanceType<this["constructor"]>, 
+        otherValue: InstanceType<this["constructor"]>, 
+        stack
+    ) => boolean;
+    clone?: (value: InstanceType<this["constructor"]>, stack) => InstanceType<this["constructor"]>;
+    toJSON?: (value: InstanceType<this["constructor"]>, stack) => any;
 }
 
 export interface ICustomClassType<T extends (new(...args: any[]) => any)> extends IType {
@@ -26,20 +33,6 @@ export interface ICustomClassType<T extends (new(...args: any[]) => any)> extend
 }
 
 export class CustomClassType extends Type {
-
-    static prepareDescription(description) {
-        
-        const isCustomClass = (
-            typeof description.type === "function" &&
-            !(description.type.prototype instanceof Model)
-        );
-        
-        if ( isCustomClass ) {
-            const CustomClass = description.type;
-            description.type = "CustomClass";
-            description.constructor = CustomClass;
-        }
-    }
 
     CustomClass: new (...args: any) => any;
 

@@ -199,4 +199,48 @@ describe("CustomClassType", () => {
         );
     });
 
+    it("array of CustomClass, try compare models by custom equal method", () => {
+        class Element {
+            html: string;
+
+            constructor(html: string) {
+                this.html = html;
+            }
+        }
+
+        class SomeModel extends Model<SomeModel> {
+            structure() {
+                return {
+                    elements: Types.Array({
+                        element: Types.CustomClass({
+                            constructor: Element,
+                            equal: (elemA: Element, elemB: Element) => 
+                                elemA.html === elemB.html
+                        })
+                    })
+                };
+            }
+        }
+
+        const elem1 = new Element("<elem1/>");
+        const elem2 = new Element("<elem2/>");
+
+        const model1 = new SomeModel({
+            elements: [
+                elem1,
+                elem2
+            ]
+        });
+
+        const model2 = new SomeModel({
+            elements: [
+                elem2,
+                elem1
+            ]
+        });
+
+
+        assert.strictEqual( model1.equal(model2), false );
+    });
+
 });
