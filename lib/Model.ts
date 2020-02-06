@@ -27,7 +27,11 @@ interface IChangeEvent<TModel extends Model> {
     changes: ReadOnlyPartial<TModel["row"]>;
 }
 
-export class Model<ChildModel extends Model = any> extends EventEmitter {
+interface IChildModel {
+    structure(): {[key: string]: IType | (new (...args: any) => IType)};    
+}
+
+export class Model<ChildModel extends Model & IChildModel = any> extends EventEmitter {
 
     static Type = Type;
 
