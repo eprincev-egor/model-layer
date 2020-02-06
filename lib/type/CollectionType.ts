@@ -6,8 +6,9 @@ import {invalidValuesAsString} from "../utils";
 import {CircularStructureToJSONError} from "../errors";
 
 export interface ICollectionTypeParams extends ITypeParams {
-    Collection: any;
+    Collection: new (...args: any) => Collection<any>;
     nullAsEmpty?: boolean;
+    default?: () => InstanceType<this["Collection"]>;
 }
 
 export function MakeCollectionType<TCollectionConstructor>(

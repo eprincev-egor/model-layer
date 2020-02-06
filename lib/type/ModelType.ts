@@ -5,9 +5,12 @@ import {Model} from "../Model";
 import {invalidValuesAsString, isNaN, eol} from "../utils";
 import {CircularStructureToJSONError} from "../errors";
 
-export function MakeModelType<TModelConstructor>(
+export function MakeModelType<TModelConstructor extends (new (...args) => Model)>(
     params: ITypeParams & 
-    {Model: TModelConstructor}
+    {
+        Model: TModelConstructor;
+        default?: () => InstanceType<TModelConstructor>;
+    }
 ): TModelConstructor {
     return {
         ...params,
