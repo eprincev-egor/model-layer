@@ -123,7 +123,7 @@ describe("ModelType", () => {
                 });
             },
             (err) =>
-                err.message === `invalid UserModel for user: {"name":"10","age":101,"email":null},${eol} required email`
+                err.message === `invalid UserModel for user: {"name":"10","age":101},${eol} required email`
         );
 
 

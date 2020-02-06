@@ -743,6 +743,26 @@ describe("Model tests", () => {
         assert.strictEqual( file.row.name, "name.txt" );
     });
 
+    it("required field with default value", () => {
+
+        class FileModel extends Model<FileModel> {
+            structure() {
+                return {
+                    name: Types.String({
+                        required: true,
+                        default: "nice"
+                    }),
+                    path: Types.String
+                };
+            }
+        }
+
+        const file = new FileModel({
+            path: "test/name.txt"
+        });
+        assert.strictEqual( file.row.name, "nice" );
+    });
+
     it("equal with same class model", () => {
 
         class SomeModel extends Model<SomeModel> {

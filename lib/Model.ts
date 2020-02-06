@@ -53,16 +53,8 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
         super();
 
         this.prepareStructure();
-        
-        const row = {} as any;
-        this.row = row as any;
 
-        let newData: any = inputData;
-
-        if ( !isObject(newData) ) {
-            newData = {} as any;
-        }
-        
+        const defaultRow: any = {};
         for (const propKey in this.properties) {
             const key = propKey as keyof this["row"];
 
@@ -73,25 +65,18 @@ export class Model<ChildModel extends Model = any> extends EventEmitter {
             const description = this.properties[ key ];
 
             // default value is null, or something from description
-            let value = description.default();
+            let defaultValue = description.default();
             // default can be invalid
-            value = description.prepare(value, key, this);
+            defaultValue = description.prepare(defaultValue, key, this);
 
-            row[ key ] = value;
-
-            // throw required error in method .set
-            if ( description.required ) {
-                if ( !(key in newData) ) {
-                    newData[key] = null;
-                }
-            }
+            defaultRow[ key ] = defaultValue;
         }
-        
-        this.isInit = true; // do not check const
-        this.set(newData);
-        delete this.isInit;
 
-        Object.freeze(this.row);
+        this.row = Object.freeze(defaultRow);
+
+        this.isInit = true; // do not check const
+        this.set(inputData || {} as any);
+        delete this.isInit;
     }
 
     structure(): {[key: string]: IType | (new (...args: any) => IType)} {
