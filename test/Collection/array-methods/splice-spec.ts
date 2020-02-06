@@ -15,7 +15,7 @@ describe("Collection.splice", () => {
             }
         }
         
-        class Users extends Collection<User> {
+        class Users extends Collection<Users> {
             Model() {
                 return User;
             }
@@ -53,7 +53,7 @@ describe("Collection.splice", () => {
             }
         }
         
-        class Users extends Collection<User> {
+        class Users extends Collection<Users> {
             Model() {
                 return User;
             }
@@ -88,7 +88,7 @@ describe("Collection.splice", () => {
             }
         }
         
-        class Users extends Collection<User> {
+        class Users extends Collection<Users> {
             Model() {
                 return User;
             }
@@ -122,7 +122,7 @@ describe("Collection.splice", () => {
             }
         }
         
-        class Users extends Collection<User> {
+        class Users extends Collection<Users> {
             Model() {
                 return User;
             }

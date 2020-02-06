@@ -15,7 +15,7 @@ describe("Collection.filter", () => {
 
     it("filter()", () => {
 
-        class Products extends Collection<Product> {
+        class Products extends Collection<Products> {
             Model() {
                 return Product;
             }
@@ -37,7 +37,7 @@ describe("Collection.filter", () => {
     });
     
     it("filter(f, context)", () => {
-        class Products extends Collection<Product> {
+        class Products extends Collection<Products> {
             Model() {
                 return Product;
             }

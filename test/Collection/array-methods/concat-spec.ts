@@ -14,7 +14,7 @@ class Product extends Model<Product> {
 describe("Collection.concat", () => {
 
     it("concat(collection)", () => {
-        class Products extends Collection<Product> {
+        class Products extends Collection<Products> {
             Model() {
                 return Product;
             }
@@ -39,7 +39,7 @@ describe("Collection.concat", () => {
 
     it("concat(rows)", () => {
         
-        class Products extends Collection<Product> {
+        class Products extends Collection<Products> {
             Model() {
                 return Product;
             }
@@ -64,7 +64,7 @@ describe("Collection.concat", () => {
 
     it("concat(rows1, rows2)", () => {
         
-        class Products extends Collection<Product> {
+        class Products extends Collection<Products> {
             Model() {
                 return Product;
             }
@@ -92,7 +92,7 @@ describe("Collection.concat", () => {
 
     it("concat(rows, collection)", () => {
         
-        class Products extends Collection<Product> {
+        class Products extends Collection<Products> {
             Model() {
                 return Product;
             }
@@ -121,7 +121,7 @@ describe("Collection.concat", () => {
     
     it("concat()", () => {
         
-        class Products extends Collection<Product> {
+        class Products extends Collection<Products> {
             Model() {
                 return Product;
             }

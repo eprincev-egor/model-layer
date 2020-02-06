@@ -14,7 +14,7 @@ describe("CollectionType", () => {
             }
         }
 
-        class Products extends Collection<Product> {
+        class Products extends Collection<Products> {
             Model() {
                 return Product;
             }
@@ -62,7 +62,7 @@ describe("CollectionType", () => {
             }
         }
 
-        class Products extends Collection<Product> {
+        class Products extends Collection<Products> {
             Model() {
                 return Product;
             }
@@ -99,7 +99,7 @@ describe("CollectionType", () => {
             }
         }
 
-        class SomeCollection extends Collection<Data> {
+        class SomeCollection extends Collection<SomeCollection> {
             Model() {
                 return Data;
             }
@@ -137,7 +137,7 @@ describe("CollectionType", () => {
             }
         }
 
-        class SomeCollection extends Collection<Data> {
+        class SomeCollection extends Collection<SomeCollection> {
             Model() {
                 return Data;
             }
@@ -177,7 +177,7 @@ describe("CollectionType", () => {
             }
         }
 
-        class MyCollection extends Collection<Data> {
+        class MyCollection extends Collection<MyCollection> {
             Model() {
                 return Data;
             }
@@ -229,7 +229,7 @@ describe("CollectionType", () => {
             }
         }
 
-        class CustomCollection extends Collection<Data> {
+        class CustomCollection extends Collection<CustomCollection> {
             Model() {
                 return Data;
             }
@@ -316,7 +316,7 @@ describe("CollectionType", () => {
             }
         }
 
-        class CustomCollection extends Collection<Item> {
+        class CustomCollection extends Collection<CustomCollection> {
             Model() {
                 return Item;
             }
@@ -363,7 +363,7 @@ describe("CollectionType", () => {
             }
         }
 
-        class Products extends Collection<Product> {
+        class Products extends Collection<Products> {
             Model() {
                 return Product;
             }
@@ -411,7 +411,7 @@ describe("CollectionType", () => {
                 };
             }
         }
-        class MyCollection extends Collection<MyModel> {
+        class MyCollection extends Collection<MyCollection> {
             Model() {
                 return MyModel;
             }

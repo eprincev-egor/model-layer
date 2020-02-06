@@ -14,7 +14,7 @@ describe("Collection tests", () => {
             }
         }
 
-        class Users extends Collection<User> {
+        class Users extends Collection<Users> {
             Model() {
                 return User;
             }
@@ -37,7 +37,7 @@ describe("Collection tests", () => {
             }
         }
 
-        class Users extends Collection<User> {
+        class Users extends Collection<Users> {
             Model() {
                 return User;
             }
@@ -66,7 +66,7 @@ describe("Collection tests", () => {
             }
         }
 
-        class Users extends Collection<User> {
+        class Users extends Collection<Users> {
             Model() {
                 return User;
             }
@@ -98,7 +98,7 @@ describe("Collection tests", () => {
             }
         }
 
-        class Users extends Collection<User> {
+        class Users extends Collection<Users> {
             Model() {
                 return User;
             }
@@ -130,7 +130,7 @@ describe("Collection tests", () => {
             }
         }
 
-        class Products extends Collection<Product> {
+        class Products extends Collection<Products> {
             Model() {
                 return Product;
             }
@@ -155,7 +155,7 @@ describe("Collection tests", () => {
             }
         }
 
-        class Companies extends Collection<Company> {
+        class Companies extends Collection<Companies> {
             Model() {
                 return Company;
             }
@@ -175,8 +175,8 @@ describe("Collection tests", () => {
     });
 
     it("Collection without Model method", () => {
-
-        class Companies extends Collection<Model> {
+        const AnyCollection = Collection as any;
+        class Companies extends AnyCollection {
         }
 
         assert.throws(

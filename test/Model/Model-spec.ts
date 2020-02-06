@@ -1044,8 +1044,8 @@ describe("Model tests", () => {
     });
 
     it("Model without structure method", () => {
-
-        class Company extends Model<Company> {
+        const AnyModel = Model as any;
+        class Company extends AnyModel {
         }
 
         assert.throws(

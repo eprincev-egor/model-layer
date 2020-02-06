@@ -17,7 +17,7 @@ describe("Collection.get", () => {
 
     it("get(id)", () => {
         
-        class Companies extends Collection<Company> {
+        class Companies extends Collection<Companies> {
             Model() {
                 return Company;
             }

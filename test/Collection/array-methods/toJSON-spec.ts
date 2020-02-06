@@ -13,7 +13,7 @@ describe("Collection.toJSON", () => {
             }
         }
         
-        class Users extends Collection<User> {
+        class Users extends Collection<Users> {
             Model() {
                 return User;
             }

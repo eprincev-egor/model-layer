@@ -15,7 +15,7 @@ describe("Collection.every", () => {
 
     it("every()", () => {
 
-        class Products extends Collection<Product> {
+        class Products extends Collection<Products> {
             Model() {
                 return Product;
             }
@@ -40,7 +40,7 @@ describe("Collection.every", () => {
     });
     
     it("every(f, context)", () => {
-        class Products extends Collection<Product> {
+        class Products extends Collection<Products> {
             Model() {
                 return Product;
             }

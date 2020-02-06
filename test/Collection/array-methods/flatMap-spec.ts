@@ -14,7 +14,7 @@ describe("Collection.flatMap", () => {
             }
         }
 
-        class Books extends Collection<Book> {
+        class Books extends Collection<Books> {
             Model() {
                 return Book;
             }
@@ -58,7 +58,7 @@ describe("Collection.flatMap", () => {
             }
         }
 
-        class Products extends Collection<Product> {
+        class Products extends Collection<Products> {
             Model() {
                 return Product;
             }

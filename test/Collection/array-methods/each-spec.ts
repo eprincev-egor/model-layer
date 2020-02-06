@@ -15,7 +15,7 @@ describe("Collection.each", () => {
 
     it("each", () => {
 
-        class Products extends Collection<Product> {
+        class Products extends Collection<Products> {
             Model() {
                 return Product;
             }
@@ -49,7 +49,7 @@ describe("Collection.each", () => {
 
     it("each(f, context)", () => {
 
-        class Products extends Collection<Product> {
+        class Products extends Collection<Products> {
             Model() {
                 return Product;
             }

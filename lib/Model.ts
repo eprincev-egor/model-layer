@@ -83,11 +83,11 @@ export class Model<ChildModel extends Model & IChildModel = any> extends EventEm
         delete this.isInit;
     }
 
-    structure(): {[key: string]: IType | (new (...args: any) => IType)} {
-        throw new ModelWithoutStructureError({
-            className: this.constructor.name
-        });
-    }
+    // structure(): {[key: string]: IType | (new (...args: any) => IType)} {
+    //     throw new ModelWithoutStructureError({
+    //         className: this.constructor.name
+    //     });
+    // }
 
     get<TKey extends keyof this["row"]>(key: TKey): this["row"][TKey] {
         return this.row[ key ];

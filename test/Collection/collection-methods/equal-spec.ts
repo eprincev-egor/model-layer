@@ -14,7 +14,7 @@ describe("Collection.equal", () => {
             }
         }
 
-        class Companies extends Collection<Company> {
+        class Companies extends Collection<Companies> {
             Model() {
                 return Company;
             }
@@ -71,7 +71,7 @@ describe("Collection.equal", () => {
             }
         }
 
-        class CustomCollection extends Collection<Custom> {
+        class CustomCollection extends Collection<CustomCollection> {
             Model() {
                 return Custom;
             }

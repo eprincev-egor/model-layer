@@ -13,7 +13,7 @@ describe("Collection.push", () => {
             }
         }
         
-        class Users extends Collection<User> {
+        class Users extends Collection<Users> {
             Model() {
                 return User;
             }
@@ -45,7 +45,7 @@ describe("Collection.push", () => {
             }
         }
 
-        class Users extends Collection<User> {
+        class Users extends Collection<Users> {
             Model() {
                 return User;
             }
@@ -84,7 +84,7 @@ describe("Collection.push", () => {
             }
         }
 
-        class Users extends Collection<User> {
+        class Users extends Collection<Users> {
             Model() {
                 return User;
             }
@@ -123,7 +123,7 @@ describe("Collection.push", () => {
         }
 
 
-        class Users extends Collection<User> {
+        class Users extends Collection<Users> {
             Model() {
                 return User;
             }
@@ -153,7 +153,7 @@ describe("Collection.push", () => {
             }
         }
 
-        class Users extends Collection<User> {
+        class Users extends Collection<Users> {
             Model() {
                 return User;
             }
@@ -177,7 +177,7 @@ describe("Collection.push", () => {
             }
         }
 
-        class Users extends Collection<User> {
+        class Users extends Collection<Users> {
             Model() {
                 return User;
             }

@@ -15,7 +15,7 @@ describe("Collection.pop", () => {
 
     it("pop()", () => {
         
-        class Products extends Collection<Product> {
+        class Products extends Collection<Products> {
             Model() {
                 return Product;
             }

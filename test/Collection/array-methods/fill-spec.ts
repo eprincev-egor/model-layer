@@ -15,7 +15,7 @@ describe("Collection.fill", () => {
 
     it("fill(row, start, end)", () => {
         
-        class Products extends Collection<Product> {
+        class Products extends Collection<Products> {
             Model() {
                 return Product;
             }
@@ -54,7 +54,7 @@ describe("Collection.fill", () => {
 
     it("fill(row, start)", () => {
         
-        class Products extends Collection<Product> {
+        class Products extends Collection<Products> {
             Model() {
                 return Product;
             }
@@ -90,7 +90,7 @@ describe("Collection.fill", () => {
     
     it("fill(row, -start)", () => {
         
-        class Products extends Collection<Product> {
+        class Products extends Collection<Products> {
             Model() {
                 return Product;
             }
@@ -118,7 +118,7 @@ describe("Collection.fill", () => {
 
     it("fill(row, -start, -end)", () => {
         
-        class Products extends Collection<Product> {
+        class Products extends Collection<Products> {
             Model() {
                 return Product;
             }

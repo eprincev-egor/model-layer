@@ -15,7 +15,7 @@ describe("Collection.indexOf", () => {
 
     it("indexOf(model)", () => {
 
-        class Products extends Collection<Product> {
+        class Products extends Collection<Products> {
             Model() {
                 return Product;
             }
@@ -52,7 +52,7 @@ describe("Collection.indexOf", () => {
     
     it("indexOf(model, fromIndex)", () => {
 
-        class Products extends Collection<Product> {
+        class Products extends Collection<Products> {
             Model() {
                 return Product;
             }

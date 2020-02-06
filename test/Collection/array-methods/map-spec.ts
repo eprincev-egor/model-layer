@@ -15,7 +15,7 @@ describe("Collection.map", () => {
 
     it("map()", () => {
 
-        class Products extends Collection<Product> {
+        class Products extends Collection<Products> {
             Model() {
                 return Product;
             }
@@ -35,7 +35,7 @@ describe("Collection.map", () => {
     });
     
     it("map(f, context)", () => {
-        class Products extends Collection<Product> {
+        class Products extends Collection<Products> {
             Model() {
                 return Product;
             }

@@ -13,7 +13,7 @@ describe("Collection.unshift", () => {
             }
         }
         
-        class Users extends Collection<User> {
+        class Users extends Collection<Users> {
             Model() {
                 return User;
             }
@@ -45,7 +45,7 @@ describe("Collection.unshift", () => {
             }
         }
         
-        class Users extends Collection<User> {
+        class Users extends Collection<Users> {
             Model() {
                 return User;
             }
@@ -84,7 +84,7 @@ describe("Collection.unshift", () => {
             }
         }
         
-        class Users extends Collection<User> {
+        class Users extends Collection<Users> {
             Model() {
                 return User;
             }
@@ -122,7 +122,7 @@ describe("Collection.unshift", () => {
             }
         }
         
-        class Users extends Collection<User> {
+        class Users extends Collection<Users> {
             Model() {
                 return User;
             }
@@ -153,7 +153,7 @@ describe("Collection.unshift", () => {
             }
         }
         
-        class Users extends Collection<User> {
+        class Users extends Collection<Users> {
             Model() {
                 return User;
             }
@@ -178,7 +178,7 @@ describe("Collection.unshift", () => {
             }
         }
         
-        class Users extends Collection<User> {
+        class Users extends Collection<Users> {
             Model() {
                 return User;
             }

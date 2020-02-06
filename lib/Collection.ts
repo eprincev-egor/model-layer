@@ -22,7 +22,14 @@ interface IRemoveEvent<TCollection, TModel> {
     collection: TCollection;
 }
 
-export class Collection<TModel extends Model> extends EventEmitter {
+interface IChildCollection {
+    Model(): new (...args: any[]) => Model;
+}
+
+export class Collection<
+    ChildCollection extends Collection & IChildCollection = any,
+    TModel extends Model = InstanceType< ReturnType< ChildCollection["Model"] > >
+> extends EventEmitter {
     TModel: TModel;
     models: TModel[];
     length: number;
@@ -39,7 +46,7 @@ export class Collection<TModel extends Model> extends EventEmitter {
         super();
 
         if ( !this.constructor.prototype.hasOwnProperty("ModelConstructor") ) {
-            this.constructor.prototype.ModelConstructor = this.Model();
+            this.constructor.prototype.ModelConstructor = (this as any).Model();
             
             // prepare model structure without calling constructor
             const model = Object.create(this.ModelConstructor.prototype);
@@ -60,11 +67,11 @@ export class Collection<TModel extends Model> extends EventEmitter {
         }
     }
     
-    Model(): new (...args: any) => TModel {
-        throw new CollectionShouldHaveModelError({
-            className: this.constructor.name
-        });
-    }
+    // Model(): new (...args: any) => TModel {
+    //     throw new CollectionShouldHaveModelError({
+    //         className: this.constructor.name
+    //     });
+    // }
 
     at(index: number, rowOrModel?: TModel["TInput"]): TModel {
         // set

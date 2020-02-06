@@ -17,7 +17,7 @@ describe("Collection event add", () => {
             }
         }
 
-        class Users extends Collection<User> {
+        class Users extends Collection<Users> {
             Model() {
                 return User;
             }
@@ -64,7 +64,7 @@ describe("Collection event add", () => {
             }
         }
 
-        class Users extends Collection<User> {
+        class Users extends Collection<Users> {
             Model() {
                 return User;
             }
@@ -112,7 +112,7 @@ describe("Collection event add", () => {
             }
         }
 
-        class Users extends Collection<User> {
+        class Users extends Collection<Users> {
             Model() {
                 return User;
             }
@@ -162,7 +162,7 @@ describe("Collection event add", () => {
             }
         }
 
-        class Users extends Collection<User> {
+        class Users extends Collection<Users> {
             Model() {
                 return User;
             }
@@ -209,7 +209,7 @@ describe("Collection event add", () => {
             }
         }
 
-        class Users extends Collection<User> {
+        class Users extends Collection<Users> {
             Model() {
                 return User;
             }
@@ -256,7 +256,7 @@ describe("Collection event add", () => {
             }
         }
 
-        class Users extends Collection<User> {
+        class Users extends Collection<Users> {
             Model() {
                 return User;
             }

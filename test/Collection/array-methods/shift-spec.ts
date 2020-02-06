@@ -15,7 +15,7 @@ describe("Collection.shift", () => {
 
     it("shift()", () => {
         
-        class Products extends Collection<Product> {
+        class Products extends Collection<Products> {
             Model() {
                 return Product;
             }
