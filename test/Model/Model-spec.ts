@@ -1410,7 +1410,7 @@ describe("Model tests", () => {
             }
         }
 
-        class Files extends Collection<File> {
+        class Files extends Collection<Files> {
             Model() {
                 return File;
             }

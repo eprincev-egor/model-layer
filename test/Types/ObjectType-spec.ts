@@ -517,7 +517,13 @@ describe("ObjectType", () => {
     // then clone should be instance of ChildModel
     it("clone object of models, should return object of instance of Child", () => {
         
-        class FirstLevel extends Model<FirstLevel> {}
+        class FirstLevel extends Model<FirstLevel> {
+            structure() {
+                return {
+                    
+                };
+            }
+        }
 
         class SecondLevel extends FirstLevel {
             structure() {

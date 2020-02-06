@@ -66,12 +66,6 @@ export class Collection<
             this.length = 0;
         }
     }
-    
-    // Model(): new (...args: any) => TModel {
-    //     throw new CollectionShouldHaveModelError({
-    //         className: this.constructor.name
-    //     });
-    // }
 
     at(index: number, rowOrModel?: TModel["TInput"]): TModel {
         // set
@@ -718,5 +712,12 @@ export class Collection<
         super.on(eventName, handler);
     }
 }
+
+// for js
+(Collection as any).prototype.Model = function() {
+    throw new CollectionShouldHaveModelError({
+        className: this.constructor.name
+    });
+};
 
 export default Collection;

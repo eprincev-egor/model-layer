@@ -848,7 +848,13 @@ describe("ArrayType", () => {
     // then clone should be instance of ChildModel
     it("clone array of models, should return array of instance of Child", () => {
 
-        class FirstLevel extends Model<FirstLevel> {}
+        class FirstLevel extends Model<FirstLevel> {
+            structure() {
+                return {
+                    
+                };
+            }
+        }
 
         class SecondLevel extends FirstLevel {
             structure() {
