@@ -104,3 +104,37 @@ export class ConflictFloorCeilRoundError extends BaseError<{
         };
     }
 }
+
+export class ConflictNullAndZeroParameterError extends BaseError<{
+}> {
+    getMessage({}) {
+        return {
+            ru: `разрешено использовать только один обработки null: nullAsZero, zeroAsNull`,
+            en: `conflicting parameters: use only nullAsZero or only zeroAsNull`
+        };
+    }
+}
+
+export class InvalidNumberError extends BaseError<{
+    key: string;
+    invalidValue: string;
+}> {
+    getMessage({key, invalidValue}) {
+        return {
+            ru: `некорректное число для поля ${key}: ${invalidValue}`,
+            en: `invalid number for ${key}: ${invalidValue}`
+        };
+    }
+}
+
+export class InvalidRoundError extends BaseError<{
+    roundType: string;
+    invalidValue: string;
+}> {
+    getMessage({roundType, invalidValue}) {
+        return {
+            ru: `некорректное значение для параметра ${roundType}: ${invalidValue}`,
+            en: `invalid ${roundType}: ${invalidValue}`
+        };
+    }
+}

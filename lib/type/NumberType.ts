@@ -2,7 +2,12 @@
 
 import {Type, IType, ITypeParams} from "./Type";
 import {isNaN, invalidValuesAsString} from "../utils";
-import {ConflictFloorCeilRoundError} from "../errors";
+import {
+    ConflictFloorCeilRoundError,
+    ConflictNullAndZeroParameterError,
+    InvalidNumberError,
+    InvalidRoundError
+} from "../errors";
 
 export interface INumberTypeParams extends ITypeParams {
     nullAsZero?: boolean;
@@ -48,12 +53,15 @@ export class NumberType extends Type {
         this.zeroAsNull = zeroAsNull;
 
         if ( nullAsZero && zeroAsNull ) {
-            throw new Error("conflicting parameters: use only nullAsZero or only zeroAsNull");
+            throw new ConflictNullAndZeroParameterError({});
         }
 
         if ( ceil != null ) {
             if ( isNaN(+ceil) ) {
-                throw new Error("invalid ceil: " + invalidValuesAsString(ceil));
+                throw new InvalidRoundError({
+                    roundType: "ceil",
+                    invalidValue: invalidValuesAsString(ceil)
+                });
             }
             ceil = +ceil;
         }
@@ -61,7 +69,10 @@ export class NumberType extends Type {
 
         if ( round != null ) {
             if ( isNaN(+round) ) {
-                throw new Error("invalid round: " + invalidValuesAsString(round));
+                throw new InvalidRoundError({
+                    roundType: "round",
+                    invalidValue: invalidValuesAsString(round)
+                });
             }
 
             if ( ceil != null ) {
@@ -74,7 +85,10 @@ export class NumberType extends Type {
 
         if ( floor != null ) {
             if ( isNaN(+floor) ) {
-                throw new Error("invalid floor: " + invalidValuesAsString(floor));
+                throw new InvalidRoundError({
+                    roundType: "floor",
+                    invalidValue: invalidValuesAsString(floor)
+                });
             }
 
             if ( ceil != null ) {
@@ -112,7 +126,10 @@ export class NumberType extends Type {
         ) {
             const valueAsString = invalidValuesAsString( originalValue );
     
-            throw new Error(`invalid number for ${key}: ${valueAsString}`);
+            throw new InvalidNumberError({
+                key,
+                invalidValue: valueAsString
+            });
         }
     
         
