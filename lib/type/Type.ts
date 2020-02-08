@@ -1,7 +1,8 @@
 
 import EqualStack from "../EqualStack";
-
+import {UnknownTypeError, ReservedWordForPrimaryKeyError} from "../errors";
 import {invalidValuesAsString} from "../utils";
+
 const FORBIDDEN_PRIMARY_KEYS = [
     "row",
     "primaryKey",
@@ -152,7 +153,10 @@ export class Type {
         // find CustomType by name
         const CustomType = Types[ description.type ];
         if ( !CustomType ) {
-            throw new Error(`${key}: unknown type: ${ description.type }`);
+            throw new UnknownTypeError({
+                key,
+                type: description.type
+            });
         }
 
 
@@ -164,7 +168,7 @@ export class Type {
             );
 
             if ( isReserved ) {
-                throw new Error(`primary key cannot be reserved word: ${ key }`);
+                throw new ReservedWordForPrimaryKeyError({key});
             }
         }
 

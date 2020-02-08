@@ -2,7 +2,12 @@
 import {Type, IType, ITypeParams} from "./Type";
 import {Model} from "../Model";
 import {invalidValuesAsString} from "../utils";
-import {NoToJSONMethodError, NoCloneMethodError, NoEqualMethodError} from "../errors";
+import {
+    NoToJSONMethodError, 
+    NoCloneMethodError, 
+    NoEqualMethodError,
+    InvalidValueForCustomClassError
+} from "../errors";
 
 export interface ICustomClassTypeParams extends ITypeParams {
     constructor: new (...args: any[]) => any;
@@ -56,7 +61,11 @@ export class CustomClassType extends Type {
         }
 
         const valueAsString = invalidValuesAsString( value );
-        throw new Error(`invalid ${ className } for ${key}: ${valueAsString}`);
+        throw new InvalidValueForCustomClassError({
+            className,
+            key,
+            invalidValue: valueAsString
+        });
     }
 
     typeAsString() {

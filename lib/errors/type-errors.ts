@@ -36,3 +36,39 @@ export class NoEqualMethodError extends BaseError<{className: string}> {
         };
     }
 }
+
+export class InvalidValueForCustomClassError extends BaseError<{
+    className: string;
+    key: string;
+    invalidValue: string;
+}> {
+    getMessage({className, key, invalidValue}) {
+        return {
+            ru: `некорректное значение для класса ${ className }, поле ${key}: ${invalidValue}`,
+            en: `invalid value for ${ className }, field ${key}: ${invalidValue}`
+        };
+    }
+}
+
+export class UnknownTypeError extends BaseError<{
+    key: string;
+    type: string;
+}> {
+    getMessage({key, type}) {
+        return {
+            ru: `поле ${key}, неизвестный тип: ${type}`,
+            en: `field ${key}, unknown type: ${type}`
+        };
+    }
+}
+
+export class ReservedWordForPrimaryKeyError extends BaseError<{
+    key: string;
+}> {
+    getMessage({key, type}) {
+        return {
+            ru: `поле ${key} не может быть первичным ключом, потому что это слово занято`,
+            en: `field ${key} cannot be primary key, because it reserved word`
+        };
+    }
+}

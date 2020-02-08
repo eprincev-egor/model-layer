@@ -38,7 +38,7 @@ describe("CustomClassType", () => {
                 anyModel.set({driver: {}});
             },
             (err) =>
-                err.message === "invalid DBDriver for driver: {}"
+                err.message === "invalid value for DBDriver, field driver: {}"
         );
     });
 

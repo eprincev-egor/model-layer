@@ -999,7 +999,7 @@ describe("Model tests", () => {
             () => {
                 const model = new AnyModel();
             }, (err) =>
-                err.message === "x: unknown type: test"
+                err.message === "field x, unknown type: test"
         );
     });
 

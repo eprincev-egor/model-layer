@@ -54,7 +54,7 @@ describe("Model primary field", () => {
                     });
                 },
                 (err) =>
-                    err.message === `primary key cannot be reserved word: ${reservedKey}`
+                    err.message === `field ${reservedKey} cannot be primary key, because it reserved word`
             );
 
         });
