@@ -2,6 +2,12 @@ import {Type, IType, ITypeParams} from "./Type";
 import {Model} from "../Model";
 import {invalidValuesAsString} from "../utils";
 import {value2json, equal, clone} from "./AnyType";
+import {
+    InvalidOrValueError,
+    RequiredOrArrayError,
+    EmptyOrArrayError,
+    InvalidOrTypeError
+} from "../errors";
 
 type ElementType < T extends any[] > = (
     // tslint:disable-next-line: no-shadowed-variable
@@ -57,10 +63,10 @@ export class OrType extends Type {
         super(otherParams);
 
         if ( !Array.isArray(or) ) {
-            throw new Error("expected 'or' array of type descriptions");
+            throw new RequiredOrArrayError({});
         }
         if ( !or.length ) {
-            throw new Error("empty 'or' array of type descriptions");
+            throw new EmptyOrArrayError({});
         }
 
         for (let i = 0, n = or.length; i < n; i++) {
@@ -69,7 +75,10 @@ export class OrType extends Type {
             if ( elem instanceof Type ) {
                 continue;
             }
-            throw new Error(`invalid type description or[${ i }]: ${ invalidValuesAsString(elem) }`);
+            throw new InvalidOrTypeError({
+                index: i,
+                invalidValue: invalidValuesAsString(elem)
+            });
         }
 
         this.or = or as any;
@@ -98,11 +107,14 @@ export class OrType extends Type {
 
         if ( !currentType ) {
             const valueAsString = invalidValuesAsString( originalValue );
-            const typeName = this.or.map((childDescription) => 
-                childDescription.type
-            ).join(" or ");
-
-            throw new Error(`invalid ${typeName} for ${key}: ${valueAsString}`);
+            
+            throw new InvalidOrValueError({
+                key,
+                invalidValue: valueAsString,
+                typesNames: this.or.map((childDescription) => 
+                    childDescription.type
+                )
+            });
         }
 
         return value;

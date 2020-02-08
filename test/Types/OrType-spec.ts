@@ -79,7 +79,7 @@ describe("OrType", () => {
                 });
             },
             (err) =>
-                err.message === "invalid number or string for id: {}"
+                err.message === "invalid value for types: number or string, for id: {}"
         );
         
     });
@@ -100,7 +100,7 @@ describe("OrType", () => {
                 const model = new WrongModel();
             },
             (err) =>
-                err.message === "id: expected 'or' array of type descriptions"
+                err.message === "id: required 'or' array of type descriptions"
         );
     });
 

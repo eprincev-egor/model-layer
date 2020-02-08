@@ -1,6 +1,7 @@
 // tslint:disable: max-classes-per-file
 import {BaseError} from "./BaseError";
 import {eol} from "../utils";
+import { types } from "util";
 
 export class CircularStructureToJSONError extends BaseError {
     getMessage() {
@@ -233,6 +234,51 @@ export class InvalidModelError extends BaseError<{
         return {
             ru: `некорректная модель ${className} для поля ${key}: ${invalidValue}${ postfix }`,
             en: `invalid model ${className} for ${key}: ${invalidValue}${ postfix }`
+        };
+    }
+}
+
+export class InvalidOrValueError extends BaseError<{
+    key: string;
+    typesNames: string[];
+    invalidValue: string;
+}> {
+    getMessage({key, typesNames = [], invalidValue}) {
+        return {
+            ru: `некорректное значение для типов: ${typesNames.join(" or ")}, для поля ${key}: ${invalidValue}`,
+            en: `invalid value for types: ${typesNames.join(" or ")}, for ${key}: ${invalidValue}`
+        };
+    }
+}
+
+export class RequiredOrArrayError extends BaseError<{
+}> {
+    getMessage({}) {
+        return {
+            ru: `необходимо указать перечисление типов`,
+            en: `required 'or' array of type descriptions`
+        };
+    }
+}
+
+export class EmptyOrArrayError extends BaseError<{
+}> {
+    getMessage({}) {
+        return {
+            ru: `перечисление типов не должно быть пустым массивом`,
+            en: `empty 'or' array of type descriptions`
+        };
+    }
+}
+
+export class InvalidOrTypeError extends BaseError<{
+    index: number;
+    invalidValue: string;
+}> {
+    getMessage({index, invalidValue}) {
+        return {
+            ru: `некорректное значение для типа or[${ index }]: ${ invalidValue }`,
+            en: `invalid type description or[${ index }]: ${ invalidValue }`
         };
     }
 }
