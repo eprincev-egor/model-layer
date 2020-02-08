@@ -382,7 +382,7 @@ describe("NumberType", () => {
                 const model = new SomeModel();
             },
             (err) =>
-                err.message === "money: conflicting parameters: use only round or only ceil"
+                err.message === "money: conflicting parameters: use only round or only ceil or only floor"
         );
     });
 
@@ -404,7 +404,7 @@ describe("NumberType", () => {
                 const model = new SomeModel();
             },
             (err) =>
-                err.message === "money: conflicting parameters: use only floor or only ceil"
+                err.message === "money: conflicting parameters: use only round or only ceil or only floor"
         );
     });
 
@@ -426,7 +426,7 @@ describe("NumberType", () => {
                 const model = new SomeModel();
             },
             (err) =>
-                err.message === "money: conflicting parameters: use only floor or only round"
+                err.message === "money: conflicting parameters: use only round or only ceil or only floor"
         );
     });
 

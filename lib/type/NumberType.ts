@@ -2,6 +2,7 @@
 
 import {Type, IType, ITypeParams} from "./Type";
 import {isNaN, invalidValuesAsString} from "../utils";
+import {ConflictFloorCeilRoundError} from "../errors";
 
 export interface INumberTypeParams extends ITypeParams {
     nullAsZero?: boolean;
@@ -64,7 +65,7 @@ export class NumberType extends Type {
             }
 
             if ( ceil != null ) {
-                throw new Error("conflicting parameters: use only round or only ceil");
+                throw new ConflictFloorCeilRoundError({});
             }
 
             round = +round;
@@ -77,10 +78,10 @@ export class NumberType extends Type {
             }
 
             if ( ceil != null ) {
-                throw new Error("conflicting parameters: use only floor or only ceil");
+                throw new ConflictFloorCeilRoundError({});
             }
             if ( round != null ) {
-                throw new Error("conflicting parameters: use only floor or only round");
+                throw new ConflictFloorCeilRoundError({});
             }
             
             floor = +floor;

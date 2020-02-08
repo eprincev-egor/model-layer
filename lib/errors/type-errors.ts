@@ -72,3 +72,35 @@ export class ReservedWordForPrimaryKeyError extends BaseError<{
         };
     }
 }
+
+export class InvalidValidationError extends BaseError<{
+    invalidValue: string;
+}> {
+    getMessage({invalidValue}) {
+        return {
+            ru: `validate должен быть функцией или регулярным выражением: ${invalidValue}`,
+            en: `validate should be function or RegExp: ${invalidValue}`
+        };
+    }
+}
+
+export class InvalidKeyValidationError extends BaseError<{
+    invalidValue: string;
+}> {
+    getMessage({invalidValue}) {
+        return {
+            ru: `key validation должен быть функцией или регулярным выражением: ${invalidValue}`,
+            en: `key validation should be function or RegExp: ${invalidValue}`
+        };
+    }
+}
+
+export class ConflictFloorCeilRoundError extends BaseError<{
+}> {
+    getMessage({}) {
+        return {
+            ru: `разрешено использовать только один тип округления: floor, round, ceil`,
+            en: `conflicting parameters: use only round or only ceil or only floor`
+        };
+    }
+}

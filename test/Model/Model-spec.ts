@@ -1039,7 +1039,7 @@ describe("Model tests", () => {
             () => {
                 const model = new AnyModel();
             }, (err) =>
-                err.message === "*: validate key should be function or RegExp: NaN"
+                err.message === "*: key validation should be function or RegExp: NaN"
         );
     });
 

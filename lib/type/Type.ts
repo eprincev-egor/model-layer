@@ -1,6 +1,11 @@
 
 import EqualStack from "../EqualStack";
-import {UnknownTypeError, ReservedWordForPrimaryKeyError} from "../errors";
+import {
+    UnknownTypeError, 
+    ReservedWordForPrimaryKeyError,
+    InvalidValidationError,
+    InvalidKeyValidationError
+} from "../errors";
 import {invalidValuesAsString} from "../utils";
 
 const FORBIDDEN_PRIMARY_KEYS = [
@@ -272,8 +277,9 @@ export class Type {
             }
 
             else {
-                throw new Error("validate should be function or RegExp: " + 
-                    invalidValuesAsString( params.validate ));
+                throw new InvalidValidationError({
+                    invalidValue: invalidValuesAsString( params.validate )
+                });
             }
         }
 
@@ -292,8 +298,9 @@ export class Type {
             }
 
             else {
-                throw new Error("validate key should be function or RegExp: " + 
-                    invalidValuesAsString( customValidateKey ));
+                throw new InvalidKeyValidationError({
+                    invalidValue: invalidValuesAsString( customValidateKey )
+                });
             }
         }
 
