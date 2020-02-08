@@ -1,6 +1,10 @@
 
 import {Type, IType, ITypeParams} from "./Type";
 import {invalidValuesAsString} from "../utils";
+import {
+    ConflictNullAndFalseParameterError,
+    InvalidBooleanError
+} from "../errors";
 
 export interface IBooleanTypeParams extends ITypeParams {
     nullAsFalse?: boolean;
@@ -32,7 +36,7 @@ export class BooleanType extends Type {
         this.falseAsNull = params.falseAsNull;
 
         if ( params.nullAsFalse && params.falseAsNull ) {
-            throw new Error("conflicting parameters: use only nullAsFalse or only falseAsNull");
+            throw new ConflictNullAndFalseParameterError({});
         }
     }
 
@@ -49,7 +53,10 @@ export class BooleanType extends Type {
         if ( typeof value !== "boolean" ) {
             const valueAsString = invalidValuesAsString( value );
     
-            throw new Error(`invalid boolean for ${key}: ${valueAsString}`);
+            throw new InvalidBooleanError({
+                key,
+                invalidValue: valueAsString
+            });
         }
 
         if ( this.falseAsNull ) {

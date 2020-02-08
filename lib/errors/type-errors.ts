@@ -138,3 +138,57 @@ export class InvalidRoundError extends BaseError<{
         };
     }
 }
+
+export class ConflictNullAndFalseParameterError extends BaseError<{
+}> {
+    getMessage({}) {
+        return {
+            ru: `разрешено использовать только один обработки null: nullAsFalse, falseAsNull`,
+            en: `conflicting parameters: use only nullAsFalse or only falseAsNull`
+        };
+    }
+}
+
+export class InvalidBooleanError extends BaseError<{
+    key: string;
+    invalidValue: string;
+}> {
+    getMessage({key, invalidValue}) {
+        return {
+            ru: `некорректный boolean для поля ${key}: ${invalidValue}`,
+            en: `invalid boolean for ${key}: ${invalidValue}`
+        };
+    }
+}
+
+export class ConflictNullAndEmptyStringParameterError extends BaseError<{
+}> {
+    getMessage({}) {
+        return {
+            ru: `разрешено использовать только один обработки null: nullAsEmpty, emptyAsNull`,
+            en: `conflicting parameters: use only nullAsEmpty or only emptyAsNull`
+        };
+    }
+}
+
+export class ConflictLowerUpperParameterError extends BaseError<{
+}> {
+    getMessage({}) {
+        return {
+            ru: `разрешено использовать только один преобразования регистра: lower, upper`,
+            en: `conflicting parameters: use only lower or only upper`
+        };
+    }
+}
+
+export class InvalidStringError extends BaseError<{
+    key: string;
+    invalidValue: string;
+}> {
+    getMessage({key, invalidValue}) {
+        return {
+            ru: `некорректная строка для поля ${key}: ${invalidValue}`,
+            en: `invalid string for ${key}: ${invalidValue}`
+        };
+    }
+}

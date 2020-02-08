@@ -2,6 +2,11 @@
 
 import {Type, IType, ITypeParams} from "./Type";
 import {isObject, isNaN, invalidValuesAsString} from "../utils";
+import {
+    ConflictNullAndEmptyStringParameterError,
+    ConflictLowerUpperParameterError,
+    InvalidStringError
+} from "../errors";
 
 export interface IStringTypeParams extends ITypeParams {
     nullAsEmpty?: boolean;
@@ -51,10 +56,10 @@ export class StringType extends Type {
         this.upper = upper;
 
         if ( nullAsEmpty && emptyAsNull ) {
-            throw new Error("conflicting parameters: use only nullAsEmpty or only emptyAsNull");
+            throw new ConflictNullAndEmptyStringParameterError({});
         }
         if ( lower && upper ) {
-            throw new Error("conflicting parameters: use only lower or only upper");
+            throw new ConflictLowerUpperParameterError({});
         }
     }
 
@@ -78,7 +83,10 @@ export class StringType extends Type {
         ) {
             const valueAsString = invalidValuesAsString( value );
     
-            throw new Error(`invalid string for ${key}: ${valueAsString}`);
+            throw new InvalidStringError({
+                key,
+                invalidValue: valueAsString
+            });
         }
     
         // convert to string
