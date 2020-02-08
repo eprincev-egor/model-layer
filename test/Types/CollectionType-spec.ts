@@ -202,7 +202,7 @@ describe("CollectionType", () => {
                 });
             },
             (err) =>
-                err.message === `invalid array[collection MyCollection] for arr: [false],${eol} invalid collection MyCollection for 0: false`
+                err.message === `invalid element for array collection MyCollection[] at 0 for model field arr: [false],${eol} invalid collection MyCollection for 0: false`
         );
 
         const model = new SomeModel({

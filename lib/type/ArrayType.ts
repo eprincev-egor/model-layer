@@ -2,6 +2,12 @@
 
 import {Type, IType, ITypeParams, TInstanceOrT} from "./Type";
 import {invalidValuesAsString, eol} from "../utils";
+import {
+    ConflictNullAndEmptyArrayParameterError,
+    InvalidArrayError,
+    InvalidArrayElementError,
+    DuplicateValueForUniqueArrayError
+} from "../errors";
 
 export interface IArrayTypeParams extends ITypeParams {
     sort?: boolean | ((a, b) => number);
@@ -53,7 +59,7 @@ export class ArrayType extends Type {
         super(otherParams);
 
         if ( emptyAsNull && nullAsEmpty ) {
-            throw new Error("conflicting parameters: use only nullAsEmpty or only emptyAsNull");
+            throw new ConflictNullAndEmptyArrayParameterError({});
         }
 
         this.emptyAsNull = emptyAsNull;
@@ -80,7 +86,11 @@ export class ArrayType extends Type {
         if ( !Array.isArray(originalValue) ) {
             const valueAsString = invalidValuesAsString( originalValue );
     
-            throw new Error(`invalid array[${ elementTypeAsString }] for ${key}: ${valueAsString}`);
+            throw new InvalidArrayError({
+                elementType: elementTypeAsString,
+                key,
+                invalidValue: valueAsString
+            });
         }
     
         const value = originalValue.map((element, i) => {
@@ -89,7 +99,13 @@ export class ArrayType extends Type {
             } catch (err) {
                 const valueAsString = invalidValuesAsString( originalValue );
     
-                throw new Error(`invalid array[${ elementTypeAsString }] for ${key}: ${valueAsString},${eol} ${err.message}`);
+                throw new InvalidArrayElementError({
+                    index: i,
+                    modelKey: key,
+                    elementType: elementTypeAsString,
+                    invalidValue: valueAsString,
+                    childError: err.message
+                });
             }
     
             return element;
@@ -128,11 +144,13 @@ export class ArrayType extends Type {
                 }
 
                 let isDuplicate = false;
+                let duplicateValue;
                 for (let i = 0, n = index; i < n; i++) {
                     const anotherElement = value[ i ];
 
                     if ( anotherElement === element ) {
                         isDuplicate = true;
+                        duplicateValue = element;
                         break;
                     }
                 }
@@ -140,7 +158,11 @@ export class ArrayType extends Type {
                 if ( isDuplicate ) {
                     const valueAsString = invalidValuesAsString( value );
 
-                    throw new Error(`${key} is not unique: ${ valueAsString }`);
+                    throw new DuplicateValueForUniqueArrayError({
+                        key,
+                        duplicateValue: invalidValuesAsString(duplicateValue),
+                        invalidArr: valueAsString
+                    });
                 }
             });
         }

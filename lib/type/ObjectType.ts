@@ -76,6 +76,9 @@ export class ObjectType extends Type {
             return null;
         }
     
+        const elementDescription = this.element;
+        const elementTypeAsString = elementDescription.typeAsString();
+
         const isObjectValue = (
             typeof originalObject === "object" &&
             !Array.isArray( originalObject ) &&
@@ -86,6 +89,7 @@ export class ObjectType extends Type {
             const valueAsString = invalidValuesAsString( originalObject );
     
             throw new InvalidObjectError({
+                elementType: elementTypeAsString,
                 key: modelKey,
                 invalidValue: valueAsString
             });
@@ -93,8 +97,6 @@ export class ObjectType extends Type {
         
         const object = {};
         let isEmpty = true;
-        const elementDescription = this.element;
-        const elementTypeAsString = elementDescription.typeAsString();
     
         for (const key in originalObject) {
             let element = originalObject[ key ];

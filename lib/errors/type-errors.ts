@@ -1,7 +1,6 @@
 // tslint:disable: max-classes-per-file
 import {BaseError} from "./BaseError";
 import {eol} from "../utils";
-import { types } from "util";
 
 export class CircularStructureToJSONError extends BaseError {
     getMessage() {
@@ -294,13 +293,14 @@ export class ConflictNullAndEmptyObjectParameterError extends BaseError<{
 }
 
 export class InvalidObjectError extends BaseError<{
+    elementType: string;
     key: string;
     invalidValue: string;
 }> {
-    getMessage({key, invalidValue}) {
+    getMessage({key, elementType, invalidValue}) {
         return {
-            ru: `некорректный объект для поля ${key}: ${invalidValue}`,
-            en: `invalid object for ${key}: ${invalidValue}`
+            ru: `некорректный объект {*: ${elementType}} для поля ${key}: ${invalidValue}`,
+            en: `invalid object {*: ${elementType}} for ${key}: ${invalidValue}`
         };
     }
 }
@@ -316,6 +316,57 @@ export class InvalidObjectElementError extends BaseError<{
         return {
             ru: `некорректное значение для типа ${elementType} в свойстве объекта object[${ objectKey }] для поля модели ${modelKey}: ${invalidValue},${eol} ${childError}`,
             en: `invalid value for type ${elementType} in property object[${ objectKey }] for model field ${modelKey}: ${invalidValue},${eol} ${childError}`
+        };
+    }
+}
+
+export class ConflictNullAndEmptyArrayParameterError extends BaseError<{
+}> {
+    getMessage({}) {
+        return {
+            ru: `разрешено использовать только один обработки null: nullAsEmpty, emptyAsNull`,
+            en: `conflicting parameters: use only nullAsEmpty or only emptyAsNull`
+        };
+    }
+}
+
+export class InvalidArrayError extends BaseError<{
+    elementType: string;
+    key: string;
+    invalidValue: string;
+}> {
+    getMessage({elementType, key, invalidValue}) {
+        return {
+            ru: `некорректный массив ${elementType}[] для поля ${key}: ${invalidValue}`,
+            en: `invalid array ${elementType}[] for ${key}: ${invalidValue}`
+        };
+    }
+}
+
+export class InvalidArrayElementError extends BaseError<{
+    modelKey: string;
+    index: number;
+    elementType: string;
+    invalidValue: string;
+    childError: string;
+}> {
+    getMessage({modelKey, index, elementType, invalidValue, childError}) {
+        return {
+            ru: `некорректно значение для элемента массива ${elementType}[] по индексу ${index} для поля модели ${modelKey}: ${invalidValue},${eol} ${childError}`,
+            en: `invalid element for array ${elementType}[] at ${index} for model field ${modelKey}: ${invalidValue},${eol} ${childError}`
+        };
+    }
+}
+
+export class DuplicateValueForUniqueArrayError extends BaseError<{
+    key: string;
+    invalidArr: string;
+    duplicateValue: string;
+}> {    
+    getMessage({key, duplicateValue, invalidArr}) {
+        return {
+            ru: `${key} не уникальный массив, дублируется значение ${duplicateValue} внутри массива: ${ invalidArr }`,
+            en: `${key} is not unique, duplicated value ${duplicateValue} inside arr: ${ invalidArr }`
         };
     }
 }

@@ -23,7 +23,7 @@ describe("ObjectType", () => {
                 });
             }, 
             (err) => 
-                err.message ===  "invalid object for map: false"
+                err.message ===  "invalid object {*: any} for map: false"
         );
         
 
@@ -34,7 +34,7 @@ describe("ObjectType", () => {
                 });
             }, 
             (err) => 
-                err.message ===  "invalid object for map: true"
+                err.message ===  "invalid object {*: any} for map: true"
         );
         
 
@@ -45,7 +45,7 @@ describe("ObjectType", () => {
                 });
             }, 
             (err) => 
-                err.message ===  "invalid object for map: \"1,2\""
+                err.message ===  "invalid object {*: any} for map: \"1,2\""
         );
         
 
@@ -56,7 +56,7 @@ describe("ObjectType", () => {
                 });
             }, 
             (err) => 
-                err.message ===  "invalid object for map: NaN"
+                err.message ===  "invalid object {*: any} for map: NaN"
         );
         
 
@@ -67,7 +67,7 @@ describe("ObjectType", () => {
                 });
             }, 
             (err) => 
-                err.message ===  "invalid object for map: /x/"
+                err.message ===  "invalid object {*: any} for map: /x/"
         );
         
         assert.throws(
@@ -77,7 +77,7 @@ describe("ObjectType", () => {
                 });
             }, 
             (err) => 
-                err.message ===  "invalid object for map: []"
+                err.message ===  "invalid object {*: any} for map: []"
         );
         
 
@@ -88,7 +88,7 @@ describe("ObjectType", () => {
                 });
             }, 
             (err) => 
-                err.message ===  "invalid object for map: Infinity"
+                err.message ===  "invalid object {*: any} for map: Infinity"
         );
         
 
@@ -99,7 +99,7 @@ describe("ObjectType", () => {
                 });
             }, 
             (err) =>
-                err.message === "invalid object for map: -Infinity"
+                err.message === "invalid object {*: any} for map: -Infinity"
         );
         
 
@@ -110,7 +110,7 @@ describe("ObjectType", () => {
                 });
             }, 
             (err) => 
-                err.message ===  "invalid object for map: 0"
+                err.message ===  "invalid object {*: any} for map: 0"
         );
         
 
@@ -122,7 +122,7 @@ describe("ObjectType", () => {
                 });
             }, 
             (err) => 
-                err.message === "invalid object for map: [false]"
+                err.message === "invalid object {*: any} for map: [false]"
         );
         
 
@@ -142,7 +142,7 @@ describe("ObjectType", () => {
         assert.ok( outsideObj !== map );
 
 
-        // array should be frozen
+        // object should be frozen
         assert.throws(
             () => {
                 map.a = 10;

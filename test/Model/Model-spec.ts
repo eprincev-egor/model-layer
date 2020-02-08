@@ -932,7 +932,7 @@ describe("Model tests", () => {
                     arr: ["wrong"]
                 });
             }, (err) =>
-                err.message === "invalid array[number] for arr: [\"wrong\"],\n invalid number for 0: \"wrong\""
+                err.message === "invalid element for array number[] at 0 for model field arr: [\"wrong\"],\n invalid number for 0: \"wrong\""
         );
 
         assert.throws(
@@ -970,7 +970,7 @@ describe("Model tests", () => {
                     arr: ["wrong"]
                 });
             }, (err) =>
-                err.message === "invalid array[number] for arr: [\"wrong\"],\r\n invalid number for 0: \"wrong\""
+                err.message === "invalid element for array number[] at 0 for model field arr: [\"wrong\"],\r\n invalid number for 0: \"wrong\""
         );
 
         assert.throws(
