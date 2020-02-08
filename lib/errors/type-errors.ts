@@ -282,3 +282,40 @@ export class InvalidOrTypeError extends BaseError<{
         };
     }
 }
+
+export class ConflictNullAndEmptyObjectParameterError extends BaseError<{
+}> {
+    getMessage({}) {
+        return {
+            ru: `разрешено использовать только один обработки null: nullAsEmpty, emptyAsNull`,
+            en: `conflicting parameters: use only nullAsEmpty or only emptyAsNull`
+        };
+    }
+}
+
+export class InvalidObjectError extends BaseError<{
+    key: string;
+    invalidValue: string;
+}> {
+    getMessage({key, invalidValue}) {
+        return {
+            ru: `некорректный объект для поля ${key}: ${invalidValue}`,
+            en: `invalid object for ${key}: ${invalidValue}`
+        };
+    }
+}
+
+export class InvalidObjectElementError extends BaseError<{
+    modelKey: string;
+    objectKey: string;
+    elementType: string;
+    invalidValue: string;
+    childError: string;
+}> {
+    getMessage({modelKey, objectKey, elementType, invalidValue, childError}) {
+        return {
+            ru: `некорректное значение для типа ${elementType} в свойстве объекта object[${ objectKey }] для поля модели ${modelKey}: ${invalidValue},${eol} ${childError}`,
+            en: `invalid value for type ${elementType} in property object[${ objectKey }] for model field ${modelKey}: ${invalidValue},${eol} ${childError}`
+        };
+    }
+}

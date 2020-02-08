@@ -942,7 +942,7 @@ describe("Model tests", () => {
                     obj: {prop: "wrong"}
                 });
             }, (err) =>
-                err.message === "invalid object[number] for obj: {\"prop\":\"wrong\"},\n invalid number for prop: \"wrong\""
+                err.message === "invalid value for type number in property object[prop] for model field obj: {\"prop\":\"wrong\"},\n invalid number for prop: \"wrong\""
         );
     });
 
@@ -980,7 +980,7 @@ describe("Model tests", () => {
                     obj: {prop: "wrong"}
                 });
             }, (err) =>
-                err.message === "invalid object[number] for obj: {\"prop\":\"wrong\"},\r\n invalid number for prop: \"wrong\""
+                err.message === "invalid value for type number in property object[prop] for model field obj: {\"prop\":\"wrong\"},\r\n invalid number for prop: \"wrong\""
         );
     });
 

@@ -2,6 +2,11 @@
 
 import {Type, IType, ITypeParams, TInstanceOrT} from "./Type";
 import {invalidValuesAsString, isObject, eol} from "../utils";
+import {
+    InvalidObjectError,
+    ConflictNullAndEmptyObjectParameterError,
+    InvalidObjectElementError
+} from "../errors";
 
 export interface IObjectTypeParams extends ITypeParams {
     nullAsEmpty?: boolean;
@@ -56,7 +61,7 @@ export class ObjectType extends Type {
         this.emptyAsNull = emptyAsNull;
 
         if ( nullAsEmpty && emptyAsNull ) {
-            throw new Error("conflicting parameters: use only nullAsEmpty or only emptyAsNull");
+            throw new ConflictNullAndEmptyObjectParameterError({});
         }
     }
 
@@ -80,7 +85,10 @@ export class ObjectType extends Type {
         if ( !isObjectValue ) {
             const valueAsString = invalidValuesAsString( originalObject );
     
-            throw new Error(`invalid object for ${modelKey}: ${valueAsString}`);
+            throw new InvalidObjectError({
+                key: modelKey,
+                invalidValue: valueAsString
+            });
         }
         
         const object = {};
@@ -96,7 +104,13 @@ export class ObjectType extends Type {
             } catch (err) {
                 const valueAsString = invalidValuesAsString( originalObject );
     
-                throw new Error(`invalid object[${ elementTypeAsString }] for ${modelKey}: ${valueAsString},${eol} ${err.message}`);
+                throw new InvalidObjectElementError({
+                    modelKey,
+                    objectKey: key,
+                    elementType: elementTypeAsString,
+                    invalidValue: valueAsString,
+                    childError: err.message
+                });
             }
     
             object[ key ] = element;

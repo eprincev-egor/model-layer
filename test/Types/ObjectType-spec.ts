@@ -410,7 +410,7 @@ describe("ObjectType", () => {
                 });
             }, 
             (err) => 
-                err.message === `invalid object[number] for object: {"a":10,"b":"nice"},${eol} invalid number for b: "nice"`
+                err.message === `invalid value for type number in property object[b] for model field object: {"a":10,"b":"nice"},${eol} invalid number for b: "nice"`
         );
     });
 
