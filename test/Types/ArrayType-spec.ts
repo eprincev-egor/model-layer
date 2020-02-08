@@ -318,7 +318,7 @@ describe("ArrayType", () => {
                 });
             }, 
             (err) => 
-                err.message === `invalid array[UserModel] for managers: [false],${eol} invalid UserModel for 0: false`
+                err.message === `invalid array[UserModel] for managers: [false],${eol} invalid model UserModel for 0: false`
         );
         
 

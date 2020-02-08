@@ -3,7 +3,10 @@
 import {Type, ITypeParams} from "./Type";
 import Collection from "../Collection";
 import {invalidValuesAsString} from "../utils";
-import {CircularStructureToJSONError} from "../errors";
+import {
+    CircularStructureToJSONError,
+    InvalidCollectionError
+} from "../errors";
 
 export interface ICollectionTypeParams extends ITypeParams {
     Collection: new (...args: any) => Collection<any>;
@@ -72,7 +75,11 @@ export class CollectionType extends Type {
     
         const valueAsString = invalidValuesAsString( value );
     
-        throw new Error(`invalid collection ${ className } for ${ key }: ${ valueAsString }`);
+        throw new InvalidCollectionError({
+            className,
+            key,
+            invalidValue: valueAsString
+        });
     }
 
     typeAsString() {

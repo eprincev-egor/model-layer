@@ -1,6 +1,7 @@
 
 import {Type, IType, ITypeParams} from "./Type";
 import {invalidValuesAsString} from "../utils";
+import {InvalidDateError} from "../errors";
 
 // tslint:disable-next-line: no-empty-interface
 export interface IDateTypeParams extends ITypeParams {
@@ -47,7 +48,10 @@ export class DateType extends Type {
         if ( isInvalidDate ) {
             const valueAsString = invalidValuesAsString( originalValue );
     
-            throw new Error(`invalid date for ${key}: ${valueAsString}`);
+            throw new InvalidDateError({
+                key,
+                invalidValue: valueAsString
+            });
         }
     
         return value;

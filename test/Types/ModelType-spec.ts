@@ -75,7 +75,7 @@ describe("ModelType", () => {
                 });
             }, 
             (err) =>
-                err.message === "invalid UserModel for user: []"
+                err.message === "invalid model UserModel for user: []"
         );
 
         assert.throws(
@@ -86,7 +86,7 @@ describe("ModelType", () => {
                 });
             }, 
             (err) =>
-                err.message === "invalid UserModel for user: false"
+                err.message === "invalid model UserModel for user: false"
         );
 
         assert.throws(
@@ -97,7 +97,7 @@ describe("ModelType", () => {
                 });
             }, 
             (err) =>
-                err.message === "invalid UserModel for user: NaN"
+                err.message === "invalid model UserModel for user: NaN"
         );
 
         assert.throws(
@@ -108,7 +108,7 @@ describe("ModelType", () => {
                 });
             }, 
             (err) =>
-                err.message === "invalid UserModel for user: /x/"
+                err.message === "invalid model UserModel for user: /x/"
         );
 
 
@@ -123,7 +123,7 @@ describe("ModelType", () => {
                 });
             },
             (err) =>
-                err.message === `invalid UserModel for user: {"name":"10","age":101},${eol} required email`
+                err.message === `invalid model UserModel for user: {"name":"10","age":101},${eol} required email`
         );
 
 

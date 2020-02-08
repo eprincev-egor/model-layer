@@ -1,5 +1,6 @@
 // tslint:disable: max-classes-per-file
 import {BaseError} from "./BaseError";
+import {eol} from "../utils";
 
 export class CircularStructureToJSONError extends BaseError {
     getMessage() {
@@ -189,6 +190,49 @@ export class InvalidStringError extends BaseError<{
         return {
             ru: `некорректная строка для поля ${key}: ${invalidValue}`,
             en: `invalid string for ${key}: ${invalidValue}`
+        };
+    }
+}
+
+export class InvalidDateError extends BaseError<{
+    key: string;
+    invalidValue: string;
+}> {
+    getMessage({key, invalidValue}) {
+        return {
+            ru: `некорректная дата для поля ${key}: ${invalidValue}`,
+            en: `invalid date for ${key}: ${invalidValue}`
+        };
+    }
+}
+
+export class InvalidCollectionError extends BaseError<{
+    key: string;
+    className: string;
+    invalidValue: string;
+}> {
+    getMessage({className, key, invalidValue}) {
+        return {
+            ru: `некорректная коллекция ${className} для поля ${key}: ${invalidValue}`,
+            en: `invalid collection ${className} for ${key}: ${invalidValue}`
+        };
+    }
+}
+
+export class InvalidModelError extends BaseError<{
+    key: string;
+    className: string;
+    invalidValue: string;
+    modelError?: string;
+}> {
+    getMessage({className, key, invalidValue, modelError}) {
+        const postfix = modelError ? 
+            `,${eol} ${modelError}` : 
+            "";
+        
+        return {
+            ru: `некорректная модель ${className} для поля ${key}: ${invalidValue}${ postfix }`,
+            en: `invalid model ${className} for ${key}: ${invalidValue}${ postfix }`
         };
     }
 }

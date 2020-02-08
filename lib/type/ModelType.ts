@@ -3,7 +3,10 @@
 import {Type, ITypeParams} from "./Type";
 import {Model} from "../Model";
 import {invalidValuesAsString, isNaN, eol} from "../utils";
-import {CircularStructureToJSONError} from "../errors";
+import {
+    CircularStructureToJSONError,
+    InvalidModelError
+} from "../errors";
 
 export function MakeModelType<TModelConstructor extends (new (...args) => Model)>(
     params: ITypeParams & 
@@ -69,7 +72,11 @@ export class ModelType extends Type {
         ) {
             const valueAsString = invalidValuesAsString( value );
     
-            throw new Error(`invalid ${ className } for ${key}: ${valueAsString}`);
+            throw new InvalidModelError({
+                key,
+                className,
+                invalidValue: valueAsString
+            });
         }
 
         
@@ -79,7 +86,12 @@ export class ModelType extends Type {
             const valueAsString = invalidValuesAsString( value );
     
             // show child error
-            throw new Error(`invalid ${ className } for ${key}: ${valueAsString},${eol} ${err.message}`);
+            throw new InvalidModelError({
+                key,
+                className,
+                invalidValue: valueAsString,
+                modelError: err.message
+            });
         }
         
     
