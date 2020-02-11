@@ -19,7 +19,7 @@ type ElementType < T extends any[] > = (
 type TypesOrModelsOrCollections = (
     Array<
         IType | 
-        (new(...args: any) => Model)
+        (new(...args: any) => Model<any>)
     >
 );
 

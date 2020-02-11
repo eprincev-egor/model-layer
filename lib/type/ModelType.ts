@@ -8,7 +8,7 @@ import {
     InvalidModelError
 } from "../errors";
 
-export function MakeModelType<TModelConstructor extends (new (...args) => Model)>(
+export function MakeModelType<TModelConstructor extends (new (...args) => Model<any>)>(
     params: ITypeParams & 
     {
         Model: TModelConstructor;
@@ -38,9 +38,9 @@ export class ModelType extends Type {
         }
     }
 
-    Model: new (...args: any) => Model;
+    Model: new (...args: any) => Model<any>;
 
-    constructor(params: ITypeParams & {Model: new (...args: any) => Model}) {
+    constructor(params: ITypeParams & {Model: new (...args: any) => Model<any>}) {
         super(params);
 
         this.Model = params.Model;

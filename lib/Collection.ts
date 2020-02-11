@@ -22,13 +22,9 @@ interface IRemoveEvent<TCollection, TModel> {
     collection: TCollection;
 }
 
-interface IChildCollection {
-    Model(): new (...args: any[]) => Model;
-}
-
-export class Collection<
-    ChildCollection extends Collection & IChildCollection = any,
-    TModel extends Model = InstanceType< ReturnType< ChildCollection["Model"] > >
+export abstract class Collection<
+    ChildCollection extends Collection<any>,
+    TModel extends Model<any> = InstanceType< ReturnType< ChildCollection["Model"] > >
 > extends EventEmitter {
     TModel: TModel;
     models: TModel[];
@@ -66,6 +62,8 @@ export class Collection<
             this.length = 0;
         }
     }
+
+    abstract Model(): new (...args: any) => TModel;
 
     at(index: number, rowOrModel?: TModel["TInput"]): TModel {
         // set

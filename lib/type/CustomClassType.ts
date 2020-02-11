@@ -11,7 +11,7 @@ import {
 
 export interface ICustomClassTypeParams extends ITypeParams {
     constructor: new (...args: any[]) => any;
-    prepare?: (value: any, key: string, model: Model) => InstanceType<this["constructor"]>;
+    prepare?: (value: any, key: string, model: Model<any>) => InstanceType<this["constructor"]>;
     validate?: 
         ((value: InstanceType<this["constructor"]>, key: string) => boolean) |
         RegExp

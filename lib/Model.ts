@@ -22,7 +22,7 @@ type ReadOnlyPartial<TData> = {
 };
 
 
-interface IChangeEvent<TModel extends Model> {
+interface IChangeEvent<TModel extends Model<any>> {
     prev: TModel["row"];
     changes: ReadOnlyPartial<TModel["row"]>;
 }
@@ -31,7 +31,7 @@ interface IChildModel {
     structure(): {[key: string]: IType | (new (...args: any) => IType)};    
 }
 
-export class Model<ChildModel extends Model & IChildModel = any> extends EventEmitter {
+export abstract class Model<ChildModel extends Model<any>> extends EventEmitter {
 
     static Type = Type;
 
@@ -46,7 +46,7 @@ export class Model<ChildModel extends Model & IChildModel = any> extends EventEm
     // value of id
     primaryValue: number | string;
     
-    parent: Model;
+    parent: Model<any>;
 
     // row properties
     private properties: any;
@@ -82,6 +82,8 @@ export class Model<ChildModel extends Model & IChildModel = any> extends EventEm
         this.set(inputData || {} as any);
         delete this.isInit;
     }
+
+    abstract structure(): {[key: string]: IType | (new (...args: any) => IType)};    
 
     get<TKey extends keyof this["row"]>(key: TKey): this["row"][TKey] {
         return this.row[ key ];
@@ -259,7 +261,7 @@ export class Model<ChildModel extends Model & IChildModel = any> extends EventEm
     }
 
     walk(
-        iteration: (model: Model, walker: Walker) => void, 
+        iteration: (model: Model<any>, walker: Walker) => void, 
         stack?
     ) {
         stack = stack || [];
@@ -310,8 +312,8 @@ export class Model<ChildModel extends Model & IChildModel = any> extends EventEm
     }
 
     findChild(
-        iteration: (model: Model) => boolean
-    ): Model {
+        iteration: (model: Model<any>) => boolean
+    ): Model<any> {
         let child;
 
         this.walk((model, walker) => {
@@ -327,10 +329,10 @@ export class Model<ChildModel extends Model & IChildModel = any> extends EventEm
     }
 
     filterChildren(
-        iteration: (model: Model) => boolean
-    ): Model[] {
+        iteration: (model: Model<any>) => boolean
+    ): Array<Model<any>> {
 
-        const children: Model[] = [];
+        const children: Array<Model<any>> = [];
 
         this.walk((model) => {
             const result = iteration( model );
@@ -344,9 +346,9 @@ export class Model<ChildModel extends Model & IChildModel = any> extends EventEm
     }
 
     findParent(
-        iteration: (model: Model) => boolean, 
+        iteration: (model: Model<any>) => boolean, 
         stack?
-    ): Model {
+    ): Model<any> {
         stack = stack || [];
 
         let parent = this.parent;
@@ -370,10 +372,10 @@ export class Model<ChildModel extends Model & IChildModel = any> extends EventEm
     }
 
     filterParents(
-        iteration: (model: Model) => boolean
-    ): Model[] {
+        iteration: (model: Model<any>) => boolean
+    ): Array<Model<any>> {
 
-        const parents: Model[] = [];
+        const parents: Array<Model<any>> = [];
         let parent = this.parent;
 
         while ( parent ) {
@@ -389,7 +391,7 @@ export class Model<ChildModel extends Model & IChildModel = any> extends EventEm
         return parents;
     }
 
-    findParentInstance<TModel extends Model>(
+    findParentInstance<TModel extends Model<any>>(
         SomeModel: new (...args: any) => TModel
     ): TModel {
         return this.findParent((model) =>
@@ -446,7 +448,7 @@ export class Model<ChildModel extends Model & IChildModel = any> extends EventEm
         return clone;
     }
 
-    equal(otherModel: Model | object, stack?): boolean {
+    equal(otherModel: Model<any> | object, stack?): boolean {
         stack = stack || new EqualStack();
 
         for (const key in this.row) {

@@ -985,7 +985,7 @@ describe("Model tests", () => {
     });
 
     it("unknown type", () => {
-        class AnyModel extends Model {
+        class AnyModel extends Model<AnyModel> {
             structure() {
                 return {
                     x: {
@@ -1004,7 +1004,7 @@ describe("Model tests", () => {
     });
 
     it("wrong validate", () => {
-        class AnyModel extends Model {
+        class AnyModel extends Model<AnyModel> {
             structure() {
                 return {
                     x: {
@@ -1024,7 +1024,7 @@ describe("Model tests", () => {
     });
 
     it("wrong validate key", () => {
-        class AnyModel extends Model {
+        class AnyModel extends Model<AnyModel> {
             structure() {
                 return {
                     "*": {
