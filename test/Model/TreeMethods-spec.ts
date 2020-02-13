@@ -1,5 +1,5 @@
 
-import {Model, Types} from "../../lib/index";
+import {Model, Types, Collection} from "../../lib/index";
 import assert from "assert";
 
 describe("TreeMethods, walk by children or parents", () => {
@@ -473,6 +473,58 @@ describe("TreeMethods, walk by children or parents", () => {
             }
         });
         assert.equal(filterChildrenByArray, true);
+    });
+
+    it("walk by collection", () => {
+    
+        class Item extends Model<Item> {
+            structure() {
+                return {
+                    name: Types.String,
+                    items: Items
+                };
+            }
+        }
+
+        class Items extends Collection<Items> {
+            Model() {
+                return Item;
+            }
+        }
+
+        const tree = new Item({
+            name: "",
+            items: [
+                {
+                    name: "root",
+                    items: [
+                        {
+                            name: "home",
+                            items: [
+                                {name: "hello"}
+                            ]
+                        }
+                    ]
+                }
+            ]
+        });
+
+        let results: string[];
+
+        results = [];
+        tree.walk((model: Item) => {
+            results.push(model.get("name"));
+        });
+        assert.deepStrictEqual(results, ["root", "home", "hello"], "walk");
+
+        results = tree.filterChildrenByInstance(Item)
+            .map((item) => item.get("name"));
+        assert.deepStrictEqual(results, ["root", "home", "hello"], "filterChildrenByInstance");
+        
+        
+        results = tree.filterChildren((item: Item) => true)
+            .map((item) => item.get("name"));
+        assert.deepStrictEqual(results, ["root", "home", "hello"], "filterChildren");
     });
 
     it("filterChildrenByInstance", () => {

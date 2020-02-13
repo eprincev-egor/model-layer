@@ -271,8 +271,21 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
 
             let elements = [value];
 
-            if ( Array.isArray(value) && value[0] instanceof Model ) {
+            const isModelsArray = (
+                Array.isArray(value) && 
+                value[0] instanceof Model
+            );
+            const isCollection = (
+                value && 
+                Array.isArray(value.models) && 
+                value.models[0] instanceof Model
+            );
+
+            if ( isModelsArray ) {
                 elements = value;
+            }
+            else if ( isCollection ) {
+                elements = value.models;
             }
 
             for (let i = 0, n = elements.length; i < n; i++) {
