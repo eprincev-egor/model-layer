@@ -345,6 +345,14 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
         return children;
     }
 
+    filterChildrenByInstance<TModel extends Model<any>>(
+        SomeModel: new (...args: any) => TModel
+    ): TModel[] {
+        return this.filterChildren((model) =>
+            model instanceof SomeModel
+        ) as TModel[];
+    }
+
     findParent(
         iteration: (model: Model<any>) => boolean, 
         stack?
@@ -448,7 +456,7 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
         return clone;
     }
 
-    equal(otherModel: Model<any> | object, stack?): boolean {
+    equal(otherModel: this | this["row"], stack?): boolean {
         stack = stack || new EqualStack();
 
         for (const key in this.row) {

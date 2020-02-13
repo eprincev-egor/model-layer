@@ -475,6 +475,146 @@ describe("TreeMethods, walk by children or parents", () => {
         assert.equal(filterChildrenByArray, true);
     });
 
+    it("filterChildrenByInstance", () => {
+
+        class FileModel extends Model<FileModel> {
+            structure() {
+                return {
+                    name: Types.String
+                };
+            }
+        }
+
+        class FolderModel extends Model<FolderModel> {
+            structure() {
+                return {
+                    name: Types.String,
+                    files: Types.Array({
+                        element: FileModel
+                    }),
+                    folders: Types.Array({
+                        element: FolderModel
+                    })
+                };
+            }
+        }
+
+        const rootFolder = new FolderModel({
+            name: "root",
+            files: [
+                {name: "root-a"},
+                {name: "root-b"}
+            ],
+            folders: [
+                {
+                    name: "home",
+                    files: [
+                        {name: "home-a"},
+                        {name: "home-b"}
+                    ]
+                }
+            ]
+        });
+
+        const files = rootFolder.filterChildrenByInstance(FileModel);
+        const filesNames = files.map((file) => file.get("name"));
+
+        assert.deepStrictEqual(filesNames, [
+            "root-a", "root-b", 
+            "home-a", "home-b"
+        ]);
+    });
+
+
+
+    it("walk by array", () => {
+    
+        class JobModel extends Model<JobModel> {
+            structure() {
+                return {
+                    name: Types.String
+                };
+            }
+        }
+        class UserModel extends Model<UserModel> {
+            structure() {
+                return {
+                    name: Types.String,
+                    job: JobModel
+                };
+            }
+        }
+
+        class CompanyModel extends Model<CompanyModel> {
+            structure() {
+                return {
+                    name: Types.String,
+                    managers: Types.Array({
+                        element: UserModel
+                    })
+                };
+            }
+        }
+
+        class OrderModel extends Model<OrderModel> {
+            structure() {
+                return {
+                    client: CompanyModel,
+                    partner: CompanyModel
+                };
+            }
+        }
+
+        const partnerCompanyModel = new CompanyModel({
+            name: "World Company"
+        });
+
+        const orderModel = new OrderModel({
+            client: {
+                name: "Red Company",
+                managers: [
+                    {
+                        name: "Oliver",
+                        job: {
+                            name: "Manager"
+                        }
+                    },
+                    {
+                        name: "Bob",
+                        job: {
+                            name: "Director"
+                        }
+                    }
+                ]
+            },
+            partner: partnerCompanyModel
+        });
+
+        const jobModel = orderModel.findChild((childModel) =>
+            childModel instanceof JobModel &&
+            childModel.get("name") === "Director"
+        ) as JobModel;
+        assert.equal( jobModel.get("name"), "Director" );
+
+        let walkByArray = false;
+        orderModel.walk((childModel) => {
+            if ( childModel instanceof JobModel ) {
+                walkByArray = true;
+            }
+        });
+        assert.equal(walkByArray, true);
+
+
+        let filterChildrenByArray = false;
+        orderModel.filterChildren((childModel) => {
+            if ( childModel instanceof JobModel ) {
+                filterChildrenByArray = true;
+                return true;
+            }
+        });
+        assert.equal(filterChildrenByArray, true);
+    });
+
 
     it("walk by any key and any value", () => {
 

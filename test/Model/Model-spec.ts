@@ -815,12 +815,12 @@ describe("Model tests", () => {
             some: 1
         });
 
-        assert.ok( firstModel.equal( secondModel ) );
+        assert.ok( firstModel.equal( secondModel as any ) );
         assert.ok( secondModel.equal( firstModel ) );
 
         secondModel.set({another: "value"});
 
-        assert.ok( !firstModel.equal( secondModel ) );
+        assert.ok( !firstModel.equal( secondModel as any ) );
         assert.ok( !secondModel.equal( firstModel ) );
     });
 
