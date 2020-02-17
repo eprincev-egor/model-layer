@@ -5,11 +5,12 @@ import {
     ConflictNullAndFalseParameterError,
     InvalidBooleanError
 } from "../errors";
+import { Model } from "../Model";
 
 export interface IBooleanTypeParams extends ITypeParams {
     nullAsFalse?: boolean;
     falseAsNull?: boolean;
-    prepare?: (value: any, key: string, model) => boolean;
+    prepare?: (value: any, key: string, model: Model<any>) => boolean;
     validate?: 
         ((value: boolean, key: string) => boolean) |
         RegExp
@@ -32,15 +33,15 @@ export class BooleanType extends Type {
     constructor(params: IBooleanTypeParams) {
         super(params);
 
-        this.nullAsFalse = params.nullAsFalse;
-        this.falseAsNull = params.falseAsNull;
+        this.nullAsFalse = !!params.nullAsFalse;
+        this.falseAsNull = !!params.falseAsNull;
 
         if ( params.nullAsFalse && params.falseAsNull ) {
             throw new ConflictNullAndFalseParameterError({});
         }
     }
 
-    prepare(value, key) {
+    prepare(value: any, key: string) {
         if ( value == null ) {
             if ( this.nullAsFalse ) {
                 return false;
@@ -65,6 +66,14 @@ export class BooleanType extends Type {
             }
         }
     
+        return value;
+    }
+
+    toJSON(value: boolean) {
+        return value;
+    }
+
+    clone(value: boolean) {
         return value;
     }
 }

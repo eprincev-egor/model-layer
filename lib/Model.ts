@@ -10,7 +10,8 @@ import {
     InvalidValueError,
     RequiredError,
     ConstValueError,
-    DataShouldBeObjectError
+    DataShouldBeObjectError,
+    InvalidOnArgumentsError
 } from "./errors";
 
 export interface ISimpleObject extends Object {
@@ -21,11 +22,13 @@ type ReadOnlyPartial<TData> = {
     readonly [key in keyof TData]?: TData[key];
 };
 
-
 interface IChangeEvent<TModel extends Model<any>> {
     prev: TModel["row"];
     changes: ReadOnlyPartial<TModel["row"]>;
 }
+
+type TChangeListener<T extends Model<any>> = (event: IChangeEvent<T>, options: ISimpleObject) => void;
+
 
 interface IChildModel {
     structure(): {[key: string]: IType | (new (...args: any) => IType)};    
@@ -262,7 +265,7 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
 
     walk(
         iteration: (model: Model<any>, walker: Walker) => void, 
-        stack?
+        stack?: any[]
     ) {
         stack = stack || [];
 
@@ -326,8 +329,8 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
 
     findChild(
         iteration: (model: Model<any>) => boolean
-    ): Model<any> {
-        let child;
+    ): Model<any> | null {
+        let child = null;
 
         this.walk((model, walker) => {
             const result = iteration( model );
@@ -368,8 +371,8 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
 
     findParent(
         iteration: (model: Model<any>) => boolean, 
-        stack?
-    ): Model<any> {
+        stack?: any[]
+    ): Model<any> | null {
         stack = stack || [];
 
         let parent = this.parent;
@@ -377,7 +380,7 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
         while ( parent ) {
             // stop circular recursion
             if ( stack.includes(parent) ) {
-                return;
+                return null;
             }
             stack.push( parent );
             
@@ -390,6 +393,8 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
 
             parent = parent.parent;
         }
+
+        return null;
     }
 
     filterParents(
@@ -420,7 +425,7 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
         ) as TModel;
     }
 
-    toJSON(stack = []): this["TJson"] {
+    toJSON(stack: any[] = []): this["TJson"] {
         const json: any = {};
         
         for (const key in this.row) {
@@ -469,7 +474,7 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
         return clone;
     }
 
-    equal(otherModel: this | this["row"], stack?): boolean {
+    equal(otherModel: this | this["row"], stack?: EqualStack): boolean {
         stack = stack || new EqualStack();
 
         for (const key in this.row) {
@@ -519,15 +524,14 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
         // any calculations with json by reference
     }
 
+    on(eventName: "change", key: keyof this["row"], listener: TChangeListener<this>): this;
+    on(eventName: "change", listener: TChangeListener<this>): this;
     on(
         eventName: "change",
-        keyOrListener: (
-            string & keyof this["row"] | 
-            ((event: IChangeEvent<this>, options: ISimpleObject) => void)
-        ),
-        listener?: (event: IChangeEvent<this>, options: ISimpleObject) => void
+        keyOrListener: keyof this["row"] | TChangeListener<this>,
+        listener?: TChangeListener<this>
     ): this {
-        if ( typeof keyOrListener === "string" ) {
+        if ( typeof keyOrListener === "string" && typeof listener === "function" ) {
             const key = keyOrListener;
             
             const description = this.getDescription(key);
@@ -539,9 +543,12 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
 
             super.on(eventName + ":" + key, listener);
         }
-        else {
-            listener = keyOrListener as any;
+        else if ( typeof keyOrListener === "function" ) {
+            listener = keyOrListener;
             super.on(eventName, listener);
+        }
+        else {
+            throw new InvalidOnArgumentsError({});
         }
 
         return this;

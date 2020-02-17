@@ -7,6 +7,7 @@ import {
     ConflictLowerUpperParameterError,
     InvalidStringError
 } from "../errors";
+import { Model } from "../Model";
 
 export interface IStringTypeParams extends ITypeParams {
     nullAsEmpty?: boolean;
@@ -14,7 +15,7 @@ export interface IStringTypeParams extends ITypeParams {
     trim?: boolean;
     lower?: boolean;
     upper?: boolean;
-    prepare?: (value: any, key: string, model) => string;
+    prepare?: (value: any, key: string, model: Model<any>) => string;
     validate?: 
         ((value: string, key: string) => boolean) |
         RegExp
@@ -63,7 +64,7 @@ export class StringType extends Type {
         }
     }
 
-    prepare(value, key) {
+    prepare(value: any, key: string) {
         if ( value == null ) {
             if ( this.nullAsEmpty ) {
                 return "";
@@ -110,5 +111,17 @@ export class StringType extends Type {
         }
     
         return value;
+    }
+
+    clone(value: string) {
+        return value;
+    }
+
+    toJSON(value: string) {
+        return value;
+    }
+
+    equal(selfNumber: string, otherNumber: string) {
+        return selfNumber === otherNumber;
     }
 }

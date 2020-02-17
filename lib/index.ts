@@ -20,8 +20,8 @@ import {IStringType, StringType} from "./type/StringType";
 import {IOrType, OrType} from "./type/OrType";
 import {ICustomClassType, CustomClassType} from "./type/CustomClassType";
 
-const returnParamsWithType: any = (type) => {
-    const func = (params) => ({
+const returnParamsWithType: any = (type: string) => {
+    const func = (params: {[key in string]: any}) => ({
         ...params,
         type
     });

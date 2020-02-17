@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "strict": true,
         "rootDir": "./lib",
         "outDir": "./dist",
         "sourceMap": true,
