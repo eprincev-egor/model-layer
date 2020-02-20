@@ -42,19 +42,21 @@ export abstract class Collection<
     TOutput: this;
     TJson: Array< TModel["TJson"] >;
 
-    // this.Model();
-    private ModelConstructor: new (...args: any) => TModel;
+    // this.ModelConstructor = this.Model();
+    private ModelConstructor: (new (...args: any) => TModel) | undefined;
 
 
     constructor(rows?: Array< TModel["TInput"] >) {
         super();
 
         if ( !this.constructor.prototype.hasOwnProperty("ModelConstructor") ) {
-            this.constructor.prototype.ModelConstructor = (this as any).Model();
+            const ModelConstructor = this.Model();
             
             // prepare model structure without calling constructor
-            const model = Object.create(this.ModelConstructor.prototype);
-            model.prepareStructure();
+            const tmpModel = Object.create( ModelConstructor.prototype );
+            tmpModel.prepareStructure();
+            
+            this.constructor.prototype.ModelConstructor = ModelConstructor;
         }
 
         this.models = [];
@@ -69,11 +71,24 @@ export abstract class Collection<
         } else {
             this.length = 0;
         }
+
+        // for fix typescript error:
+        // prop has no initializer and is not definitely assigned in the constructor
+        this.TModel = null as any;
+        this.TInput = null as any;
+        this.TOutput = null as any;
+        this.TJson = null as any;
+        delete this.TModel;
+        delete this.TInput;
+        delete this.TOutput;
+        delete this.TJson;
     }
 
     abstract Model(): new (...args: any) => TModel;
 
-    at(index: number, rowOrModel?: TModel["TInput"]): TModel {
+    at(index: number): TModel;
+    at(index: number, rowOrModel: TModel["TInput"]): void;
+    at(index: number, rowOrModel?: TModel["TInput"]): TModel | void {
         // set
         if ( rowOrModel ) {
             const removedModel = this.models[ index ];
@@ -107,25 +122,25 @@ export abstract class Collection<
     prepareRow(row: TModel["TInput"]): TModel {
         let model: TModel;
         
-        if ( row instanceof this.ModelConstructor ) {
-            model = row;
+        if ( row instanceof (this.ModelConstructor as any) ) {
+            model = row as TModel;
             return model;
         }
 
         if ( row instanceof Model ) {
             throw new WrongModelConstructorError({
                 invalid: row.constructor.name,
-                expected: this.ModelConstructor.name,
+                expected: (this.ModelConstructor as any).name,
                 collection: this.constructor.name
             });
         }
         
         if ( isPlainObject(row) ) {
-            model = new this.ModelConstructor( row );
+            model = new (this.ModelConstructor as any)( row );
         }
         else {
             throw new InvalidModelRowError({
-                model: this.ModelConstructor.name,
+                model: (this.ModelConstructor as any).name,
                 invalidValue: invalidValuesAsString( row )
             });
         }
@@ -270,14 +285,14 @@ export abstract class Collection<
         iteration: (total: T, nextModel: TModel) => T,
         initialValue?: T
     ): T {
-        return this.models.reduce(iteration, initialValue);
+        return this.models.reduce<any>(iteration, initialValue);
     }
 
     reduceRight<T>(
         iteration: (total: T, nextModel: TModel) => T,
         initialValue?: T
     ): T {
-        return this.models.reduceRight(iteration, initialValue);
+        return this.models.reduceRight<any>(iteration, initialValue);
     }
 
     every(

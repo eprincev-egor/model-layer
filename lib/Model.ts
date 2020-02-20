@@ -45,11 +45,11 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
     row: OutputType< ReturnType< ChildModel["structure"] > >;
     
     // "id"
-    primaryKey: string;
+    primaryKey: string | undefined;
     // value of id
-    primaryValue: number | string;
+    primaryValue: number | string | undefined;
     
-    parent: Model<any>;
+    parent: Model<any> | undefined;
 
     // row properties
     private properties: any;
@@ -84,6 +84,18 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
         this.isInit = true; // do not check const
         this.set(inputData || {} as any);
         delete this.isInit;
+
+        
+        // for fix typescript error:
+        // prop has no initializer and is not definitely assigned in the constructor
+        this.TInputData = null as any;
+        this.TInput = null as any;
+        this.TOutput = null as any;
+        this.TJson = null as any;
+        delete this.TInputData;
+        delete this.TInput;
+        delete this.TOutput;
+        delete this.TJson;
     }
 
     abstract structure(): {[key: string]: IType | (new (...args: any) => IType)};    
@@ -211,7 +223,7 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
         
         if ( this.primaryKey ) {
             const primaryValue = this.row[ this.primaryKey ];
-            this[ this.primaryKey ] = primaryValue;
+            (this as any)[ this.primaryKey ] = primaryValue;
             this.primaryValue = primaryValue;
         }
 

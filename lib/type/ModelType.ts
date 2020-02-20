@@ -2,7 +2,7 @@
 
 import {Type, ITypeParams} from "./Type";
 import {Model} from "../Model";
-import {invalidValuesAsString, isNaN, eol} from "../utils";
+import {invalidValuesAsString, isNaN} from "../utils";
 import {
     CircularStructureToJSONError,
     InvalidModelError

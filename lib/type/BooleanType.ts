@@ -69,6 +69,10 @@ export class BooleanType extends Type {
         return value;
     }
 
+    equal(selfBool: number, otherBool: number) {
+        return selfBool === otherBool;
+    }
+
     toJSON(value: boolean) {
         return value;
     }

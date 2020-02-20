@@ -7,12 +7,14 @@ import {
     ConflictNullAndEmptyObjectParameterError,
     InvalidObjectElementError
 } from "../errors";
+import { Model } from "../Model";
+import EqualStack from "../EqualStack";
 
 export interface IObjectTypeParams extends ITypeParams {
     nullAsEmpty?: boolean;
     emptyAsNull?: boolean;
     element?: any;
-    prepare?: (value: any, key: string, model) => IObject<this["element"]>;
+    prepare?: (value: any, key: string, model: Model<any>) => IObject<this["element"]>;
     validate?: 
         ((value: IObject<this["element"]>, key: string) => boolean) |
         RegExp
@@ -37,7 +39,7 @@ export interface IObjectType<T extends IType> extends IType {
 
 export class ObjectType extends Type {
 
-    static prepareDescription(description, key) {
+    static prepareDescription(description: any, key: string) {
         if ( description.type === "object" ) {
             // prepare element description
             description.element = Type.create( description.element || "any", key );
@@ -65,7 +67,7 @@ export class ObjectType extends Type {
         }
     }
 
-    prepare(originalObject, modelKey) {
+    prepare(originalObject: any, modelKey: string) {
         if ( originalObject == null ) {
             if ( this.nullAsEmpty ) {
                 const value = {};
@@ -95,7 +97,7 @@ export class ObjectType extends Type {
             });
         }
         
-        const object = {};
+        const object: any = {};
         let isEmpty = true;
     
         for (const key in originalObject) {
@@ -131,9 +133,9 @@ export class ObjectType extends Type {
         return object;
     }
 
-    toJSON(value, stack) {
+    toJSON(value: any, stack: any[]) {
         const obj = value;
-        const json = {};
+        const json: any = {};
 
         for (const key in obj) {
             const objValue = obj[ key ];
@@ -143,9 +145,9 @@ export class ObjectType extends Type {
         return json;
     }
 
-    clone(value, stack) {
+    clone(value: any, stack: EqualStack) {
         const obj = value;
-        const json = {};
+        const json: any = {};
 
         for (const key in obj) {
             const objValue = obj[ key ];
@@ -155,7 +157,7 @@ export class ObjectType extends Type {
         return json;
     }
 
-    equal(selfObj, otherObj, stack) {
+    equal(selfObj: any, otherObj: any, stack: EqualStack) {
         if ( selfObj == null ) {
             return otherObj === null;
         }
