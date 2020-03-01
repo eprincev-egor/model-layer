@@ -79,10 +79,11 @@
     + custom types
     + method equal
     + method clone
-        - circular recursion
+        + circular recursion
     - method contains
     + primary key
       (fast link model.id)
+      - need refactor
     
 - Collection
     array methods:
@@ -143,4 +144,4 @@
         - unique
         - foreign key
 
-- locale errors
++ locale errors
