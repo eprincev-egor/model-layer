@@ -10,8 +10,7 @@ import {
     InvalidValueError,
     RequiredError,
     ConstValueError,
-    DataShouldBeObjectError,
-    InvalidOnArgumentsError
+    DataShouldBeObjectError
 } from "./errors";
 
 export interface ISimpleObject extends Object {
@@ -22,13 +21,11 @@ type ReadOnlyPartial<TData> = {
     readonly [key in keyof TData]?: TData[key];
 };
 
+
 interface IChangeEvent<TModel extends Model<any>> {
     prev: TModel["row"];
     changes: ReadOnlyPartial<TModel["row"]>;
 }
-
-type TChangeListener<T extends Model<any>> = (event: IChangeEvent<T>, options: ISimpleObject) => void;
-
 
 interface IChildModel {
     structure(): {[key: string]: IType | (new (...args: any) => IType)};    
@@ -45,11 +42,11 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
     row: OutputType< ReturnType< ChildModel["structure"] > >;
     
     // "id"
-    primaryKey: string | undefined;
+    primaryKey: string;
     // value of id
-    primaryValue: number | string | undefined;
+    primaryValue: number | string;
     
-    parent: Model<any> | undefined;
+    parent: Model<any>;
 
     // row properties
     private properties: any;
@@ -84,18 +81,6 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
         this.isInit = true; // do not check const
         this.set(inputData || {} as any);
         delete this.isInit;
-
-        
-        // for fix typescript error:
-        // prop has no initializer and is not definitely assigned in the constructor
-        this.TInputData = null as any;
-        this.TInput = null as any;
-        this.TOutput = null as any;
-        this.TJson = null as any;
-        delete this.TInputData;
-        delete this.TInput;
-        delete this.TOutput;
-        delete this.TJson;
     }
 
     abstract structure(): {[key: string]: IType | (new (...args: any) => IType)};    
@@ -223,7 +208,7 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
         
         if ( this.primaryKey ) {
             const primaryValue = this.row[ this.primaryKey ];
-            (this as any)[ this.primaryKey ] = primaryValue;
+            this[ this.primaryKey ] = primaryValue;
             this.primaryValue = primaryValue;
         }
 
@@ -277,7 +262,7 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
 
     walk(
         iteration: (model: Model<any>, walker: Walker) => void, 
-        stack?: any[]
+        stack?
     ) {
         stack = stack || [];
 
@@ -341,8 +326,8 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
 
     findChild(
         iteration: (model: Model<any>) => boolean
-    ): Model<any> | null {
-        let child = null;
+    ): Model<any> {
+        let child;
 
         this.walk((model, walker) => {
             const result = iteration( model );
@@ -383,8 +368,8 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
 
     findParent(
         iteration: (model: Model<any>) => boolean, 
-        stack?: any[]
-    ): Model<any> | null {
+        stack?
+    ): Model<any> {
         stack = stack || [];
 
         let parent = this.parent;
@@ -392,7 +377,7 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
         while ( parent ) {
             // stop circular recursion
             if ( stack.includes(parent) ) {
-                return null;
+                return;
             }
             stack.push( parent );
             
@@ -405,8 +390,6 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
 
             parent = parent.parent;
         }
-
-        return null;
     }
 
     filterParents(
@@ -437,7 +420,7 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
         ) as TModel;
     }
 
-    toJSON(stack: any[] = []): this["TJson"] {
+    toJSON(stack = []): this["TJson"] {
         const json: any = {};
         
         for (const key in this.row) {
@@ -486,7 +469,7 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
         return clone;
     }
 
-    equal(otherModel: this | this["row"], stack?: EqualStack): boolean {
+    equal(otherModel: this | this["row"], stack?): boolean {
         stack = stack || new EqualStack();
 
         for (const key in this.row) {
@@ -536,14 +519,15 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
         // any calculations with json by reference
     }
 
-    on(eventName: "change", key: keyof this["row"], listener: TChangeListener<this>): this;
-    on(eventName: "change", listener: TChangeListener<this>): this;
     on(
         eventName: "change",
-        keyOrListener: keyof this["row"] | TChangeListener<this>,
-        listener?: TChangeListener<this>
+        keyOrListener: (
+            string & keyof this["row"] | 
+            ((event: IChangeEvent<this>, options: ISimpleObject) => void)
+        ),
+        listener?: (event: IChangeEvent<this>, options: ISimpleObject) => void
     ): this {
-        if ( typeof keyOrListener === "string" && typeof listener === "function" ) {
+        if ( typeof keyOrListener === "string" ) {
             const key = keyOrListener;
             
             const description = this.getDescription(key);
@@ -555,12 +539,9 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
 
             super.on(eventName + ":" + key, listener);
         }
-        else if ( typeof keyOrListener === "function" ) {
-            listener = keyOrListener;
-            super.on(eventName, listener);
-        }
         else {
-            throw new InvalidOnArgumentsError({});
+            listener = keyOrListener as any;
+            super.on(eventName, listener);
         }
 
         return this;

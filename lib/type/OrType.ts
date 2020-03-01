@@ -8,7 +8,6 @@ import {
     EmptyOrArrayError,
     InvalidOrTypeError
 } from "../errors";
-import EqualStack from "../EqualStack";
 
 type ElementType < T extends any[] > = (
     // tslint:disable-next-line: no-shadowed-variable
@@ -41,11 +40,11 @@ export interface IOrType<T extends IType> extends IType {
 
 export class OrType extends Type {
 
-    static prepareDescription(description: any, key: string) {
+    static prepareDescription(description, key) {
         if ( description.type === "or" ) {
             // prepare OR description
             try {
-                description.or = description.or.map((childDescription: any) =>
+                description.or = description.or.map((childDescription) =>
                     Type.create( childDescription, key )
                 );
             } catch (err) {
@@ -85,13 +84,13 @@ export class OrType extends Type {
         this.or = or as any;
     }
 
-    prepare(originalValue: any, key: string, model: Model<any>) {
+    prepare(originalValue, key, model) {
         if ( originalValue == null ) {
             return null;
         }
 
         let value;
-        let currentType: Type | null = null;
+        let currentType: Type = null;
 
         for (let i = 0, n = this.or.length; i < n; i++) {
             const description = this.or[i];
@@ -121,15 +120,15 @@ export class OrType extends Type {
         return value;
     }
 
-    clone(value: any, stack: EqualStack) {
+    clone(value, stack) {
         return clone(value, stack);
     }
 
-    equal(selfValue: any, otherValue: any, stack: EqualStack) {
+    equal(selfValue, otherValue, stack) {
         return equal(selfValue, otherValue, stack);
     }
 
-    toJSON(value: any, stack: any[]) {
+    toJSON(value, stack) {
         return value2json( value, stack );
     }
 }

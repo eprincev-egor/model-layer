@@ -6,10 +6,10 @@ import {BaseError} from "./BaseError";
 export class CollectionShouldHaveModelError extends BaseError<{
     className: string
 }> {
-    getMessage(data: {className: string}) {
+    getMessage({className}) {
         return {
-            ru: `необходимо объявить метод: ${ data.className }.Model()`,
-            en: `${ data.className }.Model() is not declared`
+            ru: `необходимо объявить метод: ${ className }.Model()`,
+            en: `${ className }.Model() is not declared`
         };
     }
 }
@@ -19,11 +19,10 @@ export class WrongModelConstructorError extends BaseError<{
     invalid: string;
     expected: string;
 }> {
-    getMessage(data: {collection: string, invalid: string, expected: string}) {
+    getMessage({collection, invalid, expected}) {
         return {
-            ru: `${data.collection}: ожидается модель класса: ${ data.expected }, ` +
-                `но передана модель: ${ data.invalid }`,
-            en: `${data.collection}: expected model constructor ${ data.expected }, but have ${ data.invalid }`
+            ru: `${collection}: ожидается модель класса: ${ expected }, но передана модель: ${ invalid }`,
+            en: `${collection}: expected model constructor ${ expected }, but have ${ invalid }`
         };
     }
 }
@@ -32,10 +31,10 @@ export class InvalidModelRowError extends BaseError<{
     invalidValue: string;
     model: string;
 }> {
-    getMessage(data: {invalidValue: string, model: string}) {
+    getMessage({invalidValue, model}) {
         return {
-            ru: `некорректные данные ${data.invalidValue} для моделей ${data.model}`,
-            en: `invalid row ${data.invalidValue} for model ${data.model}`
+            ru: `некорректные данные ${invalidValue} для моделей ${model}`,
+            en: `invalid row ${invalidValue} for model ${model}`
         };
     }
 }
@@ -43,10 +42,10 @@ export class InvalidModelRowError extends BaseError<{
 export class InvalidSortParamsError extends BaseError<{
     invalidValue: string;
 }> {
-    getMessage(data: {invalidValue: string}) {
+    getMessage({invalidValue}) {
         return {
-            ru: `некорректное поле или функция сравнения ${ data.invalidValue }`,
-            en: `invalid compareFunction or key: ${ data.invalidValue }`
+            ru: `некорректное поле или функция сравнения ${invalidValue}`,
+            en: `invalid compareFunction or key: ${ invalidValue }`
         };
     }
 }

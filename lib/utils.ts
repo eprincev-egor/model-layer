@@ -1,6 +1,6 @@
 
 
-export function isObject(value: any): boolean {
+export function isObject(value): boolean {
     return (
         // not null
         value &&
@@ -63,13 +63,13 @@ export function invalidValuesAsString(value: any): string {
 
 
 export const eol = {
-    eol: null as string | null,
+    eol: null,
     
     toString() {
         return this.eol;
     },
 
-    define(os?: string) {
+    define(os?) {
         // https://github.com/ryanve/eol/blob/gh-pages/eol.js
         let isWindows = (
             typeof process !== "undefined" && 

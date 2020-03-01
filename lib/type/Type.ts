@@ -7,7 +7,6 @@ import {
     InvalidKeyValidationError
 } from "../errors";
 import {invalidValuesAsString} from "../utils";
-import { Model } from "../Model";
 
 const FORBIDDEN_PRIMARY_KEYS = [
     "row",
@@ -81,36 +80,23 @@ export type JsonType<T> = (
         jsonData< T >
 );
 
-type JsonItem = (
-    null | boolean | number | string | 
-    {[key: string]: JsonItem} |
-    JsonItem[]
-);
-
 export interface IType {
     TOutput: any;
     TInput: any;
     TJson: any;
 }
 
-type TTypeConstructor = (
-    (new (...args: any[]) => Type) & {
-        prepareDescription: (description: any, key: string) => void;
-    }
-);
-const Types: {
-    [key: string]: TTypeConstructor;
-} = {};
+const Types = {};
 
 export interface ITypeParams {
     key?: ((key: string) => boolean) | RegExp;
-    type: string;
+    type?: string;
     required?: boolean;
     primary?: boolean;
-    prepare?: (value: any, key: string, model: Model<any>) => any;
-    toJSON?: (value: any, stack: any[]) => any;
-    clone?: (value: any, stack: EqualStack) => any;
-    equal?: (selfValue: any, anotherValue: any, stack: EqualStack) => boolean;
+    prepare?: (value: any, key: string, model) => any;
+    toJSON?: (value: any, stack) => any;
+    clone?: (value: any, stack) => any;
+    equal?: (selfValue: any, anotherValue: any, stack) => boolean;
     validate?: 
         ((value: any, key: string) => boolean) |
         RegExp
@@ -120,18 +106,15 @@ export interface ITypeParams {
     const?: boolean;
 }
 
-export abstract class Type {
+export class Type {
     static Model: any;
 
-    static registerType(
-        name: string, 
-        SomeType: TTypeConstructor
-    ) {
+    static registerType(name: string, SomeType: (new (...args: any) => Type)) {
         Types[name] = SomeType;
     }
 
     // create type by params
-    static create(description: any, key: string) {
+    static create(description, key: string) {
         
         const isTypeHelper = (
             typeof description === "function" &&
@@ -183,9 +166,9 @@ export abstract class Type {
 
 
         if ( description.primary ) {
-            const CustomModel = Type.Model;
+            const Model = Type.Model;
             const isReserved = (
-                key in CustomModel.prototype ||
+                key in Model.prototype ||
                 FORBIDDEN_PRIMARY_KEYS.includes( key )
             );
 
@@ -208,7 +191,7 @@ export abstract class Type {
     }
 
     // default behavior
-    static prepareDescription(description: any, key: string) {
+    static prepareDescription(description, key: string) {
         // redefine me
         return description;
     }
@@ -322,7 +305,9 @@ export abstract class Type {
         }
 
         // don't change value
-        this.const = params.const ? true : false;
+        if ( params.const ) {
+            this.const = true;
+        }
 
         if ( params.clone ) {
             this.clone = params.clone;
@@ -341,7 +326,7 @@ export abstract class Type {
         return true;
     }
 
-    validate(value: any, key: string): boolean {
+    validate(value, key): boolean {
         if ( this.enum ) {
             if ( value != null ) {
                 return this.enum.includes( value );
@@ -351,16 +336,23 @@ export abstract class Type {
         return true;
     }
 
-    prepare(value: any, key: any, model: Model<any>): any {
+    prepare(value, key, model): any {
         return value;
     }
 
-    abstract toJSON(value: any, stack?: any[]): JsonItem;
-    abstract clone(value: any, stack?: EqualStack): any;
-    abstract equal(selfValue: any, otherValue: any, stack: EqualStack): boolean;
+    toJSON(value, stack): any {
+        return value;
+    }
+
+    clone(value, stack?: EqualStack): any {
+        return this.toJSON( value, stack );
+    }
 
     typeAsString(): string {
         return this.type;
     }
 
+    equal(selfValue, otherValue, stack): boolean {
+        return selfValue === otherValue;
+    }
 }

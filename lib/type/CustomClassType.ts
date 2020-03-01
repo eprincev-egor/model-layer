@@ -8,7 +8,6 @@ import {
     NoEqualMethodError,
     InvalidValueForCustomClassError
 } from "../errors";
-import EqualStack from "../EqualStack";
 
 export interface ICustomClassTypeParams extends ITypeParams {
     constructor: new (...args: any[]) => any;
@@ -21,10 +20,10 @@ export interface ICustomClassTypeParams extends ITypeParams {
     equal?: (
         selfValue: InstanceType<this["constructor"]>, 
         otherValue: InstanceType<this["constructor"]>, 
-        stack: EqualStack
+        stack
     ) => boolean;
-    clone?: (value: InstanceType<this["constructor"]>, stack: EqualStack) => InstanceType<this["constructor"]>;
-    toJSON?: (value: InstanceType<this["constructor"]>, stack: any[]) => any;
+    clone?: (value: InstanceType<this["constructor"]>, stack) => InstanceType<this["constructor"]>;
+    toJSON?: (value: InstanceType<this["constructor"]>, stack) => any;
 }
 
 export interface ICustomClassType<T extends (new(...args: any[]) => any)> extends IType {
@@ -48,7 +47,7 @@ export class CustomClassType extends Type {
         this.CustomClass = params.constructor;
     }
     
-    prepare(value: any, key: string) {
+    prepare(value, key) {
         if ( value == null ) {
             return null;
         }
@@ -74,11 +73,11 @@ export class CustomClassType extends Type {
     }
 
     
-    toJSON(): any {
+    toJSON() {
         throw new NoToJSONMethodError({className: this.CustomClass.name});
     }
 
-    clone(model: Model<any>, stack: EqualStack): any {
+    clone(model, stack) {
         throw new NoCloneMethodError({className: this.CustomClass.name});
     }
 

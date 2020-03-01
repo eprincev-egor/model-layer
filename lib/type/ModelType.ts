@@ -2,14 +2,13 @@
 
 import {Type, ITypeParams} from "./Type";
 import {Model} from "../Model";
-import {invalidValuesAsString, isNaN} from "../utils";
+import {invalidValuesAsString, isNaN, eol} from "../utils";
 import {
     CircularStructureToJSONError,
     InvalidModelError
 } from "../errors";
-import EqualStack from "../EqualStack";
 
-export function MakeModelType<TModelConstructor extends (new (...args: any[]) => Model<any>)>(
+export function MakeModelType<TModelConstructor extends (new (...args) => Model<any>)>(
     params: ITypeParams & 
     {
         Model: TModelConstructor;
@@ -25,7 +24,7 @@ MakeModelType.isTypeHelper = true;
 
 export class ModelType extends Type {
 
-    static prepareDescription(description: any) {
+    static prepareDescription(description) {
         
         const isCustomModel = (
             typeof description.type === "function" &&
@@ -47,7 +46,7 @@ export class ModelType extends Type {
         this.Model = params.Model;
     }
 
-    prepare(value: any, key: string, model: Model<any>) {
+    prepare(value, key, model) {
         if ( value == null ) {
             return null;
         }
@@ -104,7 +103,7 @@ export class ModelType extends Type {
         return this.Model.name;
     }
 
-    toJSON(model: Model<any>, stack: any[]) {
+    toJSON(model, stack) {
 
         if ( stack.includes(model) ) {
             throw new CircularStructureToJSONError({});
@@ -114,11 +113,11 @@ export class ModelType extends Type {
         return model.toJSON(stack);
     }
 
-    clone(model: Model<any>, stack: EqualStack) {
+    clone(model, stack) {
         return model.clone(stack);
     }
 
-    equal(selfModel: Model<any>, otherModel: Model<any>, stack: EqualStack) {
+    equal(selfModel, otherModel, stack) {
         if ( selfModel == null ) {
             return otherModel === null;
         }

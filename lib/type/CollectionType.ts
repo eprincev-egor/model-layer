@@ -7,7 +7,6 @@ import {
     CircularStructureToJSONError,
     InvalidCollectionError
 } from "../errors";
-import EqualStack from "../EqualStack";
 
 export interface ICollectionTypeParams extends ITypeParams {
     Collection: new (...args: any) => Collection<any>;
@@ -27,7 +26,7 @@ export function MakeCollectionType<TCollectionConstructor>(
 MakeCollectionType.isTypeHelper = true;
 
 export class CollectionType extends Type {
-    static prepareDescription(description: any) {
+    static prepareDescription(description) {
         
         const isCollection = (
             typeof description.type === "function" &&
@@ -49,11 +48,11 @@ export class CollectionType extends Type {
     constructor(params: ICollectionTypeParams) {
         super(params);
 
-        this.nullAsEmpty = !!params.nullAsEmpty;
+        this.nullAsEmpty = params.nullAsEmpty;
         this.Collection = params.Collection;
     }
 
-    prepare(value: any, key: string) {
+    prepare(value, key) {
         if ( value == null ) {
             if ( this.nullAsEmpty ) {
                 value = [];
@@ -87,7 +86,7 @@ export class CollectionType extends Type {
         return "collection " + this.Collection.name;
     }
 
-    toJSON(collection: Collection<any>, stack: any[]) {
+    toJSON(collection, stack) {
         if ( stack.includes(collection) ) {
             throw new CircularStructureToJSONError({});
         }
@@ -96,11 +95,11 @@ export class CollectionType extends Type {
         return collection.toJSON(stack);
     }
 
-    clone(collection: Collection<any>, stack: EqualStack) {
+    clone(collection, stack) {
         return collection.clone(stack);
     }
 
-    equal(selfCollection: Collection<any>, otherCollection: Collection<any>, stack: EqualStack) {
+    equal(selfCollection, otherCollection, stack) {
         if ( selfCollection == null ) {
             return otherCollection === null;
         }

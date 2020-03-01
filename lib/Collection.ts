@@ -15,20 +15,12 @@ interface IAddEvent<TCollection, TModel> {
     model: TModel;
     collection: TCollection;
 }
-type TAddEventListener<
-    TCollection extends Collection<any>, 
-    TModel extends Model<any>
-> = (event: IAddEvent<TCollection, TModel>) => void;
 
 interface IRemoveEvent<TCollection, TModel> {
     type: "remove";
     model: TModel;
     collection: TCollection;
 }
-type TRemoveEventListener<
-    TCollection extends Collection<any>, 
-    TModel extends Model<any>
-> = (event: IAddEvent<TCollection, TModel>) => void;
 
 export abstract class Collection<
     ChildCollection extends Collection<any>,
@@ -42,21 +34,19 @@ export abstract class Collection<
     TOutput: this;
     TJson: Array< TModel["TJson"] >;
 
-    // this.ModelConstructor = this.Model();
-    private ModelConstructor: (new (...args: any) => TModel) | undefined;
+    // this.Model();
+    private ModelConstructor: new (...args: any) => TModel;
 
 
     constructor(rows?: Array< TModel["TInput"] >) {
         super();
 
         if ( !this.constructor.prototype.hasOwnProperty("ModelConstructor") ) {
-            const ModelConstructor = this.Model();
+            this.constructor.prototype.ModelConstructor = (this as any).Model();
             
             // prepare model structure without calling constructor
-            const tmpModel = Object.create( ModelConstructor.prototype );
-            tmpModel.prepareStructure();
-            
-            this.constructor.prototype.ModelConstructor = ModelConstructor;
+            const model = Object.create(this.ModelConstructor.prototype);
+            model.prepareStructure();
         }
 
         this.models = [];
@@ -71,24 +61,11 @@ export abstract class Collection<
         } else {
             this.length = 0;
         }
-
-        // for fix typescript error:
-        // prop has no initializer and is not definitely assigned in the constructor
-        this.TModel = null as any;
-        this.TInput = null as any;
-        this.TOutput = null as any;
-        this.TJson = null as any;
-        delete this.TModel;
-        delete this.TInput;
-        delete this.TOutput;
-        delete this.TJson;
     }
 
     abstract Model(): new (...args: any) => TModel;
 
-    at(index: number): TModel;
-    at(index: number, rowOrModel: TModel["TInput"]): void;
-    at(index: number, rowOrModel?: TModel["TInput"]): TModel | void {
+    at(index: number, rowOrModel?: TModel["TInput"]): TModel {
         // set
         if ( rowOrModel ) {
             const removedModel = this.models[ index ];
@@ -122,25 +99,25 @@ export abstract class Collection<
     prepareRow(row: TModel["TInput"]): TModel {
         let model: TModel;
         
-        if ( row instanceof (this.ModelConstructor as any) ) {
-            model = row as TModel;
+        if ( row instanceof this.ModelConstructor ) {
+            model = row;
             return model;
         }
 
         if ( row instanceof Model ) {
             throw new WrongModelConstructorError({
                 invalid: row.constructor.name,
-                expected: (this.ModelConstructor as any).name,
+                expected: this.ModelConstructor.name,
                 collection: this.constructor.name
             });
         }
         
         if ( isPlainObject(row) ) {
-            model = new (this.ModelConstructor as any)( row );
+            model = new this.ModelConstructor( row );
         }
         else {
             throw new InvalidModelRowError({
-                model: (this.ModelConstructor as any).name,
+                model: this.ModelConstructor.name,
                 invalidValue: invalidValuesAsString( row )
             });
         }
@@ -181,7 +158,7 @@ export abstract class Collection<
             return;
         }
 
-        let inputModels: Array< TModel["TInput"] > = [];
+        let inputModels = [];
         for (let i = 0, n = models.length; i < n; i++) {
             const modelOrArr = models[i];
 
@@ -197,9 +174,9 @@ export abstract class Collection<
 
         const addedModels = [];
         for (let i = 0, n = inputModels.length; i < n; i++) {
-            const inputModel = inputModels[i];
-            const model = this.prepareRow( inputModel );
-            
+            let model = inputModels[i];
+
+            model = this.prepareRow( model );
             addedModels.push( model );
             this.models.push( model );
         }
@@ -220,53 +197,53 @@ export abstract class Collection<
 
     forEach(
         iteration: (model: TModel, index: number, models: TModel[]) => void, 
-        context?: any
+        context?
     ): void {
         this.models.forEach(iteration, context || this);
     }
 
     each(
         iteration: (model: TModel, index: number, models: TModel[]) => void, 
-        context?: any
+        context?
     ): void {
         this.models.forEach(iteration, context || this);
     }
 
     find(
         iteration: (model: TModel, index: number, models: TModel[]) => boolean, 
-        context?: any
-    ): TModel | undefined {
+        context?
+    ): TModel {
         return this.models.find(iteration, context || this);
     }
 
     findIndex(
         iteration: (model: TModel, index: number, models: TModel[]) => boolean, 
-        context?: any
+        context?
     ): number {
         return this.models.findIndex(iteration, context || this);
     }
 
     filter(
         iteration: (model: TModel, index: number, models: TModel[]) => boolean, 
-        context?: any
+        context?
     ): TModel[] {
         return this.models.filter(iteration, context || this);
     }
 
     map<T>(
         iteration: (model: TModel, index: number, models: TModel[]) => T, 
-        context?: any
+        context?
     ): T[] {
         return this.models.map(iteration, context || this);
     }
 
-    flatMap<U, TArr extends U[]>(
+    flatMap<TArr extends any[]>(
         iteration: (model: TModel, index: number, models: TModel[]) => TArr, 
-        context?: any
-    ): U[] {
+        context?
+    ): Array<TArr[0]> {
         const result = this.models.map(iteration, context || this);
             
-        let output: U[] = [];
+        let output = [];
         for (let i = 0, n = result.length; i < n; i++) {
             const elem = result[ i ];
 
@@ -285,26 +262,26 @@ export abstract class Collection<
         iteration: (total: T, nextModel: TModel) => T,
         initialValue?: T
     ): T {
-        return this.models.reduce<any>(iteration, initialValue);
+        return this.models.reduce(iteration, initialValue);
     }
 
     reduceRight<T>(
         iteration: (total: T, nextModel: TModel) => T,
         initialValue?: T
     ): T {
-        return this.models.reduceRight<any>(iteration, initialValue);
+        return this.models.reduceRight(iteration, initialValue);
     }
 
     every(
         iteration: (model: TModel, index: number, models: TModel[]) => boolean, 
-        context?: any
+        context?
     ): boolean {
         return this.models.every(iteration, context || this);
     }
 
     some(
         iteration: (model: TModel, index: number, models: TModel[]) => boolean, 
-        context?: any
+        context?
     ): boolean {
         return this.models.some(iteration, context || this);
     }
@@ -334,35 +311,31 @@ export abstract class Collection<
         return this.models.includes(searchElement, fromIndex);
     }
 
-    pop(): TModel | undefined {
+    pop(): TModel {
         const model = this.models.pop();
         this.length = this.models.length;
         
-        if ( model ) {
-            const removeEvent: IRemoveEvent<this, TModel> = {
-                type: "remove",
-                collection: this,
-                model
-            };
-            this.emit("remove", removeEvent);
-        }
-        
+        const removeEvent: IRemoveEvent<this, TModel> = {
+            type: "remove",
+            collection: this,
+            model
+        };
+        this.emit("remove", removeEvent);
+
         return model;
     }
 
-    shift(): TModel | undefined {
+    shift(): TModel {
         const model = this.models.shift();
         this.length = this.models.length;
 
-        if ( model ) {
-            const removeEvent: IRemoveEvent<this, TModel> = {
-                type: "remove",
-                collection: this,
-                model
-            };
-            this.emit("remove", removeEvent);
-        }
-        
+        const removeEvent: IRemoveEvent<this, TModel> = {
+            type: "remove",
+            collection: this,
+            model
+        };
+        this.emit("remove", removeEvent);
+
         return model;
     }
 
@@ -421,7 +394,7 @@ export abstract class Collection<
             else {
                 const keys = [firstKey].concat( otherKeys ) as Array<keyof TModel["row"]>;
 
-                this.models.sort((modelA: TModel, modelB: TModel) => {
+                this.models.sort((modelA, modelB) => {
 
                     for (let i = 0, n = keys.length; i < n; i++) {
                         const key = keys[i] as string;
@@ -437,8 +410,6 @@ export abstract class Collection<
                             return -1;
                         }
                     }
-
-                    return 0;
                 });
             }
             
@@ -623,7 +594,7 @@ export abstract class Collection<
         return model;
     }
 
-    toJSON(stack: any[] = []): Array<TModel["TJson"]> {
+    toJSON(stack = []): Array<TModel["TJson"]> {
         return this.models.map((model) =>
             model.toJSON(stack)
         );
@@ -684,7 +655,7 @@ export abstract class Collection<
         }
     }
 
-    get(id: number | string): TModel | undefined {
+    get(id: number | string): TModel {
         return this.find((model) => 
             model.primaryValue === id
         );
@@ -733,13 +704,10 @@ export abstract class Collection<
         return true;
     }
 
-    on(eventName: "add", listener: TAddEventListener<this, TModel>): this;
-    on(eventName: "remove", listener: TRemoveEventListener<this, TModel>): this;
-    on(
-        eventName: "add" | "remove", 
-        listener: TAddEventListener<this, TModel> | TRemoveEventListener<this, TModel>
-    ): this {
-        return super.on(eventName, listener);
+    on(eventName: "add", handler: ((event: IAddEvent<this, TModel>) => void));
+    on(eventName: "remove", handler: ((event: IRemoveEvent<this, TModel>) => void));
+    on(eventName: "add" | "remove", handler) {
+        super.on(eventName, handler);
     }
 }
 

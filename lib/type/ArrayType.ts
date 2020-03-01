@@ -8,16 +8,14 @@ import {
     InvalidArrayElementError,
     DuplicateValueForUniqueArrayError
 } from "../errors";
-import { Model } from "../Model";
-import EqualStack from "../EqualStack";
 
 export interface IArrayTypeParams extends ITypeParams {
-    sort?: boolean | ((a: this["element"], b: this["element"]) => number);
+    sort?: boolean | ((a, b) => number);
     unique?: boolean;
     emptyAsNull?: boolean;
     nullAsEmpty?: boolean;
     element?: any;
-    prepare?: (value: any, key: string, model: Model<any>) => Array<this["element"]>;
+    prepare?: (value: any, key: string, model) => Array<this["element"]>;
     validate?: 
         ((value: Array<this["element"]>, key: string) => boolean) |
         RegExp
@@ -37,14 +35,14 @@ export interface IArrayType<T extends IType> {
 }
 export class ArrayType extends Type {
 
-    static prepareDescription(description: any, key: string) {
+    static prepareDescription(description, key) {
         if ( description.type === "array" ) {
             // prepare element description
             description.element = Type.create( description.element || "any", key );
         }
     }
 
-    sort: boolean | ((a: this["element"], b: this["element"]) => number);
+    sort: boolean | ((a, b) => number);
     unique: boolean;
     emptyAsNull: boolean;
     nullAsEmpty: boolean;
@@ -71,10 +69,10 @@ export class ArrayType extends Type {
         this.element = element;
     }
 
-    prepare(originalValue: any, key: string) {
+    prepare(originalValue, key) {
         if ( originalValue == null ) {
             if ( this.nullAsEmpty ) {
-                const emptyArr: any[] = [];
+                const emptyArr = [];
                 Object.freeze(emptyArr);
     
                 return emptyArr;
@@ -132,7 +130,7 @@ export class ArrayType extends Type {
         return value;
     }
 
-    validate(value: any[], key: string) {
+    validate(value, key) {
         const isValid = super.validate(value, key);
         if ( !isValid ) {
             return false;
@@ -172,19 +170,19 @@ export class ArrayType extends Type {
         return true;
     }
 
-    toJSON(value: any[], stack: any[]) {
+    toJSON(value, stack) {
         return value.map((item) => 
             this.element.toJSON( item, [...stack] )
         );
     }
 
-    clone(value: any[], stack: EqualStack) {
+    clone(value, stack) {
         return value.map((item) => 
             this.element.clone( item, stack )
         );
     }
 
-    equal(selfArr: any[], otherArr: any[], stack: EqualStack) {
+    equal(selfArr, otherArr, stack) {
         if ( selfArr == null ) {
             return otherArr === null;
         }

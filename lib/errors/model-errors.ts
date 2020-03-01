@@ -5,10 +5,10 @@ import {BaseError} from "./BaseError";
 export class UnknownPropertyError extends BaseError<{
     propertyName: string
 }> {
-    getMessage(data: {propertyName: string}) {
+    getMessage({propertyName}) {
         return {
-            ru: `неизвестное свойство: ${data.propertyName}`,
-            en: `unknown property: ${data.propertyName}`,
+            ru: `неизвестное свойство: ${propertyName}`,
+            en: `unknown property: ${propertyName}`,
         };
     }
 }
@@ -17,19 +17,19 @@ export class UnknownPropertyError extends BaseError<{
 export class ModelWithoutStructureError extends BaseError<{
     className: string
 }> {
-    getMessage(data: {className: string}) {
+    getMessage({className}) {
         return {
-            ru: `не объявлен метод ${ data.className }.structure()`,
-            en: `${ data.className }.structure() is not declared`
+            ru: `не объявлен метод ${ className }.structure()`,
+            en: `${ className }.structure() is not declared`
         };
     }
 }
 
 export class InvalidKeyError extends BaseError<{key: string}> {
-    getMessage(data: {key: string}) {
+    getMessage({key}) {
         return {
-            ru: `некорректный ключ: ${ data.key }`,
-            en: `invalid key: ${ data.key }`
+            ru: `некорректный ключ: ${ key }`,
+            en: `invalid key: ${ key }`
         };
     }
 }
@@ -38,10 +38,10 @@ export class InvalidValueError extends BaseError<{
     key: string,
     value: string
 }> {
-    getMessage(data: {key: string, value: string}) {
+    getMessage({key, value}) {
         return {
-            ru: `некорректное значение: ${ data.key }: ${ data.value }`,
-            en: `invalid ${ data.key }: ${ data.value }`
+            ru: `некорректное значение: ${ key }: ${ value }`,
+            en: `invalid ${ key }: ${ value }`
         };
     }
 }
@@ -49,10 +49,10 @@ export class InvalidValueError extends BaseError<{
 export class RequiredError extends BaseError<{
     key: string
 }> {
-    getMessage(data: {key: string}) {
+    getMessage({key}) {
         return {
-            ru: `пропущено обязательное поле: ${ data.key }`,
-            en: `required ${ data.key }`
+            ru: `пропущено обязательное поле: ${ key }`,
+            en: `required ${ key }`
         };
     }
 }
@@ -60,10 +60,10 @@ export class RequiredError extends BaseError<{
 export class ConstValueError extends BaseError<{
     key: string
 }> {
-    getMessage(data: {key: string}) {
+    getMessage({key}) {
         return {
-            ru: `невозможно изменить поле только для чтения: ${ data.key }`,
-            en: `cannot assign to read only property: ${ data.key }`
+            ru: `невозможно изменить поле только для чтения: ${ key }`,
+            en: `cannot assign to read only property: ${ key }`
         };
     }
 }
@@ -73,15 +73,6 @@ export class DataShouldBeObjectError extends BaseError {
         return {
             ru: `ожидается объект row`,
             en: `row must be are object`
-        };
-    }
-}
-
-export class InvalidOnArgumentsError extends BaseError {
-    getMessage() {
-        return {
-            ru: `ожидается аргумент listener`,
-            en: `expected listener`
         };
     }
 }

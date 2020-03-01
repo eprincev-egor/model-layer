@@ -8,15 +8,14 @@ import {
     InvalidNumberError,
     InvalidRoundError
 } from "../errors";
-import { Model } from "../Model";
 
 export interface INumberTypeParams extends ITypeParams {
     nullAsZero?: boolean;
     zeroAsNull?: boolean;
-    ceil?: number | null;
-    round?: number | null;
-    floor?: number | null;
-    prepare?: (value: any, key: string, model: Model<any>) => number;
+    ceil?: number;
+    round?: number;
+    floor?: number;
+    prepare?: (value: any, key: string, model) => number;
     validate?: 
         ((value: number, key: string) => boolean) |
         RegExp
@@ -35,9 +34,9 @@ export interface INumberType extends IType {
 export class NumberType extends Type {
     nullAsZero: boolean;
     zeroAsNull: boolean;
-    ceil: number | null;
-    round: number | null;
-    floor: number | null;
+    ceil: number;
+    round: number;
+    floor: number;
 
     constructor({
         nullAsZero = false,
@@ -104,7 +103,7 @@ export class NumberType extends Type {
         this.floor = floor;
     }
 
-    prepare(originalValue: any, key: string): number | null {
+    prepare(originalValue,  key) {
         if ( originalValue == null ) {
             if ( this.nullAsZero ) {
                 return 0;
@@ -113,7 +112,7 @@ export class NumberType extends Type {
         }
     
     
-        let value: number | null = +originalValue;
+        let value = +originalValue;
     
         if ( 
             isNaN(value) ||
@@ -182,17 +181,5 @@ export class NumberType extends Type {
         }
     
         return value;
-    }
-
-    clone(value: number) {
-        return value;
-    }
-
-    toJSON(value: number) {
-        return value;
-    }
-
-    equal(selfNumber: number, otherNumber: number) {
-        return selfNumber === otherNumber;
     }
 }

@@ -19,20 +19,20 @@ export interface IAnyType extends IType {
 }
 
 export class AnyType extends Type {
-    toJSON(value: any, stack: any[]) {
+    toJSON(value, stack) {
         return value2json( value, stack );
     }
 
-    clone(value: any, stack: EqualStack) {
+    clone(value, stack: EqualStack) {
         return clone(value, stack);
     }
 
-    equal(selfValue: any, otherValue: any, stack: EqualStack) {
+    equal(selfValue, otherValue, stack: EqualStack) {
         return equal(selfValue, otherValue, stack);
     }
 }
 
-export function equal(selfValue: any, otherValue: any, stack: EqualStack) {
+export function equal(selfValue, otherValue, stack: EqualStack) {
     if ( selfValue instanceof Date && otherValue instanceof Date ) {
         return +selfValue === +otherValue;
     }
@@ -119,7 +119,7 @@ export function equal(selfValue: any, otherValue: any, stack: EqualStack) {
     return selfValue === otherValue;
 }
 
-export function value2json(value: any, stack: any[]): any {
+export function value2json(value, stack) {
     if ( value instanceof Date ) {
         return value.toISOString();
     }
@@ -151,7 +151,7 @@ export function value2json(value: any, stack: any[]): any {
         stack.push(value);
 
         
-        const json: {[key: string]: any} = {};
+        const json = {};
 
         for (const key in value) {
             const item = value[ key ];
@@ -165,7 +165,7 @@ export function value2json(value: any, stack: any[]): any {
     return value;
 }
 
-export function clone(value: any, stack: EqualStack): any {
+export function clone(value, stack: EqualStack) {
     if ( value instanceof Date ) {
         return new Date( +value );
     }
@@ -181,7 +181,7 @@ export function clone(value: any, stack: EqualStack): any {
     }
 
     if ( isObject(value) ) {
-        const cloneObj: {[key: string]: any} = {};
+        const cloneObj = {};
 
         for (const key in value) {
             const item = value[ key ];
