@@ -15,21 +15,29 @@ export type InputValue<Value> = (
 );
 
 export abstract class Model extends EventEmitter {
-    private static meta: {
+    readonly row: any;
+
+    private meta!: {
         [key: string]: IMeta;
     };
-
-    row: any;
 
     constructor(inputRow?: any) {
         super();
 
         this.row = {};
+        for (const key in this.meta) {
+            const propMeta = this.meta[ key ];
+            if ( propMeta.default ) {
+                this.row[ key ] = propMeta.default();
+            }
+        }
+
         for (const key in inputRow) {
             const value = inputRow[ key ];
-            const meta = getPropMeta(  );
             this.row[ key ] = value;
         }
+
+        this.row = Object.freeze(this.row);
     }
 
     get<Key extends keyof this["row"]>(key: Key): this["row"][Key] {
@@ -37,7 +45,30 @@ export abstract class Model extends EventEmitter {
     }
 
     set(row: Partial<this["row"]>): this {
-        this.row = {...this.row, row};
+        const newRow: any = {};
+        let hasChanges = false;
+
+        for (const key in this.row) {
+            newRow[ key ] = this.row[ key ];
+        }
+        for (const key in row) {
+            const oldValue = this.row[ key ];
+            const newValue = row[ key ];
+
+            if ( newValue !== oldValue ) {
+                hasChanges = true;
+                newRow[ key ] = row[ key ];
+            }
+        }
+        
+        if ( hasChanges ) {
+            (this as any).row = Object.freeze(newRow);
+        }
+
         return this;
+    }
+
+    hasValue<Key extends keyof this["row"]>(key: Key): boolean {
+        return key in this.row;
     }
 }

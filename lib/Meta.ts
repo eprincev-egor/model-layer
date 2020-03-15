@@ -13,15 +13,16 @@ export function Prop(key: string) {
     };
 }
 
-function setPropMeta(targetClass: any, key: string, meta: any) {
-    const classMeta = targetClass.meta || {};
-    targetClass.meta = meta;
+function setPropMeta(targetClass: any, key: string, partialPropMeta: any) {
+    const parentClassMeta = targetClass.prototype.meta || {};
+    const classMeta = Object.create(parentClassMeta);
+    targetClass.prototype.meta = classMeta;
 
     const propMeta = classMeta[ key ] || {};
-    meta[ key ] = propMeta;
+    classMeta[ key ] = propMeta;
 
-    for (const metaKey in meta) {
-        propMeta[ metaKey ] = meta[ metaKey ];
+    for (const metaKey in partialPropMeta) {
+        propMeta[ metaKey ] = partialPropMeta[ metaKey ];
     }
 }
 

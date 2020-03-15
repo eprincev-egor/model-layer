@@ -78,18 +78,18 @@ describe("Model tests", () => {
         assert.strictEqual( model.row.prop, undefined );
     });
 
-    /*
     it("default() value", () => {
 
         const now = Date.now();
 
-        class SomeModel extends Model<SomeModel> {
-            structure() {
-                return {
-                    now: Types.Number({
-                        default: () => Date.now()
-                    })
-                };
+        @Prop("now").Default(() => Date.now())
+        class SomeModel extends Model {
+            row!: {
+                now: number;
+            };
+
+            constructor(row?: InputRow<SomeModel>) {
+                super(row);
             }
         }
 
@@ -100,39 +100,76 @@ describe("Model tests", () => {
         );
     });
 
+    it("call default value from parent class", () => {
+
+        @Prop("parent").Default(() => 1)
+        class Parent extends Model {
+            row!: {
+                parent: number;
+            };
+
+            constructor(row?: InputRow<Parent>) {
+                super(row);
+            }
+        }
+
+        @Prop("child").Default(() => 2)
+        class Child extends Parent {
+            row!: Parent["row"] & {
+                child: number;
+            };
+
+            constructor(row?: InputRow<Child>) {
+                super(row);
+            }
+        }
+
+        const model = new Child();
+
+        assert.deepStrictEqual(
+            model.row,
+            {
+                parent: 1,
+                child: 2
+            }
+        );
+    });
+
     it("set value", () => {
 
-        class SomeModel extends Model<SomeModel> {
-            structure() {
-                return {
-                    name: Types.String,
-                    age: Types.Number
-                };
+        class SomeModel extends Model {
+            row!: {
+                name: string;
+                age: number;
+            };
+
+            constructor(inputRow?: InputRow<SomeModel>) {
+                super(inputRow);
             }
         }
 
         const model = new SomeModel();
         let row = model.row;
 
-        assert.strictEqual( model.get("name"), null );
-        assert.strictEqual( model.row.name, null );
-        assert.strictEqual( model.get("age"), null );
-        assert.strictEqual( model.row.age, null );
+        assert.strictEqual( model.get("name"), undefined );
+        assert.strictEqual( model.row.name, undefined );
+        assert.strictEqual( model.get("age"), undefined );
+        assert.strictEqual( model.row.age, undefined );
         
         model.set({name: "nice"});
         assert.equal( model.get("name"), "nice" );
         assert.equal( model.row.name, "nice" );
-        assert.strictEqual( model.get("age"), null );
-        assert.strictEqual( model.row.age, null );
+        assert.strictEqual( model.get("age"), undefined );
+        assert.strictEqual( model.row.age, undefined );
         
         assert.ok( row !== model.row );
         row = model.row;
 
-        model.set({name: null});
-        assert.strictEqual( model.get("name"), null );
-        assert.strictEqual( model.row.name, null );
-        assert.strictEqual( model.get("age"), null );
-        assert.strictEqual( model.row.age, null );
+        model.set({name: undefined});
+        assert.strictEqual( model.get("name"), undefined );
+        assert.strictEqual( model.row.name, undefined );
+        assert.strictEqual( model.get("age"), undefined );
+        assert.strictEqual( model.row.age, undefined );
 
         assert.ok( row !== model.row );
         row = model.row;
@@ -140,8 +177,8 @@ describe("Model tests", () => {
         model.set({name: "test"});
         assert.equal( model.get("name"), "test" );
         assert.equal( model.row.name, "test" );
-        assert.strictEqual( model.get("age"), null );
-        assert.strictEqual( model.row.age, null );
+        assert.strictEqual( model.get("age"), undefined );
+        assert.strictEqual( model.row.age, undefined );
 
         assert.ok( row !== model.row );
         row = model.row;
@@ -163,6 +200,7 @@ describe("Model tests", () => {
         assert.strictEqual( model.row.age, 99 );
     });
 
+    /*
     it("error on set unknown property", () => {
 
         class SomeModel extends Model<SomeModel> {
@@ -207,14 +245,17 @@ describe("Model tests", () => {
                 err.message === "unknown property: some"
         );
     });
+    */
 
 
     it("model.row is freeze object", () => {
-        class SomeModel extends Model<SomeModel> {
-            structure() {
-                return {
-                    prop: Types.String
-                };
+        class SomeModel extends Model {
+            row!: {
+                prop: string;
+            };
+
+            constructor(row?: InputRow<SomeModel>) {
+                super(row);
             }
         }
 
@@ -225,8 +266,8 @@ describe("Model tests", () => {
                 const anyModel = model as any;
                 anyModel.row.prop = "a";
             }, 
-            (err) =>
-                /Cannot assign to read only property/.test(err.message)
+            (err: Error) =>
+                /object is not extensible/.test(err.message)
         );
 
         model.set({prop: "x"});
@@ -237,7 +278,7 @@ describe("Model tests", () => {
             () => {
                 const anyModel = model as any;
                 anyModel.row.prop = "y";
-            }, (err) =>
+            }, (err: Error) =>
                 /Cannot assign to read only property/.test(err.message)
         );
 
@@ -246,11 +287,13 @@ describe("Model tests", () => {
     });
 
     it("keep row if hasn't changes", () => {
-        class SomeModel extends Model<SomeModel> {
-            structure() {
-                return {
-                    prop: Types.String
-                };
+        class SomeModel extends Model {
+            row!: {
+                prop: string;
+            };
+
+            constructor(inputRow?: InputRow<SomeModel>) {
+                super(inputRow);
             }
         }
 
@@ -269,6 +312,7 @@ describe("Model tests", () => {
         assert.ok( model.row === row );
     });
 
+    /*
     it("model.hasProperty", () => {
         class SomeModel extends Model<SomeModel> {
             structure() {
@@ -296,14 +340,17 @@ describe("Model tests", () => {
             false
         );
     });
+    */
 
     it("model.hasValue", () => {
-        class SomeModel extends Model<SomeModel> {
-            structure() {
-                return {
-                    name: Types.String,
-                    age: Types.Number
-                };
+        class SomeModel extends Model {
+            row!: {
+                name: string;
+                age?: number;
+            };
+
+            constructor(row?: InputRow<SomeModel>) {
+                super(row);
             }
         }
 
@@ -322,13 +369,13 @@ describe("Model tests", () => {
         );
 
         model.set({
-            name: null,
+            name: undefined,
             age: 100
         });
 
         assert.strictEqual(
             model.hasValue("name"),
-            false
+            true
         );
 
         assert.strictEqual(
@@ -345,6 +392,7 @@ describe("Model tests", () => {
         );
     });
 
+    /*
     it("model.toJSON", () => {
         class SomeModel extends Model<SomeModel> {
             structure() {
