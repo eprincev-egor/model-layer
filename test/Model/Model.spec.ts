@@ -1,47 +1,52 @@
 
-import {Model, Collection, Types} from "../../lib/index";
+import {Model, InputRow} from "../../lib/Model";
 import assert from "assert";
-import {eol} from "../../lib/utils";
+// import {eol} from "../../lib/utils";
 
 describe("Model tests", () => {
 
     it("create model with row", () => {
 
-        class SomeModel extends Model<SomeModel> {
-            structure() {
-                return {
-                    prop: Types.String
-                };
+        class SomeModel extends Model {
+            row!: {
+                prop: string
+            };
+
+            constructor(row: InputRow<SomeModel>) {
+                super(row);
             }
         }
 
-        const row = {
+        const testRow = {
             prop: "nice"
         };
-        const model = new SomeModel(row);
+        const model = new SomeModel(testRow);
 
         assert.strictEqual( model.get("prop"), "nice" );
         assert.strictEqual( model.row.prop, "nice" );
 
-        assert.ok( model.row !== row );
+        assert.ok( model.row !== testRow );
     });
 
     it("create model without row", () => {
 
-        class SomeModel extends Model<SomeModel> {
-            structure() {
-                return {
-                    prop: Types.String
-                };
+        class SomeModel extends Model {
+            row!: {
+                prop: string
+            };
+
+            constructor(row?: InputRow<SomeModel>) {
+                super(row);
             }
         }
 
         const model = new SomeModel();
 
-        assert.strictEqual( model.get("prop"), null );
-        assert.strictEqual( model.row.prop, null );
+        assert.strictEqual( model.get("prop"), undefined );
+        assert.strictEqual( model.row.prop, undefined );
     });
 
+    /*
     it("default value", () => {
 
         class SomeModel extends Model<SomeModel> {
@@ -1484,4 +1489,5 @@ describe("Model tests", () => {
             cloneModel1 === cloneModel1.get("any").get("any")
         );
     });
+    */
 });
