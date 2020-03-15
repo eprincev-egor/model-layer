@@ -1,5 +1,5 @@
 
-import {Model, InputRow} from "../../lib/Model";
+import {Model, InputRow, Prop} from "../../lib/index";
 import assert from "assert";
 // import {eol} from "../../lib/utils";
 
@@ -46,16 +46,16 @@ describe("Model tests", () => {
         assert.strictEqual( model.row.prop, undefined );
     });
 
-    /*
     it("default value", () => {
+        
+        @Prop("prop").Default(() => "default")
+        class SomeModel extends Model {
+            row!: {
+                prop?: string;
+            };
 
-        class SomeModel extends Model<SomeModel> {
-            structure() {
-                return {
-                    prop: Types.String({
-                        default: "default"
-                    })
-                };
+            constructor(row?: InputRow<SomeModel>) {
+                super(row);
             }
         }
 
@@ -72,19 +72,13 @@ describe("Model tests", () => {
         assert.equal( model.row.prop, "default" );
 
         model = new SomeModel({
-            prop: null
-        });
-        assert.strictEqual( model.get("prop"), null );
-        assert.strictEqual( model.row.prop, null );
-
-
-        model = new SomeModel({
             prop: undefined
         });
-        assert.strictEqual( model.get("prop"), null );
-        assert.strictEqual( model.row.prop, null );
+        assert.strictEqual( model.get("prop"), undefined );
+        assert.strictEqual( model.row.prop, undefined );
     });
 
+    /*
     it("default() value", () => {
 
         const now = Date.now();

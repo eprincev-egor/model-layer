@@ -1,7 +1,6 @@
 {
     "compilerOptions": {
-        "rootDir": "./lib",
-        "outDir": "./dist",
+        "rootDir": "./",
         "sourceMap": true,
         "target": "esnext",
         "module": "commonjs",
@@ -9,5 +8,5 @@
         "strict": true,
         "experimentalDecorators": true
     },
-    "include": ["./lib/**/*.ts"]
+    "include": ["**/*.ts"]
 }

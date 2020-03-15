@@ -2,6 +2,7 @@
 // tslint:disable: member-access
 
 import {setLang} from "./errors";
-import {Model} from "./Model";
+import {Model, InputRow} from "./Model";
+import {Prop} from "./Meta";
 
-export {Model, setLang};
+export {Model, InputRow, Prop, setLang};

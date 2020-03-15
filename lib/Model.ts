@@ -1,4 +1,6 @@
+import "reflect-metadata";
 import EventEmitter from "events";
+import {IMeta} from "./Meta";
 
 export type InputRow<SomeModel extends Model> = {
     [key in keyof SomeModel["row"]]: InputValue< SomeModel["row"][key] >;
@@ -13,6 +15,10 @@ export type InputValue<Value> = (
 );
 
 export abstract class Model extends EventEmitter {
+    private static meta: {
+        [key: string]: IMeta;
+    };
+
     row: any;
 
     constructor(inputRow?: any) {
@@ -21,6 +27,7 @@ export abstract class Model extends EventEmitter {
         this.row = {};
         for (const key in inputRow) {
             const value = inputRow[ key ];
+            const meta = getPropMeta(  );
             this.row[ key ] = value;
         }
     }
