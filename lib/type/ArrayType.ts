@@ -69,7 +69,7 @@ export class ArrayType extends Type {
         this.element = element;
     }
 
-    prepare(originalValue, key) {
+    prepare(originalValue, key, parentModel) {
         if ( originalValue == null ) {
             if ( this.nullAsEmpty ) {
                 const emptyArr = [];
@@ -95,7 +95,7 @@ export class ArrayType extends Type {
     
         const value = originalValue.map((element, i) => {
             try {
-                element = elementDescription.prepare( element, i );
+                element = elementDescription.prepare( element, i, parentModel );
             } catch (err) {
                 const valueAsString = invalidValuesAsString( originalValue );
     

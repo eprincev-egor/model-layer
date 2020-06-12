@@ -1050,5 +1050,36 @@ describe("ArrayType", () => {
                 err.message === "Cannot converting circular structure to JSON"
         );
     });
+    
+    it("array of models, check parent reference", () => {
+
+        class TestModel extends Model<TestModel> {
+            structure() {
+                return {
+                    name: Types.String,
+                    children: Types.Array({
+                        element: TestModel
+                    })
+                };
+            }
+        }
+
+        const parent = new TestModel({
+            name: "parent",
+            children: [
+                new TestModel({name: "a"}),
+                new TestModel({name: "b"})
+            ]
+        });
+
+        const a = parent.get("children")[0] as TestModel;
+        const b = parent.get("children")[1] as TestModel;
+
+        const aParent = a.findParentInstance(TestModel);
+        const bParent = b.findParentInstance(TestModel);
+
+        assert.ok(aParent === parent, "a parent is valid model");
+        assert.ok(bParent === parent, "b parent is valid model");
+    });
 
 });
