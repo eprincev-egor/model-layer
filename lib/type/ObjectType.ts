@@ -65,7 +65,7 @@ export class ObjectType extends Type {
         }
     }
 
-    prepare(originalObject, modelKey) {
+    prepare(originalObject, modelKey, parentModel) {
         if ( originalObject == null ) {
             if ( this.nullAsEmpty ) {
                 const value = {};
@@ -102,7 +102,7 @@ export class ObjectType extends Type {
             let element = originalObject[ key ];
     
             try {
-                element = elementDescription.prepare( element, key );
+                element = elementDescription.prepare( element, key, parentModel );
             } catch (err) {
                 const valueAsString = invalidValuesAsString( originalObject );
     

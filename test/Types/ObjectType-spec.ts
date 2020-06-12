@@ -674,4 +674,35 @@ describe("ObjectType", () => {
         });
     });
 
+    it("object of models, check parent reference", () => {
+
+        class TestModel extends Model<TestModel> {
+            structure() {
+                return {
+                    name: Types.String,
+                    children: Types.Object({
+                        element: TestModel
+                    })
+                };
+            }
+        }
+
+        const parent = new TestModel({
+            name: "parent",
+            children: {
+                a: new TestModel({name: "a"}),
+                b: new TestModel({name: "b"})
+            }
+        });
+
+        const a = parent.get("children").a as TestModel;
+        const b = parent.get("children").b as TestModel;
+
+        const aParent = a.findParentInstance(TestModel);
+        const bParent = b.findParentInstance(TestModel);
+
+        assert.ok(aParent === parent, "a parent is valid model");
+        assert.ok(bParent === parent, "b parent is valid model");
+    });
+
 });
