@@ -344,7 +344,7 @@ export class Type {
         return value;
     }
 
-    clone(value, stack?: EqualStack): any {
+    clone(value, stack?: EqualStack, parentModel?: any): any {
         return this.toJSON( value, stack );
     }
 

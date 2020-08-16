@@ -458,7 +458,7 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
             let value = this.row[ key ];
 
             if ( value != null ) {
-                value = description.clone( value, stack ); 
+                value = description.clone( value, stack, clone ); 
             }
 
             cloneData[ key ] = value;

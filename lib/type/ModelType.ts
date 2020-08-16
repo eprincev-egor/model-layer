@@ -113,8 +113,10 @@ export class ModelType extends Type {
         return model.toJSON(stack);
     }
 
-    clone(model, stack) {
-        return model.clone(stack);
+    clone(model, stack, parentModel) {
+        const modelClone = model.clone(stack);
+        modelClone.parent = parentModel;
+        return modelClone;
     }
 
     equal(selfModel, otherModel, stack) {

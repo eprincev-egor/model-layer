@@ -484,4 +484,42 @@ describe("ModelType", () => {
         });
     });
 
+    it("save parent reference after clone", () => {
+        
+        class User extends Model<User> {
+            structure() {
+                return {
+                    name: Types.String
+                };
+            }
+        }
+
+        class TestModel extends Model<TestModel> {
+            structure() {
+                return {
+                    a: User,
+                    b: User
+                };
+            }
+        }
+
+        const user = new User({
+            name: "Jack"
+        });
+        const test = new TestModel({
+            a: user,
+            b: user
+        });
+
+        const testClone = test.clone();
+        const cloneUserA = testClone.get("a");
+        const cloneUserB = testClone.get("b");
+
+        const cloneUserAParent = cloneUserA.findParentInstance(TestModel);
+        const cloneUserBParent = cloneUserB.findParentInstance(TestModel);
+
+        assert.ok(cloneUserAParent === testClone, "valid clone parent A");
+        assert.ok(cloneUserBParent === testClone, "valid clone parent B");
+    });
+
 });
