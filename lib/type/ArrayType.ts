@@ -176,9 +176,9 @@ export class ArrayType extends Type {
         );
     }
 
-    clone(value, stack) {
+    clone(value, stack, parentModel) {
         return value.map((item) => 
-            this.element.clone( item, stack )
+            this.element.clone( item, stack, parentModel )
         );
     }
 

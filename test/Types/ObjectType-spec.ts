@@ -705,4 +705,36 @@ describe("ObjectType", () => {
         assert.ok(bParent === parent, "b parent is valid model");
     });
 
+    it("clone object of models, check parent reference", () => {
+
+        class TestModel extends Model<TestModel> {
+            structure() {
+                return {
+                    name: Types.String,
+                    children: Types.Object({
+                        element: TestModel
+                    })
+                };
+            }
+        }
+
+        const parent = new TestModel({
+            name: "parent",
+            children: {
+                a: new TestModel({name: "a"}),
+                b: new TestModel({name: "b"})
+            }
+        });
+        const parentClone = parent.clone();
+
+        const aClone = parentClone.get("children").a as TestModel;
+        const bClone = parentClone.get("children").b as TestModel;
+
+        const aCloneParent = aClone.findParentInstance(TestModel);
+        const bCloneParent = bClone.findParentInstance(TestModel);
+
+        assert.ok(aCloneParent === parentClone, "a clone parent is valid model");
+        assert.ok(bCloneParent === parentClone, "b clone parent is valid model");
+    });
+
 });

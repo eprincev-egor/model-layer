@@ -143,13 +143,13 @@ export class ObjectType extends Type {
         return json;
     }
 
-    clone(value, stack) {
+    clone(value, stack, parentModel) {
         const obj = value;
         const json = {};
 
         for (const key in obj) {
             const objValue = obj[ key ];
-            json[ key ] = this.element.clone( objValue, stack );
+            json[ key ] = this.element.clone( objValue, stack, parentModel );
         }
 
         return json;
