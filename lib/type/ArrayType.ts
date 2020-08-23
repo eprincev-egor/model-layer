@@ -10,12 +10,12 @@ import {
 } from "../errors";
 
 export interface IArrayTypeParams extends ITypeParams {
-    sort?: boolean | ((a, b) => number);
+    sort?: boolean | ((a: any, b: any) => number);
     unique?: boolean;
     emptyAsNull?: boolean;
     nullAsEmpty?: boolean;
     element?: any;
-    prepare?: (value: any, key: string, model) => Array<this["element"]>;
+    prepare?: (value: any, key: string, model: any) => Array<this["element"]>;
     validate?: 
         ((value: Array<this["element"]>, key: string) => boolean) |
         RegExp
@@ -35,14 +35,14 @@ export interface IArrayType<T extends IType> {
 }
 export class ArrayType extends Type {
 
-    static prepareDescription(description, key) {
+    static prepareDescription(description: any, key: string) {
         if ( description.type === "array" ) {
             // prepare element description
             description.element = Type.create( description.element || "any", key );
         }
     }
 
-    sort: boolean | ((a, b) => number);
+    sort: boolean | ((a: any, b: any) => number);
     unique: boolean;
     emptyAsNull: boolean;
     nullAsEmpty: boolean;
@@ -69,10 +69,10 @@ export class ArrayType extends Type {
         this.element = element;
     }
 
-    prepare(originalValue, key, parentModel) {
+    prepare(originalValue: any, key: string, parentModel: any) {
         if ( originalValue == null ) {
             if ( this.nullAsEmpty ) {
-                const emptyArr = [];
+                const emptyArr: any[] = [];
                 Object.freeze(emptyArr);
     
                 return emptyArr;
@@ -130,7 +130,7 @@ export class ArrayType extends Type {
         return value;
     }
 
-    validate(value, key) {
+    validate(value: any, key: string) {
         const isValid = super.validate(value, key);
         if ( !isValid ) {
             return false;
@@ -138,7 +138,7 @@ export class ArrayType extends Type {
 
 
         if ( value && this.unique ) {
-            value.forEach((element, index) => {
+            value.forEach((element: any, index: number) => {
                 if ( element == null ) {
                     return;
                 }
@@ -170,19 +170,19 @@ export class ArrayType extends Type {
         return true;
     }
 
-    toJSON(value, stack) {
-        return value.map((item) => 
+    toJSON(value: any, stack: any) {
+        return value.map((item: any) => 
             this.element.toJSON( item, [...stack] )
         );
     }
 
-    clone(value, stack, parentModel) {
-        return value.map((item) => 
+    clone(value: any, stack: any, parentModel: any) {
+        return value.map((item: any) => 
             this.element.clone( item, stack, parentModel )
         );
     }
 
-    equal(selfArr, otherArr, stack) {
+    equal(selfArr: any, otherArr: any, stack: any) {
         if ( selfArr == null ) {
             return otherArr === null;
         }

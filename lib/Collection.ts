@@ -26,16 +26,16 @@ export abstract class Collection<
     ChildCollection extends Collection<any>,
     TModel extends Model<any> = InstanceType< ReturnType< ChildCollection["Model"] > >
 > extends EventEmitter {
-    TModel: TModel;
+    TModel!: TModel;
     models: TModel[];
     length: number;
     
-    TInput: this | Array< TModel["TInput"] >;
-    TOutput: this;
-    TJson: Array< TModel["TJson"] >;
+    TInput!: this | Array< TModel["TInput"] >;
+    TOutput!: this;
+    TJson!: Array< TModel["TJson"] >;
 
     // this.Model();
-    private ModelConstructor: new (...args: any) => TModel;
+    private ModelConstructor!: new (...args: any) => TModel;
 
 
     constructor(rows?: Array< TModel["TInput"] >) {
@@ -65,7 +65,7 @@ export abstract class Collection<
 
     abstract Model(): new (...args: any) => TModel;
 
-    at(index: number, rowOrModel?: TModel["TInput"]): TModel {
+    at(index: number, rowOrModel?: TModel["TInput"]): TModel | undefined {
         // set
         if ( rowOrModel ) {
             const removedModel = this.models[ index ];
@@ -158,7 +158,7 @@ export abstract class Collection<
             return;
         }
 
-        let inputModels = [];
+        let inputModels: any[] = [];
         for (let i = 0, n = models.length; i < n; i++) {
             const modelOrArr = models[i];
 
@@ -197,53 +197,53 @@ export abstract class Collection<
 
     forEach(
         iteration: (model: TModel, index: number, models: TModel[]) => void, 
-        context?
+        context?: any
     ): void {
         this.models.forEach(iteration, context || this);
     }
 
     each(
         iteration: (model: TModel, index: number, models: TModel[]) => void, 
-        context?
+        context?: any
     ): void {
         this.models.forEach(iteration, context || this);
     }
 
     find(
         iteration: (model: TModel, index: number, models: TModel[]) => boolean, 
-        context?
-    ): TModel {
+        context?: any
+    ): TModel | undefined {
         return this.models.find(iteration, context || this);
     }
 
     findIndex(
         iteration: (model: TModel, index: number, models: TModel[]) => boolean, 
-        context?
+        context?: any
     ): number {
         return this.models.findIndex(iteration, context || this);
     }
 
     filter(
         iteration: (model: TModel, index: number, models: TModel[]) => boolean, 
-        context?
+        context?: any
     ): TModel[] {
         return this.models.filter(iteration, context || this);
     }
 
     map<T>(
         iteration: (model: TModel, index: number, models: TModel[]) => T, 
-        context?
+        context?: any
     ): T[] {
         return this.models.map(iteration, context || this);
     }
 
     flatMap<TArr extends any[]>(
         iteration: (model: TModel, index: number, models: TModel[]) => TArr, 
-        context?
+        context?: any
     ): Array<TArr[0]> {
         const result = this.models.map(iteration, context || this);
             
-        let output = [];
+        let output: any[] = [];
         for (let i = 0, n = result.length; i < n; i++) {
             const elem = result[ i ];
 
@@ -262,26 +262,28 @@ export abstract class Collection<
         iteration: (total: T, nextModel: TModel) => T,
         initialValue?: T
     ): T {
-        return this.models.reduce(iteration, initialValue);
+        const reduced = (this.models as any).reduce(iteration, initialValue);
+        return reduced;
     }
 
     reduceRight<T>(
         iteration: (total: T, nextModel: TModel) => T,
         initialValue?: T
     ): T {
-        return this.models.reduceRight(iteration, initialValue);
+        const reduced = (this.models as any).reduceRight(iteration, initialValue);
+        return reduced.reduceRight(iteration, initialValue);
     }
 
     every(
         iteration: (model: TModel, index: number, models: TModel[]) => boolean, 
-        context?
+        context?: any
     ): boolean {
         return this.models.every(iteration, context || this);
     }
 
     some(
         iteration: (model: TModel, index: number, models: TModel[]) => boolean, 
-        context?
+        context?: any
     ): boolean {
         return this.models.some(iteration, context || this);
     }
@@ -311,30 +313,36 @@ export abstract class Collection<
         return this.models.includes(searchElement, fromIndex);
     }
 
-    pop(): TModel {
+    pop(): TModel | undefined {
         const model = this.models.pop();
         this.length = this.models.length;
         
-        const removeEvent: IRemoveEvent<this, TModel> = {
-            type: "remove",
-            collection: this,
-            model
-        };
-        this.emit("remove", removeEvent);
+        if ( model ) {
+            const removeEvent: IRemoveEvent<this, TModel> = {
+                type: "remove",
+                collection: this,
+                model
+            };
+            this.emit("remove", removeEvent);
+        }
+        
 
         return model;
     }
 
-    shift(): TModel {
+    shift(): TModel | undefined {
         const model = this.models.shift();
         this.length = this.models.length;
 
-        const removeEvent: IRemoveEvent<this, TModel> = {
-            type: "remove",
-            collection: this,
-            model
-        };
-        this.emit("remove", removeEvent);
+        if ( model ) {
+            const removeEvent: IRemoveEvent<this, TModel> = {
+                type: "remove",
+                collection: this,
+                model
+            };
+            this.emit("remove", removeEvent);
+        }
+        
 
         return model;
     }
@@ -394,7 +402,7 @@ export abstract class Collection<
             else {
                 const keys = [firstKey].concat( otherKeys ) as Array<keyof TModel["row"]>;
 
-                this.models.sort((modelA, modelB) => {
+                this.models.sort((modelA: any, modelB: any) => {
 
                     for (let i = 0, n = keys.length; i < n; i++) {
                         const key = keys[i] as string;
@@ -410,6 +418,8 @@ export abstract class Collection<
                             return -1;
                         }
                     }
+
+                    return 0;
                 });
             }
             
@@ -655,7 +665,7 @@ export abstract class Collection<
         }
     }
 
-    get(id: number | string): TModel {
+    get(id: number | string): TModel | undefined {
         return this.find((model) => 
             model.primaryValue === id
         );
@@ -689,7 +699,7 @@ export abstract class Collection<
 
 
         for (let i = 0, n = this.length; i < n; i++) {
-            const selfModel = this.at(i);
+            const selfModel = this.at(i) as any;
             const otherModel = otherCollection instanceof Collection ?
                 otherCollection.at(i) :
                 otherCollection[i];
@@ -704,9 +714,9 @@ export abstract class Collection<
         return true;
     }
 
-    on(eventName: "add", handler: ((event: IAddEvent<this, TModel>) => void));
-    on(eventName: "remove", handler: ((event: IRemoveEvent<this, TModel>) => void));
-    on(eventName: "add" | "remove", handler) {
+    on(eventName: "add", handler: ((event: IAddEvent<this, TModel>) => void)): any;
+    on(eventName: "remove", handler: ((event: IRemoveEvent<this, TModel>) => void)): any;
+    on(eventName: "add" | "remove", handler: any): any {
         super.on(eventName, handler);
     }
 }

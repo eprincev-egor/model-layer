@@ -1,7 +1,7 @@
 
 export default class Walker {
-    private exited: boolean;
-    private continued: boolean;
+    private exited: boolean = false;
+    private continued: boolean = false;
 
     exit(): void {
         this.exited = true;

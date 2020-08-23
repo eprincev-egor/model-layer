@@ -6,10 +6,10 @@ import {BaseError} from "./BaseError";
 export class CollectionShouldHaveModelError extends BaseError<{
     className: string
 }> {
-    getMessage({className}) {
+    getMessage(data: {className: string}) {
         return {
-            ru: `необходимо объявить метод: ${ className }.Model()`,
-            en: `${ className }.Model() is not declared`
+            ru: `необходимо объявить метод: ${ data.className }.Model()`,
+            en: `${ data.className }.Model() is not declared`
         };
     }
 }
@@ -19,10 +19,10 @@ export class WrongModelConstructorError extends BaseError<{
     invalid: string;
     expected: string;
 }> {
-    getMessage({collection, invalid, expected}) {
+    getMessage(data: {collection: any, invalid: any, expected: any}) {
         return {
-            ru: `${collection}: ожидается модель класса: ${ expected }, но передана модель: ${ invalid }`,
-            en: `${collection}: expected model constructor ${ expected }, but have ${ invalid }`
+            ru: `${data.collection}: ожидается модель класса: ${ data.expected }, но передана модель: ${ data.invalid }`,
+            en: `${data.collection}: expected model constructor ${ data.expected }, but have ${ data.invalid }`
         };
     }
 }
@@ -31,10 +31,10 @@ export class InvalidModelRowError extends BaseError<{
     invalidValue: string;
     model: string;
 }> {
-    getMessage({invalidValue, model}) {
+    getMessage(data: {invalidValue: any, model: any}) {
         return {
-            ru: `некорректные данные ${invalidValue} для моделей ${model}`,
-            en: `invalid row ${invalidValue} for model ${model}`
+            ru: `некорректные данные ${data.invalidValue} для моделей ${data.model}`,
+            en: `invalid row ${data.invalidValue} for model ${data.model}`
         };
     }
 }
@@ -42,10 +42,10 @@ export class InvalidModelRowError extends BaseError<{
 export class InvalidSortParamsError extends BaseError<{
     invalidValue: string;
 }> {
-    getMessage({invalidValue}) {
+    getMessage(data: {invalidValue: any}) {
         return {
-            ru: `некорректное поле или функция сравнения ${invalidValue}`,
-            en: `invalid compareFunction or key: ${ invalidValue }`
+            ru: `некорректное поле или функция сравнения ${data.invalidValue}`,
+            en: `invalid compareFunction or key: ${ data.invalidValue }`
         };
     }
 }

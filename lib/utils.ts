@@ -1,6 +1,6 @@
 
 
-export function isObject(value): boolean {
+export function isObject(value: any): boolean {
     return (
         // not null
         value &&
@@ -69,7 +69,7 @@ export const eol = {
         return this.eol;
     },
 
-    define(os?) {
+    define(os?: string) {
         // https://github.com/ryanve/eol/blob/gh-pages/eol.js
         let isWindows = (
             typeof process !== "undefined" && 
@@ -86,10 +86,10 @@ export const eol = {
         
 
         if ( isWindows ) {
-            this.eol = "\r\n";
+            (this as any).eol = "\r\n";
         }
         else {
-            this.eol = "\n";
+            (this as any).eol = "\n";
         }
     }
 };

@@ -5,7 +5,7 @@ import {InvalidDateError} from "../errors";
 
 // tslint:disable-next-line: no-empty-interface
 export interface IDateTypeParams extends ITypeParams {
-    prepare?: (value: any, key: string, model) => Date;
+    prepare?: (value: any, key: string, model: any) => Date;
     validate?: 
         ((value: Date, key: string) => boolean) |
         RegExp
@@ -22,7 +22,7 @@ export interface IDateType extends IType {
 }
 
 export class DateType extends Type {
-    prepare(originalValue, key) {
+    prepare(originalValue: any, key: string) {
         if ( originalValue == null ) {
             return null;
         }
@@ -57,7 +57,7 @@ export class DateType extends Type {
         return value;
     }
 
-    equal(selfValue, anotherValue) {
+    equal(selfValue: any, anotherValue: any) {
         if ( selfValue == null ) {
             return anotherValue === null;
         }
@@ -69,7 +69,7 @@ export class DateType extends Type {
         return +selfValue === +anotherValue;
     }
 
-    toJSON(date) {
+    toJSON(date: Date) {
         return date.toISOString();
     }
 }

@@ -20,10 +20,10 @@ export interface ICustomClassTypeParams extends ITypeParams {
     equal?: (
         selfValue: InstanceType<this["constructor"]>, 
         otherValue: InstanceType<this["constructor"]>, 
-        stack
+        stack: any
     ) => boolean;
-    clone?: (value: InstanceType<this["constructor"]>, stack) => InstanceType<this["constructor"]>;
-    toJSON?: (value: InstanceType<this["constructor"]>, stack) => any;
+    clone?: (value: InstanceType<this["constructor"]>, stack: any) => InstanceType<this["constructor"]>;
+    toJSON?: (value: InstanceType<this["constructor"]>, stack: any) => any;
 }
 
 export interface ICustomClassType<T extends (new(...args: any[]) => any)> extends IType {
@@ -47,7 +47,7 @@ export class CustomClassType extends Type {
         this.CustomClass = params.constructor;
     }
     
-    prepare(value, key) {
+    prepare(value: any, key: string) {
         if ( value == null ) {
             return null;
         }
@@ -77,7 +77,7 @@ export class CustomClassType extends Type {
         throw new NoToJSONMethodError({className: this.CustomClass.name});
     }
 
-    clone(model, stack) {
+    clone(model: any, stack: any) {
         throw new NoCloneMethodError({className: this.CustomClass.name});
     }
 

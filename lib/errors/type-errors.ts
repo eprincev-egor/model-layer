@@ -12,28 +12,28 @@ export class CircularStructureToJSONError extends BaseError {
 }
 
 export class NoToJSONMethodError extends BaseError {
-    getMessage({className}) {
+    getMessage(data: {className: string}) {
         return {
-            ru: `невозможно преобразовать [object: ${className}] в json, объявите метод toJSON для этого поля`,
-            en: `cannot convert [object: ${className}] to json, need toJSON method for this field`
+            ru: `невозможно преобразовать [object: ${data.className}] в json, объявите метод toJSON для этого поля`,
+            en: `cannot convert [object: ${data.className}] to json, need toJSON method for this field`
         };
     }
 }
 
 export class NoCloneMethodError extends BaseError {
-    getMessage({className}) {
+    getMessage(data: {className: string}) {
         return {
-            ru: `невозможно копировать [object: ${className}], объявите метод clone для этого поля`,
-            en: `cannot clone [object: ${className}], need clone method for this field`
+            ru: `невозможно копировать [object: ${data.className}], объявите метод clone для этого поля`,
+            en: `cannot clone [object: ${data.className}], need clone method for this field`
         };
     }
 }
 
 export class NoEqualMethodError extends BaseError<{className: string}> {
-    getMessage({className}) {
+    getMessage(data: {className: string}) {
         return {
-            ru: `невозможно сравнить [object: ${className}], объявите метод equal для этого поля`,
-            en: `cannot equal [object: ${className}], need equal method for this field`
+            ru: `невозможно сравнить [object: ${data.className}], объявите метод equal для этого поля`,
+            en: `cannot equal [object: ${data.className}], need equal method for this field`
         };
     }
 }
@@ -43,10 +43,10 @@ export class InvalidValueForCustomClassError extends BaseError<{
     key: string;
     invalidValue: string;
 }> {
-    getMessage({className, key, invalidValue}) {
+    getMessage(data: {className: string, key: string, invalidValue: any}) {
         return {
-            ru: `некорректное значение для класса ${ className }, поле ${key}: ${invalidValue}`,
-            en: `invalid value for ${ className }, field ${key}: ${invalidValue}`
+            ru: `некорректное значение для класса ${ data.className }, поле ${data.key}: ${data.invalidValue}`,
+            en: `invalid value for ${ data.className }, field ${data.key}: ${data.invalidValue}`
         };
     }
 }
@@ -55,10 +55,10 @@ export class UnknownTypeError extends BaseError<{
     key: string;
     type: string;
 }> {
-    getMessage({key, type}) {
+    getMessage(data: {key: string, type: string}) {
         return {
-            ru: `поле ${key}, неизвестный тип: ${type}`,
-            en: `field ${key}, unknown type: ${type}`
+            ru: `поле ${data.key}, неизвестный тип: ${data.type}`,
+            en: `field ${data.key}, unknown type: ${data.type}`
         };
     }
 }
@@ -66,10 +66,10 @@ export class UnknownTypeError extends BaseError<{
 export class ReservedWordForPrimaryKeyError extends BaseError<{
     key: string;
 }> {
-    getMessage({key, type}) {
+    getMessage(data: {key: string, type: string}) {
         return {
-            ru: `поле ${key} не может быть первичным ключом, потому что это слово занято`,
-            en: `field ${key} cannot be primary key, because it reserved word`
+            ru: `поле ${data.key} не может быть первичным ключом, потому что это слово занято`,
+            en: `field ${data.key} cannot be primary key, because it reserved word`
         };
     }
 }
@@ -77,10 +77,10 @@ export class ReservedWordForPrimaryKeyError extends BaseError<{
 export class InvalidValidationError extends BaseError<{
     invalidValue: string;
 }> {
-    getMessage({invalidValue}) {
+    getMessage(data: {invalidValue: any}) {
         return {
-            ru: `validate должен быть функцией или регулярным выражением: ${invalidValue}`,
-            en: `validate should be function or RegExp: ${invalidValue}`
+            ru: `validate должен быть функцией или регулярным выражением: ${data.invalidValue}`,
+            en: `validate should be function or RegExp: ${data.invalidValue}`
         };
     }
 }
@@ -88,10 +88,10 @@ export class InvalidValidationError extends BaseError<{
 export class InvalidKeyValidationError extends BaseError<{
     invalidValue: string;
 }> {
-    getMessage({invalidValue}) {
+    getMessage(data: {invalidValue: any}) {
         return {
-            ru: `key validation должен быть функцией или регулярным выражением: ${invalidValue}`,
-            en: `key validation should be function or RegExp: ${invalidValue}`
+            ru: `key validation должен быть функцией или регулярным выражением: ${data.invalidValue}`,
+            en: `key validation should be function or RegExp: ${data.invalidValue}`
         };
     }
 }
@@ -120,10 +120,10 @@ export class InvalidNumberError extends BaseError<{
     key: string;
     invalidValue: string;
 }> {
-    getMessage({key, invalidValue}) {
+    getMessage(data: {key: string, invalidValue: any}) {
         return {
-            ru: `некорректное число для поля ${key}: ${invalidValue}`,
-            en: `invalid number for ${key}: ${invalidValue}`
+            ru: `некорректное число для поля ${data.key}: ${data.invalidValue}`,
+            en: `invalid number for ${data.key}: ${data.invalidValue}`
         };
     }
 }
@@ -132,10 +132,10 @@ export class InvalidRoundError extends BaseError<{
     roundType: string;
     invalidValue: string;
 }> {
-    getMessage({roundType, invalidValue}) {
+    getMessage(data: {roundType: string, invalidValue: any}) {
         return {
-            ru: `некорректное значение для параметра ${roundType}: ${invalidValue}`,
-            en: `invalid ${roundType}: ${invalidValue}`
+            ru: `некорректное значение для параметра ${data.roundType}: ${data.invalidValue}`,
+            en: `invalid ${data.roundType}: ${data.invalidValue}`
         };
     }
 }
@@ -154,10 +154,10 @@ export class InvalidBooleanError extends BaseError<{
     key: string;
     invalidValue: string;
 }> {
-    getMessage({key, invalidValue}) {
+    getMessage(data: {key: string, invalidValue: any}) {
         return {
-            ru: `некорректный boolean для поля ${key}: ${invalidValue}`,
-            en: `invalid boolean for ${key}: ${invalidValue}`
+            ru: `некорректный boolean для поля ${data.key}: ${data.invalidValue}`,
+            en: `invalid boolean for ${data.key}: ${data.invalidValue}`
         };
     }
 }
@@ -186,10 +186,10 @@ export class InvalidStringError extends BaseError<{
     key: string;
     invalidValue: string;
 }> {
-    getMessage({key, invalidValue}) {
+    getMessage(data: {key: string, invalidValue: any}) {
         return {
-            ru: `некорректная строка для поля ${key}: ${invalidValue}`,
-            en: `invalid string for ${key}: ${invalidValue}`
+            ru: `некорректная строка для поля ${data.key}: ${data.invalidValue}`,
+            en: `invalid string for ${data.key}: ${data.invalidValue}`
         };
     }
 }
@@ -198,10 +198,10 @@ export class InvalidDateError extends BaseError<{
     key: string;
     invalidValue: string;
 }> {
-    getMessage({key, invalidValue}) {
+    getMessage(data: {key: string, invalidValue: any}) {
         return {
-            ru: `некорректная дата для поля ${key}: ${invalidValue}`,
-            en: `invalid date for ${key}: ${invalidValue}`
+            ru: `некорректная дата для поля ${data.key}: ${data.invalidValue}`,
+            en: `invalid date for ${data.key}: ${data.invalidValue}`
         };
     }
 }
@@ -211,10 +211,10 @@ export class InvalidCollectionError extends BaseError<{
     className: string;
     invalidValue: string;
 }> {
-    getMessage({className, key, invalidValue}) {
+    getMessage(data: {className: string, key: string, invalidValue: any}) {
         return {
-            ru: `некорректная коллекция ${className} для поля ${key}: ${invalidValue}`,
-            en: `invalid collection ${className} for ${key}: ${invalidValue}`
+            ru: `некорректная коллекция ${data.className} для поля ${data.key}: ${data.invalidValue}`,
+            en: `invalid collection ${data.className} for ${data.key}: ${data.invalidValue}`
         };
     }
 }
@@ -225,14 +225,14 @@ export class InvalidModelError extends BaseError<{
     invalidValue: string;
     modelError?: string;
 }> {
-    getMessage({className, key, invalidValue, modelError}) {
-        const postfix = modelError ? 
-            `,${eol} ${modelError}` : 
+    getMessage(data: {className: string, key: string, invalidValue: any, modelError: any}) {
+        const postfix = data.modelError ? 
+            `,${eol} ${data.modelError}` : 
             "";
         
         return {
-            ru: `некорректная модель ${className} для поля ${key}: ${invalidValue}${ postfix }`,
-            en: `invalid model ${className} for ${key}: ${invalidValue}${ postfix }`
+            ru: `некорректная модель ${data.className} для поля ${data.key}: ${data.invalidValue}${ postfix }`,
+            en: `invalid model ${data.className} for ${data.key}: ${data.invalidValue}${ postfix }`
         };
     }
 }
@@ -242,10 +242,10 @@ export class InvalidOrValueError extends BaseError<{
     typesNames: string[];
     invalidValue: string;
 }> {
-    getMessage({key, typesNames = [], invalidValue}) {
+    getMessage(data: {key: string, typesNames: string[], invalidValue: any}) {
         return {
-            ru: `некорректное значение для типов: ${typesNames.join(" or ")}, для поля ${key}: ${invalidValue}`,
-            en: `invalid value for types: ${typesNames.join(" or ")}, for ${key}: ${invalidValue}`
+            ru: `некорректное значение для типов: ${data.typesNames.join(" or ")}, для поля ${data.key}: ${data.invalidValue}`,
+            en: `invalid value for types: ${data.typesNames.join(" or ")}, for ${data.key}: ${data.invalidValue}`
         };
     }
 }
@@ -274,10 +274,10 @@ export class InvalidOrTypeError extends BaseError<{
     index: number;
     invalidValue: string;
 }> {
-    getMessage({index, invalidValue}) {
+    getMessage(data: {index: number, invalidValue: any}) {
         return {
-            ru: `некорректное значение для типа or[${ index }]: ${ invalidValue }`,
-            en: `invalid type description or[${ index }]: ${ invalidValue }`
+            ru: `некорректное значение для типа or[${ data.index }]: ${ data.invalidValue }`,
+            en: `invalid type description or[${ data.index }]: ${ data.invalidValue }`
         };
     }
 }
@@ -297,10 +297,10 @@ export class InvalidObjectError extends BaseError<{
     key: string;
     invalidValue: string;
 }> {
-    getMessage({key, elementType, invalidValue}) {
+    getMessage(data: {key: string, elementType: string, invalidValue: any}) {
         return {
-            ru: `некорректный объект {*: ${elementType}} для поля ${key}: ${invalidValue}`,
-            en: `invalid object {*: ${elementType}} for ${key}: ${invalidValue}`
+            ru: `некорректный объект {*: ${data.elementType}} для поля ${data.key}: ${data.invalidValue}`,
+            en: `invalid object {*: ${data.elementType}} for ${data.key}: ${data.invalidValue}`
         };
     }
 }
@@ -312,10 +312,10 @@ export class InvalidObjectElementError extends BaseError<{
     invalidValue: string;
     childError: string;
 }> {
-    getMessage({modelKey, objectKey, elementType, invalidValue, childError}) {
+    getMessage(data: {modelKey: string, objectKey: string, elementType: string, invalidValue: any, childError: any}) {
         return {
-            ru: `некорректное значение для типа ${elementType} в свойстве объекта object[${ objectKey }] для поля модели ${modelKey}: ${invalidValue},${eol} ${childError}`,
-            en: `invalid value for type ${elementType} in property object[${ objectKey }] for model field ${modelKey}: ${invalidValue},${eol} ${childError}`
+            ru: `некорректное значение для типа ${data.elementType} в свойстве объекта object[${ data.objectKey }] для поля модели ${data.modelKey}: ${data.invalidValue},${eol} ${data.childError}`,
+            en: `invalid value for type ${data.elementType} in property object[${ data.objectKey }] for model field ${data.modelKey}: ${data.invalidValue},${eol} ${data.childError}`
         };
     }
 }
@@ -335,10 +335,10 @@ export class InvalidArrayError extends BaseError<{
     key: string;
     invalidValue: string;
 }> {
-    getMessage({elementType, key, invalidValue}) {
+    getMessage(data: {elementType: string, key: string, invalidValue: any}) {
         return {
-            ru: `некорректный массив ${elementType}[] для поля ${key}: ${invalidValue}`,
-            en: `invalid array ${elementType}[] for ${key}: ${invalidValue}`
+            ru: `некорректный массив ${data.elementType}[] для поля ${data.key}: ${data.invalidValue}`,
+            en: `invalid array ${data.elementType}[] for ${data.key}: ${data.invalidValue}`
         };
     }
 }
@@ -350,10 +350,10 @@ export class InvalidArrayElementError extends BaseError<{
     invalidValue: string;
     childError: string;
 }> {
-    getMessage({modelKey, index, elementType, invalidValue, childError}) {
+    getMessage(data: {modelKey: string, index: number, elementType: string, invalidValue: any, childError: any}) {
         return {
-            ru: `некорректно значение для элемента массива ${elementType}[] по индексу ${index} для поля модели ${modelKey}: ${invalidValue},${eol} ${childError}`,
-            en: `invalid element for array ${elementType}[] at ${index} for model field ${modelKey}: ${invalidValue},${eol} ${childError}`
+            ru: `некорректно значение для элемента массива ${data.elementType}[] по индексу ${data.index} для поля модели ${data.modelKey}: ${data.invalidValue},${eol} ${data.childError}`,
+            en: `invalid element for array ${data.elementType}[] at ${data.index} for model field ${data.modelKey}: ${data.invalidValue},${eol} ${data.childError}`
         };
     }
 }
@@ -363,10 +363,10 @@ export class DuplicateValueForUniqueArrayError extends BaseError<{
     invalidArr: string;
     duplicateValue: string;
 }> {    
-    getMessage({key, duplicateValue, invalidArr}) {
+    getMessage(data: {key: string, duplicateValue: any, invalidArr: any}) {
         return {
-            ru: `${key} не уникальный массив, дублируется значение ${duplicateValue} внутри массива: ${ invalidArr }`,
-            en: `${key} is not unique, duplicated value ${duplicateValue} inside arr: ${ invalidArr }`
+            ru: `${data.key} не уникальный массив, дублируется значение ${data.duplicateValue} внутри массива: ${ data.invalidArr }`,
+            en: `${data.key} is not unique, duplicated value ${data.duplicateValue} inside arr: ${ data.invalidArr }`
         };
     }
 }

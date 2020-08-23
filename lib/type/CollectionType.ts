@@ -26,7 +26,7 @@ export function MakeCollectionType<TCollectionConstructor>(
 MakeCollectionType.isTypeHelper = true;
 
 export class CollectionType extends Type {
-    static prepareDescription(description) {
+    static prepareDescription(description: any) {
         
         const isCollection = (
             typeof description.type === "function" &&
@@ -48,11 +48,11 @@ export class CollectionType extends Type {
     constructor(params: ICollectionTypeParams) {
         super(params);
 
-        this.nullAsEmpty = params.nullAsEmpty;
+        this.nullAsEmpty = !!params.nullAsEmpty;
         this.Collection = params.Collection;
     }
 
-    prepare(value, key) {
+    prepare(value: any, key: any) {
         if ( value == null ) {
             if ( this.nullAsEmpty ) {
                 value = [];
@@ -86,7 +86,7 @@ export class CollectionType extends Type {
         return "collection " + this.Collection.name;
     }
 
-    toJSON(collection, stack) {
+    toJSON(collection: any, stack: any) {
         if ( stack.includes(collection) ) {
             throw new CircularStructureToJSONError({});
         }
@@ -95,11 +95,11 @@ export class CollectionType extends Type {
         return collection.toJSON(stack);
     }
 
-    clone(collection, stack) {
+    clone(collection: any, stack: any) {
         return collection.clone(stack);
     }
 
-    equal(selfCollection, otherCollection, stack) {
+    equal(selfCollection: any, otherCollection: any, stack: any) {
         if ( selfCollection == null ) {
             return otherCollection === null;
         }

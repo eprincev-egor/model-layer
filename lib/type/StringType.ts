@@ -14,7 +14,7 @@ export interface IStringTypeParams extends ITypeParams {
     trim?: boolean;
     lower?: boolean;
     upper?: boolean;
-    prepare?: (value: any, key: string, model) => string;
+    prepare?: (value: any, key: string, model: any) => string;
     validate?: 
         ((value: string, key: string) => boolean) |
         RegExp
@@ -63,7 +63,7 @@ export class StringType extends Type {
         }
     }
 
-    prepare(value, key) {
+    prepare(value: any, key: string) {
         if ( value == null ) {
             if ( this.nullAsEmpty ) {
                 return "";

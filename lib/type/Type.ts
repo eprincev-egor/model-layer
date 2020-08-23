@@ -26,7 +26,9 @@ interface IObjectWithAnyKey {
 
 // output
 type outputValue<T extends any> = (
-    TInstanceOrT<T>["TOutput"]
+    TInstanceOrT<T> extends {TOutput: any} ?
+        TInstanceOrT<T>["TOutput"] :
+        never
 );
 type outputData<T> = {
     readonly [key in keyof T]?: outputValue< T[key] >;
@@ -44,7 +46,9 @@ export type OutputType<T> = (
 
 // input
 type inputValue<T extends any> = (
-    TInstanceOrT<T>["TInput"]
+    TInstanceOrT<T> extends {TInput: any} ?
+        TInstanceOrT<T>["TInput"] :
+        never
 );
 
 type inputData<T> = {
@@ -63,7 +67,9 @@ export type InputType<T> = (
 
 // json
 type jsonValue<T extends any> = (
-    TInstanceOrT<T>["TJson"]
+    TInstanceOrT<T> extends {TJson: any} ?
+        TInstanceOrT<T>["TJson"] :
+        never
 );
 
 interface IJsonAnyData<T> {
@@ -86,17 +92,17 @@ export interface IType {
     TJson: any;
 }
 
-const Types = {};
+const Types: any = {};
 
 export interface ITypeParams {
     key?: ((key: string) => boolean) | RegExp;
     type?: string;
     required?: boolean;
     primary?: boolean;
-    prepare?: (value: any, key: string, model) => any;
-    toJSON?: (value: any, stack) => any;
-    clone?: (value: any, stack) => any;
-    equal?: (selfValue: any, anotherValue: any, stack) => boolean;
+    prepare?: (value: any, key: string, model: any) => any;
+    toJSON?: (value: any, stack: any) => any;
+    clone?: (value: any, stack: any) => any;
+    equal?: (selfValue: any, anotherValue: any, stack: any) => boolean;
     validate?: 
         ((value: any, key: string) => boolean) |
         RegExp
@@ -114,7 +120,7 @@ export class Type {
     }
 
     // create type by params
-    static create(description, key: string) {
+    static create(description: any, key: string) {
         
         const isTypeHelper = (
             typeof description === "function" &&
@@ -191,7 +197,7 @@ export class Type {
     }
 
     // default behavior
-    static prepareDescription(description, key: string) {
+    static prepareDescription(description: any, key: string) {
         // redefine me
         return description;
     }
@@ -199,7 +205,7 @@ export class Type {
     primary?: boolean;
     required: boolean;
     type: string;
-    const: boolean;
+    const: boolean = false;
     enum?: any[];
 
     constructor(params: ITypeParams) {
@@ -207,7 +213,7 @@ export class Type {
             this.primary = true;
         }
 
-        this.type = params.type;
+        this.type = params.type as string;
         this.required = params.required || params.primary || false;
 
         if ( Array.isArray( params.enum ) ) {
@@ -326,7 +332,7 @@ export class Type {
         return true;
     }
 
-    validate(value, key): boolean {
+    validate(value: any, key: string): boolean {
         if ( this.enum ) {
             if ( value != null ) {
                 return this.enum.includes( value );
@@ -336,15 +342,15 @@ export class Type {
         return true;
     }
 
-    prepare(value, key, model): any {
+    prepare(value: any, key: string, model: any): any {
         return value;
     }
 
-    toJSON(value, stack): any {
+    toJSON(value: any, stack: any): any {
         return value;
     }
 
-    clone(value, stack?: EqualStack, parentModel?: any): any {
+    clone(value: any, stack?: EqualStack, parentModel?: any): any {
         return this.toJSON( value, stack );
     }
 
@@ -352,7 +358,7 @@ export class Type {
         return this.type;
     }
 
-    equal(selfValue, otherValue, stack): boolean {
+    equal(selfValue: any, otherValue: any, stack: any): boolean {
         return selfValue === otherValue;
     }
 }

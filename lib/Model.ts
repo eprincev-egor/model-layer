@@ -35,27 +35,25 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
 
     static Type = Type;
 
-    TInputData: InputType< ReturnType< ChildModel["structure"] > >;
-    TInput: InputType< ReturnType< ChildModel["structure"] > > | this;
-    TOutput: this;
-    TJson: JsonType< ReturnType< ChildModel["structure"] > >;
+    TInputData!: InputType< ReturnType< ChildModel["structure"] > >;
+    TInput!: InputType< ReturnType< ChildModel["structure"] > > | this;
+    TOutput!: this;
+    TJson!: JsonType< ReturnType< ChildModel["structure"] > >;
     row: OutputType< ReturnType< ChildModel["structure"] > >;
     
     // "id"
-    primaryKey: string;
+    primaryKey?: string;
     // value of id
-    primaryValue: number | string;
+    primaryValue?: number | string;
     
-    parent: Model<any>;
+    parent?: Model<any>;
 
     // row properties
     private properties: any;
     
-    private isInit: boolean;
-
     constructor(inputData?: InputType< ReturnType< ChildModel["structure"] > >) {
         super();
-
+        
         this.prepareStructure();
 
         const defaultRow: any = {};
@@ -78,9 +76,9 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
 
         this.row = Object.freeze(defaultRow);
 
-        this.isInit = true; // do not check const
+        (this as any).isInit = true; // do not check const
         this.set(inputData || {} as any);
-        delete this.isInit;
+        delete (this as any).isInit;
     }
 
     abstract structure(): {[key: string]: IType | (new (...args: any) => IType)};    
@@ -167,7 +165,7 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
 
             if ( oldValue !== newValue ) {
                 if ( description.const ) {
-                    if ( !this.isInit ) {
+                    if ( !(this as any).isInit ) {
                         throw new ConstValueError({
                             key
                         });
@@ -208,7 +206,7 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
         
         if ( this.primaryKey ) {
             const primaryValue = this.row[ this.primaryKey ];
-            this[ this.primaryKey ] = primaryValue;
+            (this as any)[ this.primaryKey ] = primaryValue;
             this.primaryValue = primaryValue;
         }
 
@@ -262,7 +260,7 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
 
     walk(
         iteration: (model: Model<any>, walker: Walker) => void, 
-        stack?
+        stack?: any
     ) {
         stack = stack || [];
 
@@ -326,8 +324,8 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
 
     findChild(
         iteration: (model: Model<any>) => boolean
-    ): Model<any> {
-        let child;
+    ): Model<any> | undefined {
+        let child: Model<any> | undefined;
 
         this.walk((model, walker) => {
             const result = iteration( model );
@@ -368,8 +366,8 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
 
     findParent(
         iteration: (model: Model<any>) => boolean, 
-        stack?
-    ): Model<any> {
+        stack?: any
+    ): Model<any> | undefined {
         stack = stack || [];
 
         let parent = this.parent;
@@ -469,7 +467,7 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
         return clone;
     }
 
-    equal(otherModel: this | this["row"], stack?): boolean {
+    equal(otherModel: this | this["row"], stack?: any): boolean {
         stack = stack || new EqualStack();
 
         for (const key in this.row) {
@@ -537,11 +535,11 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
                 });
             }
 
-            super.on(eventName + ":" + key, listener);
+            super.on(eventName + ":" + key, listener as any);
         }
         else {
             listener = keyOrListener as any;
-            super.on(eventName, listener);
+            super.on(eventName, listener as any);
         }
 
         return this;

@@ -15,7 +15,7 @@ export interface INumberTypeParams extends ITypeParams {
     ceil?: number;
     round?: number;
     floor?: number;
-    prepare?: (value: any, key: string, model) => number;
+    prepare?: (value: any, key: string, model: any) => number;
     validate?: 
         ((value: number, key: string) => boolean) |
         RegExp
@@ -34,16 +34,16 @@ export interface INumberType extends IType {
 export class NumberType extends Type {
     nullAsZero: boolean;
     zeroAsNull: boolean;
-    ceil: number;
-    round: number;
-    floor: number;
+    ceil?: number;
+    round?: number;
+    floor?: number;
 
     constructor({
         nullAsZero = false,
         zeroAsNull = false,
-        ceil = null,
-        round = null,
-        floor = null,
+        ceil,
+        round,
+        floor,
         ...otherParams
     }: INumberTypeParams) {
         super(otherParams);
@@ -103,7 +103,7 @@ export class NumberType extends Type {
         this.floor = floor;
     }
 
-    prepare(originalValue,  key) {
+    prepare(originalValue: any,  key: string) {
         if ( originalValue == null ) {
             if ( this.nullAsZero ) {
                 return 0;
@@ -112,7 +112,7 @@ export class NumberType extends Type {
         }
     
     
-        let value = +originalValue;
+        let value: number | null = +originalValue;
     
         if ( 
             isNaN(value) ||

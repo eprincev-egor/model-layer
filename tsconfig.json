@@ -5,7 +5,8 @@
         "sourceMap": true,
         "target": "esnext",
         "module": "commonjs",
-        "esModuleInterop": true
+        "esModuleInterop": true,
+        "strict": true
     },
     "include": ["./lib/**/*.ts"]
 }
