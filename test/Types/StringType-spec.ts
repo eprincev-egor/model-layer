@@ -28,7 +28,7 @@ describe("StringType", () => {
         model.set({name: 1.1 as any});
         assert.strictEqual( model.row.name, "1.1" );
 
-        model.set({name: null});
+        model.set({name: null as any});
         assert.strictEqual( model.row.name, null );
 
         model.set({name: "nice"});
@@ -177,7 +177,7 @@ describe("StringType", () => {
         model.set({name: "word"});
         assert.strictEqual( model.row.name, "word" );
 
-        model.set({name: null});
+        model.set({name: null as any});
         assert.strictEqual( model.row.name, "" );
     });
 

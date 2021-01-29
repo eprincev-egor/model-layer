@@ -269,7 +269,7 @@ extends EventEmitter {
         initialValue?: T
     ): T {
         const reduced = (this.models as any).reduceRight(iteration, initialValue);
-        return reduced.reduceRight(iteration, initialValue);
+        return reduced;
     }
 
     every(

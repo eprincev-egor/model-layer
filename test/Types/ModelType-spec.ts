@@ -60,7 +60,7 @@ describe("ModelType", () => {
             () => {
                 const regModel = new RegistrationModel({
                     date: Date.now(),
-                    user: null
+                    user: null as any
                 });
             }, 
             (err: Error) =>
@@ -140,10 +140,10 @@ describe("ModelType", () => {
             }
         });
 
-        assert.strictEqual( +registrationModel.row.date, now );
+        assert.strictEqual( +registrationModel.row.date!, now );
         assert.ok( registrationModel.row.date instanceof Date );
 
-        const user = registrationModel.row.user;
+        const user = registrationModel.row.user!;
         assert.strictEqual( user.row.name, "Bob" );
         assert.strictEqual( user.row.age, 99 );
         assert.strictEqual( user.row.email, "x@x.x" );
@@ -512,8 +512,8 @@ describe("ModelType", () => {
         });
 
         const testClone = test.clone();
-        const cloneUserA = testClone.get("a");
-        const cloneUserB = testClone.get("b");
+        const cloneUserA = testClone.get("a")!;
+        const cloneUserB = testClone.get("b")!;
 
         const cloneUserAParent = cloneUserA.findParentInstance(TestModel);
         const cloneUserBParent = cloneUserB.findParentInstance(TestModel);

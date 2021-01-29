@@ -281,7 +281,7 @@ describe("OrType", () => {
         });
 
         assert.ok(model.row.value instanceof Date);
-        assert.strictEqual(+model.row.value, +date);
+        assert.strictEqual(+model.row.value!, +date);
 
         
         assert.deepStrictEqual(model.toJSON(), {
@@ -384,13 +384,15 @@ describe("OrType", () => {
             }]
         });
         assert.ok(json.value !== model.row.value);
-        assert.ok(json.value[0] !== model.row.value[0]);
+        assert.ok((json as any).value[0] !== (model.row as any).value[0]);
     });
 
     it("circular structure to json, or: [Model]", () => {
 
         class MyModel extends Model<MyModel> {
-            structure() {
+            structure(): {
+                model: typeof MyModel;
+            } {
                 return {
                     model: Types.Or({
                         or: [MyModel]
@@ -446,7 +448,7 @@ describe("OrType", () => {
         );
 
         // circular array
-        const arr = [];
+        const arr: any = [];
         arr[0] = arr;
         model.set({
             value: arr
@@ -584,13 +586,13 @@ describe("OrType", () => {
         circularObj4.self = circularObj2;
 
         // circular arr
-        const circularArr1 = [];
+        const circularArr1: any = [];
         circularArr1[0] = circularArr1;
 
-        const circularArr2 = [];
+        const circularArr2: any = [];
         circularArr2[0] = circularArr2;
 
-        const circularArr3 = [];
+        const circularArr3: any = [];
         circularArr3[0] = circularArr3;
         circularArr3[1] = 0;
 

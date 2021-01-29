@@ -14,7 +14,7 @@ describe("NumberType", () => {
                 };
             }
         }
-        let model: SomeModel;
+        let model!: SomeModel;
 
         model = new SomeModel();
         assert.strictEqual( model.row.age, 0 );
@@ -27,7 +27,7 @@ describe("NumberType", () => {
         model.set({age: "2" as any});
         assert.strictEqual( model.row.age, 2 );
 
-        model.set({age: null});
+        model.set({age: null as any});
         assert.strictEqual( model.row.age, null );
 
         model.set({age: "-2000.123" as any});
@@ -256,7 +256,7 @@ describe("NumberType", () => {
         model.set({money: 1});
         assert.strictEqual( model.row.money, 1 );
 
-        model.set({money: null});
+        model.set({money: null as any});
         assert.strictEqual( model.row.money, 0 );
     });
 

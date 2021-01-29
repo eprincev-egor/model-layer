@@ -29,7 +29,7 @@ describe("CustomClassType", () => {
 
         assert.ok( model.get("driver") === driver );
 
-        assert.strictEqual(model.get("driver").load(), "loaded");
+        assert.strictEqual(model.get("driver")!.load(), "loaded");
 
 
         const anyModel = model as any;

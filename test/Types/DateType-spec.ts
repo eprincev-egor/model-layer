@@ -20,34 +20,34 @@ describe("DateType", () => {
                 };
             }
         }
-        let model: SomeModel;
+        let model!: SomeModel;
 
         model = new SomeModel();
-        assert.strictEqual( +model.row.bornDate, now );
+        assert.strictEqual( +model.row.bornDate!, now );
         assert.ok( model.row.bornDate instanceof Date );
 
         model = new SomeModel({
             bornDate: nowDate
         });
-        assert.strictEqual( +model.row.bornDate, now );
+        assert.strictEqual( +model.row.bornDate!, now );
         assert.ok( model.row.bornDate instanceof Date );
         
         model.set({bornDate: now});
-        assert.strictEqual( +model.row.bornDate, now );
+        assert.strictEqual( +model.row.bornDate!, now );
         assert.ok( model.row.bornDate instanceof Date );
 
-        model.set({bornDate: null});
+        model.set({bornDate: null as any});
         assert.strictEqual( model.row.bornDate, null );
 
         model.set({bornDate: nowDate.toString()});
-        assert.strictEqual( +model.row.bornDate, now );
+        assert.strictEqual( +model.row.bornDate!, now );
         assert.ok( model.row.bornDate instanceof Date );
 
-        model.set({bornDate: null});
+        model.set({bornDate: null as any});
         assert.strictEqual( model.row.bornDate, null );
 
         model.set({bornDate: nowDate.toISOString()});
-        assert.strictEqual( +model.row.bornDate, now );
+        assert.strictEqual( +model.row.bornDate!, now );
         assert.ok( model.row.bornDate instanceof Date );
 
         assert.throws(
@@ -139,7 +139,7 @@ describe("DateType", () => {
                 err.message === "invalid date for bornDate: [0]"
         );
 
-        assert.strictEqual( +model.row.bornDate, now );
+        assert.strictEqual( +model.row.bornDate!, now );
         assert.ok( model.row.bornDate instanceof Date );
     });
 

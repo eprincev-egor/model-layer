@@ -1,5 +1,5 @@
 
-import {Model, Types} from "../../lib/index";
+import {IObjectType, IStringType, Model, Types} from "../../lib/index";
 import assert from "assert";
 import {eol} from "../../lib/utils";
 
@@ -135,7 +135,7 @@ describe("ObjectType", () => {
             map: outsideObj
         });
 
-        const map = model.get("map");
+        const map = model.get("map")!;
 
         assert.deepEqual( map, outsideObj );
 
@@ -198,7 +198,7 @@ describe("ObjectType", () => {
         model.set({words: {water: true}});
         assert.deepEqual( model.row.words, {water: true} );
 
-        model.set({words: null});
+        model.set({words: null as any});
         assert.deepEqual( model.row.words, {} );
     });
 
@@ -248,15 +248,15 @@ describe("ObjectType", () => {
         );
 
         assert.ok(
-            clone.row.tree.tree !== model.row.tree.tree
+            clone.row.tree!.tree !== model.row.tree!.tree
         );
 
         assert.ok(
-            clone.row.tree.tree.arr !== model.row.tree.tree.arr
+            clone.row.tree!.tree.arr !== model.row.tree!.tree.arr
         );
 
         assert.ok(
-            clone.row.tree.tree.arr[0] !== model.row.tree.tree.arr[0]
+            clone.row.tree!.tree.arr[0] !== model.row.tree!.tree.arr[0]
         );
     });
     
@@ -327,15 +327,15 @@ describe("ObjectType", () => {
         );
 
         assert.ok(
-            json.tree.tree !== model.row.tree.tree
+            json.tree!.tree !== model.row.tree!.tree
         );
 
         assert.ok(
-            json.tree.tree.arr !== model.row.tree.tree.arr
+            json.tree!.tree.arr !== model.row.tree!.tree.arr
         );
 
         assert.ok(
-            json.tree.tree.arr[0] !== model.row.tree.tree.arr[0]
+            json.tree!.tree.arr[0] !== model.row.tree!.tree.arr[0]
         );
     });
 
@@ -357,8 +357,8 @@ describe("ObjectType", () => {
                 b: "20" as any
             }
         });
-        assert.strictEqual( model.row.object.a, 10 );
-        assert.strictEqual( model.row.object.b, 20 );
+        assert.strictEqual( model.row.object!.a, 10 );
+        assert.strictEqual( model.row.object!.b, 20 );
     });
 
     it("object of any values", () => {
@@ -561,7 +561,7 @@ describe("ObjectType", () => {
 
         const clone = main.clone();
 
-        assert.ok( clone.get("obj").prop instanceof SecondLevel );
+        assert.ok( clone.get("obj")!.prop instanceof SecondLevel );
 
     });
 
@@ -621,7 +621,9 @@ describe("ObjectType", () => {
     it("circular structure to json (object of models)", () => {
         
         class MyModel extends Model<MyModel> {
-            structure() {
+            structure(): {
+                obj: IObjectType<MyModel>;
+            } {
                 return {
                     obj: Types.Object({
                         element: MyModel
@@ -649,7 +651,9 @@ describe("ObjectType", () => {
     it("same model as value in two fields", () => {
         
         class MyModel extends Model<MyModel> {
-            structure() {
+            structure(): {
+                obj: IObjectType<MyModel>
+            } {
                 return {
                     obj: Types.Object({
                         element: MyModel
@@ -677,7 +681,10 @@ describe("ObjectType", () => {
     it("object of models, check parent reference", () => {
 
         class TestModel extends Model<TestModel> {
-            structure() {
+            structure(): {
+                name: IStringType;
+                children: IObjectType<TestModel>;
+            } {
                 return {
                     name: Types.String,
                     children: Types.Object({
@@ -695,8 +702,8 @@ describe("ObjectType", () => {
             }
         });
 
-        const a = parent.get("children").a as TestModel;
-        const b = parent.get("children").b as TestModel;
+        const a = parent.get("children")!.a as TestModel;
+        const b = parent.get("children")!.b as TestModel;
 
         const aParent = a.findParentInstance(TestModel);
         const bParent = b.findParentInstance(TestModel);
@@ -708,7 +715,10 @@ describe("ObjectType", () => {
     it("clone object of models, check parent reference", () => {
 
         class TestModel extends Model<TestModel> {
-            structure() {
+            structure(): {
+                name: IStringType;
+                children: IObjectType<TestModel>;
+            } {
                 return {
                     name: Types.String,
                     children: Types.Object({
@@ -727,8 +737,8 @@ describe("ObjectType", () => {
         });
         const parentClone = parent.clone();
 
-        const aClone = parentClone.get("children").a as TestModel;
-        const bClone = parentClone.get("children").b as TestModel;
+        const aClone = parentClone.get("children")!.a as TestModel;
+        const bClone = parentClone.get("children")!.b as TestModel;
 
         const aCloneParent = aClone.findParentInstance(TestModel);
         const bCloneParent = bClone.findParentInstance(TestModel);
