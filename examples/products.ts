@@ -1,7 +1,7 @@
 
 
 // const {Model} = require("model-layer");
-import {Model, Types} from "../lib/index";
+import {Model, Types, MutableObject} from "../lib/index";
 import assert from "assert";
 
 class Product extends Model<Product> {
@@ -41,9 +41,10 @@ class Cart extends Model<Cart> {
     }
 
     // calc total price for cart
-    prepare(row) {
-        row.total = row.products.reduce((total, product) =>
-            total + product.get("price") * product.get("quantity"), 0
+    prepare(row: MutableObject< this["row"] >) {
+        row.total = row.products!.reduce((total, product) =>
+            total + product.get("price")! * product.get("quantity")!,
+            0 as number
         );
     }
 }

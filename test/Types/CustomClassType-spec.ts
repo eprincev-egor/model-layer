@@ -37,7 +37,7 @@ describe("CustomClassType", () => {
             () => {
                 anyModel.set({driver: {}});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid value for DBDriver, field driver: {}"
         );
     });
@@ -64,7 +64,7 @@ describe("CustomClassType", () => {
             () => {
                 model.toJSON();
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "cannot convert [object: DBDriver] to json, need toJSON method for this field"
         );
     });
@@ -140,7 +140,7 @@ describe("CustomClassType", () => {
             () => {
                 model.clone();
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "cannot clone [object: DBDriver], need clone method for this field"
         );
     });
@@ -194,7 +194,7 @@ describe("CustomClassType", () => {
             () => {
                 model1.equal(model2);
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "cannot equal [object: DBDriver], need equal method for this field"
         );
     });

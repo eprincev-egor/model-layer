@@ -15,7 +15,7 @@ describe("Collection.last", () => {
 
     it("last()", () => {
         
-        class Products extends Collection<Products> {
+        class Products extends Collection<Product> {
             Model() {
                 return Product;
             }

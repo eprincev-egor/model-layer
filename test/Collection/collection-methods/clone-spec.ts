@@ -14,7 +14,7 @@ describe("Collection.clone", () => {
             }
         }
 
-        class Companies extends Collection<Companies> {
+        class Companies extends Collection<Company> {
             Model() {
                 return Company;
             }

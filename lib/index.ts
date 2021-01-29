@@ -3,7 +3,7 @@
 
 import {setLang} from "./errors";
 
-import {Model} from "./Model";
+import {Model, MutableObject} from "./Model";
 import Collection from "./Collection";
 
 import {IType, Type} from "./type/Type";
@@ -58,4 +58,4 @@ Type.registerType("or", OrType);
 Type.registerType("CustomClass", CustomClassType);
 
 
-export {Model, Collection, Types, setLang};
+export {Model, Collection, Types, setLang, MutableObject};

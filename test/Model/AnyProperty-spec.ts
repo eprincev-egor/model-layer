@@ -76,7 +76,7 @@ describe("Model with any property", () => {
                     x: "wrong"
                 });
             }, 
-            (err) => 
+            (err: Error) => 
                 err.message === "invalid number for x: \"wrong\""
         );
 
@@ -101,7 +101,7 @@ describe("Model with any property", () => {
                 const anyModel = model as any;
                 anyModel.row.y = 10;
             },
-            (err) =>
+            (err: Error) =>
                 /Cannot assign to read only property/.test(err.message)
         );
 
@@ -110,7 +110,7 @@ describe("Model with any property", () => {
                 const anyModel = model as any;
                 anyModel.row.prop = 10;
             },
-            (err) =>
+            (err: Error) =>
                 /Cannot add property prop/.test(err.message)
         );
     });
@@ -172,7 +172,7 @@ describe("Model with any property", () => {
                 const anyModel = model as any;
                 anyModel.set({age: "wrong"});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid number for age: \"wrong\""
         );
 
@@ -181,7 +181,7 @@ describe("Model with any property", () => {
                 const anyModel = model as any;
                 anyModel.set({any: {}});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid string for any: {}"
         );
 
@@ -256,7 +256,7 @@ describe("Model with any property", () => {
                     prop: 9
                 });
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid prop: 9"
         );
 
@@ -274,7 +274,7 @@ describe("Model with any property", () => {
                     nice: 1
                 });
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid nice: 1"
         );
 
@@ -304,7 +304,7 @@ describe("Model with any property", () => {
                     wrong: "key"
                 });
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid key: wrong"
         );
 
@@ -323,7 +323,7 @@ describe("Model with any property", () => {
                     wrong: "key"
                 });
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid key: wrong"
         );
 
@@ -353,7 +353,7 @@ describe("Model with any property", () => {
                     wrong: "key"
                 });
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid key: wrong"
         );
 
@@ -371,7 +371,7 @@ describe("Model with any property", () => {
                     wrong: "key"
                 });
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid key: wrong"
         );
         

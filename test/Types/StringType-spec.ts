@@ -40,7 +40,7 @@ describe("StringType", () => {
                 const anyModel = model as any;
                 anyModel.set({name: {}});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid string for name: {}"
         );
 
@@ -49,7 +49,7 @@ describe("StringType", () => {
                 const anyModel = model as any;
                 anyModel.set({name: {name: 1}});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid string for name: {\"name\":1}"
         );
 
@@ -58,7 +58,7 @@ describe("StringType", () => {
                 const anyModel = model as any;
                 anyModel.set({name: false});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid string for name: false"
         );
 
@@ -67,7 +67,7 @@ describe("StringType", () => {
                 const anyModel = model as any;
                 anyModel.set({name: true});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid string for name: true"
         );
 
@@ -75,7 +75,7 @@ describe("StringType", () => {
             () => {
                 model.set({name: -1 / 0 as any});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid string for name: -Infinity"
         );
 
@@ -83,7 +83,7 @@ describe("StringType", () => {
             () => {
                 model.set({name: 1 / 0 as any});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid string for name: Infinity"
         );
 
@@ -91,7 +91,7 @@ describe("StringType", () => {
             () => {
                 model.set({name: NaN as any});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid string for name: NaN"
         );
 
@@ -100,7 +100,7 @@ describe("StringType", () => {
                 const anyModel = model as any;
                 anyModel.set({name: /x/});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid string for name: /x/"
         );
 
@@ -109,7 +109,7 @@ describe("StringType", () => {
                 const anyModel = model as any;
                 anyModel.set({name: [0]});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid string for name: [0]"
         );
 
@@ -325,7 +325,7 @@ describe("StringType", () => {
             () => {
                 const model = new SomeModel();
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "name: conflicting parameters: use only nullAsEmpty or only emptyAsNull"
         );
     });
@@ -347,7 +347,7 @@ describe("StringType", () => {
             () => {
                 const model = new SomeModel();
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "name: conflicting parameters: use only lower or only upper"
         );
     });

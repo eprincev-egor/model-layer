@@ -291,7 +291,7 @@ describe("AnyType", () => {
             () => {
                 model.toJSON();
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "Cannot converting circular structure to JSON"
         );
 
@@ -305,7 +305,7 @@ describe("AnyType", () => {
             () => {
                 model.toJSON();
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "Cannot converting circular structure to JSON"
         );
 
@@ -321,7 +321,7 @@ describe("AnyType", () => {
             () => {
                 model.toJSON();
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "Cannot converting circular structure to JSON"
         );
 

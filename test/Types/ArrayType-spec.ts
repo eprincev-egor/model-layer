@@ -26,7 +26,7 @@ describe("ArrayType", () => {
                     managersIds: false
                 });
             }, 
-            (err) => 
+            (err: Error) => 
                 err.message === "invalid array number[] for managersIds: false"
         );
         
@@ -37,7 +37,7 @@ describe("ArrayType", () => {
                     managersIds: true
                 });
             }, 
-            (err) => 
+            (err: Error) => 
                 err.message ===  "invalid array number[] for managersIds: true"
         );
         
@@ -48,7 +48,7 @@ describe("ArrayType", () => {
                     managersIds: {}
                 });
             }, 
-            (err) => 
+            (err: Error) => 
                 err.message === "invalid array number[] for managersIds: {}"
         );
         
@@ -59,7 +59,7 @@ describe("ArrayType", () => {
                     managersIds: "1,2"
                 });
             }, 
-            (err) => 
+            (err: Error) => 
                 err.message === "invalid array number[] for managersIds: \"1,2\""
         );
         
@@ -70,7 +70,7 @@ describe("ArrayType", () => {
                     managersIds: NaN
                 });
             }, 
-            (err) => 
+            (err: Error) => 
                 err.message === "invalid array number[] for managersIds: NaN"
         );
         
@@ -81,7 +81,7 @@ describe("ArrayType", () => {
                     managersIds: /x/
                 });
             }, 
-            (err) => 
+            (err: Error) => 
                 err.message === "invalid array number[] for managersIds: /x/"
         );
         
@@ -92,7 +92,7 @@ describe("ArrayType", () => {
                     managersIds: Infinity
                 });
             }, 
-            (err) => 
+            (err: Error) => 
                 err.message === "invalid array number[] for managersIds: Infinity"
         );
         
@@ -103,7 +103,7 @@ describe("ArrayType", () => {
                     managersIds: -Infinity
                 });
             }, 
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid array number[] for managersIds: -Infinity"
         );
         
@@ -114,7 +114,7 @@ describe("ArrayType", () => {
                     managersIds: 0
                 });
             }, 
-            (err) => 
+            (err: Error) => 
                 err.message === "invalid array number[] for managersIds: 0"
         );
         
@@ -126,7 +126,7 @@ describe("ArrayType", () => {
                     managersIds: [false]
                 });
             }, 
-            (err) => 
+            (err: Error) => 
                 err.message === `invalid element for array number[] at 0 for model field managersIds: [false],${eol} invalid number for 0: false`
         );
         
@@ -137,7 +137,7 @@ describe("ArrayType", () => {
                     managersIds: ["1", "wrong"]
                 });
             }, 
-            (err) => 
+            (err: Error) => 
                 err.message === `invalid element for array number[] at 1 for model field managersIds: ["1","wrong"],${eol} invalid number for 1: "wrong"`
         );
         
@@ -161,7 +161,7 @@ describe("ArrayType", () => {
             () => {
                 managersIds[0] = 10;
             },
-            (err) =>
+            (err: Error) =>
                 /Cannot assign to read only property/.test(err.message)
         );
         
@@ -237,7 +237,7 @@ describe("ArrayType", () => {
                     answers: [null, false, true, "wrong"]
                 });
             }, 
-            (err) => 
+            (err: Error) => 
                 err.message === `invalid element for array boolean[] at 3 for model field answers: [null,false,true,"wrong"],${eol} invalid boolean for 3: "wrong"`
         );
         
@@ -272,7 +272,7 @@ describe("ArrayType", () => {
                     pays: ["wrong"]
                 });
             }, 
-            (err) => 
+            (err: Error) => 
                 err.message === `invalid element for array date[] at 0 for model field pays: ["wrong"],${eol} invalid date for 0: "wrong"`
         );
         
@@ -317,7 +317,7 @@ describe("ArrayType", () => {
                     managers: [false]
                 });
             }, 
-            (err) => 
+            (err: Error) => 
                 err.message === `invalid element for array UserModel[] at 0 for model field managers: [false],${eol} invalid model UserModel for 0: false`
         );
         
@@ -359,7 +359,7 @@ describe("ArrayType", () => {
                     names: [false]
                 });
             }, 
-            (err) => 
+            (err: Error) => 
                 err.message === `invalid element for array string[] at 0 for model field names: [false],${eol} invalid string for 0: false`
         );
         
@@ -395,7 +395,7 @@ describe("ArrayType", () => {
                     users: [{id: 1}, false]
                 });
             }, 
-            (err) => 
+            (err: Error) => 
                 err.message === `invalid element for array object[] at 1 for model field users: [{"id":1},false],${eol} invalid object {*: any} for 1: false`
         );
         
@@ -428,7 +428,7 @@ describe("ArrayType", () => {
                     managersIds: [1, 2, 1]
                 });
             }, 
-            (err) => 
+            (err: Error) => 
                 err.message === "managersIds is not unique, duplicated value 1 inside arr: [1,2,1]"
         );
         
@@ -444,7 +444,7 @@ describe("ArrayType", () => {
             
         
             }, 
-            (err) => 
+            (err: Error) => 
                 err.message === "managersIds is not unique, duplicated value 2 inside arr: [2,2]"
         );
         
@@ -487,7 +487,7 @@ describe("ArrayType", () => {
                     managers: [userModel1, userModel1]
                 });
             }, 
-            (err) => 
+            (err: Error) => 
                 err.message === "managers is not unique, duplicated value {\"name\":\"test\"} inside arr: [{\"name\":\"test\"},{\"name\":\"test\"}]"
         );
         
@@ -508,7 +508,7 @@ describe("ArrayType", () => {
             () => {
                 companyModel.set({managers: [userModel2, userModel2]});
             }, 
-            (err) => 
+            (err: Error) => 
                 err.message === "managers is not unique, duplicated value {\"name\":\"test\"} inside arr: [{\"name\":\"test\"},{\"name\":\"test\"}]"
         );
         
@@ -718,7 +718,7 @@ describe("ArrayType", () => {
                     ids: [3, 3]
                 });
             }, 
-            (err) => 
+            (err: Error) => 
                 err.message ===  "invalid ids: [3,3]"
         );
         
@@ -916,7 +916,7 @@ describe("ArrayType", () => {
             () => {
                 const model = new SomeModel();
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "arr: conflicting parameters: use only nullAsEmpty or only emptyAsNull"
         );
     });
@@ -946,7 +946,7 @@ describe("ArrayType", () => {
             () => {
                 model.toJSON();
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "Cannot converting circular structure to JSON"
         );
     });
@@ -1046,7 +1046,7 @@ describe("ArrayType", () => {
             () => {
                 model.toJSON();
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "Cannot converting circular structure to JSON"
         );
     });

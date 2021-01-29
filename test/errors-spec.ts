@@ -22,7 +22,7 @@ describe("Errors", () => {
                     x: 1
                 } as any);
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "неизвестное свойство: x" &&
                 err instanceof UnknownPropertyError
         );
@@ -34,7 +34,7 @@ describe("Errors", () => {
                     x: 1
                 } as any);
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "unknown property: x" &&
                 err instanceof UnknownPropertyError
         );

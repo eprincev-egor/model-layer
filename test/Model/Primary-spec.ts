@@ -53,7 +53,7 @@ describe("Model primary field", () => {
                         [reservedKey]: 1
                     });
                 },
-                (err) =>
+                (err: Error) =>
                     err.message === `field ${reservedKey} cannot be primary key, because it reserved word`
             );
 
@@ -152,7 +152,7 @@ describe("Model primary field", () => {
             () => {
                 const company = new Company();
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "required id"
         );
     });

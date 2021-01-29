@@ -22,7 +22,7 @@ describe("ObjectType", () => {
                     map: false
                 });
             }, 
-            (err) => 
+            (err: Error) => 
                 err.message ===  "invalid object {*: any} for map: false"
         );
         
@@ -33,7 +33,7 @@ describe("ObjectType", () => {
                     map: true
                 });
             }, 
-            (err) => 
+            (err: Error) => 
                 err.message ===  "invalid object {*: any} for map: true"
         );
         
@@ -44,7 +44,7 @@ describe("ObjectType", () => {
                     map: "1,2"
                 });
             }, 
-            (err) => 
+            (err: Error) => 
                 err.message ===  "invalid object {*: any} for map: \"1,2\""
         );
         
@@ -55,7 +55,7 @@ describe("ObjectType", () => {
                     map: NaN
                 });
             }, 
-            (err) => 
+            (err: Error) => 
                 err.message ===  "invalid object {*: any} for map: NaN"
         );
         
@@ -66,7 +66,7 @@ describe("ObjectType", () => {
                     map: /x/
                 });
             }, 
-            (err) => 
+            (err: Error) => 
                 err.message ===  "invalid object {*: any} for map: /x/"
         );
         
@@ -76,7 +76,7 @@ describe("ObjectType", () => {
                     map: []
                 });
             }, 
-            (err) => 
+            (err: Error) => 
                 err.message ===  "invalid object {*: any} for map: []"
         );
         
@@ -87,7 +87,7 @@ describe("ObjectType", () => {
                     map: Infinity
                 });
             }, 
-            (err) => 
+            (err: Error) => 
                 err.message ===  "invalid object {*: any} for map: Infinity"
         );
         
@@ -98,7 +98,7 @@ describe("ObjectType", () => {
                     map: -Infinity
                 });
             }, 
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid object {*: any} for map: -Infinity"
         );
         
@@ -109,7 +109,7 @@ describe("ObjectType", () => {
                     map: 0
                 });
             }, 
-            (err) => 
+            (err: Error) => 
                 err.message ===  "invalid object {*: any} for map: 0"
         );
         
@@ -121,7 +121,7 @@ describe("ObjectType", () => {
                     map: [false]
                 });
             }, 
-            (err) => 
+            (err: Error) => 
                 err.message === "invalid object {*: any} for map: [false]"
         );
         
@@ -147,7 +147,7 @@ describe("ObjectType", () => {
             () => {
                 map.a = 10;
             },
-            (err) =>
+            (err: Error) =>
                 /Cannot assign to read only property/.test(err.message)
         );
         
@@ -409,7 +409,7 @@ describe("ObjectType", () => {
                     }
                 });
             }, 
-            (err) => 
+            (err: Error) => 
                 err.message === `invalid value for type number in property object[b] for model field object: {"a":10,"b":"nice"},${eol} invalid number for b: "nice"`
         );
     });
@@ -583,7 +583,7 @@ describe("ObjectType", () => {
             () => {
                 const model = new SomeModel();
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "obj: conflicting parameters: use only nullAsEmpty or only emptyAsNull"
         );
     });
@@ -613,7 +613,7 @@ describe("ObjectType", () => {
             () => {
                 model.toJSON();
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "Cannot converting circular structure to JSON"
         );
     });
@@ -641,7 +641,7 @@ describe("ObjectType", () => {
             () => {
                 model.toJSON();
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "Cannot converting circular structure to JSON"
         );
     });

@@ -41,7 +41,7 @@ describe("CollectionType", () => {
                     products: false
                 });
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid collection Products for products: false"
         );
 
@@ -201,7 +201,7 @@ describe("CollectionType", () => {
                     arr: [false]
                 });
             },
-            (err) =>
+            (err: Error) =>
                 err.message === `invalid element for array collection MyCollection[] at 0 for model field arr: [false],${eol} invalid collection MyCollection for 0: false`
         );
 
@@ -427,7 +427,7 @@ describe("CollectionType", () => {
             () => {
                 model.toJSON();
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "Cannot converting circular structure to JSON"
         );
     });

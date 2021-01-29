@@ -36,7 +36,7 @@ describe("BooleanType", () => {
                     some: 1 as any
                 });
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid boolean for some: 1"
         );
 
@@ -44,7 +44,7 @@ describe("BooleanType", () => {
             () => {
                 model.set({some: {}});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid boolean for some: {}"
         );
 
@@ -52,7 +52,7 @@ describe("BooleanType", () => {
             () => {
                 model.set({some: {some: 1}});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid boolean for some: {\"some\":1}"
         );
 
@@ -60,7 +60,7 @@ describe("BooleanType", () => {
             () => {
                 model.set({some: -1 / 0});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid boolean for some: -Infinity"
         );
 
@@ -68,7 +68,7 @@ describe("BooleanType", () => {
             () => {
                 model.set({some: 1 / 0});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid boolean for some: Infinity"
         );
 
@@ -76,7 +76,7 @@ describe("BooleanType", () => {
             () => {
                 model.set({some: NaN});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid boolean for some: NaN"
         );
 
@@ -84,7 +84,7 @@ describe("BooleanType", () => {
             () => {
                 model.set({some: /x/});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid boolean for some: /x/"
         );
 
@@ -92,7 +92,7 @@ describe("BooleanType", () => {
             () => {
                 model.set({some: "wrong"});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid boolean for some: \"wrong\""
         );
 
@@ -100,7 +100,7 @@ describe("BooleanType", () => {
             () => {
                 model.set({some: [0]});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid boolean for some: [0]"
         );
 
@@ -212,7 +212,7 @@ describe("BooleanType", () => {
             () => {
                 const model = new SomeModel();
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "flag: conflicting parameters: use only nullAsFalse or only falseAsNull"
         );
     });

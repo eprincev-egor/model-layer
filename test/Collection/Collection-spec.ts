@@ -14,7 +14,7 @@ describe("Collection tests", () => {
             }
         }
 
-        class Users extends Collection<Users> {
+        class Users extends Collection<User> {
             Model() {
                 return User;
             }
@@ -37,7 +37,7 @@ describe("Collection tests", () => {
             }
         }
 
-        class Users extends Collection<Users> {
+        class Users extends Collection<User> {
             Model() {
                 return User;
             }
@@ -53,7 +53,7 @@ describe("Collection tests", () => {
         const user = users.at(0);
 
         assert.ok( user instanceof Model );
-        assert.strictEqual( user.get("name"), "Bob" );
+        assert.strictEqual( user!.get("name"), "Bob" );
 
     });
 
@@ -66,7 +66,7 @@ describe("Collection tests", () => {
             }
         }
 
-        class Users extends Collection<Users> {
+        class Users extends Collection<User> {
             Model() {
                 return User;
             }
@@ -85,7 +85,7 @@ describe("Collection tests", () => {
         const firstUser = users.at(0);
 
         assert.ok( firstUser === user );
-        assert.strictEqual( firstUser.get("name"), "Bob" );
+        assert.strictEqual( firstUser!.get("name"), "Bob" );
 
     });
 
@@ -98,7 +98,7 @@ describe("Collection tests", () => {
             }
         }
 
-        class Users extends Collection<Users> {
+        class Users extends Collection<User> {
             Model() {
                 return User;
             }
@@ -114,7 +114,7 @@ describe("Collection tests", () => {
 
         const user = users.at(0);
         assert.ok( user instanceof Model );
-        assert.strictEqual( user.get("name"), "Bob" );
+        assert.strictEqual( user!.get("name"), "Bob" );
     });
 
     it("once call row", () => {
@@ -130,7 +130,7 @@ describe("Collection tests", () => {
             }
         }
 
-        class Products extends Collection<Products> {
+        class Products extends Collection<Product> {
             Model() {
                 return Product;
             }
@@ -155,7 +155,7 @@ describe("Collection tests", () => {
             }
         }
 
-        class Companies extends Collection<Companies> {
+        class Companies extends Collection<Company> {
             Model() {
                 return Company;
             }
@@ -182,7 +182,7 @@ describe("Collection tests", () => {
         assert.throws(
             () => {
                 const collection = new Companies();
-            }, (err) =>
+            }, (err: Error) =>
                 err.message === "Companies.Model() is not declared"
         );
     });

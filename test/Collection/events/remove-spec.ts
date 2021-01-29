@@ -17,7 +17,7 @@ describe("Collection event add", () => {
             }
         }
 
-        class Users extends Collection<Users> {
+        class Users extends Collection<User> {
             Model() {
                 return User;
             }
@@ -25,7 +25,7 @@ describe("Collection event add", () => {
 
         const users = new Users();
 
-        let model;
+        let model!: User;
         let type;
         let count = 0;
         let length;
@@ -64,7 +64,7 @@ describe("Collection event add", () => {
             }
         }
 
-        class Users extends Collection<Users> {
+        class Users extends Collection<User> {
             Model() {
                 return User;
             }
@@ -72,7 +72,7 @@ describe("Collection event add", () => {
 
         const users = new Users();
 
-        let model;
+        let model!: User;
         let type;
         let count = 0;
         let length;
@@ -112,7 +112,7 @@ describe("Collection event add", () => {
             }
         }
 
-        class Users extends Collection<Users> {
+        class Users extends Collection<User> {
             Model() {
                 return User;
             }
@@ -120,7 +120,7 @@ describe("Collection event add", () => {
 
         const users = new Users();
 
-        let model;
+        let model!: User;
         let type;
         let count = 0;
         let length;
@@ -162,7 +162,7 @@ describe("Collection event add", () => {
             }
         }
 
-        class Users extends Collection<Users> {
+        class Users extends Collection<User> {
             Model() {
                 return User;
             }
@@ -170,7 +170,7 @@ describe("Collection event add", () => {
 
         const users = new Users();
 
-        let model;
+        let model!: User;
         let type;
         let count = 0;
         let length;
@@ -209,7 +209,7 @@ describe("Collection event add", () => {
             }
         }
 
-        class Users extends Collection<Users> {
+        class Users extends Collection<User> {
             Model() {
                 return User;
             }
@@ -217,7 +217,7 @@ describe("Collection event add", () => {
 
         const users = new Users();
 
-        let model;
+        let model!: User;
         let type;
         let count = 0;
         let length;
@@ -256,7 +256,7 @@ describe("Collection event add", () => {
             }
         }
 
-        class Users extends Collection<Users> {
+        class Users extends Collection<User> {
             Model() {
                 return User;
             }
@@ -264,7 +264,7 @@ describe("Collection event add", () => {
 
         const users = new Users();
 
-        let model;
+        let model!: User;
         let type;
         let count = 0;
         let length;

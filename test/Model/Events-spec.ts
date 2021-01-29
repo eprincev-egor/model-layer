@@ -110,7 +110,7 @@ describe("Model events", () => {
         assert.throws(
             () => {
                 model.on("change", "unknownProp" as any, handler);
-            }, (err) =>
+            }, (err: Error) =>
                 err.message === "unknown property: unknownProp"
         );
 

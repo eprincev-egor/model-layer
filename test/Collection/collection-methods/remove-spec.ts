@@ -14,7 +14,7 @@ describe("Collection.remove", () => {
             }
         }
 
-        class Products extends Collection<Products> {
+        class Products extends Collection<Product> {
             Model() {
                 return Product;
             }
@@ -54,7 +54,7 @@ describe("Collection.remove", () => {
             }
         }
 
-        class Companies extends Collection<Companies> {
+        class Companies extends Collection<Company> {
             Model() {
                 return Company;
             }

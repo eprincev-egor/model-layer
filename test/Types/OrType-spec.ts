@@ -78,7 +78,7 @@ describe("OrType", () => {
                     id: {} as any
                 });
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid value for types: number or string, for id: {}"
         );
         
@@ -99,7 +99,7 @@ describe("OrType", () => {
 
                 const model = new WrongModel();
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "id: required 'or' array of type descriptions"
         );
     });
@@ -119,7 +119,7 @@ describe("OrType", () => {
 
                 const model = new WrongModel();
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "id: invalid type description or[0]: {\"wrong\":true}"
         );
     });
@@ -139,7 +139,7 @@ describe("OrType", () => {
 
                 const model = new WrongModel();
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "id: empty 'or' array of type descriptions"
         );
     });
@@ -408,7 +408,7 @@ describe("OrType", () => {
             () => {
                 model.toJSON();
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "Cannot converting circular structure to JSON"
         );
     });
@@ -441,7 +441,7 @@ describe("OrType", () => {
             () => {
                 model.toJSON();
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "Cannot converting circular structure to JSON"
         );
 
@@ -456,7 +456,7 @@ describe("OrType", () => {
             () => {
                 model.toJSON();
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "Cannot converting circular structure to JSON"
         );
     });
@@ -487,7 +487,7 @@ describe("OrType", () => {
             () => {
                 model.toJSON();
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "Cannot converting circular structure to JSON"
         );
 
@@ -503,7 +503,7 @@ describe("OrType", () => {
             () => {
                 model.toJSON();
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "Cannot converting circular structure to JSON"
         );
         

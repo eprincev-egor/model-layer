@@ -186,7 +186,7 @@ describe("Model tests", () => {
             () => {
                 const anyModel = model as any;
                 anyModel.set({some: "1"});
-            }, (err) =>
+            }, (err: Error) =>
                 err.message === "unknown property: some"
         );
 
@@ -204,7 +204,7 @@ describe("Model tests", () => {
                     some: "x"
                 });
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "unknown property: some"
         );
     });
@@ -226,7 +226,7 @@ describe("Model tests", () => {
                 const anyModel = model as any;
                 anyModel.row.prop = "a";
             }, 
-            (err) =>
+            (err: Error) =>
                 /Cannot assign to read only property/.test(err.message)
         );
 
@@ -238,7 +238,7 @@ describe("Model tests", () => {
             () => {
                 const anyModel = model as any;
                 anyModel.row.prop = "y";
-            }, (err) =>
+            }, (err: Error) =>
                 /Cannot assign to read only property/.test(err.message)
         );
 
@@ -874,7 +874,7 @@ describe("Model tests", () => {
                 const model = new SomeModel({
                     prop: ("X1234568790123456879012345687901234568790123456879" as any)
                 });
-            }, (err) =>
+            }, (err: Error) =>
                 err.message === "invalid number for prop: \"X1234568790123456879012345687901234568790123456879\""
         );
 
@@ -883,7 +883,7 @@ describe("Model tests", () => {
                 const model = new SomeModel({
                     prop: ("X1234568790123456879012345687901234568790123456879y" as any)
                 });
-            }, (err) =>
+            }, (err: Error) =>
                 err.message === "invalid number for prop: \"X1234568790123456879012345687901234568790123456879...\""
         );
 
@@ -893,7 +893,7 @@ describe("Model tests", () => {
                 const model = new AnyModel({
                     prop: {some: 1}
                 });
-            }, (err) =>
+            }, (err: Error) =>
             err.message === "invalid number for prop: {\"some\":1}"
             );
             
@@ -903,7 +903,7 @@ describe("Model tests", () => {
                 const model = new AnyModel({
                     prop: {some: 1, sub: {bigString: "X1234568790123456879012345687901234568790123456879"}}
                 });
-            }, (err) =>
+            }, (err: Error) =>
                 err.message === "invalid number for prop: {\"some\":1,\"sub\":{\"bigString\":\"X1234568790123456879..."
         );
     });
@@ -931,7 +931,7 @@ describe("Model tests", () => {
                 const model = new AnyModel({
                     arr: ["wrong"]
                 });
-            }, (err) =>
+            }, (err: Error) =>
                 err.message === "invalid element for array number[] at 0 for model field arr: [\"wrong\"],\n invalid number for 0: \"wrong\""
         );
 
@@ -941,7 +941,7 @@ describe("Model tests", () => {
                 const model = new AnyModel({
                     obj: {prop: "wrong"}
                 });
-            }, (err) =>
+            }, (err: Error) =>
                 err.message === "invalid value for type number in property object[prop] for model field obj: {\"prop\":\"wrong\"},\n invalid number for prop: \"wrong\""
         );
     });
@@ -969,7 +969,7 @@ describe("Model tests", () => {
                 const model = new AnyModel({
                     arr: ["wrong"]
                 });
-            }, (err) =>
+            }, (err: Error) =>
                 err.message === "invalid element for array number[] at 0 for model field arr: [\"wrong\"],\r\n invalid number for 0: \"wrong\""
         );
 
@@ -979,7 +979,7 @@ describe("Model tests", () => {
                 const model = new AnyModel({
                     obj: {prop: "wrong"}
                 });
-            }, (err) =>
+            }, (err: Error) =>
                 err.message === "invalid value for type number in property object[prop] for model field obj: {\"prop\":\"wrong\"},\r\n invalid number for prop: \"wrong\""
         );
     });
@@ -998,7 +998,7 @@ describe("Model tests", () => {
         assert.throws(
             () => {
                 const model = new AnyModel();
-            }, (err) =>
+            }, (err: Error) =>
                 err.message === "field x, unknown type: test"
         );
     });
@@ -1018,7 +1018,7 @@ describe("Model tests", () => {
         assert.throws(
             () => {
                 const model = new AnyModel();
-            }, (err) =>
+            }, (err: Error) =>
                 err.message === "x: validate should be function or RegExp: NaN"
         );
     });
@@ -1038,7 +1038,7 @@ describe("Model tests", () => {
         assert.throws(
             () => {
                 const model = new AnyModel();
-            }, (err) =>
+            }, (err: Error) =>
                 err.message === "*: key validation should be function or RegExp: NaN"
         );
     });
@@ -1051,7 +1051,7 @@ describe("Model tests", () => {
         assert.throws(
             () => {
                 const model = new Company();
-            }, (err) =>
+            }, (err: Error) =>
                 err.message === "Company.structure() is not declared"
         );
     });

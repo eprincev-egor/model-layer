@@ -17,7 +17,7 @@ describe("Collection.get", () => {
 
     it("get(id)", () => {
         
-        class Companies extends Collection<Companies> {
+        class Companies extends Collection<Company> {
             Model() {
                 return Company;
             }
@@ -30,13 +30,13 @@ describe("Collection.get", () => {
 
 
         const first = companies.get(1);
-        assert.deepStrictEqual( first.toJSON(), {
+        assert.deepStrictEqual( first!.toJSON(), {
             id: 1, 
             name: "X"
         });
 
         const second = companies.get(2);
-        assert.deepStrictEqual( second.toJSON(), {
+        assert.deepStrictEqual( second!.toJSON(), {
             id: 2, 
             name: "Y"
         });

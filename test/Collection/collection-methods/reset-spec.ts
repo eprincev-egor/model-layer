@@ -15,7 +15,7 @@ describe("Collection.reset", () => {
 
     it("reset()", () => {
         
-        class Products extends Collection<Products> {
+        class Products extends Collection<Product> {
             Model() {
                 return Product;
             }

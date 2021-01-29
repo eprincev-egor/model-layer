@@ -37,7 +37,7 @@ describe("NumberType", () => {
             () => {
                 model.set({age: "wrong" as any});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid number for age: \"wrong\""
         );
 
@@ -46,7 +46,7 @@ describe("NumberType", () => {
                 const anyModel = model as any;
                 anyModel.set({age: {}});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid number for age: {}"
         );
 
@@ -55,7 +55,7 @@ describe("NumberType", () => {
                 const anyModel = model as any;
                 anyModel.set({age: {age: 1}});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid number for age: {\"age\":1}"
         );
 
@@ -64,7 +64,7 @@ describe("NumberType", () => {
                 const anyModel = model as any;
                 anyModel.set({age: false});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid number for age: false"
         );
 
@@ -73,7 +73,7 @@ describe("NumberType", () => {
                 const anyModel = model as any;
                 anyModel.set({age: true});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid number for age: true"
         );
 
@@ -82,7 +82,7 @@ describe("NumberType", () => {
                 const anyModel = model as any;
                 anyModel.set({age: /x/});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid number for age: /x/"
         );
 
@@ -93,7 +93,7 @@ describe("NumberType", () => {
                 const anyModel = model as any;
                 anyModel.set({age: date});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid number for age: \"" + isoDate + "\""
         );
 
@@ -101,7 +101,7 @@ describe("NumberType", () => {
             () => {
                 model.set({age: -1 / 0});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid number for age: -Infinity"
         );
 
@@ -109,7 +109,7 @@ describe("NumberType", () => {
             () => {
                 model.set({age: 1 / 0});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid number for age: Infinity"
         );
 
@@ -117,7 +117,7 @@ describe("NumberType", () => {
             () => {
                 model.set({age: NaN});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid number for age: NaN"
         );
 
@@ -126,7 +126,7 @@ describe("NumberType", () => {
                 const anyModel = model as any;
                 anyModel.set({age: [0]});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid number for age: [0]"
         );
 
@@ -137,7 +137,7 @@ describe("NumberType", () => {
             () => {
                 model.set({age: circularJSON});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid number for age: [object Object]"
         );
 
@@ -276,7 +276,7 @@ describe("NumberType", () => {
             () => {
                 const model = new SomeModel();
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "money: invalid ceil: \"wrong\""
         );
     });
@@ -297,7 +297,7 @@ describe("NumberType", () => {
             () => {
                 const model = new SomeModel();
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "money: invalid floor: \"wrong\""
         );
     });
@@ -318,7 +318,7 @@ describe("NumberType", () => {
             () => {
                 const model = new SomeModel();
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "money: invalid round: \"wrong\""
         );
     });
@@ -381,7 +381,7 @@ describe("NumberType", () => {
             () => {
                 const model = new SomeModel();
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "money: conflicting parameters: use only round or only ceil or only floor"
         );
     });
@@ -403,7 +403,7 @@ describe("NumberType", () => {
             () => {
                 const model = new SomeModel();
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "money: conflicting parameters: use only round or only ceil or only floor"
         );
     });
@@ -425,7 +425,7 @@ describe("NumberType", () => {
             () => {
                 const model = new SomeModel();
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "money: conflicting parameters: use only round or only ceil or only floor"
         );
     });
@@ -447,7 +447,7 @@ describe("NumberType", () => {
             () => {
                 const model = new SomeModel();
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "age: conflicting parameters: use only nullAsZero or only zeroAsNull"
         );
     });

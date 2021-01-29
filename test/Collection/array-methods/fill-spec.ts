@@ -35,18 +35,18 @@ describe("Collection.fill", () => {
         
         assert.strictEqual( products.length, 3 );
 
-        assert.strictEqual( products.at(0).get("name"), "X" );
-        assert.strictEqual( products.at(1).get("name"), "X" );
-        assert.strictEqual( products.at(2).get("name"), "X" );
+        assert.strictEqual( products.at(0)!.get("name"), "X" );
+        assert.strictEqual( products.at(1)!.get("name"), "X" );
+        assert.strictEqual( products.at(2)!.get("name"), "X" );
         
         assert.ok( products.at(0) !== products.at(1) );
         assert.ok( products.at(1) !== products.at(2) );
         assert.ok( products.at(2) !== products.at(0) );
 
         products.first().set({name: "Y"});
-        assert.strictEqual( products.at(0).get("name"), "Y" );
-        assert.strictEqual( products.at(1).get("name"), "X" );
-        assert.strictEqual( products.at(2).get("name"), "X" );
+        assert.strictEqual( products.at(0)!.get("name"), "Y" );
+        assert.strictEqual( products.at(1)!.get("name"), "X" );
+        assert.strictEqual( products.at(2)!.get("name"), "X" );
 
     });
 
@@ -74,16 +74,16 @@ describe("Collection.fill", () => {
         
         assert.strictEqual( products.length, 3 );
 
-        assert.strictEqual( products.at(0).get("name"), "A" );
-        assert.strictEqual( products.at(1).get("name"), "X" );
-        assert.strictEqual( products.at(2).get("name"), "X" );
+        assert.strictEqual( products.at(0)!.get("name"), "A" );
+        assert.strictEqual( products.at(1)!.get("name"), "X" );
+        assert.strictEqual( products.at(2)!.get("name"), "X" );
         
         assert.ok( products.at(1) !== products.at(2) );
 
-        products.at(1).set({name: "Y"});
-        assert.strictEqual( products.at(0).get("name"), "A" );
-        assert.strictEqual( products.at(1).get("name"), "Y" );
-        assert.strictEqual( products.at(2).get("name"), "X" );
+        products.at(1)!.set({name: "Y"});
+        assert.strictEqual( products.at(0)!.get("name"), "A" );
+        assert.strictEqual( products.at(1)!.get("name"), "Y" );
+        assert.strictEqual( products.at(2)!.get("name"), "X" );
 
     });
 
@@ -110,9 +110,9 @@ describe("Collection.fill", () => {
         
         assert.strictEqual( products.length, 3 );
 
-        assert.strictEqual( products.at(0).get("name"), "A" );
-        assert.strictEqual( products.at(1).get("name"), "B" );
-        assert.strictEqual( products.at(2).get("name"), "X" );
+        assert.strictEqual( products.at(0)!.get("name"), "A" );
+        assert.strictEqual( products.at(1)!.get("name"), "B" );
+        assert.strictEqual( products.at(2)!.get("name"), "X" );
         
     });
 
@@ -138,9 +138,9 @@ describe("Collection.fill", () => {
         
         assert.strictEqual( products.length, 3 );
 
-        assert.strictEqual( products.at(0).get("name"), "A" );
-        assert.strictEqual( products.at(1).get("name"), "X" );
-        assert.strictEqual( products.at(2).get("name"), "C" );
+        assert.strictEqual( products.at(0)!.get("name"), "A" );
+        assert.strictEqual( products.at(1)!.get("name"), "X" );
+        assert.strictEqual( products.at(2)!.get("name"), "C" );
         
     });
 

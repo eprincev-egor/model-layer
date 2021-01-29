@@ -21,7 +21,7 @@ describe("Model validate", () => {
             () => {
                 const someModel = new SomeModel();
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "required name"
         );
 
@@ -40,7 +40,7 @@ describe("Model validate", () => {
             () => {
                 model.set({name: null});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "required name"
         );
 
@@ -76,7 +76,7 @@ describe("Model validate", () => {
                     age: -1
                 });
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid age"
         );
 
@@ -92,7 +92,7 @@ describe("Model validate", () => {
                     age: -100
                 });
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid age"
         );
 
@@ -120,7 +120,7 @@ describe("Model validate", () => {
             () => {
                 const ageModel = new AgeModel({ age: 1 });
             },
-            (err) =>
+            (err: Error) =>
                 /Cannot assign to read only property/.test(err.message)
         );
     });
@@ -168,7 +168,7 @@ describe("Model validate", () => {
                     age: -1
                 });
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid age: -1"
         );
 
@@ -184,7 +184,7 @@ describe("Model validate", () => {
                     age: -100
                 });
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid age: -100"
         );
 
@@ -242,7 +242,7 @@ describe("Model validate", () => {
                     word: " some 12123 "
                 });
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid word: \" some 12123 \""
         );
 
@@ -258,7 +258,7 @@ describe("Model validate", () => {
                     word: "some wrong"
                 });
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid word: \"some wrong\""
         );
 
@@ -289,7 +289,7 @@ describe("Model validate", () => {
                     color: "orange"
                 });
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid color: \"orange\""
         );
 
@@ -304,7 +304,7 @@ describe("Model validate", () => {
                     color: "dark blue"
                 });
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid color: \"dark blue\""
         );
 
@@ -408,7 +408,7 @@ describe("Model validate", () => {
             () => {
                 anyModel.isValid();
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "row must be are object"
         );
     });
@@ -433,7 +433,7 @@ describe("Model validate", () => {
             () => {
                 model.set({name: "new name"});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "cannot assign to read only property: name"
         );
 
@@ -447,7 +447,7 @@ describe("Model validate", () => {
             () => {
                 model.set({name: "new name"});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "cannot assign to read only property: name"
         );
     });

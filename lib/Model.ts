@@ -17,6 +17,10 @@ export interface ISimpleObject extends Object {
     [propName: string]: any;
 }
 
+export type MutableObject<T extends ISimpleObject> = {
+    -readonly [key in keyof T]: T[key];
+}
+
 export type StructureType = {
     [key: string]: IType | (new (...args: any) => IType)
 }

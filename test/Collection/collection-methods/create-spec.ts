@@ -15,7 +15,7 @@ describe("Collection.create", () => {
 
     it("create(row)", () => {
         
-        class Products extends Collection<Products> {
+        class Products extends Collection<Product> {
             Model() {
                 return Product;
             }

@@ -54,7 +54,7 @@ describe("DateType", () => {
             () => {
                 model.set({bornDate: "wrong"});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid date for bornDate: \"wrong\""
         );
 
@@ -63,7 +63,7 @@ describe("DateType", () => {
                 const anyModel = model as any;
                 anyModel.set({bornDate: {}});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid date for bornDate: {}"
         );
 
@@ -72,7 +72,7 @@ describe("DateType", () => {
                 const anyModel = model as any;
                 anyModel.set({bornDate: {bornDate: 1}});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid date for bornDate: {\"bornDate\":1}"
         );
 
@@ -81,7 +81,7 @@ describe("DateType", () => {
                 const anyModel = model as any;
                 anyModel.set({bornDate: false});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid date for bornDate: false"
         );
 
@@ -90,7 +90,7 @@ describe("DateType", () => {
                 const anyModel = model as any;
                 anyModel.set({bornDate: true});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid date for bornDate: true"
         );
 
@@ -99,7 +99,7 @@ describe("DateType", () => {
                 const anyModel = model as any;
                 anyModel.set({bornDate: -1 / 0});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid date for bornDate: -Infinity"
         );
 
@@ -108,7 +108,7 @@ describe("DateType", () => {
                 const anyModel = model as any;
                 anyModel.set({bornDate: 1 / 0});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid date for bornDate: Infinity"
         );
 
@@ -117,7 +117,7 @@ describe("DateType", () => {
                 const anyModel = model as any;
                 anyModel.set({bornDate: NaN});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid date for bornDate: NaN"
         );
 
@@ -126,7 +126,7 @@ describe("DateType", () => {
                 const anyModel = model as any;
                 anyModel.set({bornDate: /x/});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid date for bornDate: /x/"
         );
 
@@ -135,7 +135,7 @@ describe("DateType", () => {
                 const anyModel = model as any;
                 anyModel.set({bornDate: [0]});
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid date for bornDate: [0]"
         );
 

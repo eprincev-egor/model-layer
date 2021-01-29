@@ -52,7 +52,7 @@ describe("ModelType", () => {
                     date: Date.now()
                 });
             }, 
-            (err) =>
+            (err: Error) =>
                 err.message === "required user"
         );
 
@@ -63,7 +63,7 @@ describe("ModelType", () => {
                     user: null
                 });
             }, 
-            (err) =>
+            (err: Error) =>
                 err.message === "required user"
         );
 
@@ -74,7 +74,7 @@ describe("ModelType", () => {
                     user: []
                 });
             }, 
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid model UserModel for user: []"
         );
 
@@ -85,7 +85,7 @@ describe("ModelType", () => {
                     user: false
                 });
             }, 
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid model UserModel for user: false"
         );
 
@@ -96,7 +96,7 @@ describe("ModelType", () => {
                     user: NaN
                 });
             }, 
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid model UserModel for user: NaN"
         );
 
@@ -107,7 +107,7 @@ describe("ModelType", () => {
                     user: /x/
                 });
             }, 
-            (err) =>
+            (err: Error) =>
                 err.message === "invalid model UserModel for user: /x/"
         );
 
@@ -122,7 +122,7 @@ describe("ModelType", () => {
                     }
                 });
             },
-            (err) =>
+            (err: Error) =>
                 err.message === `invalid model UserModel for user: {"name":"10","age":101},${eol} required email`
         );
 
@@ -446,7 +446,7 @@ describe("ModelType", () => {
             () => {
                 model.toJSON();
             },
-            (err) =>
+            (err: Error) =>
                 err.message === "Cannot converting circular structure to JSON"
         );
     });
