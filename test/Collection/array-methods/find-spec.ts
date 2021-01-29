@@ -15,7 +15,7 @@ describe("Collection.find", () => {
         }
         
 
-        class Colors extends Collection<Colors> {
+        class Colors extends Collection<Color> {
             Model() {
                 return Color;
             }
@@ -29,7 +29,7 @@ describe("Collection.find", () => {
 
         const red = colors.find((color) =>
             color.get("name") === "red"
-        );
+        )!;
 
         assert.strictEqual( red.get("name"), "red" );
     });
@@ -44,7 +44,7 @@ describe("Collection.find", () => {
             }
         }
         
-        class Products extends Collection<Products> {
+        class Products extends Collection<Product> {
             Model() {
                 return Product;
             }
@@ -56,13 +56,14 @@ describe("Collection.find", () => {
 
         
         const context = {
-            changed: false
+            changed: false,
+            handler() {
+                this.changed = true;
+                return true;
+            }
         };
 
-        products.find(function() {
-            this.changed = true;
-            return true;
-        }, context);
+        products.find(context.handler, context);
 
         assert.strictEqual(context.changed, true);
     });

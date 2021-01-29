@@ -1,6 +1,6 @@
 
-import EventEmitter from "events";
-import {Model, ISimpleObject} from "./Model";
+import {EventEmitter} from "events";
+import {Model, ISimpleObject, StructureType} from "./Model";
 import EqualStack from "./EqualStack";
 import {invalidValuesAsString, isPlainObject} from "./utils";
 import {
@@ -22,10 +22,8 @@ interface IRemoveEvent<TCollection, TModel> {
     collection: TCollection;
 }
 
-export abstract class Collection<
-    ChildCollection extends Collection<any>,
-    TModel extends Model<any> = InstanceType< ReturnType< ChildCollection["Model"] > >
-> extends EventEmitter {
+export abstract class Collection<TModel extends Model<any>>
+extends EventEmitter {
     TModel!: TModel;
     models: TModel[];
     length: number;

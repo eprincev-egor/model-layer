@@ -15,7 +15,7 @@ describe("Collection.reduce", () => {
 
     it("reduce()", () => {
 
-        class Products extends Collection<Products> {
+        class Products extends Collection<Product> {
             Model() {
                 return Product;
             }
@@ -28,7 +28,7 @@ describe("Collection.reduce", () => {
         ]);
 
         const total = products.reduce((currentTotal, product) =>
-            currentTotal + product.get("price"),
+            currentTotal + product.get("price")!,
             0
         );
 

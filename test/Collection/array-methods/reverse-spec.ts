@@ -15,7 +15,7 @@ describe("Collection.reverse", () => {
 
     it("reverse()", () => {
         
-        class Products extends Collection<Products> {
+        class Products extends Collection<Product> {
             Model() {
                 return Product;
             }
@@ -27,15 +27,15 @@ describe("Collection.reverse", () => {
             {name: "Milk", price: 4}
         ]);
 
-        assert.strictEqual( products.at(0).get("price"), 10 );
-        assert.strictEqual( products.at(1).get("price"), 1.8 );
-        assert.strictEqual( products.at(2).get("price"), 4 );
+        assert.strictEqual( products.at(0)!.get("price"), 10 );
+        assert.strictEqual( products.at(1)!.get("price"), 1.8 );
+        assert.strictEqual( products.at(2)!.get("price"), 4 );
 
         products.reverse();
 
-        assert.strictEqual( products.at(0).get("price"), 4 );
-        assert.strictEqual( products.at(1).get("price"), 1.8 );
-        assert.strictEqual( products.at(2).get("price"), 10 );
+        assert.strictEqual( products.at(0)!.get("price"), 4 );
+        assert.strictEqual( products.at(1)!.get("price"), 1.8 );
+        assert.strictEqual( products.at(2)!.get("price"), 10 );
     });
 
 

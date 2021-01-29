@@ -15,7 +15,7 @@ describe("Collection.forEach", () => {
 
     it("forEach", () => {
 
-        class Products extends Collection<Products> {
+        class Products extends Collection<Product> {
             Model() {
                 return Product;
             }
@@ -30,15 +30,15 @@ describe("Collection.forEach", () => {
         assert.strictEqual( products.length, 2 );
 
 
-        const names = [];
-        const prices = [];
-        const indexes = [];
+        const names: string[] = [];
+        const prices: number[] = [];
+        const indexes: number[] = [];
 
         products.forEach((product, i) => {
             assert.ok( product instanceof Model );
 
-            names.push( product.get("name") );
-            prices.push( product.get("price") );
+            names.push( product.get("name")! );
+            prices.push( product.get("price")! );
             indexes.push( i );
         });
 
@@ -49,7 +49,7 @@ describe("Collection.forEach", () => {
 
     it("forEach(f, context)", () => {
 
-        class Products extends Collection<Products> {
+        class Products extends Collection<Product> {
             Model() {
                 return Product;
             }
@@ -61,12 +61,13 @@ describe("Collection.forEach", () => {
 
         
         const context = {
-            changed: false
+            changed: false,
+            handler() {
+                this.changed = true;
+            }
         };
 
-        products.forEach(function() {
-            this.changed = true;
-        }, context);
+        products.forEach(context.handler, context);
 
         assert.strictEqual(context.changed, true);
     });

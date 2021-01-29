@@ -15,7 +15,7 @@ describe("Collection.map", () => {
 
     it("map()", () => {
 
-        class Products extends Collection<Products> {
+        class Products extends Collection<Product> {
             Model() {
                 return Product;
             }
@@ -35,7 +35,7 @@ describe("Collection.map", () => {
     });
     
     it("map(f, context)", () => {
-        class Products extends Collection<Products> {
+        class Products extends Collection<Product> {
             Model() {
                 return Product;
             }
@@ -47,12 +47,13 @@ describe("Collection.map", () => {
 
         
         const context = {
-            changed: false
+            changed: false,
+            handler() {
+                this.changed = true;
+            }
         };
 
-        products.map(function() {
-            this.changed = true;
-        }, context);
+        products.map(context.handler, context);
 
         assert.strictEqual(context.changed, true);
     });

@@ -15,7 +15,7 @@ describe("Collection.shift", () => {
 
     it("shift()", () => {
         
-        class Products extends Collection<Products> {
+        class Products extends Collection<Product> {
             Model() {
                 return Product;
             }
@@ -30,15 +30,15 @@ describe("Collection.shift", () => {
         assert.strictEqual( products.length, 3 );
 
         let result = products.shift();
-        assert.strictEqual( result.get("name"), "Eggs" );
+        assert.strictEqual( result!.get("name"), "Eggs" );
         assert.strictEqual( products.length, 2 );
 
         result = products.shift();
-        assert.strictEqual( result.get("name"), "Pie" );
+        assert.strictEqual( result!.get("name"), "Pie" );
         assert.strictEqual( products.length, 1 );
 
         result = products.shift();
-        assert.strictEqual( result.get("name"), "Milk" );
+        assert.strictEqual( result!.get("name"), "Milk" );
         assert.strictEqual( products.length, 0 );
 
         result = products.shift();

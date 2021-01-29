@@ -15,7 +15,7 @@ describe("Collection.some", () => {
 
     it("some()", () => {
 
-        class Products extends Collection<Products> {
+        class Products extends Collection<Product> {
             Model() {
                 return Product;
             }
@@ -28,19 +28,19 @@ describe("Collection.some", () => {
         ]);
 
         let result = products.some((product) =>
-            product.get("price") > 5
+            product.get("price")! > 5
         );
         assert.strictEqual( result, true );
 
 
         result = products.some((product) =>
-            product.get("price") > 20
+            product.get("price")! > 20
         );
         assert.strictEqual( result, false );
     });
     
     it("some(f, context)", () => {
-        class Products extends Collection<Products> {
+        class Products extends Collection<Product> {
             Model() {
                 return Product;
             }
@@ -52,13 +52,14 @@ describe("Collection.some", () => {
 
         
         const context = {
-            changed: false
+            changed: false,
+            handler() {
+                this.changed = true;
+                return true;
+            }
         };
 
-        products.some(function() {
-            this.changed = true;
-            return true;
-        }, context);
+        products.some(context.handler, context);
 
         assert.strictEqual(context.changed, true);
     });

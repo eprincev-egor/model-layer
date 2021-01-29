@@ -13,7 +13,7 @@ describe("Collection.unshift", () => {
             }
         }
         
-        class Users extends Collection<Users> {
+        class Users extends Collection<User> {
             Model() {
                 return User;
             }
@@ -33,7 +33,7 @@ describe("Collection.unshift", () => {
 
         const user = users.at(0);
         assert.ok( user instanceof Model );
-        assert.strictEqual( user.get("name"), "Bob" );
+        assert.strictEqual( user!.get("name"), "Bob" );
     });
 
     it("unshift(a, b, ...)", () => {
@@ -45,7 +45,7 @@ describe("Collection.unshift", () => {
             }
         }
         
-        class Users extends Collection<Users> {
+        class Users extends Collection<User> {
             Model() {
                 return User;
             }
@@ -66,13 +66,13 @@ describe("Collection.unshift", () => {
         assert.strictEqual( users.length, 3 );
 
         assert.ok( users.at(0) instanceof Model );
-        assert.strictEqual( users.at(0).get("name"), "Bob" );
+        assert.strictEqual( users.at(0)!.get("name"), "Bob" );
 
         assert.ok( users.at(1) instanceof Model );
-        assert.strictEqual( users.at(1).get("name"), "James" );
+        assert.strictEqual( users.at(1)!.get("name"), "James" );
 
         assert.ok( users.at(2) instanceof Model );
-        assert.strictEqual( users.at(2).get("name"), "Oliver" );
+        assert.strictEqual( users.at(2)!.get("name"), "Oliver" );
     });
 
     it("unshift CustomModel", () => {
@@ -84,7 +84,7 @@ describe("Collection.unshift", () => {
             }
         }
         
-        class Users extends Collection<Users> {
+        class Users extends Collection<User> {
             Model() {
                 return User;
             }
@@ -122,7 +122,7 @@ describe("Collection.unshift", () => {
             }
         }
         
-        class Users extends Collection<Users> {
+        class Users extends Collection<User> {
             Model() {
                 return User;
             }
@@ -136,7 +136,7 @@ describe("Collection.unshift", () => {
         assert.throws(
             () => {
                 users.unshift(someModel);
-            }, (err) =>
+            }, (err: Error) =>
                 err.message === "Users: expected model constructor User, but have AnotherModel"
         );
 
@@ -153,7 +153,7 @@ describe("Collection.unshift", () => {
             }
         }
         
-        class Users extends Collection<Users> {
+        class Users extends Collection<User> {
             Model() {
                 return User;
             }
@@ -178,7 +178,7 @@ describe("Collection.unshift", () => {
             }
         }
         
-        class Users extends Collection<Users> {
+        class Users extends Collection<User> {
             Model() {
                 return User;
             }
@@ -188,8 +188,8 @@ describe("Collection.unshift", () => {
         
         assert.throws(
             () => {
-                users.unshift(undefined);
-            }, (err) =>
+                users.unshift(undefined as any);
+            }, (err: Error) =>
                 err.message === "invalid row undefined for model User"
         );
     });

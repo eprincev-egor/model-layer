@@ -1,4 +1,4 @@
-import EventEmitter from "events";
+import {EventEmitter} from "events";
 import EqualStack from "./EqualStack";
 import {Type, InputType, OutputType, JsonType, IType} from "./type/Type";
 import { invalidValuesAsString, isObject } from "./utils";
@@ -17,6 +17,15 @@ export interface ISimpleObject extends Object {
     [propName: string]: any;
 }
 
+export type StructureType = {
+    [key: string]: IType | (new (...args: any) => IType)
+}
+
+export type EventHandlerType<TModel extends Model<any>> = (
+    event: IChangeEvent<TModel>,
+    options: ISimpleObject
+) => void;
+
 type ReadOnlyPartial<TData> = {
     readonly [key in keyof TData]?: TData[key];
 };
@@ -27,11 +36,9 @@ interface IChangeEvent<TModel extends Model<any>> {
     changes: ReadOnlyPartial<TModel["row"]>;
 }
 
-interface IChildModel {
-    structure(): {[key: string]: IType | (new (...args: any) => IType)};    
-}
-
-export abstract class Model<ChildModel extends Model<any>> extends EventEmitter {
+export abstract class Model<ChildModel extends {
+    structure: () => StructureType;
+}> extends EventEmitter {
 
     static Type = Type;
 
@@ -81,7 +88,7 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
         delete (this as any).isInit;
     }
 
-    abstract structure(): {[key: string]: IType | (new (...args: any) => IType)};    
+    abstract structure(): {[key: string]: IType | (new (...args: any) => IType)};
 
     get<TKey extends keyof this["row"]>(key: TKey): this["row"][TKey] {
         return this.row[ key ];
@@ -519,11 +526,8 @@ export abstract class Model<ChildModel extends Model<any>> extends EventEmitter 
 
     on(
         eventName: "change",
-        keyOrListener: (
-            string & keyof this["row"] | 
-            ((event: IChangeEvent<this>, options: ISimpleObject) => void)
-        ),
-        listener?: (event: IChangeEvent<this>, options: ISimpleObject) => void
+        keyOrListener: string | EventHandlerType<this>,
+        listener?: EventHandlerType<this>
     ): this {
         if ( typeof keyOrListener === "string" ) {
             const key = keyOrListener;

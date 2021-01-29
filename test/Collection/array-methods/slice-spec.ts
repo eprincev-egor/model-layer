@@ -15,7 +15,7 @@ describe("Collection.slice", () => {
 
     it("slice()", () => {
 
-        class Products extends Collection<Products> {
+        class Products extends Collection<Product> {
             Model() {
                 return Product;
             }
@@ -37,7 +37,7 @@ describe("Collection.slice", () => {
     
     it("slice(begin)", () => {
 
-        class Products extends Collection<Products> {
+        class Products extends Collection<Product> {
             Model() {
                 return Product;
             }
@@ -64,7 +64,7 @@ describe("Collection.slice", () => {
     
     it("slice(begin, end)", () => {
 
-        class Products extends Collection<Products> {
+        class Products extends Collection<Product> {
             Model() {
                 return Product;
             }

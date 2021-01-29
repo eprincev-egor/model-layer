@@ -15,7 +15,7 @@ describe("Collection.indexOf", () => {
 
     it("indexOf(model)", () => {
 
-        class Products extends Collection<Products> {
+        class Products extends Collection<Product> {
             Model() {
                 return Product;
             }
@@ -27,8 +27,8 @@ describe("Collection.indexOf", () => {
             {name: "Milk", price: 4}
         ]);
 
-        const firstModel = products.at(0);
-        const lastModel = products.at(2);
+        const firstModel = products.at(0)!;
+        const lastModel = products.at(2)!;
 
         class SomeModel extends Model<SomeModel> {
             structure() {
@@ -52,7 +52,7 @@ describe("Collection.indexOf", () => {
     
     it("indexOf(model, fromIndex)", () => {
 
-        class Products extends Collection<Products> {
+        class Products extends Collection<Product> {
             Model() {
                 return Product;
             }
@@ -64,8 +64,8 @@ describe("Collection.indexOf", () => {
             {name: "Milk", price: 4}
         ]);
 
-        const firstModel = products.at(0);
-        const lastModel = products.at(2);
+        const firstModel = products.at(0)!;
+        const lastModel = products.at(2)!;
 
         
         let result = products.indexOf( lastModel, 1 );

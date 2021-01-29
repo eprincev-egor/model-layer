@@ -15,7 +15,7 @@ describe("Collection.filter", () => {
 
     it("filter()", () => {
 
-        class Products extends Collection<Products> {
+        class Products extends Collection<Product> {
             Model() {
                 return Product;
             }
@@ -28,7 +28,7 @@ describe("Collection.filter", () => {
         ]);
 
         const result = products.filter((product) =>
-            product.get("price") > 2
+            product.get("price")! > 2
         );
 
         assert.strictEqual( result.length, 2 );
@@ -37,7 +37,7 @@ describe("Collection.filter", () => {
     });
     
     it("filter(f, context)", () => {
-        class Products extends Collection<Products> {
+        class Products extends Collection<Product> {
             Model() {
                 return Product;
             }
@@ -49,13 +49,14 @@ describe("Collection.filter", () => {
 
         
         const context = {
-            changed: false
+            changed: false,
+            handler() {
+                this.changed = true;
+                return true;
+            }
         };
 
-        products.filter(function() {
-            this.changed = true;
-            return true;
-        }, context);
+        products.filter(context.handler, context);
 
         assert.strictEqual(context.changed, true);
     });

@@ -1,7 +1,6 @@
 
 import {Collection, Model, Types} from "../../../lib/index";
 import assert from "assert";
-import { Type } from "../../../lib/type/Type";
 
 describe("Collection.splice", () => {
 
@@ -15,7 +14,7 @@ describe("Collection.splice", () => {
             }
         }
         
-        class Users extends Collection<Users> {
+        class Users extends Collection<User> {
             Model() {
                 return User;
             }
@@ -53,7 +52,7 @@ describe("Collection.splice", () => {
             }
         }
         
-        class Users extends Collection<Users> {
+        class Users extends Collection<User> {
             Model() {
                 return User;
             }
@@ -72,9 +71,9 @@ describe("Collection.splice", () => {
             name: "Oliver"
         });
         assert.strictEqual( users.length, 3 );
-        assert.strictEqual( users.at(0).get("name"), "Alice" );
-        assert.strictEqual( users.at(1).get("name"), "Oliver" );
-        assert.strictEqual( users.at(2).get("name"), "Steve" );
+        assert.strictEqual( users.at(0)!.get("name"), "Alice" );
+        assert.strictEqual( users.at(1)!.get("name"), "Oliver" );
+        assert.strictEqual( users.at(2)!.get("name"), "Steve" );
 
     });
 
@@ -88,7 +87,7 @@ describe("Collection.splice", () => {
             }
         }
         
-        class Users extends Collection<Users> {
+        class Users extends Collection<User> {
             Model() {
                 return User;
             }
@@ -107,9 +106,9 @@ describe("Collection.splice", () => {
             {name: "Oliver"}
         );
         assert.strictEqual( users.length, 3 );
-        assert.strictEqual( users.at(0).get("name"), "Alice" );
-        assert.strictEqual( users.at(1).get("name"), "Oliver" );
-        assert.strictEqual( users.at(2).get("name"), "Steve" );
+        assert.strictEqual( users.at(0)!.get("name"), "Alice" );
+        assert.strictEqual( users.at(1)!.get("name"), "Oliver" );
+        assert.strictEqual( users.at(2)!.get("name"), "Steve" );
 
     });
 
@@ -122,7 +121,7 @@ describe("Collection.splice", () => {
             }
         }
         
-        class Users extends Collection<Users> {
+        class Users extends Collection<User> {
             Model() {
                 return User;
             }
@@ -141,9 +140,9 @@ describe("Collection.splice", () => {
             name: "Oliver"
         }));
         assert.strictEqual( users.length, 3 );
-        assert.strictEqual( users.at(0).get("name"), "Alice" );
-        assert.strictEqual( users.at(1).get("name"), "Oliver" );
-        assert.strictEqual( users.at(2).get("name"), "Steve" );
+        assert.strictEqual( users.at(0)!.get("name"), "Alice" );
+        assert.strictEqual( users.at(1)!.get("name"), "Oliver" );
+        assert.strictEqual( users.at(2)!.get("name"), "Steve" );
 
     });
 

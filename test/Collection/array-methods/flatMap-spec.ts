@@ -14,7 +14,7 @@ describe("Collection.flatMap", () => {
             }
         }
 
-        class Books extends Collection<Books> {
+        class Books extends Collection<Book> {
             Model() {
                 return Book;
             }
@@ -23,11 +23,11 @@ describe("Collection.flatMap", () => {
         const books = new Books([
             {name: "Book 1", price: 1.23},
             {name: "Book 2", price: 2.3},
-            {name: "Book 3", price: null}
+            {name: "Book 3", price: null as any}
         ]);
 
         const words = books.flatMap((book) =>
-            book.get("name").split(" ")
+            book.get("name")!.split(" ")
         );
 
         assert.deepStrictEqual( words, ["Book", "1", "Book", "2", "Book", "3"] );
@@ -41,7 +41,7 @@ describe("Collection.flatMap", () => {
                     .map((str) => +str);
             }
             else {
-                return null;
+                return null as any;
             }
         });
         
@@ -58,7 +58,7 @@ describe("Collection.flatMap", () => {
             }
         }
 
-        class Products extends Collection<Products> {
+        class Products extends Collection<Product> {
             Model() {
                 return Product;
             }
@@ -70,13 +70,14 @@ describe("Collection.flatMap", () => {
 
         
         const context = {
-            changed: false
+            changed: false,
+            handler() {
+                this.changed = true;
+                return [];
+            }
         };
 
-        products.flatMap(function() {
-            this.changed = true;
-            return [];
-        }, context);
+        products.flatMap(context.handler, context);
 
         assert.strictEqual(context.changed, true);
     });

@@ -19,7 +19,7 @@ describe("Collection.join", () => {
             }
         }
 
-        class Products extends Collection<Products> {
+        class Products extends Collection<Product> {
             Model() {
                 return Product;
             }

@@ -14,7 +14,7 @@ describe("Collection.add", () => {
             }
         }
 
-        class Users extends Collection<Users> {
+        class Users extends Collection<User> {
             Model() {
                 return User;
             }
@@ -34,7 +34,7 @@ describe("Collection.add", () => {
 
         const user = users.at(1);
         assert.ok( user instanceof Model );
-        assert.strictEqual( user.get("name"), "Bob" );
+        assert.strictEqual( user!.get("name"), "Bob" );
     });
 
     it("add(a, b, ...)", () => {
@@ -47,7 +47,7 @@ describe("Collection.add", () => {
             }
         }
 
-        class Users extends Collection<Users> {
+        class Users extends Collection<User> {
             Model() {
                 return User;
             }
@@ -68,13 +68,13 @@ describe("Collection.add", () => {
         assert.strictEqual( users.length, 3 );
 
         assert.ok( users.at(0) instanceof Model );
-        assert.strictEqual( users.at(0).get("name"), "Bob" );
+        assert.strictEqual( users.at(0)!.get("name"), "Bob" );
 
         assert.ok( users.at(1) instanceof Model );
-        assert.strictEqual( users.at(1).get("name"), "James" );
+        assert.strictEqual( users.at(1)!.get("name"), "James" );
 
         assert.ok( users.at(2) instanceof Model );
-        assert.strictEqual( users.at(2).get("name"), "Oliver" );
+        assert.strictEqual( users.at(2)!.get("name"), "Oliver" );
     });
 
     it("add CustomModel", () => {
@@ -86,7 +86,7 @@ describe("Collection.add", () => {
             }
         }
 
-        class Users extends Collection<Users> {
+        class Users extends Collection<User> {
             Model() {
                 return User;
             }
@@ -124,7 +124,7 @@ describe("Collection.add", () => {
             }
         }
 
-        class Users extends Collection<Users> {
+        class Users extends Collection<User> {
             Model() {
                 return User;
             }
@@ -138,7 +138,7 @@ describe("Collection.add", () => {
         assert.throws(
             () => {
                 users.add(someModel);
-            }, (err) =>
+            }, (err: Error) =>
                 err.message === "Users: expected model constructor User, but have AnotherModel"
         );
 
@@ -155,7 +155,7 @@ describe("Collection.add", () => {
             }
         }
 
-        class Users extends Collection<Users> {
+        class Users extends Collection<User> {
             Model() {
                 return User;
             }
@@ -180,7 +180,7 @@ describe("Collection.add", () => {
             }
         }
 
-        class Users extends Collection<Users> {
+        class Users extends Collection<User> {
             Model() {
                 return User;
             }
@@ -190,8 +190,8 @@ describe("Collection.add", () => {
         
         assert.throws(
             () => {
-                users.add(undefined);
-            }, (err) =>
+                users.add(undefined as any);
+            }, (err: Error) =>
                 err.message === "invalid row undefined for model User"
         );
     });
@@ -205,7 +205,7 @@ describe("Collection.add", () => {
             }
         }
 
-        class Users extends Collection<Users> {
+        class Users extends Collection<User> {
             Model() {
                 return User;
             }
@@ -228,13 +228,13 @@ describe("Collection.add", () => {
         assert.strictEqual( users.length, 3 );
 
         assert.ok( users.at(0) instanceof Model );
-        assert.strictEqual( users.at(0).get("name"), "Bob" );
+        assert.strictEqual( users.at(0)!.get("name"), "Bob" );
 
         assert.ok( users.at(1) instanceof Model );
-        assert.strictEqual( users.at(1).get("name"), "James" );
+        assert.strictEqual( users.at(1)!.get("name"), "James" );
 
         assert.ok( users.at(2) instanceof Model );
-        assert.strictEqual( users.at(2).get("name"), "Oliver" );
+        assert.strictEqual( users.at(2)!.get("name"), "Oliver" );
     });
 
     it("add([obj, model])", () => {
@@ -246,7 +246,7 @@ describe("Collection.add", () => {
             }
         }
 
-        class Users extends Collection<Users> {
+        class Users extends Collection<User> {
             Model() {
                 return User;
             }
@@ -269,13 +269,13 @@ describe("Collection.add", () => {
         assert.strictEqual( users.length, 3 );
 
         assert.ok( users.at(0) instanceof Model );
-        assert.strictEqual( users.at(0).get("name"), "Bob" );
+        assert.strictEqual( users.at(0)!.get("name"), "Bob" );
 
         assert.ok( users.at(1) instanceof Model );
-        assert.strictEqual( users.at(1).get("name"), "James" );
+        assert.strictEqual( users.at(1)!.get("name"), "James" );
 
         assert.ok( users.at(2) instanceof Model );
-        assert.strictEqual( users.at(2).get("name"), "Oliver" );
+        assert.strictEqual( users.at(2)!.get("name"), "Oliver" );
     });
 
     it("add([obj], [model])", () => {
@@ -287,7 +287,7 @@ describe("Collection.add", () => {
             }
         }
 
-        class Users extends Collection<Users> {
+        class Users extends Collection<User> {
             Model() {
                 return User;
             }
@@ -310,10 +310,10 @@ describe("Collection.add", () => {
         assert.strictEqual( users.length, 2 );
 
         assert.ok( users.at(0) instanceof Model );
-        assert.strictEqual( users.at(0).get("name"), "Bob" );
+        assert.strictEqual( users.at(0)!.get("name"), "Bob" );
 
         assert.ok( users.at(1) instanceof Model );
-        assert.strictEqual( users.at(1).get("name"), "Oliver" );
+        assert.strictEqual( users.at(1)!.get("name"), "Oliver" );
     });
 
 });

@@ -13,7 +13,7 @@ describe("Collection.push", () => {
             }
         }
         
-        class Users extends Collection<Users> {
+        class Users extends Collection<User> {
             Model() {
                 return User;
             }
@@ -33,7 +33,7 @@ describe("Collection.push", () => {
 
         const user = users.at(1);
         assert.ok( user instanceof Model );
-        assert.strictEqual( user.get("name"), "Bob" );
+        assert.strictEqual( user!.get("name"), "Bob" );
     });
 
     it("push(a, b, ...)", () => {
@@ -45,7 +45,7 @@ describe("Collection.push", () => {
             }
         }
 
-        class Users extends Collection<Users> {
+        class Users extends Collection<User> {
             Model() {
                 return User;
             }
@@ -66,13 +66,13 @@ describe("Collection.push", () => {
         assert.strictEqual( users.length, 3 );
 
         assert.ok( users.at(0) instanceof Model );
-        assert.strictEqual( users.at(0).get("name"), "Bob" );
+        assert.strictEqual( users.at(0)!.get("name"), "Bob" );
 
         assert.ok( users.at(1) instanceof Model );
-        assert.strictEqual( users.at(1).get("name"), "James" );
+        assert.strictEqual( users.at(1)!.get("name"), "James" );
 
         assert.ok( users.at(2) instanceof Model );
-        assert.strictEqual( users.at(2).get("name"), "Oliver" );
+        assert.strictEqual( users.at(2)!.get("name"), "Oliver" );
     });
 
     it("push CustomModel", () => {
@@ -84,7 +84,7 @@ describe("Collection.push", () => {
             }
         }
 
-        class Users extends Collection<Users> {
+        class Users extends Collection<User> {
             Model() {
                 return User;
             }
@@ -123,7 +123,7 @@ describe("Collection.push", () => {
         }
 
 
-        class Users extends Collection<Users> {
+        class Users extends Collection<User> {
             Model() {
                 return User;
             }
@@ -137,7 +137,7 @@ describe("Collection.push", () => {
         assert.throws(
             () => {
                 users.push(someModel);
-            }, (err) =>
+            }, (err: Error) =>
                 err.message === "Users: expected model constructor User, but have AnotherModel"
         );
 
@@ -153,7 +153,7 @@ describe("Collection.push", () => {
             }
         }
 
-        class Users extends Collection<Users> {
+        class Users extends Collection<User> {
             Model() {
                 return User;
             }
@@ -177,7 +177,7 @@ describe("Collection.push", () => {
             }
         }
 
-        class Users extends Collection<Users> {
+        class Users extends Collection<User> {
             Model() {
                 return User;
             }
@@ -187,8 +187,8 @@ describe("Collection.push", () => {
         
         assert.throws(
             () => {
-                users.push(undefined);
-            }, (err) =>
+                users.push(undefined as any);
+            }, (err: Error) =>
                 err.message === "invalid row undefined for model User"
         );
     });

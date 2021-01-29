@@ -15,7 +15,7 @@ describe("Collection.findIndex", () => {
             }
         }
 
-        class Colors extends Collection<Colors> {
+        class Colors extends Collection<Color> {
             Model() {
                 return Color;
             }
@@ -44,7 +44,7 @@ describe("Collection.findIndex", () => {
             }
         }
 
-        class Products extends Collection<Products> {
+        class Products extends Collection<Product> {
             Model() {
                 return Product;
             }
@@ -56,13 +56,14 @@ describe("Collection.findIndex", () => {
 
         
         const context = {
-            changed: false
+            changed: false,
+            handler() {
+                this.changed = true;
+                return true;
+            }
         };
 
-        products.findIndex(function() {
-            this.changed = true;
-            return true;
-        }, context);
+        products.findIndex(context.handler, context);
 
         assert.strictEqual(context.changed, true);
     });

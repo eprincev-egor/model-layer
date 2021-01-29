@@ -15,7 +15,7 @@ describe("Collection.every", () => {
 
     it("every()", () => {
 
-        class Products extends Collection<Products> {
+        class Products extends Collection<Product> {
             Model() {
                 return Product;
             }
@@ -28,19 +28,19 @@ describe("Collection.every", () => {
         ]);
 
         let result = products.every((product) =>
-            product.get("price") > 5
+            product.get("price")! > 5
         );
         assert.strictEqual( result, false );
 
 
         result = products.every((product) =>
-            product.get("price") > 1
+            product.get("price")! > 1
         );
         assert.strictEqual( result, true );
     });
     
     it("every(f, context)", () => {
-        class Products extends Collection<Products> {
+        class Products extends Collection<Product> {
             Model() {
                 return Product;
             }
@@ -52,13 +52,14 @@ describe("Collection.every", () => {
 
         
         const context = {
-            changed: false
+            changed: false,
+            handler() {
+                this.changed = true;
+                return true;
+            }
         };
 
-        products.every(function() {
-            this.changed = true;
-            return true;
-        }, context);
+        products.every(context.handler, context);
 
         assert.strictEqual(context.changed, true);
     });

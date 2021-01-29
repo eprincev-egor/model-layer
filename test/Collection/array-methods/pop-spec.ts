@@ -15,7 +15,7 @@ describe("Collection.pop", () => {
 
     it("pop()", () => {
         
-        class Products extends Collection<Products> {
+        class Products extends Collection<Product> {
             Model() {
                 return Product;
             }
@@ -29,16 +29,16 @@ describe("Collection.pop", () => {
 
         assert.strictEqual( products.length, 3 );
 
-        let result = products.pop();
-        assert.strictEqual( result.get("name"), "Milk" );
+        let result: Product | undefined = products.pop();
+        assert.strictEqual( result!.get("name"), "Milk" );
         assert.strictEqual( products.length, 2 );
 
         result = products.pop();
-        assert.strictEqual( result.get("name"), "Pie" );
+        assert.strictEqual( result!.get("name"), "Pie" );
         assert.strictEqual( products.length, 1 );
 
         result = products.pop();
-        assert.strictEqual( result.get("name"), "Eggs" );
+        assert.strictEqual( result!.get("name"), "Eggs" );
         assert.strictEqual( products.length, 0 );
 
         result = products.pop();
