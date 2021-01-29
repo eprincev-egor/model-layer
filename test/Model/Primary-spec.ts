@@ -109,7 +109,7 @@ describe("Model primary field", () => {
     it("model.id, if exists static field 'id' in row", () => {
         class Company extends Model<Company> {
             
-            id: number;
+            id!: number;
             structure() {
                 return {
                     id: Types.Number({

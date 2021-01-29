@@ -38,7 +38,7 @@ describe("Model validate", () => {
 
         assert.throws(
             () => {
-                model.set({name: null});
+                model.set({name: null as any});
             },
             (err: Error) =>
                 err.message === "required name"
@@ -62,7 +62,7 @@ describe("Model validate", () => {
                 };
             }
 
-            validate(row) {
+            validate(row: any) {
                 if ( row.age < 0 ) {
                     throw new Error("invalid age");
                 }
@@ -111,7 +111,7 @@ describe("Model validate", () => {
                 };
             }
 
-            validate(row) {
+            validate(row: any) {
                 row.age = 200;
             }
         }
@@ -136,7 +136,7 @@ describe("Model validate", () => {
                 };
             }
 
-            validate(row) {
+            validate(row: any) {
                 assert.equal( this.row.age, 100 );
                 assert.equal( row.age, 200 );
             }
@@ -218,7 +218,7 @@ describe("Model validate", () => {
         assert.strictEqual(model.row.prop, "nice");
 
 
-        model.set({prop: null});
+        model.set({prop: null as any});
         assert.strictEqual(model.row.prop, null);
     });
 
@@ -313,7 +313,7 @@ describe("Model validate", () => {
         assert.equal(model.get("color"), "red");
 
         // null is valid value for enum validation
-        model.set({color: null});
+        model.set({color: null as any});
         assert.equal(model.get("color"), null);
     });
 
@@ -342,7 +342,7 @@ describe("Model validate", () => {
                 };
             }
 
-            validate(row) {
+            validate(row: any) {
                 if ( row.buy > row.sale ) {
                     throw new Error("invalid sale");
                 }

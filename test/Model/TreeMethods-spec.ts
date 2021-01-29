@@ -1,5 +1,5 @@
 
-import {Model, Types, Collection} from "../../lib/index";
+import {Model, Types, Collection, IStringType, IArrayType} from "../../lib/index";
 import assert from "assert";
 
 describe("TreeMethods, walk by children or parents", () => {
@@ -15,9 +15,9 @@ describe("TreeMethods, walk by children or parents", () => {
                 };
             }
 
-            findName(id): string {
+            findName(id: number): string | null {
                 if ( id === this.get("id") ) {
-                    return this.get("name");
+                    return this.get("name")!;
                 }
 
                 if ( id > this.get("id") ) {
@@ -72,10 +72,12 @@ describe("TreeMethods, walk by children or parents", () => {
         assert.strictEqual( binaryTreeModel.findName(8), null );
 
         // test native method walk
-        const nameById = {};
-        nameById[ binaryTreeModel.get("id") ] = binaryTreeModel.get("name");
+        const nameById: {
+            [id: number]: string;
+        } = {};
+        nameById[ binaryTreeModel.get("id")! ] = binaryTreeModel.get("name")!;
 
-        binaryTreeModel.walk((model: BinaryTreeModel) => {
+        binaryTreeModel.walk((model: any) => {
             const id = model.get("id");
             const name = model.get("name");
 
@@ -101,8 +103,8 @@ describe("TreeMethods, walk by children or parents", () => {
 
         assert.equal(counter, 1);
 
-        const ids = [];
-        binaryTreeModel.walk((model: BinaryTreeModel, walker) => {
+        const ids: number[] = [];
+        binaryTreeModel.walk((model: any, walker) => {
             ids.push(
                 model.get("id")
             );
@@ -151,8 +153,8 @@ describe("TreeMethods, walk by children or parents", () => {
             }
         });
 
-        const values = [];
-        model.walk((childModel: SomeModel, walker) => {
+        const values: string[] = [];
+        model.walk((childModel: any, walker) => {
             const value = childModel.get("value");
 
             values.push( value );
@@ -197,7 +199,7 @@ describe("TreeMethods, walk by children or parents", () => {
         });
 
         let counter = 0;
-        const lvl2model = model.findChild((childModel: SomeModel) => {
+        const lvl2model = model.findChild((childModel: any) => {
             counter++;
     
             return childModel.get("level") === 2;
@@ -236,7 +238,7 @@ describe("TreeMethods, walk by children or parents", () => {
             }
         });
 
-        const models = model.filterChildren((childModel: SomeModel) =>
+        const models = model.filterChildren((childModel: any) =>
             childModel.get("level") % 2  === 0
         ) as SomeModel[];
     
@@ -274,14 +276,14 @@ describe("TreeMethods, walk by children or parents", () => {
             }
         });
 
-        const lastModel = model.findChild((childModel: SomeModel) =>
+        const lastModel = model.findChild((childModel: any) =>
             childModel.get("level") === 4
         ) as SomeModel;
     
         assert.equal( lastModel.get("level"), 4 );
         
         let counter = 0;
-        const lvl1 = lastModel.findParent((childModel: SomeModel) => {
+        const lvl1 = lastModel.findParent((childModel: any) => {
             counter++;
 
             return childModel.get("level") === 1;
@@ -321,11 +323,11 @@ describe("TreeMethods, walk by children or parents", () => {
             }
         });
 
-        const lastModel = model.findChild((childModel: SomeModel) =>
+        const lastModel = model.findChild((childModel: any) =>
             childModel.get("level") === 4
         ) as SomeModel;
 
-        const models = lastModel.filterParents((childModel: SomeModel) =>
+        const models = lastModel.filterParents((childModel: any) =>
             childModel.get("level") % 2  === 1
         ) as SomeModel[];
     
@@ -466,11 +468,12 @@ describe("TreeMethods, walk by children or parents", () => {
 
 
         let filterChildrenByArray = false;
-        orderModel.filterChildren((childModel) => {
+        orderModel.filterChildren((childModel: any) => {
             if ( childModel instanceof JobModel ) {
                 filterChildrenByArray = true;
                 return true;
             }
+            return false;
         });
         assert.equal(filterChildrenByArray, true);
     });
@@ -486,7 +489,7 @@ describe("TreeMethods, walk by children or parents", () => {
             }
         }
 
-        class Items extends Collection<Items> {
+        class Items extends Collection<Item> {
             Model() {
                 return Item;
             }
@@ -509,20 +512,19 @@ describe("TreeMethods, walk by children or parents", () => {
             ]
         });
 
-        let results: string[];
+        let results: string[] = [];
 
-        results = [];
-        tree.walk((model: Item) => {
+        tree.walk((model: any) => {
             results.push(model.get("name"));
         });
         assert.deepStrictEqual(results, ["root", "home", "hello"], "walk");
 
         results = tree.filterChildrenByInstance(Item)
-            .map((item) => item.get("name"));
+            .map((item) => item.get("name")!);
         assert.deepStrictEqual(results, ["root", "home", "hello"], "filterChildrenByInstance");
         
         
-        results = tree.filterChildren((item: Item) => true)
+        results = tree.filterChildren((item: any) => true)
             .map((item) => item.get("name"));
         assert.deepStrictEqual(results, ["root", "home", "hello"], "filterChildren");
     });
@@ -538,7 +540,11 @@ describe("TreeMethods, walk by children or parents", () => {
         }
 
         class FolderModel extends Model<FolderModel> {
-            structure() {
+            structure(): {
+                name: IStringType;
+                files: IArrayType<FileModel>;
+                folders: IArrayType<FolderModel>;
+            } {
                 return {
                     name: Types.String,
                     files: Types.Array({
@@ -658,11 +664,12 @@ describe("TreeMethods, walk by children or parents", () => {
 
 
         let filterChildrenByArray = false;
-        orderModel.filterChildren((childModel) => {
+        orderModel.filterChildren((childModel: any) => {
             if ( childModel instanceof JobModel ) {
                 filterChildrenByArray = true;
                 return true;
             }
+            return false;
         });
         assert.equal(filterChildrenByArray, true);
     });
@@ -695,8 +702,8 @@ describe("TreeMethods, walk by children or parents", () => {
             child: lvl2
         });
 
-        const tmp = [];
-        lvl1.walk((model: TreeModel) => {
+        const tmp: number[] = [];
+        lvl1.walk((model: any) => {
             tmp.push( model.get("lvl") );
         });
 
@@ -725,8 +732,8 @@ describe("TreeMethods, walk by children or parents", () => {
             child
         });
 
-        const tmp = [];
-        root.walk((model: TreeModel) => {
+        const tmp: string[] = [];
+        root.walk((model: any) => {
             const name = model.get("name");
             tmp.push( name );
         });
@@ -759,8 +766,8 @@ describe("TreeMethods, walk by children or parents", () => {
             child
         });
 
-        const tmp = [];
-        root.findParent((parentModel: TreeModel) => {
+        const tmp: string[] = [];
+        root.findParent((parentModel: any) => {
             const name = parentModel.get("name");
             tmp.push( name );
             return false;

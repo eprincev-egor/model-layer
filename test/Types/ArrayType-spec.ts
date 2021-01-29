@@ -1,5 +1,5 @@
 
-import {Model, Types} from "../../lib/index";
+import {IArrayType, IStringType, Model, Types} from "../../lib/index";
 import assert from "assert";
 import {eol} from "../../lib/utils";
 
@@ -148,7 +148,7 @@ describe("ArrayType", () => {
             managersIds: outsideArr
         });
 
-        const managersIds = companyModel.get("managersIds");
+        const managersIds = companyModel.get("managersIds")!;
 
         assert.deepEqual( managersIds, [1, 2] );
         assert.strictEqual( managersIds[0], 1 );
@@ -213,7 +213,7 @@ describe("ArrayType", () => {
         model.set({colors: ["red"]});
         assert.deepEqual( model.row.colors, ["red"] );
 
-        model.set({colors: null});
+        model.set({colors: null as any});
         assert.deepEqual( model.row.colors, [] );
     });
 
@@ -246,7 +246,7 @@ describe("ArrayType", () => {
             answers: someAnswers
         });
 
-        const answers = model.row.answers;
+        const answers = model.row.answers!;
         assert.deepEqual( answers, [false, true] );
 
         assert.strictEqual( answers[0], false );
@@ -282,7 +282,7 @@ describe("ArrayType", () => {
             pays: [now]
         });
 
-        const pays = model.row.pays;
+        const pays = model.row.pays!;
 
         assert.strictEqual( +pays[0], now );
         assert.ok( pays[0] instanceof Date );
@@ -452,7 +452,7 @@ describe("ArrayType", () => {
         assert.deepEqual(companyModel.row.managersIds, [1, 2]);
         
         // in unique validation   null != null
-        companyModel.set({managersIds: [null, undefined, null]});
+        companyModel.set({managersIds: [null, undefined, null] as any});
         assert.deepEqual(companyModel.row.managersIds, [null, null, null]);
     });
 
@@ -500,7 +500,7 @@ describe("ArrayType", () => {
             managers: [userModel1, userModel2]
         });
 
-        let managers = companyModel.row.managers;
+        let managers = companyModel.row.managers!;
         assert.ok( managers[0] === userModel1 );
         assert.ok( managers[1] === userModel2 );
 
@@ -513,7 +513,7 @@ describe("ArrayType", () => {
         );
         
 
-        managers = companyModel.row.managers;
+        managers = companyModel.row.managers!;
         assert.ok( managers[0] === userModel1 );
         assert.ok( managers[1] === userModel2 );
     });
@@ -787,13 +787,13 @@ describe("ArrayType", () => {
     });
 
     it("equal circular arrays", () => {
-        const circular1 = [];
+        const circular1: any = [];
         circular1[0] = circular1;
 
-        const circular2 = [];
+        const circular2: any = [];
         circular2[0] = circular2;
 
-        const circular3 = [];
+        const circular3: any = [];
         circular3[0] = circular3;
         circular3[1] = [];
 
@@ -893,7 +893,7 @@ describe("ArrayType", () => {
 
         const clone = main.clone();
 
-        assert.ok( clone.get("arr")[0] instanceof SecondLevel );
+        assert.ok( clone.get("arr")![0] instanceof SecondLevel );
 
     });
 
@@ -935,7 +935,7 @@ describe("ArrayType", () => {
             }
         }
 
-        const arr = [];
+        const arr: any = [];
         arr[0] = arr;
         
         const model = new MyModel({
@@ -1006,7 +1006,9 @@ describe("ArrayType", () => {
     it("same model as value in two elements of array", () => {
         
         class TestModel extends Model<TestModel> {
-            structure() {
+            structure(): {
+                arr: IArrayType<TestModel>;
+            } {
                 return {
                     arr: Types.Array({
                         element: TestModel
@@ -1028,7 +1030,9 @@ describe("ArrayType", () => {
     it("circular structure to json", () => {
         
         class TestModel extends Model<TestModel> {
-            structure() {
+            structure(): {
+                arr: IArrayType<TestModel>
+            } {
                 return {
                     arr: Types.Array({
                         element: TestModel
@@ -1054,7 +1058,10 @@ describe("ArrayType", () => {
     it("array of models, check parent reference", () => {
 
         class TestModel extends Model<TestModel> {
-            structure() {
+            structure(): {
+                name: IStringType;
+                children: IArrayType<TestModel>;
+            } {
                 return {
                     name: Types.String,
                     children: Types.Array({
@@ -1072,8 +1079,8 @@ describe("ArrayType", () => {
             ]
         });
 
-        const a = parent.get("children")[0] as TestModel;
-        const b = parent.get("children")[1] as TestModel;
+        const a = parent.get("children")![0] as TestModel;
+        const b = parent.get("children")![1] as TestModel;
 
         const aParent = a.findParentInstance(TestModel);
         const bParent = b.findParentInstance(TestModel);
@@ -1085,7 +1092,10 @@ describe("ArrayType", () => {
     it("clone array of models and check parent reference", () => {
 
         class TestModel extends Model<TestModel> {
-            structure() {
+            structure(): {
+                name: IStringType;
+                children: IArrayType<TestModel>
+            } {
                 return {
                     name: Types.String,
                     children: Types.Array({
@@ -1105,8 +1115,8 @@ describe("ArrayType", () => {
 
         const parentClone = parent.clone();
 
-        const aClone = parentClone.get("children")[0] as TestModel;
-        const bClone = parentClone.get("children")[1] as TestModel;
+        const aClone = parentClone.get("children")![0] as TestModel;
+        const bClone = parentClone.get("children")![1] as TestModel;
 
         const aCloneParent = aClone.findParentInstance(TestModel);
         const bCloneParent = bClone.findParentInstance(TestModel);

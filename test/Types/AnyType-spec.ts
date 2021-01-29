@@ -118,13 +118,13 @@ describe("AnyType", () => {
         circularObj4.self = circularObj2;
 
         // circular arr
-        const circularArr1 = [];
+        const circularArr1: any = [];
         circularArr1[0] = circularArr1;
 
-        const circularArr2 = [];
+        const circularArr2: any = [];
         circularArr2[0] = circularArr2;
 
-        const circularArr3 = [];
+        const circularArr3: any = [];
         circularArr3[0] = circularArr3;
         circularArr3[1] = 0;
 
@@ -282,7 +282,7 @@ describe("AnyType", () => {
         const model = new MyModel();
 
         // circular arr
-        const arr = [];
+        const arr: any = [];
         arr[0] = arr;
         model.set({
             value: arr
