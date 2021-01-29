@@ -59,7 +59,7 @@ describe("Model events", () => {
 
         model.on("change", throwError);
 
-        model.set({prop: null});
+        model.set({prop: null as any});
     });
 
     it("listen change:prop", () => {

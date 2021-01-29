@@ -1,7 +1,9 @@
 
-import {Model, Collection, Types} from "../../lib/index";
+import {Model, Collection, Types, IObjectType} from "../../lib/index";
 import assert from "assert";
 import {eol} from "../../lib/utils";
+import { IArrayType } from "../../lib/type/ArrayType";
+import { IStringType } from "../../lib/type/StringType";
 
 describe("Model tests", () => {
 
@@ -67,7 +69,7 @@ describe("Model tests", () => {
         assert.equal( model.row.prop, "default" );
 
         model = new SomeModel({
-            prop: null
+            prop: null as any
         });
         assert.strictEqual( model.get("prop"), null );
         assert.strictEqual( model.row.prop, null );
@@ -97,7 +99,7 @@ describe("Model tests", () => {
         const model = new SomeModel();
 
         assert.ok(
-            model.row.now >= now
+            model.row.now! >= now
         );
     });
 
@@ -129,7 +131,7 @@ describe("Model tests", () => {
         assert.ok( row !== model.row );
         row = model.row;
 
-        model.set({name: null});
+        model.set({name: null as any});
         assert.strictEqual( model.get("name"), null );
         assert.strictEqual( model.row.name, null );
         assert.strictEqual( model.get("age"), null );
@@ -323,7 +325,7 @@ describe("Model tests", () => {
         );
 
         model.set({
-            name: null,
+            name: null as any,
             age: 100
         });
 
@@ -390,7 +392,7 @@ describe("Model tests", () => {
                 };
             }
 
-            prepareJSON(json) {
+            prepareJSON(json: any) {
                 delete json.age;
             }
         }
@@ -472,7 +474,10 @@ describe("Model tests", () => {
     it("custom toJSON, for field", () => {
 
         class SomeModel extends Model<SomeModel> {
-            structure() {
+            structure(): {
+                name: IStringType;
+                self: typeof SomeModel;
+            } {
                 return {
                     name: Types.String,
                     self: Types.Model({
@@ -502,7 +507,9 @@ describe("Model tests", () => {
     it("custom toJSON, for any field", () => {
 
         class SomeModel extends Model<SomeModel> {
-            structure() {
+            structure(): {
+                [key: string]: typeof SomeModel;
+            } {
                 return {
                     "*": Types.Model({
                         Model: SomeModel,
@@ -515,7 +522,7 @@ describe("Model tests", () => {
 
         const model = new SomeModel();
         model.set({self: model});
-        model.set({empty: null});
+        model.set({empty: null  as any});
 
         assert.deepEqual(
             model.toJSON(),
@@ -570,7 +577,7 @@ describe("Model tests", () => {
         model.set({money: 12});
         assert.strictEqual( model.row.money, 24 );
 
-        model.set({money: null});
+        model.set({money: null as any});
         assert.strictEqual( model.row.money, null );
     });
 
@@ -583,7 +590,7 @@ describe("Model tests", () => {
                 };
             }
 
-            prepare(row) {
+            prepare(row: any) {
                 row.name = 10;
             }
         }
@@ -604,7 +611,7 @@ describe("Model tests", () => {
                 };
             }
 
-            prepare(row) {
+            prepare(row: any) {
                 row.name = 10;
             }
         }
@@ -662,7 +669,7 @@ describe("Model tests", () => {
             fullName: string;
         }
 
-        function upFirstLetter(name) {
+        function upFirstLetter(name: string) {
             return (
                 name[0].toUpperCase() + 
                     name.slice(1).toLowerCase()
@@ -689,7 +696,7 @@ describe("Model tests", () => {
                 };
             }
 
-            prepare(row) {
+            prepare(row: any) {
                 // row.firstName can be null
                 const firstName = row.firstName || "";
                 // row.lastName can be null
@@ -732,7 +739,7 @@ describe("Model tests", () => {
                 };
             }
 
-            prepare(row) {
+            prepare(row: any) {
                 row.name = row.path.split("/").pop();
             }
         }
@@ -1288,7 +1295,12 @@ describe("Model tests", () => {
 
     it("model.clone() with circular reference (array type)", () => {
         class Human extends Model<Human> {
-            structure() {
+            structure(): {
+                name: IStringType;
+                dad: typeof Human;
+                mom: typeof Human;
+                children: IArrayType<Human>;
+            } {
                 return {
                     name: Types.String,
                     dad: Human,
@@ -1323,7 +1335,7 @@ describe("Model tests", () => {
         assert.ok( clone instanceof Human );
         assert.strictEqual( clone.get("name"), "mom" );
         
-        const cloneChild = clone.get("children")[0];
+        const cloneChild = clone.get("children")![0];
         assert.ok( cloneChild instanceof Human );
         assert.ok( cloneChild !== child );
         assert.strictEqual( cloneChild.get("name"), "bob" );
@@ -1333,7 +1345,10 @@ describe("Model tests", () => {
     
     it("model.clone() with circular reference (object type)", () => {
         class Human extends Model<Human> {
-            structure() {
+            structure(): {
+                name: IStringType;
+                friend: IObjectType<Human>;
+            } {
                 return {
                     name: Types.String,
                     friend: Types.Object({
@@ -1359,9 +1374,9 @@ describe("Model tests", () => {
         assert.ok( clone instanceof Human );
         assert.strictEqual( clone.get("name"), "bob" );
         
-        const cloneFriend = clone.get("friend");
+        const cloneFriend = clone.get("friend")!;
         assert.ok( cloneFriend.first instanceof Human, "instance Human" );
-        assert.ok( cloneFriend.first !== bob.get("friend").first, "is another Model" );
+        assert.ok( cloneFriend.first !== bob.get("friend")!.first, "is another Model" );
         assert.strictEqual( cloneFriend.first.get("name"), "jack" );
 
     });
@@ -1393,7 +1408,7 @@ describe("Model tests", () => {
         assert.ok( clone instanceof Human );
         assert.strictEqual( clone.get("name"), "bob" );
         
-        const cloneFriend = clone.get("friend");
+        const cloneFriend = clone.get("friend")!;
         assert.ok( cloneFriend instanceof Human );
         assert.ok( cloneFriend !== bob.get("friend") );
         assert.strictEqual( cloneFriend.get("name"), "jack" );
@@ -1410,7 +1425,7 @@ describe("Model tests", () => {
             }
         }
 
-        class Files extends Collection<Files> {
+        class Files extends Collection<File> {
             Model() {
                 return File;
             }
@@ -1443,14 +1458,14 @@ describe("Model tests", () => {
         assert.ok( clone.get("files") instanceof Files );
         assert.ok( clone.get("files") !== mainFile.get("files") );
 
-        assert.strictEqual( mainFile.get("files").at(1).get("name"), "file 2" );
+        assert.strictEqual( mainFile.get("files")!.at(1)!.get("name"), "file 2" );
 
 
         const filesClone = files.clone();
         assert.ok( filesClone instanceof Files );
         assert.ok( filesClone !== files );
 
-        assert.strictEqual( filesClone.at(1).get("name"), "file 2" );
+        assert.strictEqual( filesClone.at(1)!.get("name"), "file 2" );
     });
 
     

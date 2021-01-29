@@ -16,9 +16,9 @@ class BinaryTreeModel extends Model<BinaryTreeModel> {
         };
     }
 
-    findName(id: number): string {
+    findName(id: number): string | null {
         if ( id === this.get("id") ) {
-            return this.get("name");
+            return this.get("name")!;
         }
 
         if ( id > this.get("id") ) {

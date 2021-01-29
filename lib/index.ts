@@ -59,3 +59,14 @@ Type.registerType("CustomClass", CustomClassType);
 
 
 export {Model, Collection, Types, setLang, MutableObject};
+export {IAnyType, AnyType};
+export {IArrayType, ArrayType};
+export {IBooleanType, BooleanType};
+export {IDateType, DateType};
+export {MakeModelType, ModelType};
+export {MakeCollectionType, CollectionType};
+export {INumberType, NumberType};
+export {IObjectType, ObjectType};
+export {IStringType, StringType};
+export {IOrType, OrType};
+export {ICustomClassType, CustomClassType};
